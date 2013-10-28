@@ -1,0 +1,27 @@
+#!/bin/bash
+
+brew update
+brew upgrade
+brew tap homebrew/versions
+brew tap phinze/homebrew-cask
+
+brew install brew-cask
+brew install git
+brew install gist
+
+brew install phantomjs
+brew install wget --enable-iri
+
+brew cask install bartender
+brew cask install dropbox
+brew cask install google-chrome
+brew cask install handbrake
+brew cask install handbrakebatch
+brew cask install iterm2
+brew cask install reggy
+brew cask install spotify
+brew cask install sublime-text-3
+brew cask install transmission
+brew cask install vlc
+
+brew cleanup

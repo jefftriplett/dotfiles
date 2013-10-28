@@ -1,0 +1,2 @@
+#!/bin/bash
+/usr/bin/find . -name "*.pyc" -delete

@@ -1,0 +1,158 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# setup.py? http://ezcheese.mrj0.com/setup/ac994ebd2343452eae665d30f71a8de1/setup.py
+
+"""PIP Outdated libraries
+
+originally based off of:
+    http://code.activestate.com/recipes/577708/
+
+Usage:
+  pip-outdated.py [--upgrade] [--clear] [--ignored=<ignored>]
+
+Options:
+  -h --help     Show this screen.
+  -c --clear    Clears the update cache.
+  -i --ignored=<ignored>  Packages to ignore.
+  -u --upgrade  Requirements.txt upgrade friendly output.
+
+"""
+
+import logging
+import os
+import pip
+import shelve
+import sys
+import tempfile
+
+try:
+    import xmlrpc.client as xmlrpclib
+except ImportError:
+    import xmlrpclib
+
+from docopt import docopt
+
+
+__version__ = (0, 1, 0)
+
+
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.DEBUG, format='%(message)s')
+
+
+def normalize_package_name(name):
+    name = name.lower()
+    name = name.replace('-', '_')
+    return name
+
+
+def setup_logging(verbose):
+    if verbose:
+        level = logging.DEBUG
+    else:
+        level = logging.INFO
+
+    logging.basicConfig(level=level, format='%(message)s')
+
+
+def main(upgrade=False, clear=False, ignored=False):
+    ignored_libraries = os.environ.get('PIP_IGNORE_VERSIONS', '')
+    cached_filename = os.environ.get('PIP_OUTDATED_CACHE', os.path.join(tempfile.gettempdir(), 'pip-outdated-cache'))
+    pypi_cache_filename = os.environ.get('PYPI_PACKAGE_CACHE', os.path.join(tempfile.gettempdir(), 'pypi-package-cache'))
+
+    if ignored_libraries:
+        ignored_libraries = [item for item in str(ignored_libraries).split(',') if item]
+    else:
+        ignored_libraries = []
+
+    if ignored:
+        ignored = map(str, str(ignored).split(','))
+        ignored_libraries.extend(ignored)
+
+    try:
+        version = shelve.open(cached_filename, writeback=True)
+        pypi_cache = shelve.open(pypi_cache_filename, writeback=True)
+
+        if clear:
+            version.clear()
+            pypi_cache.clear()  # should probably be an all-items
+
+        pypi = xmlrpclib.ServerProxy('http://pypi.python.org/pypi')
+
+        if not pypi_cache:
+            logger.debug('rebuilding package-cache...')
+            list_packages = pypi.list_packages()
+            for package in list_packages:
+                if isinstance(package, str):
+                    pypi_cache[package] = package
+                    clean_package_name = normalize_package_name(package)
+                    if clean_package_name != package:
+                        pypi_cache[clean_package_name] = package
+                else:
+                    try:
+                        logger.warning('# bad package name, skipping "{0}"'.format(package.encode('utf8')), file=sys.stderr)
+                    except Exception as e:
+                        pass
+
+        for dist in pip.get_installed_distributions():
+            available = False
+            using_cache = False
+            project_name = dist.project_name
+            clean_project_name = normalize_package_name(project_name)
+
+            if project_name in ignored_libraries or clean_project_name in ignored_libraries:
+                continue
+
+            if project_name in version:
+                available = version[project_name]
+                using_cache = True
+
+            elif project_name.capitalize() in version:
+                project_name = project_name.capitalize()
+                available = version[project_name]
+                using_cache = True
+
+            elif clean_project_name in version:
+                available = version[clean_project_name]
+                using_cache = True
+
+            if not available:
+                available = pypi.package_releases(project_name)
+
+                if not available:
+                    # Try the cleaned up pkg name
+                    available = pypi.package_releases(clean_project_name)
+
+                if not available:
+                    # Try to capitalize pkg name
+                    project_name = project_name.capitalize()
+                    available = pypi.package_releases(project_name)
+
+                if available:
+                    version[project_name] = available
+
+            try:
+                if available[0] != dist.version:
+                    if upgrade:
+                        logging.info('{dist.project_name}=={available}'.format(dist=dist, available=available[0]))
+                    else:
+                        logging.info('{dist.project_name} ({dist.version} != {available})'.format(dist=dist, available=available[0]))
+                    if not using_cache:
+                        version[project_name] = available
+
+            except IndexError:
+                # these are most likely not in pypi
+                logging.warning('# {0} is not available on PyPI'.format(dist.project_name))
+                #last_chance = normalize_package_name(dist.project_name)
+                #if last_chance in pypi_cache:
+                #    print '{0} should be {1}'.format(dist.project_name, pypi_cache[last_chance])
+
+    finally:
+        version.close()
+        pypi_cache.close()
+
+
+if __name__ == '__main__':
+    arguments = docopt(__doc__, version='.'.join(map(str, __version__)))
+    main(upgrade=arguments['--upgrade'], clear=arguments['--clear'],
+         ignored=arguments['--ignored'])

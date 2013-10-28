@@ -1,0 +1,24 @@
+
+PATH=$PATH:/usr/local/bin:/usr/local/sbin:/usr/local/share/npm/bin
+export PATH
+
+if [[ -e $HOME/bin ]] ; then
+  export PATH=$HOME/bin:$PATH
+fi
+
+export PATH=$PATH:/usr/local/Cellar/ruby/2.0.0-p247/bin
+
+export EDITOR='nano'
+
+## i7 gcc / 4.2.1 hack - to fix some odd install errors... ala http://stackoverflow.com/questions/5366882/installing-pil-on-os-x-snow-leopard-w-xcode4-no-ppc-support
+export ARCHFLAGS="-arch i386 -arch x86_64"
+
+## history
+export HISTCONTROL=erasedups
+export HISTSIZE=10000
+
+## pip settings
+export PIP_REQUIRE_VIRTUALENV=true
+export PIP_RESPECT_VIRTUALENV=true
+export PIP_DOWNLOAD_CACHE=/Users/jefftriplett/.pip/download_cache
+export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
