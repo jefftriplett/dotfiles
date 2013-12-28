@@ -1,1 +1,2 @@
+alias dokku="ssh -t root@cog.gs dokku"
 alias gist="gist -p"
