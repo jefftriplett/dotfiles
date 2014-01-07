@@ -20,5 +20,5 @@ export HISTSIZE=10000
 ## pip settings
 export PIP_REQUIRE_VIRTUALENV=true
 export PIP_RESPECT_VIRTUALENV=true
-export PIP_DOWNLOAD_CACHE=/Users/jefftriplett/.pip/download_cache
+export PIP_DOWNLOAD_CACHE=/tmp/.pip/download_cache
 export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
