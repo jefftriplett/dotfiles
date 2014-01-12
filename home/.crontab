@@ -1,1 +1,2 @@
-* 23 * * * /usr/local/bin/brew update
+MAILTO=""
+* 23 * * * /usr/local/bin/brew update &> /dev/null
