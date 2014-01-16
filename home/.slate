@@ -1,4 +1,3 @@
-
 # Slate confuration
 # -------------------------------------------------------------------
 config defaultToCurrentScreen true
@@ -41,19 +40,19 @@ bind space:cmd;shift grid padding:5 ${monitor-monoprice-work}:6,6 ${monitor-macb
 # Application Aliases and Bindings
 # -------------------------------------------------------------------
 
-# Application focus
-
-alias editor 'Sublime Text 2'
-bind y:${hyper} focus ${editor}
-
-alias terminal 'iTerm'
-bind i:${hyper} focus ${terminal}
-
 alias browser 'Google Chrome'
+alias editor 'Sublime Text 2'
+alias hipchat 'HipChat'
+alias irc 'Textual'
+alias terminal 'iTerm'
+
+# Application focus
+bind y:${hyper} focus ${editor}
+bind i:${hyper} focus ${terminal}
 bind g:${hyper} focus ${browser}
 
 
-# Monitor Aliases
+# Monitor Position Aliases
 # -------------------------------------------------------------------
 
 # Laptop monitor
@@ -78,8 +77,15 @@ alias monoprice-work-rightfourfifths move (screenOriginX+screenSizeX/5)+14;scree
 alias monoprice-work-tophalf move screenOriginX;screenOriginY screenSizeX;screenSizeY/2 ${monitor-monoprice-work}
 alias monoprice-work-bottomhalf move screenOriginX;screenOriginY+screenSizeY/2 screenSizeX;screenSizeY/2 ${monitor-monoprice-work}
 
+# Portrait monitor
+alias portrait-topthird move screenOriginX;screenOriginY screenSizeX;(screenSizeY/3) ${monitor-dell-portrait}
+alias portrait-middlethird move screenOriginX;(screenOriginY+screenSizeY/3) screenSizeX;screenSizeY/3 ${monitor-dell-portrait}
+alias portrait-bottomthird move screenOriginX;(screenOriginY+(screenSizeY/3)*2) screenSizeX;screenSizeY/3 ${monitor-dell-portrait}
+
 
 # Two monitor layout
+# -------------------------------------------------------------------
+
 layout 2monitors ${editor}:MAIN_FIRST ${monoprice-work-lefthalf}
 layout 2monitors ${terminal}:MAIN_FIRST ${macbook-full}
 layout 2monitors ${browser}:REPEAT ${monoprice-work-righthalf}
@@ -92,13 +98,28 @@ default 2monitors resolutions:${monitor-macbook};${monitor-monoprice-work}
 
 
 # One monitor layout
+# -------------------------------------------------------------------
+
 layout 1monitors ${editor}:MAIN_FIRST ${macbook-lefthalf}
 layout 1monitors ${terminal}:MAIN_FIRST ${macbook-righthalf}
 layout 1monitors ${browser}:REPEAT ${macbook-rightfourfifths}
 
 # Bind a key to trigger this layout
-bind pad/:${hyper} layout 1monitors
-bind /:${hyper} layout 1monitors
+bind 7:${hyper} layout 1monitors
 
 # Trigger this layout automatically when 1 monitors are present
 default 1monitors resolutions:${monitor-macbook}
+
+
+# One monitor (portrait mode)
+# -------------------------------------------------------------------
+
+layout 1monitors-portrait ${hipchat}:MAIN_FIRST     ${portrait-topthird}
+layout 1monitors-portrait ${irc}:MAIN_FIRST         ${portrait-middlethird}
+layout 1monitors-portrait ${terminal}:MAIN_FIRST    ${portrait-bottomthird}
+
+# Bind a key to trigger this layout
+bind 9:${hyper} layout 1monitors-portrait
+
+# Trigger this layout automatically when 1 monitor in portrait is present
+default 1monitors-portrait resolutions:${monitor-dell-portrait}
