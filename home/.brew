@@ -14,7 +14,6 @@ brew install wget --enable-iri
 
 brew cask install bartender
 brew cask install chicken
-brew cask install divvy
 brew cask install dropbox
 brew cask install gitx-l
 brew cask install google-chrome
@@ -23,7 +22,7 @@ brew cask install handbrakebatch
 brew cask install iterm2
 brew cask install picard
 brew cask install reggy
-brew cask install size-up
+brew cask install slate
 brew cask install spotify
 brew cask install sublime-text-3
 brew cask install synergy
