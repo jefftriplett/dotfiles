@@ -1,0 +1,133 @@
+# SizeUp commands translated to Slate
+# via: https://raw2.github.com/jdao/dotfiles/master/sizeup.slate
+
+# TODOs
+#   Spaces Actions
+#   fix SnapBack
+#   option to resize windows proportionally with Multiple Monitor actions
+#   option to resize window absolutely instead of relative to screen size with Center
+#   option to not resize window on Center
+#   SizeUp's "best effort" behavior
+
+### Settings accessed through SizeUp's preferences window
+
+# Screen Edge Margins
+alias ScreenEdgeLeft 0
+alias ScreenEdgeRight 0
+alias ScreenEdgeUp 0
+alias ScreenEdgeDown 0
+
+# Partition (Between Window) Margins
+alias PartitionX 0
+alias PartitionY 0
+
+# settings for Center with resizing relative to screen size
+alias centerWidth 0.75
+alias centerHeight 0.75
+
+# Split Screen Partitions
+alias SplitX 0.50
+alias SplitY 0.50
+
+# Quarter Screen Partitions
+alias QuarterX 0.50
+alias QuarterY 0.50
+
+
+### Other aliases used here to help translate the user settings to the Slate commands
+
+# aliases for Screen Edge Margins
+alias sizeX (screenSizeX-${ScreenEdgeLeft}-${ScreenEdgeRight})
+alias sizeY (screenSizeY-${ScreenEdgeUp}-${ScreenEdgeDown})
+
+alias originX screenOriginX+${ScreenEdgeLeft}
+alias originY screenOriginY+${ScreenEdgeUp}
+
+# aliases used for Split Screen Partitions
+alias splitLeft (${sizeX}*${SplitX}-(${PartitionX}/2))
+alias splitRight (${sizeX}*(1-${SplitX})-(${PartitionX}/2))
+alias splitUp (${sizeY}*(1-${SplitY})-(${PartitionY}/2))
+alias splitDown (${sizeY}*${SplitY}-(${PartitionY}/2))
+
+alias rightSplitOrigin ${originX}+${sizeX}*${SplitX}+(${PartitionX}/2)
+alias downSplitOrigin ${originY}+${sizeY}*(1-${SplitY})+(${PartitionY}/2)
+
+# aliases for Quarter Screen Partitions
+alias quarterLeft ${sizeX}*${QuarterX}-(${PartitionX}/2)
+alias quarterRight ${sizeX}*(1-${QuarterX})-(${PartitionX}/2)
+alias quarterUp ${sizeY}*(1-${QuarterY})-(${PartitionY}/2)
+alias quarterDown ${sizeY}*${QuarterY}-(${PartitionY}/2)
+
+alias quarterRightOrigin ${originX}+${sizeX}*${QuarterX}+(${PartitionX}/2)
+alias quarterDownOrigin ${originY}+${sizeY}*(1-${QuarterY})+(${PartitionY}/2)
+
+
+# aliases for Centering, with resizing relative to screen size
+alias centerXoffset ${sizeX}*((1-${centerWidth})/2)
+alias centerYoffset ${sizeY}*((1-${centerHeight})/2)
+
+alias centerOriginX ${originX}+${centerXoffset}
+alias centerOriginY ${originY}+${centerYoffset}
+
+alias centerSizeX ${sizeX}*${centerWidth}
+alias centerSizeY ${sizeY}*${centerHeight}
+
+# settings for SnapBack
+config undoMaxStackSize 0
+config undoOps move,throw
+
+
+### alias definitions to match SizeUp command names
+
+alias Left move ${originX};${originY} ${splitLeft};${sizeY}
+alias Right move ${rightSplitOrigin};${originY} ${splitRight};${sizeY}
+alias Up move ${originX};${originY} ${sizeX};${splitUp}
+alias Down move ${originX};${downSplitOrigin} ${sizeX};${splitDown}
+
+alias UpperLeft move ${originX};${originY} ${quarterLeft};${quarterUp}
+alias UpperRight move ${quarterRightOrigin};${originY} ${quarterRight};${quarterUp}
+alias LowerLeft move ${originX};${quarterDownOrigin} ${quarterLeft};${quarterDown}
+alias LowerRight move ${quarterRightOrigin};${quarterDownOrigin} ${quarterRight};${quarterDown}
+
+alias FullScreen move ${originX};${originY} ${sizeX};${sizeY}
+alias Center move ${centerOriginX};${centerOriginY} ${centerSizeX};${centerSizeY}
+
+alias SnapBack undo
+
+alias PrevMonitor throw previous
+alias NextMonitor throw next
+
+# alias SpacePrev
+# alias SpaceNext
+
+
+### bindings / Shortcuts
+
+bind h:ctrl;alt;cmd ${Left}
+bind l:ctrl;alt;cmd ${Right}
+bind k:ctrl;alt;cmd ${Up}
+bind j:ctrl;alt;cmd ${Down}
+
+bind left:ctrl;alt;cmd  ${Left}
+bind right:ctrl;alt;cmd ${Right}
+bind up:ctrl;alt;cmd    ${Up}
+bind down:ctrl;alt;cmd  ${Down}
+
+bind left:shift;ctrl;alt  ${UpperLeft}
+bind right:shift;ctrl;alt ${UpperRight}
+bind up:shift;ctrl;alt    ${LowerLeft}
+bind down:shift;ctrl;alt  ${LowerRight}
+
+bind m:ctrl;alt;cmd ${FullScreen}
+bind c:ctrl;alt;cmd ${Center}
+
+bind /:ctrl;alt;cmd ${SnapBack}
+
+bind h:ctrl;alt ${PrevMonitor}
+bind l:ctrl;alt ${NextMonitor}
+
+bind left:ctrl;alt  ${PrevMonitor}
+bind right:ctrl;alt ${NextMonitor}
+
+# bind h:ctrl;cmd ${SpacePrev}
+# bind l:ctrl;cmd ${SpaceNext}

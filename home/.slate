@@ -1,0 +1,104 @@
+
+# Slate confuration
+# -------------------------------------------------------------------
+config defaultToCurrentScreen true
+config keyboardLayout "qwerty"
+config nudgePercentOf screenSize
+config resizePercentOf screenSize
+config secondsBeforeRepeat 0.4
+config secondsBetweenRepeat 0.1
+
+
+# create a HYPER key shortcut
+# -------------------------------------------------------------------
+alias hyper ctrl;alt;cmd
+
+
+# Monitor Aliases
+# -------------------------------------------------------------------
+alias monitor-macbook           1680x1050
+alias monitor-monoprice-work    2560x1600
+alias monitor-dell-portrait     1200x1920
+
+
+# Slate Features
+# -------------------------------------------------------------------
+config windowHintsIgnoreHiddenWindows false
+config windowHintsShowIcons true
+config windowHintsSpread true
+bind h:cmd;shift hint ASDFHJKLQWERTYUIOPCVBNG
+
+# Reload slate configuration file
+bind s:${hyper} relaunch
+
+# Mimic SizeUp
+source .sizeup.slate
+
+# Mimic Divvy / setup gird layout
+bind space:cmd;shift grid padding:5 ${monitor-monoprice-work}:6,6 ${monitor-macbook}:6,2 ${monitor-dell-portrait}:2,6
+
+
+# Application Aliases and Bindings
+# -------------------------------------------------------------------
+
+# Application focus
+
+alias editor 'Sublime Text 2'
+bind y:${hyper} focus ${editor}
+
+alias terminal 'iTerm'
+bind i:${hyper} focus ${terminal}
+
+alias browser 'Google Chrome'
+bind g:${hyper} focus ${browser}
+
+
+# Monitor Aliases
+# -------------------------------------------------------------------
+
+# Laptop monitor
+alias macbook-full move screenOriginX;screenOriginY screenSizeX;screenSizeY ${monitor-macbook}
+alias macbook-lefthalf move screenOriginX;screenOriginY screenSizeX/2;screenSizeY ${monitor-macbook}
+alias macbook-righthalf move screenOriginX+screenSizeX/2;screenOriginY screenSizeX/2;screenSizeY ${monitor-macbook}
+alias macbook-leftthird move screenOriginX;screenOriginY screenSizeX/3;screenSizeY ${monitor-macbook}
+alias macbook-righttwothirds move screenOriginX+screenSizeX/3;screenOriginY 2*screenSizeX/3;screenSizeY ${monitor-macbook}
+alias macbook-leftfifth move screenOriginX;screenOriginY screenSizeX/5;screenSizeY ${monitor-macbook}
+alias macbook-rightfourfifths move (screenOriginX+screenSizeX/5)+45;screenOriginY (4*screenSizeX/5)-45;screenSizeY ${monitor-macbook}
+alias macbook-tophalf move screenOriginX;screenOriginY screenSizeX;screenSizeY/2 ${monitor-macbook}
+alias macbook-bottomhalf move screenOriginX;screenOriginY+screenSizeY/2 screenSizeX;screenSizeY/2 ${monitor-macbook}
+
+# Work monitor
+alias monoprice-work-full move screenOriginX;screenOriginY screenSizeX;screenSizeY ${monitor-monoprice-work}
+alias monoprice-work-lefthalf move screenOriginX;screenOriginY screenSizeX/2;screenSizeY ${monitor-monoprice-work}
+alias monoprice-work-righthalf move screenOriginX+screenSizeX/2;screenOriginY screenSizeX/2;screenSizeY ${monitor-monoprice-work}
+alias monoprice-work-leftthird move screenOriginX;screenOriginY screenSizeX/3;screenSizeY ${monitor-monoprice-work}
+alias monoprice-work-righttwothirds move screenOriginX+screenSizeX/3;screenOriginY 2*screenSizeX/3;screenSizeY ${monitor-monoprice-work}
+alias monoprice-work-leftfifth move screenOriginX;screenOriginY screenSizeX/5;screenSizeY ${monitor-monoprice-work}
+alias monoprice-work-rightfourfifths move (screenOriginX+screenSizeX/5)+14;screenOriginY (4*screenSizeX/5)-14;screenSizeY ${monitor-monoprice-work}
+alias monoprice-work-tophalf move screenOriginX;screenOriginY screenSizeX;screenSizeY/2 ${monitor-monoprice-work}
+alias monoprice-work-bottomhalf move screenOriginX;screenOriginY+screenSizeY/2 screenSizeX;screenSizeY/2 ${monitor-monoprice-work}
+
+
+# Two monitor layout
+layout 2monitors ${editor}:MAIN_FIRST ${monoprice-work-lefthalf}
+layout 2monitors ${terminal}:MAIN_FIRST ${macbook-full}
+layout 2monitors ${browser}:REPEAT ${monoprice-work-righthalf}
+
+# Bind a key to trigger this layout
+bind 8:${hyper} layout 2monitors
+
+# Trigger this layout automatically when 2 monitors are present
+default 2monitors resolutions:${monitor-macbook};${monitor-monoprice-work}
+
+
+# One monitor layout
+layout 1monitors ${editor}:MAIN_FIRST ${macbook-lefthalf}
+layout 1monitors ${terminal}:MAIN_FIRST ${macbook-righthalf}
+layout 1monitors ${browser}:REPEAT ${macbook-rightfourfifths}
+
+# Bind a key to trigger this layout
+bind pad/:${hyper} layout 1monitors
+bind /:${hyper} layout 1monitors
+
+# Trigger this layout automatically when 1 monitors are present
+default 1monitors resolutions:${monitor-macbook}
