@@ -6,7 +6,7 @@ if [[ -e $HOME/bin ]] ; then
   export PATH=$HOME/bin:$PATH
 fi
 
-export PATH=$PATH:/usr/local/Cellar/ruby/2.0.0-p247/bin
+export PATH=$(brew --prefix ruby)/bin:$PATH
 
 export EDITOR='nano'
 
