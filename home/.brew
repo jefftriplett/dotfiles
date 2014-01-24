@@ -14,11 +14,13 @@ brew install wget --enable-iri
 
 brew cask install bartender
 brew cask install chicken
+brew cask install coconutbattery
 brew cask install dropbox
 brew cask install gitx-l
 brew cask install google-chrome
 brew cask install handbrake
 brew cask install handbrakebatch
+brew cask install hip-chat
 brew cask install iterm2
 brew cask install picard
 brew cask install reggy
