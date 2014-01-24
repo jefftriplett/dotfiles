@@ -114,9 +114,9 @@ bind up:ctrl;alt;cmd    ${Up}
 bind down:ctrl;alt;cmd  ${Down}
 
 bind left:shift;ctrl;alt  ${UpperLeft}
-bind right:shift;ctrl;alt ${UpperRight}
-bind up:shift;ctrl;alt    ${LowerLeft}
-bind down:shift;ctrl;alt  ${LowerRight}
+bind right:shift;ctrl;alt ${LowerRight}
+bind up:shift;ctrl;alt    ${UpperRight}
+bind down:shift;ctrl;alt  ${LowerLeft}
 
 bind m:ctrl;alt;cmd ${FullScreen}
 bind c:ctrl;alt;cmd ${Center}
