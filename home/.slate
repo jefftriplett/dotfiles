@@ -15,9 +15,11 @@ alias hyper ctrl;alt;cmd
 
 # Monitor Aliases
 # -------------------------------------------------------------------
+alias monitor-imac              1920x1200
 alias monitor-macbook           1680x1050
+alias monitor-monoprice-home    2560x1440
 alias monitor-monoprice-work    2560x1600
-alias monitor-dell-portrait     1200x1920
+alias monitor-portrait          1200x1920
 
 
 # Slate Features
@@ -34,7 +36,7 @@ bind s:${hyper} relaunch
 source .sizeup.slate
 
 # Mimic Divvy / setup gird layout
-bind space:cmd;shift grid padding:5 ${monitor-monoprice-work}:6,6 ${monitor-macbook}:6,2 ${monitor-dell-portrait}:2,6
+bind space:cmd;shift grid padding:5 ${monitor-monoprice-work}:6,6 ${monitor-macbook}:6,2 ${monitor-portrait}:2,6, ${monitor-monoprice-home}:6,2
 
 
 # Application Aliases and Bindings
@@ -57,69 +59,65 @@ bind g:${hyper} focus ${browser}
 
 # Laptop monitor
 alias macbook-full move screenOriginX;screenOriginY screenSizeX;screenSizeY ${monitor-macbook}
-alias macbook-lefthalf move screenOriginX;screenOriginY screenSizeX/2;screenSizeY ${monitor-macbook}
-alias macbook-righthalf move screenOriginX+screenSizeX/2;screenOriginY screenSizeX/2;screenSizeY ${monitor-macbook}
-alias macbook-leftthird move screenOriginX;screenOriginY screenSizeX/3;screenSizeY ${monitor-macbook}
-alias macbook-righttwothirds move screenOriginX+screenSizeX/3;screenOriginY 2*screenSizeX/3;screenSizeY ${monitor-macbook}
-alias macbook-leftfifth move screenOriginX;screenOriginY screenSizeX/5;screenSizeY ${monitor-macbook}
-alias macbook-rightfourfifths move (screenOriginX+screenSizeX/5)+45;screenOriginY (4*screenSizeX/5)-45;screenSizeY ${monitor-macbook}
-alias macbook-tophalf move screenOriginX;screenOriginY screenSizeX;screenSizeY/2 ${monitor-macbook}
-alias macbook-bottomhalf move screenOriginX;screenOriginY+screenSizeY/2 screenSizeX;screenSizeY/2 ${monitor-macbook}
+alias macbook-left-half move screenOriginX;screenOriginY screenSizeX/2;screenSizeY ${monitor-macbook}
+alias macbook-right-half move screenOriginX+screenSizeX/2;screenOriginY screenSizeX/2;screenSizeY ${monitor-macbook}
+alias macbook-left-third move screenOriginX;screenOriginY screenSizeX/3;screenSizeY ${monitor-macbook}
+alias macbook-right-two-thirds move screenOriginX+screenSizeX/3;screenOriginY 2*screenSizeX/3;screenSizeY ${monitor-macbook}
+alias macbook-top-half move screenOriginX;screenOriginY screenSizeX;screenSizeY/2 ${monitor-macbook}
+alias macbook-bottom-half move screenOriginX;screenOriginY+screenSizeY/2 screenSizeX;screenSizeY/2 ${monitor-macbook}
 
 # Work monitor
 alias monoprice-work-full move screenOriginX;screenOriginY screenSizeX;screenSizeY ${monitor-monoprice-work}
-alias monoprice-work-lefthalf move screenOriginX;screenOriginY screenSizeX/2;screenSizeY ${monitor-monoprice-work}
-alias monoprice-work-righthalf move screenOriginX+screenSizeX/2;screenOriginY screenSizeX/2;screenSizeY ${monitor-monoprice-work}
-alias monoprice-work-leftthird move screenOriginX;screenOriginY screenSizeX/3;screenSizeY ${monitor-monoprice-work}
-alias monoprice-work-righttwothirds move screenOriginX+screenSizeX/3;screenOriginY 2*screenSizeX/3;screenSizeY ${monitor-monoprice-work}
-alias monoprice-work-leftfifth move screenOriginX;screenOriginY screenSizeX/5;screenSizeY ${monitor-monoprice-work}
-alias monoprice-work-rightfourfifths move (screenOriginX+screenSizeX/5)+14;screenOriginY (4*screenSizeX/5)-14;screenSizeY ${monitor-monoprice-work}
-alias monoprice-work-tophalf move screenOriginX;screenOriginY screenSizeX;screenSizeY/2 ${monitor-monoprice-work}
-alias monoprice-work-bottomhalf move screenOriginX;screenOriginY+screenSizeY/2 screenSizeX;screenSizeY/2 ${monitor-monoprice-work}
+alias monoprice-work-left-half move screenOriginX;screenOriginY screenSizeX/2;screenSizeY ${monitor-monoprice-work}
+alias monoprice-work-right-half move screenOriginX+screenSizeX/2;screenOriginY screenSizeX/2;screenSizeY ${monitor-monoprice-work}
+alias monoprice-work-left-third move screenOriginX;screenOriginY screenSizeX/3;screenSizeY ${monitor-monoprice-work}
+alias monoprice-work-right-two-thirds move screenOriginX+screenSizeX/3;screenOriginY 2*screenSizeX/3;screenSizeY ${monitor-monoprice-work}
+alias monoprice-work-top-half move screenOriginX;screenOriginY screenSizeX;screenSizeY/2 ${monitor-monoprice-work}
+alias monoprice-work-bottom-half move screenOriginX;screenOriginY+screenSizeY/2 screenSizeX;screenSizeY/2 ${monitor-monoprice-work}
 
 # Portrait monitor
-alias portrait-topthird move screenOriginX;screenOriginY screenSizeX;(screenSizeY/3) ${monitor-dell-portrait}
-alias portrait-middlethird move screenOriginX;(screenOriginY+screenSizeY/3) screenSizeX;screenSizeY/3 ${monitor-dell-portrait}
-alias portrait-bottomthird move screenOriginX;(screenOriginY+(screenSizeY/3)*2) screenSizeX;screenSizeY/3 ${monitor-dell-portrait}
+alias portrait-topthird move screenOriginX;screenOriginY screenSizeX;(screenSizeY/3) ${monitor-portrait}
+alias portrait-middlethird move screenOriginX;(screenOriginY+screenSizeY/3) screenSizeX;screenSizeY/3 ${monitor-portrait}
+alias portrait-bottomthird move screenOriginX;(screenOriginY+(screenSizeY/3)*2) screenSizeX;screenSizeY/3 ${monitor-portrait}
 
 
-# Two monitor layout
+# Two monitor layout (work)
 # -------------------------------------------------------------------
 
-layout 2monitors ${editor}:MAIN_FIRST ${monoprice-work-lefthalf}
-layout 2monitors ${terminal}:MAIN_FIRST ${macbook-full}
-layout 2monitors ${browser}:REPEAT ${monoprice-work-righthalf}
+layout two-monitors-work ${editor}:MAIN_FIRST ${monoprice-work-left-half}
+layout two-monitors-work ${terminal}:MAIN_FIRST ${macbook-full}
+layout two-monitors-work ${browser}:REPEAT ${monoprice-work-right-half}
 
 # Bind a key to trigger this layout
-bind 8:${hyper} layout 2monitors
+bind 8:${hyper} layout two-monitors-work
 
 # Trigger this layout automatically when 2 monitors are present
-default 2monitors resolutions:${monitor-macbook};${monitor-monoprice-work}
+default two-monitors-work resolutions:${monitor-macbook};${monitor-monoprice-work}
 
 
-# One monitor layout
+# One monitor layout (laptop)
 # -------------------------------------------------------------------
 
-layout 1monitors ${editor}:MAIN_FIRST ${macbook-lefthalf}
-layout 1monitors ${terminal}:MAIN_FIRST ${macbook-righthalf}
-layout 1monitors ${browser}:REPEAT ${macbook-rightfourfifths}
+layout one-monitor ${editor}:MAIN_FIRST ${macbook-left-half}
+layout one-monitor ${terminal}:MAIN_FIRST ${macbook-right-half}
+layout one-monitor ${browser}:REPEAT ${macbook-full}
 
 # Bind a key to trigger this layout
-bind 7:${hyper} layout 1monitors
+bind 7:${hyper} layout one-monitor
 
 # Trigger this layout automatically when 1 monitors are present
-default 1monitors resolutions:${monitor-macbook}
+default one-monitor resolutions:${monitor-macbook}
 
 
 # One monitor (portrait mode)
 # -------------------------------------------------------------------
 
-layout 1monitors-portrait ${hipchat}:MAIN_FIRST     ${portrait-topthird}
-layout 1monitors-portrait ${irc}:MAIN_FIRST         ${portrait-middlethird}
-layout 1monitors-portrait ${terminal}:MAIN_FIRST    ${portrait-bottomthird}
+layout one-monitor-portrait ${hipchat}:MAIN_FIRST     ${portrait-topthird}
+layout one-monitor-portrait ${irc}:MAIN_FIRST         ${portrait-middlethird}
+layout one-monitor-portrait ${terminal}:MAIN_FIRST    ${portrait-bottomthird}
 
 # Bind a key to trigger this layout
-bind 9:${hyper} layout 1monitors-portrait
+bind 9:${hyper} layout one-monitor-portrait
 
 # Trigger this layout automatically when 1 monitor in portrait is present
-default 1monitors-portrait resolutions:${monitor-dell-portrait}
+default one-monitor-portrait resolutions:${monitor-portrait}
