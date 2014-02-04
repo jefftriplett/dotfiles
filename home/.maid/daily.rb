@@ -16,6 +16,13 @@ Maid.rules do
         `brew upgrade`
       end
 
+    when 'Jeff-Tripletts-iMac'
+      print "==Jeff-Tripletts-iMac::daily()\n"
+
+      rule 'Update Jeff-Tripletts-iMac' do
+        `brew upgrade`
+      end
+
   end
 
   rule 'Cleanup homebrew' do
