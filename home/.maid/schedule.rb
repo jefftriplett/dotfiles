@@ -1,6 +1,6 @@
 require 'whenever'
 
-every 1.hours do
+every 30.minutes do
   command "maid clean --silent"
 end
 
