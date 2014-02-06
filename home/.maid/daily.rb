@@ -7,15 +7,12 @@ Maid.rules do
 
   hostname = %x/hostname -s/.chomp
   case hostname
-    when 'jeffrey-tripletts-macbook-pro'
-      print "==jeffrey-tripletts-macbook-pro::daily()\n"
-
-    when 'Jeffs-Mac-mini', 'Jeff-Tripletts-iMac'
-      print "==Jeffs-Mac-mini::daily()\n"
-
+    when 'Jeffs-Mac-mini', 'Jeff-Tripletts-iMac', 'TV'
       rule 'Update Jeffs-Mac-mini' do
         `brew upgrade`
       end
+
+    #when 'jeffrey-tripletts-macbook-pro'
 
   end
 

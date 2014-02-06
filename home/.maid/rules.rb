@@ -23,15 +23,18 @@ Maid.rules do
   # inpired by OS name example - https://github.com/mitchty/src/blob/master/dotfiles/maid/rules.rb
   # custom rules based on known machine names
   case %x/hostname -s/.chomp
+
     when 'jeffrey-tripletts-macbook-pro'
-      print "==jeffrey-tripletts-macbook-pro\n"
 
     when 'Jeffs-Mac-mini'
-      print "==Jeffs-Mac-mini\n"
+
+    when 'Jeff-Tripletts-iMac'
+
+    when 'TV'
+
   end
 
   rule 'Collect downloaded videos to watch later' do
-    print "Collect downloaded videos to watch later\n"
 
     move where_content_type(dir('~/Downloads/*'), 'video'), '~/Movies/'
     dir('~/Downloads/*.{mkv,mp4,avi}').each do |path|
