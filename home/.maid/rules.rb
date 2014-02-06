@@ -47,6 +47,10 @@ Maid.rules do
     end
   end
 
+  rule 'Update crontab' do
+    `whenever --update-crontab -f ~/.maid/schedule.rb`
+  end
+
   # NOTE: Currently, only Mac OS X supports `duration_s`.
   #rule 'MP3s likely to be music' do
   #  dir('~/Downloads/*.mp3').each do |path|
