@@ -7,6 +7,7 @@ if [[ -e $HOME/bin ]] ; then
 fi
 
 export PATH=$(brew --prefix ruby)/bin:$PATH
+export PATH=/usr/local/node_modules/.bin:$PATH
 
 export EDITOR='nano'
 
