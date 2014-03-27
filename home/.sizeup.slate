@@ -22,8 +22,8 @@ alias PartitionX 0
 alias PartitionY 0
 
 # settings for Center with resizing relative to screen size
-alias centerWidth 0.75
-alias centerHeight 0.75
+alias centerWidth 0.60
+alias centerHeight 0.60
 
 # Split Screen Partitions
 alias SplitX 0.50
