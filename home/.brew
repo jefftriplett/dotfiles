@@ -12,6 +12,7 @@ brew install gist
 brew install phantomjs
 brew install wget --enable-iri
 
+brew cask install aria2
 brew cask install bartender
 brew cask install bittorrent-sync
 brew cask install charles
