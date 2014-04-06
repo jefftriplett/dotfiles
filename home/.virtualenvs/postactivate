@@ -1,0 +1,10 @@
+#!/bin/bash
+export DJANGO_SETTINGS_MODULE=app.settings
+
+if [ -d "$VIRTUAL_ENV/src" ]; then
+  cd $VIRTUAL_ENV/src
+else
+  cd $VIRTUAL_ENV/src
+fi
+
+#find . -name "*.pyc" -delete 2>&1 > /dev/null
