@@ -12,7 +12,7 @@ export PATH=/usr/local/node_modules/.bin:$PATH
 export EDITOR='nano'
 
 ## i7 gcc / 4.2.1 hack - to fix some odd install errors... ala http://stackoverflow.com/questions/5366882/installing-pil-on-os-x-snow-leopard-w-xcode4-no-ppc-support
-export ARCHFLAGS="-arch x86_64"
+export ARCHFLAGS=-Wno-error=unused-command-line-argument-hard-error-in-future
 
 ## history
 export HISTCONTROL=erasedups
