@@ -1,0 +1,48 @@
+# copied from: https://raw.githubusercontent.com/stinoga/dotfiles/master/.osx
+
+###############################################################################
+# General UI/UX                                                               #
+###############################################################################
+
+# Disable the â€œAre you sure you want to open this application?â€ dialog
+defaults write com.apple.LaunchServices LSQuarantine -bool false
+
+# Donâ€™t display the annoying prompt when quitting iTerm
+defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+
+# Disable Notification Center and remove the menu bar icon
+launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null
+
+###############################################################################
+# Finder                                                                      #
+###############################################################################
+
+# Finder: show all filename extensions
+defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+# Finder: allow text selection in Quick Look
+defaults write com.apple.finder QLEnableTextSelection -bool true
+
+# Show the ~/Library folder
+chflags nohidden ~/Library
+
+# Disable the warning when changing a file extension
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+
+# Empty Trash securely by default
+defaults write com.apple.finder EmptyTrashSecurely -bool false
+
+# Enable the 2D Dock
+defaults write com.apple.dock no-glass -bool true
+
+###############################################################################
+# Dock & hot corners                                                          #
+###############################################################################
+
+# Hot corners
+# Bottom left screen corner â†’ Start screen saver
+defaults write com.apple.dock wvous-bl-corner -int 5
+defaults write com.apple.dock wvous-bl-modifier -int 0
+
+# Disable mission control and spaces, and rejoice
+defaults write com.apple.dock mcx-expose-disabled -bool TRUE
