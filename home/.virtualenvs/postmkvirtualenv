@@ -1,4 +1,2 @@
 #!/bin/bash
 # This hook is run after a new virtualenv is activated.
-mkdir $VIRTUAL_ENV/src
-add2virtualenv $VIRTUAL_ENV/src

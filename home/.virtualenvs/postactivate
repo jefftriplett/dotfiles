@@ -1,9 +1,12 @@
 #!/bin/bash
+
 export DJANGO_SETTINGS_MODULE=app.settings
 
 if [ -d "$VIRTUAL_ENV/src" ]; then
   cd $VIRTUAL_ENV/src
 else
+  mkdir $VIRTUAL_ENV/src
+  add2virtualenv $VIRTUAL_ENV/src
   cd $VIRTUAL_ENV/src
 fi
 
