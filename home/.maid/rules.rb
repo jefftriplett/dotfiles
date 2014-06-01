@@ -9,11 +9,6 @@ Maid.rules do
     `homesick symlink`
   end
 
-  #rule 'Update homebrew' do
-  #  `brew update`
-  #  `brew cleanup`
-  #end
-
   rule 'Torrents' do
     dir('~/Downloads/*.torrent').each do |path|
       move(path, '~/Dropbox/Torrents/')
@@ -35,7 +30,6 @@ Maid.rules do
   end
 
   rule 'Collect downloaded videos to watch later' do
-
     move where_content_type(dir('~/Downloads/*'), 'video'), '~/Movies/'
     dir('~/Downloads/*.{mkv,mp4,avi}').each do |path|
       move(path, '~/Movies/')
