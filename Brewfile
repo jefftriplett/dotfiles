@@ -1,10 +1,6 @@
 update
 upgrade
 
-# add Repositories
-#tap homebrew/versions
-tap phinze/homebrew-cask
-
 # this are needed before the others
 install coreutils
 install sqlite
@@ -12,10 +8,10 @@ install readline
 install wget --enable-iri
 
 # standard apps
-install git
+install caskroom/cask/brew-cask
 install gist
+install git
 install phantomjs
-install brew-cask
 
 # brew-cask applications
 cask install aria2

@@ -2,10 +2,8 @@
 
 brew update
 brew upgrade
-brew tap homebrew/versions
-brew tap phinze/homebrew-cask
 
-brew install brew-cask
+brew install caskroom/cask/brew-cask
 brew install git
 brew install gist
 
