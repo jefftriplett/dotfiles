@@ -29,6 +29,7 @@ cask install handbrakebatch
 cask install hip-chat
 cask install iterm2
 cask install launchrocket
+cask install pyenv
 cask install reggy
 cask install slate
 cask install spotify
