@@ -8,6 +8,7 @@ fi
 
 export PATH=$(brew --prefix ruby)/bin:$PATH
 export PATH=/usr/local/node_modules/.bin:$PATH
+export PATH=~/.local/bin/:$PATH
 
 export EDITOR='nano'
 
