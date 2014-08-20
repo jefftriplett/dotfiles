@@ -8,6 +8,7 @@ There are my personal dotfiles. They are managed using:
 - [Maid][2] "Hazel for hackers" for automating various tasks
 - [Whenever][3] for autmating cron jobs
 - [Slate][5]: a window manager
+- [PIP][6]: The PyPA recommended tool for installing and managing Python packages.
 
 Installation
 ------------
@@ -18,6 +19,8 @@ Installation
     homesick symlink
 
     maid clean
+
+    pip install -r -U requirements.txt
 
 Inspiration
 -----------
@@ -30,3 +33,4 @@ Inspiration
 [3]: https://github.com/javan/whenever
 [4]: http://brew.sh/
 [5]: https://github.com/jigish/slate
+[6]: https://pip.pypa.io/en/latest/
