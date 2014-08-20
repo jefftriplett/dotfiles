@@ -1,0 +1,9 @@
+docopt
+mercurial
+pip
+pipsi
+setuptools
+virtualenv
+virtualenvwrapper
+virtualenv-clone
+venv-dependencies
