@@ -30,19 +30,19 @@ Maid.rules do
     when 'Darwin'
       rule '/Library/Caches/Homebrew/' do
         dir('/Library/Caches/Homebrew/*.tar.*').each do |path|
-          trash path if File.mtime(path) < THREE_MONTHS_AGO
+          trash path if File.mtime(path) > THREE_MONTHS_AGO
         end
         dir('/Library/Caches/Homebrew/*.tgz').each do |path|
-          trash path if File.mtime(path) < THREE_MONTHS_AGO
+          trash path if File.mtime(path) > THREE_MONTHS_AGO
         end
         dir('/Library/Caches/Homebrew/*.tbz').each do |path|
-          trash path if File.mtime(path) < THREE_MONTHS_AGO
+          trash path if File.mtime(path) > THREE_MONTHS_AGO
         end
       end
 
       rule '~/Library/Caches' do
         dir('~/Library/Caches/Google/Chrome/Default/Cache/*').each do |path|
-          trash path if File.mtime(path) < THREE_MONTHS_AGO
+          trash path if File.mtime(path) > THREE_MONTHS_AGO
         end
       end
 
