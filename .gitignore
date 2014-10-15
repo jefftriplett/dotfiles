@@ -23,3 +23,5 @@ Temporary Items
 # Mine
 *.lock
 *.log
+
+home/.maid/*.log.[0-9]
