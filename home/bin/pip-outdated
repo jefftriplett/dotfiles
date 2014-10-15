@@ -24,6 +24,7 @@ import pip
 import shelve
 import sys
 import tempfile
+import click
 
 try:
     import xmlrpc.client as xmlrpclib
@@ -35,7 +36,7 @@ from docopt import docopt
 
 __version__ = (0, 1, 0)
 
-
+version='.'.join(map(str, __version__))
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.DEBUG, format='%(message)s')
 
@@ -55,6 +56,11 @@ def setup_logging(verbose):
     logging.basicConfig(level=level, format='%(message)s')
 
 
+@click.command()
+@click.option('--clear/--no-clear', default=False, is_flag=True, help='Clears the update cache.')
+@click.option('--ignored', default=None, help='Packages to ignore.')
+@click.option('--upgrade', default=False, is_flag=True, help='Requirements.txt upgrade friendly output.')
+@click.version_option(version=version)
 def main(upgrade=False, clear=False, ignored=False):
     ignored_libraries = os.environ.get('PIP_IGNORE_VERSIONS', '')
     cached_filename = os.environ.get('PIP_OUTDATED_CACHE', os.path.join(tempfile.gettempdir(), 'pip-outdated-cache'))
@@ -153,6 +159,4 @@ def main(upgrade=False, clear=False, ignored=False):
 
 
 if __name__ == '__main__':
-    arguments = docopt(__doc__, version='.'.join(map(str, __version__)))
-    main(upgrade=arguments['--upgrade'], clear=arguments['--clear'],
-         ignored=arguments['--ignored'])
+    main()
