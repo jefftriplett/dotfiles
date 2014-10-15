@@ -13,6 +13,7 @@ install gist
 install git
 install phantomjs
 install sshrc
+install chrome-cli
 
 # brew-cask applications
 cask install aria2
