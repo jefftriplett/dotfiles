@@ -1,0 +1,59 @@
+[user]
+	email = jeff.triplett@gmail.com
+	name = Jeff Triplett
+
+[github]
+    user = jefftriplett
+
+[alias]
+    st = status
+    d = diff
+    ci = commit -v
+    cia = commit -v -a
+    lm = log master..
+    co = checkout
+    cp = cherry-pick
+    l = log --graph --topo-order --decorate --first-parent
+    lc = log ORIG_HEAD.. --stat --no-merges
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s - %C(yellow)%aN%Creset %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
+    ll = log -p
+    llt = log -p trunk..
+    lt = log trunk..
+    llm = log -p master..
+    b = branch
+
+[apply]
+    whitespace = fix
+
+[branch]
+    autosetuprebase = always
+
+[color]
+    diff = auto
+    branch = auto
+    status = auto
+	ui = true
+
+[core]
+	excludesfile = /Users/jefftriplett/.gitignore
+    editor = nano
+    #editor = subl
+    rebase = true
+
+[diff]
+    renames = true
+
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path =
+
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+
+[mergetool]
+	keepBackup = true
+
+[push]
+	default = tracking
+    #default = simple

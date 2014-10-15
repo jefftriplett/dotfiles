@@ -12,6 +12,7 @@ install caskroom/cask/brew-cask
 install gist
 install git
 install phantomjs
+install sshrc
 
 # brew-cask applications
 cask install aria2
