@@ -40,6 +40,7 @@
         "pyenv-virtualenvwrapper",
         "rbenv",
         "readline",
+        "ruby-build",
         "sqlite",
         "sshrc",
         "wget --enable-iri"
