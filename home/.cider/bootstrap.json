@@ -9,7 +9,6 @@
         "brew update"
     ],
     "casks": [
-        "aria2c",
         "arq",
         "bartender",
         "bittorrent-sync",
@@ -39,6 +38,7 @@
         "xquartz"
     ],
     "formulas": [
+        "aria2",
         "brew-cask",
         "ccache",
         "chrome-cli",
