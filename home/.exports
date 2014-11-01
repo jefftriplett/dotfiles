@@ -23,13 +23,10 @@ export HISTSIZE=10000
 export PYENV_ROOT=/usr/local/opt/pyenv
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 
-#pyenv virtualenvwrapper
-pyenv virtualenvwrapper_lazy
-
 ## pip settings
 export PIP_DOWNLOAD_CACHE=/tmp/.pip/download_cache
-export PIP_REQUIRE_VIRTUALENV=true
-export PIP_RESPECT_VIRTUALENV=true
+export PIP_REQUIRE_VIRTUALENV="true"
+export PIP_RESPECT_VIRTUALENV="true"
 #export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
 
 # rbenv settings
