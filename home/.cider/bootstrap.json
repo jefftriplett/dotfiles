@@ -9,7 +9,7 @@
         "brew update"
     ],
     "casks": [
-        "aria2",
+        "aria2c",
         "arq",
         "bartender",
         "bittorrent-sync",
