@@ -1,42 +1,12 @@
 {
-    "before-scripts": [
-        "brew update"
-    ],
     "after-scripts": [
         "brew cleanup",
         "brew cask cleanup",
         "launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null",
         "chflags nohidden ~/Library"
     ],
-    "taps": [
-        "caskroom/cask",
-        "caskroom/versions",
-        "homebrew/binary",
-        "homebrew/dupes",
-        "homebrew/games",
-        "homebrew/headonly",
-        "homebrew/python",
-        "homebrew/science",
-        "homebrew/versions",
-        "jimbojsb/launchrocket",
-        "nwoolls/cryptocoin",
-        "watsonbox/cmu-sphinx"
-    ],
-    "formulas": [
-        "coreutils",
-        "sqlite",
-        "readline",
-        "wget --enable-iri",
-        "caskroom/cask/brew-cask",
-        "chrome-cli",
-        "gist",
-        "git",
-        "pyenv",
-        "pyenv-ccache",
-        "pyenv-pip-rehash",
-        "pyenv-virtualenv",
-        "pyenv-virtualenvwrapper",
-        "sshrc"
+    "before-scripts": [
+        "brew update"
     ],
     "casks": [
         "arq",
@@ -57,6 +27,23 @@
         "xld",
         "xquartz"
     ],
+    "formulas": [
+        "brew-cask",
+        "chrome-cli",
+        "coreutils",
+        "gist",
+        "git",
+        "pyenv",
+        "pyenv-ccache",
+        "pyenv-pip-rehash",
+        "pyenv-virtualenv",
+        "pyenv-virtualenvwrapper",
+        "rbenv",
+        "readline",
+        "sqlite",
+        "sshrc",
+        "wget --enable-iri"
+    ],
     "ignored_casks": [
         "hazel",
         "phantomjs",
@@ -65,5 +52,19 @@
         "usb-overdrive",
         "vagrant",
         "virtualbox"
+    ],
+    "taps": [
+        "caskroom/cask",
+        "caskroom/versions",
+        "homebrew/binary",
+        "homebrew/dupes",
+        "homebrew/games",
+        "homebrew/headonly",
+        "homebrew/python",
+        "homebrew/science",
+        "homebrew/versions",
+        "jimbojsb/launchrocket",
+        "nwoolls/cryptocoin",
+        "watsonbox/cmu-sphinx"
     ]
 }
