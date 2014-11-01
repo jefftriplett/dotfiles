@@ -20,11 +20,8 @@ export HISTCONTROL=erasedups
 export HISTSIZE=10000
 
 ## pyenv settings
-export PYENV_ROOT="$HOME/.pyenv"
-export PATH="$PYENV_ROOT/bin:$PATH"
+export PYENV_ROOT=/usr/local/opt/pyenv
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
-if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
 
 #pyenv virtualenvwrapper
 pyenv virtualenvwrapper_lazy
@@ -34,3 +31,6 @@ export PIP_DOWNLOAD_CACHE=/tmp/.pip/download_cache
 export PIP_REQUIRE_VIRTUALENV=true
 export PIP_RESPECT_VIRTUALENV=true
 #export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
+
+# rbenv settings
+export RBENV_ROOT=/usr/local/var/rbenv
