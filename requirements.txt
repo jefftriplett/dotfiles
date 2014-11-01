@@ -7,7 +7,9 @@ virtualenv
 virtualenv-clone
 virtualenvwrapper
 
-# these may be inswtalled via pipsi
-cider
+# utility libraries
 click
 docopt
+
+# these may be installed via pipsi
+cider
