@@ -1,0 +1,69 @@
+{
+    "before-scripts": [
+        "brew update"
+    ],
+    "after-scripts": [
+        "brew cleanup",
+        "brew cask cleanup",
+        "launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null",
+        "chflags nohidden ~/Library"
+    ],
+    "taps": [
+        "caskroom/cask",
+        "caskroom/versions",
+        "homebrew/binary",
+        "homebrew/dupes",
+        "homebrew/games",
+        "homebrew/headonly",
+        "homebrew/python",
+        "homebrew/science",
+        "homebrew/versions",
+        "jimbojsb/launchrocket",
+        "nwoolls/cryptocoin",
+        "watsonbox/cmu-sphinx"
+    ],
+    "formulas": [
+        "coreutils",
+        "sqlite",
+        "readline",
+        "wget --enable-iri",
+        "caskroom/cask/brew-cask",
+        "chrome-cli",
+        "gist",
+        "git",
+        "pyenv",
+        "pyenv-ccache",
+        "pyenv-pip-rehash",
+        "pyenv-virtualenv",
+        "pyenv-virtualenvwrapper",
+        "sshrc"
+    ],
+    "casks": [
+        "arq",
+        "bittorrent-sync",
+        "calibre",
+        "chicken",
+        "gitx-l",
+        "handbrake",
+        "handbrakebatch",
+        "iterm2",
+        "java",
+        "launchrocket",
+        "mactex",
+        "reggy",
+        "skype",
+        "slate",
+        "vlc",
+        "xld",
+        "xquartz"
+    ],
+    "ignored_casks": [
+        "hazel",
+        "phantomjs",
+        "torbrowser",
+        "transmission",
+        "usb-overdrive",
+        "vagrant",
+        "virtualbox"
+    ]
+}

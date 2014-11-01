@@ -1,9 +1,13 @@
-docopt
 mercurial
 pip
 pipsi
 setuptools
-virtualenv
-virtualenvwrapper
-virtualenv-clone
 venv-dependencies
+virtualenv
+virtualenv-clone
+virtualenvwrapper
+
+# these may be inswtalled via pipsi
+cider
+click
+docopt
