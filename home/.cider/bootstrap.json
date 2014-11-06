@@ -55,6 +55,7 @@
         "rbenv",
         "readline",
         "ruby-build",
+        "sudolikeaboss",
         "sqlite",
         "sshrc",
         "wget --enable-iri"
@@ -80,6 +81,7 @@
         "homebrew/versions",
         "jimbojsb/launchrocket",
         "nwoolls/cryptocoin",
+        "ravenac95/sudolikeaboss",
         "watsonbox/cmu-sphinx"
     ]
 }
