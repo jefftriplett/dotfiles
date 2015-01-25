@@ -3,6 +3,7 @@ Maid.rules do
 
   rule 'Update homebrew' do
     `brew update`
+    `brew cask update`
   end
 
   hostname = %x/hostname -s/.chomp
@@ -18,6 +19,7 @@ Maid.rules do
 
   rule 'Cleanup homebrew' do
     `brew cleanup`
+    `brew cask cleanup`
   end
 
 end
