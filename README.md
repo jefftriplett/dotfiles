@@ -30,7 +30,7 @@ Installation
     # install system level python libraries and tools (as few as possible)
     pip install -r -U requirements.txt
 
-    # install isolated python apps
+    # install isolated python apps (see `requirements-pipsi.txt` for more)
     pipsi install cider
 
     # homebrew install all the things
