@@ -10,6 +10,3 @@ virtualenvwrapper
 # utility libraries
 click
 docopt
-
-# these may be installed via pipsi
-cider
