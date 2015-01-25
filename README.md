@@ -9,8 +9,8 @@ There are my personal dotfiles. They are managed using:
 - [Maid][2] "Hazel for hackers" for automating various tasks
 - [Whenever][3] for autmating cron jobs
 - [Slate][5]: a window manager
-- [PIP][6]: The PyPA recommended tool for installing and managing Python packages.
-- [PIPSI][8]: pip script installer. pipsi is a nice tool for Python tools which need to be installed system wide.
+- [pip][6]: The PyPA recommended tool for installing and managing Python packages.
+- [pipsi][8]: pip script installer. pipsi is a nice tool for Python tools which need to be installed system wide.
 
 Installation
 ------------
