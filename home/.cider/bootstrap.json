@@ -6,7 +6,8 @@
         "chflags nohidden ~/Library"
     ],
     "before-scripts": [
-        "brew update"
+        "brew update",
+        "brew cask update"
     ],
     "casks": [
         "arq",
@@ -47,6 +48,8 @@
         "coreutils",
         "gist",
         "git",
+        "gpg",
+        "keybase",
         "phantomjs",
         "pyenv",
         "pyenv-ccache",
@@ -56,9 +59,9 @@
         "rbenv",
         "readline",
         "ruby-build",
-        "sudolikeaboss",
         "sqlite",
         "sshrc",
+        "sudolikeaboss",
         "wget --enable-iri"
     ],
     "ignored_casks": [
