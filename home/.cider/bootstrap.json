@@ -41,7 +41,7 @@
     ],
     "formulas": [
         "aria2",
-        "brew-cask",
+        "caskroom/cask/brew-cask",
         "ccache",
         "chrome-cli",
         "coreutils",
@@ -74,7 +74,6 @@
         "virtualbox"
     ],
     "taps": [
-        "caskroom/cask",
         "caskroom/versions",
         "homebrew/binary",
         "homebrew/dupes",
