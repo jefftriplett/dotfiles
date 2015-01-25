@@ -17,7 +17,6 @@
         "chicken",
         "cleanmymac",
         "coconutbattery",
-        "gitx-l",
         "google-chrome",
         "google-hangouts",
         "handbrake",
@@ -65,6 +64,7 @@
         "wget --enable-iri"
     ],
     "ignored_casks": [
+        "gitx-l",
         "hazel",
         "phantomjs",
         "torbrowser",
