@@ -1,2 +1,3 @@
 alias dokku="ssh -t root@cog.gs dokku"
 alias gist="gist -p"
+alias nw="/Users/jefftriplett/node_modules/nwjs/nwjs.app/Contents/MacOS/nwjs"
