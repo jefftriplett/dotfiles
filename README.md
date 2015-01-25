@@ -28,6 +28,12 @@ Inspiration
 - https://github.com/JohnColvin/.maid/blob/master/rules.rb
 - https://github.com/mitchty/src/blob/master/dotfiles/maid/rules.rb
 
+Terminal theme
+--------------
+
+- https://github.com/mdo/ocean-terminal
+
+
 [1]: https://github.com/technicalpickles/homesick
 [2]: https://github.com/benjaminoakes/maid
 [3]: https://github.com/javan/whenever
