@@ -1,0 +1,7 @@
+cider
+httpie
+mackup
+openconnect-helper
+pgcli
+pythonpy
+url2markdown-cli
