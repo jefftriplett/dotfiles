@@ -1,6 +1,12 @@
 
-PATH=/usr/local/bin:/usr/local/sbin:/usr/local/share/npm/bin:$PATH
+PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export PATH
+
+## node
+export PATH=$PATH:/usr/local/share/npm/bin
+
+## basher
+export PATH="$HOME/.basher/bin:$PATH"
 
 if [[ -e $HOME/bin ]] ; then
   export PATH=$HOME/bin:$PATH
