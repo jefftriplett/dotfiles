@@ -57,3 +57,5 @@
 [push]
 	default = tracking
     #default = simple
+[rerere]
+	enabled = true
