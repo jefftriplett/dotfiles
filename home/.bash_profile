@@ -46,3 +46,6 @@ complete -o default -F _pip_completion pip
 
 ssh-add ~/.ssh/id_rsa
 ssh-add ~/.ssh/id_dsa
+
+### Added by the Heroku Toolbelt
+export PATH="/usr/local/heroku/bin:$PATH"
