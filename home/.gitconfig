@@ -21,6 +21,7 @@
     lt = log trunk..
     llm = log -p master..
     b = branch
+    undo = reset --soft HEAD^
 
 [apply]
     whitespace = fix
