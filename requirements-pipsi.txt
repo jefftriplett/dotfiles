@@ -1,7 +1,12 @@
 cider
+cookiecutter
 httpie
+itermocil
 mackup
+mercurial
 openconnect-helper
+osx-openconnect-helper
 pgcli
 pythonpy
+tvnamer
 url2markdown-cli
