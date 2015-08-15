@@ -1,0 +1,21 @@
+windows:
+  - name: sendout-four-panes
+    root: /Users/jefftriplett/.virtualenvs/sendoutcards/src
+    layout: tiled
+    panes:
+      - commands:
+        - workon sendoutcards
+        - cd newsoc/
+        - vagrant up
+        - vagrant ssh
+        focus: true
+      - commands:
+        - workon sendoutcards
+        - cd newsoc/
+        - vagrant ssh
+      - commands:
+        - workon sendoutcards
+        - cd newsoc/
+      - commands:
+        - workon sendoutcards
+        - cd newsoc/
