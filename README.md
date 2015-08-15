@@ -28,7 +28,7 @@ Installation
     maid clean
 
     # install system level python libraries and tools (as few as possible)
-    pip install -r -U requirements.txt
+    pip install -U -r requirements.txt
 
     # install isolated python apps (see `requirements-pipsi.txt` for more)
     pipsi install cider
