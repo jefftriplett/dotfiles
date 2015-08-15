@@ -11,11 +11,13 @@ config secondsBetweenRepeat 0.1
 # create a HYPER key shortcut
 # -------------------------------------------------------------------
 alias hyper ctrl;alt;cmd
+alias meta cmd;shift
 
 
 # Monitor Aliases
 # -------------------------------------------------------------------
 alias monitor-imac              1920x1200
+alias monitor-ipad-mini         1024x768
 alias monitor-macbook           1680x1050
 alias monitor-monoprice-home    2560x1440
 alias monitor-monoprice-work    2560x1600
@@ -27,7 +29,7 @@ alias monitor-portrait          1200x1920
 config windowHintsIgnoreHiddenWindows false
 config windowHintsShowIcons true
 config windowHintsSpread true
-bind h:cmd;shift hint ASDFHJKLQWERTYUIOPCVBNG
+bind h:${meta} hint ASDFHJKLQWERTYUIOPCVBNG
 
 # Reload slate configuration file
 bind s:${hyper} relaunch
@@ -36,22 +38,23 @@ bind s:${hyper} relaunch
 source .slate.sizeup
 
 # Mimic Divvy / setup gird layout
-bind space:cmd;shift grid padding:5 ${monitor-monoprice-work}:6,6 ${monitor-macbook}:6,2 ${monitor-portrait}:2,6 ${monitor-monoprice-home}:6,2 ${monitor-imac}:6,2
+bind space:${meta} grid padding:5 ${monitor-imac}:6,2 ${monitor-ipad-mini}:3,2 ${monitor-macbook}:6,2 ${monitor-monoprice-home}:6,2 ${monitor-monoprice-work}:6,6 ${monitor-portrait}:2,6
 
 
 # Application Aliases and Bindings
 # -------------------------------------------------------------------
 
 alias browser 'Google Chrome'
-alias editor 'Sublime Text 2'
+alias editor 'Sublime Text'
 alias hipchat 'HipChat'
 alias irc 'Textual'
+alias slack 'Slack'
 alias terminal 'iTerm'
 
 # Application focus
-bind y:${hyper} focus ${editor}
-bind i:${hyper} focus ${terminal}
 bind g:${hyper} focus ${browser}
+bind i:${hyper} focus ${terminal}
+bind y:${hyper} focus ${editor}
 
 
 # Monitor Position Aliases
@@ -112,7 +115,7 @@ default one-monitor resolutions:${monitor-macbook}
 # One monitor (portrait mode)
 # -------------------------------------------------------------------
 
-layout one-monitor-portrait ${hipchat}:MAIN_FIRST     ${portrait-topthird}
+layout one-monitor-portrait ${slack}:MAIN_FIRST       ${portrait-topthird}
 layout one-monitor-portrait ${irc}:MAIN_FIRST         ${portrait-middlethird}
 layout one-monitor-portrait ${terminal}:MAIN_FIRST    ${portrait-bottomthird}
 
