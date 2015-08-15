@@ -47,5 +47,8 @@ complete -o default -F _pip_completion pip
 ssh-add ~/.ssh/id_rsa
 ssh-add ~/.ssh/id_dsa
 
+## itermocil autocompletion
+complete -W "$(itermocil --list)" itermocil
+
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
