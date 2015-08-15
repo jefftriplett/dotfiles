@@ -6,7 +6,3 @@ venv-dependencies
 virtualenv
 virtualenv-clone
 virtualenvwrapper
-
-# utility libraries
-click
-docopt
