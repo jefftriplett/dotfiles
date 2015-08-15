@@ -26,9 +26,12 @@ export HISTCONTROL=erasedups
 export HISTSIZE=10000
 
 ## pyenv settings
-export PYENV_ROOT=/usr/local/opt/pyenv
+# export PYENV_ROOT=/usr/local/opt/pyenv
+export PYENV_ROOT=$HOME/.pyenv
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-export PYENV_VIRTUALENVWRAPPER_PYENV_VERSION="2.7.9"
+# export PYENV_VIRTUALENVWRAPPER_PYENV_VERSION="2.7.10"
+
+export PATH=$PYENV_ROOT/bin:$PATH
 
 ## pip settings
 export PIP_DOWNLOAD_CACHE=/tmp/.pip/download_cache
