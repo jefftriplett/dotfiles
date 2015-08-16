@@ -43,7 +43,6 @@ bind space:${meta} grid padding:5 ${monitor-imac}:6,2 ${monitor-ipad-mini}:3,2 $
 
 # Application Aliases and Bindings
 # -------------------------------------------------------------------
-
 alias browser 'Google Chrome'
 alias editor 'Sublime Text'
 alias hipchat 'HipChat'
@@ -86,7 +85,6 @@ alias portrait-bottomthird move screenOriginX;(screenOriginY+(screenSizeY/3)*2) 
 
 # Two monitor layout (work)
 # -------------------------------------------------------------------
-
 layout two-monitors-work ${editor}:MAIN_FIRST ${monoprice-work-left-half}
 layout two-monitors-work ${terminal}:MAIN_FIRST ${macbook-full}
 layout two-monitors-work ${browser}:REPEAT ${monoprice-work-right-half}
@@ -100,7 +98,6 @@ default two-monitors-work resolutions:${monitor-macbook};${monitor-monoprice-wor
 
 # One monitor layout (laptop)
 # -------------------------------------------------------------------
-
 layout one-monitor ${editor}:MAIN_FIRST ${macbook-left-half}
 layout one-monitor ${terminal}:MAIN_FIRST ${macbook-right-half}
 layout one-monitor ${browser}:REPEAT ${macbook-full}
@@ -114,7 +111,6 @@ default one-monitor resolutions:${monitor-macbook}
 
 # One monitor (portrait mode)
 # -------------------------------------------------------------------
-
 layout one-monitor-portrait ${slack}:MAIN_FIRST       ${portrait-topthird}
 layout one-monitor-portrait ${irc}:MAIN_FIRST         ${portrait-middlethird}
 layout one-monitor-portrait ${terminal}:MAIN_FIRST    ${portrait-bottomthird}
