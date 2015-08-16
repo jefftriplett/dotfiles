@@ -19,10 +19,10 @@ alias meta cmd;shift
 alias monitor-imac              1920x1200
 alias monitor-ipad-mini         1024x768
 alias monitor-macbook           1680x1050
+alias monitor-macbook-retina    1440x900
 alias monitor-monoprice-home    2560x1440
 alias monitor-monoprice-work    2560x1600
 alias monitor-portrait          1200x1920
-
 
 # Slate Features
 # -------------------------------------------------------------------
@@ -38,7 +38,7 @@ bind s:${hyper} relaunch
 source .slate.sizeup
 
 # Mimic Divvy / setup gird layout
-bind space:${meta} grid padding:5 ${monitor-imac}:6,2 ${monitor-ipad-mini}:3,2 ${monitor-macbook}:6,2 ${monitor-monoprice-home}:6,2 ${monitor-monoprice-work}:6,6 ${monitor-portrait}:2,6
+bind space:${meta} grid padding:5 ${monitor-imac}:6,2 ${monitor-ipad-mini}:3,2 ${monitor-macbook}:6,2 ${monitor-macbook-retina}:6,2 ${monitor-monoprice-home}:6,2 ${monitor-monoprice-work}:6,6 ${monitor-portrait}:2,6
 
 
 # Application Aliases and Bindings
