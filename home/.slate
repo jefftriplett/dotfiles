@@ -38,7 +38,7 @@ bind s:${hyper} relaunch
 source .slate.sizeup
 
 # Mimic Divvy / setup gird layout
-bind space:${meta} grid padding:5 ${monitor-imac}:6,2 ${monitor-ipad-mini}:3,2 ${monitor-macbook}:6,2 ${monitor-macbook-retina}:6,2 ${monitor-monoprice-home}:6,2 ${monitor-monoprice-work}:6,6 ${monitor-portrait}:2,6
+bind space:${meta} grid padding:5 ${monitor-imac}:6,4 ${monitor-ipad-mini}:3,2 ${monitor-macbook}:6,4 ${monitor-macbook-retina}:6,4 ${monitor-monoprice-home}:6,4 ${monitor-monoprice-work}:6,6 ${monitor-portrait}:2,6
 
 
 # Application Aliases and Bindings
