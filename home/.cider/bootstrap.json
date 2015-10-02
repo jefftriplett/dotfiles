@@ -17,6 +17,9 @@
         "chicken",
         "cleanmymac",
         "coconutbattery",
+        "font-hack",
+        "font-ubuntu",
+        "font-ubuntu-mono-powerline"
         "google-chrome",
         "google-hangouts",
         "handbrake",
@@ -49,6 +52,7 @@
         "coreutils",
         "gist",
         "git",
+        "gotty",
         "gpg",
         "keybase",
         "phantomjs",
@@ -76,6 +80,7 @@
         "virtualbox"
     ],
     "taps": [
+        "caskroom/fonts",
         "caskroom/versions",
         "homebrew/binary",
         "homebrew/dupes",
@@ -88,5 +93,6 @@
         "nwoolls/cryptocoin",
         "ravenac95/sudolikeaboss",
         "watsonbox/cmu-sphinx"
+        "yudai/gotty",
     ]
 }
