@@ -44,3 +44,7 @@ export PIP_RESPECT_VIRTUALENV="true"
 
 # rbenv settings
 export RBENV_ROOT=/usr/local/var/rbenv
+
+export DEV_HOME="$HOME/dev/arcanist/bin"
+export PATH="$DEV_HOME:$PATH"
+source $HOME/dev/arcanist/resources/shell/bash-completion
