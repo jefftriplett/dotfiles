@@ -19,7 +19,7 @@
         "coconutbattery",
         "font-hack",
         "font-ubuntu",
-        "font-ubuntu-mono-powerline"
+        "font-ubuntu-mono-powerline",
         "google-chrome",
         "google-hangouts",
         "handbrake",
@@ -94,7 +94,7 @@
         "jimbojsb/launchrocket",
         "nwoolls/cryptocoin",
         "ravenac95/sudolikeaboss",
-        "watsonbox/cmu-sphinx"
-        "yudai/gotty",
+        "watsonbox/cmu-sphinx",
+        "yudai/gotty"
     ]
 }
