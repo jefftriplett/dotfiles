@@ -3,14 +3,14 @@ My Dotfiles
 
 There are my personal dotfiles. They are managed using:
 
-- [Homebrew][4] for OS X package management
 - [cider][7]: Hassle-free bootstrapping using Homebrew. cider is pip/gem tool for Homebrew
+- [Homebrew][4] for OS X package management
 - [Homesick][1] for managing dotfiles
 - [Maid][2] "Hazel for hackers" for automating various tasks
-- [Whenever][3] for autmating cron jobs
-- [Slate][5]: a window manager
 - [pip][6]: The PyPA recommended tool for installing and managing Python packages.
 - [pipsi][8]: pip script installer. pipsi is a nice tool for Python tools which need to be installed system wide.
+- [Slate][5]: a window manager
+- [Whenever][3] for automating cron jobs
 
 Installation
 ------------
