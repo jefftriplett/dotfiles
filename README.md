@@ -31,6 +31,7 @@ Installation
     brew install pyenv
 
     # install pyenv plugins
+    git clone https://github.com/yyuu/pyenv-ccache.git ~/.pyenv/plugins/pyenv-ccache
     git clone https://github.com/yyuu/pyenv-doctor.git ~/.pyenv/plugins/pyenv-doctor
     git clone https://github.com/yyuu/pyenv-update.git ~/.pyenv/plugins/pyenv-update
     git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
