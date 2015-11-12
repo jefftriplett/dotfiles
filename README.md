@@ -27,13 +27,22 @@ Installation
     # cleans up my desktop, trash, etc
     maid clean
 
-    # install pyenv (via homebrew)
-    brew install pyenv pyenv-virtualenv pyenv-virtualenvwrapper
+    # install pyenv (via Homebrew)
+    brew install pyenv
+
+    # install pyenv plugins
+    git clone https://github.com/yyuu/pyenv-doctor.git ~/.pyenv/plugins/pyenv-doctor
+    git clone https://github.com/yyuu/pyenv-update.git ~/.pyenv/plugins/pyenv-update
+    git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
+    git clone https://github.com/yyuu/pyenv-virtualenvwrapper.git ~/.pyenv/plugins/pyenv-virtualenvwrapper
+    git clone https://github.com/yyuu/pyenv-which-ext.git ~/.pyenv/plugins/pyenv-which-ext
 
     # pyenv setup; switch default to 2.7.x; install py3
+    pyenv update
     pyenv install 2.7.10
     pyenv global 2.7.10
     pyenv install 3.4.3
+    pyenv install 3.5.0
 
     # install system level python libraries and tools (as few as possible)
     pip install -U -r requirements.txt
