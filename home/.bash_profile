@@ -16,25 +16,26 @@ done
 ## history
 shopt -s histappend
 
-# pyenv
-if which pyenv > /dev/null; then
-    eval "$(pyenv init -)";
-fi
-
-if which pyenv-virtualenv-init > /dev/null; then
-    eval "$(pyenv virtualenv-init -)";
-fi
-
-pyenv virtualenvwrapper_lazy
-
 # rbenv
 if which rbenv > /dev/null; then
     eval "$(rbenv init -)";
 fi
 
-## virtualenv/pip
+# python settings
 
-# pip bash completion start
+# pyenv settings
+if which pyenv > /dev/null; then
+    eval "$(pyenv init -)";
+fi
+
+# if which pyenv-virtualenv-init > /dev/null; then
+#     eval "$(pyenv virtualenv-init -)";
+# fi
+
+# pyenv virtualenvwrapper
+pyenv virtualenvwrapper_lazy
+
+## pip bash completion start
 _pip_completion()
 {
     COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
@@ -42,13 +43,13 @@ _pip_completion()
                    PIP_AUTO_COMPLETE=1 $1 ) )
 }
 complete -o default -F _pip_completion pip
-# pip bash completion end
+## pip bash completion end
 
-ssh-add ~/.ssh/id_rsa
-ssh-add ~/.ssh/id_dsa
+# python settings end
+
+# add ssh keys
+ssh-add ~/.ssh/id_rsa &> /dev/null
+ssh-add ~/.ssh/id_dsa &> /dev/null
 
 ## itermocil autocompletion
 complete -W "$(itermocil --list)" itermocil
-
-### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
