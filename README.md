@@ -30,9 +30,10 @@ Installation
     # install pyenv (via Homebrew)
     brew install pyenv
 
-    # install pyenv plugins
+    # install pyenv plugins    
     git clone https://github.com/yyuu/pyenv-ccache.git ~/.pyenv/plugins/pyenv-ccache
     git clone https://github.com/yyuu/pyenv-doctor.git ~/.pyenv/plugins/pyenv-doctor
+    git clone https://github.com/yyuu/pyenv-pip-migrate.git ~/.pyenv/plugins/pyenv-pip-migrate
     git clone https://github.com/yyuu/pyenv-update.git ~/.pyenv/plugins/pyenv-update
     git clone https://github.com/yyuu/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv
     git clone https://github.com/yyuu/pyenv-virtualenvwrapper.git ~/.pyenv/plugins/pyenv-virtualenvwrapper
