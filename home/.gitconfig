@@ -36,7 +36,7 @@
 	ui = true
 
 [core]
-	excludesfile = /Users/jefftriplett/.gitignore
+	excludesfile = ~/.gitignore
     editor = nano
     #editor = subl
     rebase = true
