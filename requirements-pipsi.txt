@@ -1,7 +1,6 @@
 cider
 cookiecutter
 httpie
-itermocil
 mackup
 mercurial
 openconnect-helper
