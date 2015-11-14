@@ -46,7 +46,6 @@ export RBENV_ROOT="/usr/local/var/rbenv"
 # arcanist settings
 export DEV_HOME="${HOME}/dev/arcanist/bin"
 PATH="${DEV_HOME}:${PATH}"
-source "${HOME}/dev/arcanist/resources/shell/bash-completion"
 
 # Heroku Toolbelt settings
 PATH="/usr/local/heroku/bin:${PATH}"
