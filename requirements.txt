@@ -1,8 +1,1 @@
-mercurial
-pip
-pipsi
-setuptools
-venv-dependencies
-virtualenv
-virtualenv-clone
-virtualenvwrapper
+-r home/requirements/base.txt

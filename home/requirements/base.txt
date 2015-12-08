@@ -1,0 +1,8 @@
+# NOTE: move as many of these into pipsi.txt as possible...
+pip
+pipsi
+setuptools
+venv-dependencies
+virtualenv
+virtualenv-clone
+virtualenvwrapper
