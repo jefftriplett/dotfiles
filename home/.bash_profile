@@ -53,4 +53,6 @@ ssh-add ~/.ssh/id_rsa &> /dev/null
 ssh-add ~/.ssh/id_dsa &> /dev/null
 
 ## itermocil autocompletion
-complete -W "$(itermocil --list)" itermocil
+if which itermocil > /dev/null; then
+    complete -W "$(itermocil --list)" itermocil
+fi
