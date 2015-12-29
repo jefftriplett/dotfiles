@@ -81,6 +81,7 @@
         "caskroom/fonts",
         "caskroom/versions",
         "homebrew/binary",
+        "homebrew/command-not-found",
         "homebrew/dupes",
         "homebrew/games",
         "homebrew/headonly",

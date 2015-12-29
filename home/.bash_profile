@@ -48,6 +48,11 @@ complete -o default -F _pip_completion pip
 
 # python settings end
 
+# command-not-found-init settings
+if brew command command-not-found-init > /dev/null; then
+  eval "$(brew command-not-found-init)";
+fi
+
 # add ssh keys
 ssh-add ~/.ssh/id_rsa &> /dev/null
 ssh-add ~/.ssh/id_dsa &> /dev/null
