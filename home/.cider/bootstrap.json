@@ -1,6 +1,7 @@
 {
     "after-scripts": [
         "brew cleanup",
+        "brew cask cleanup",
         "launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null",
         "chflags nohidden ~/Library"
     ],
