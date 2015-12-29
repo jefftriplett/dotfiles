@@ -77,6 +77,7 @@
         "virtualbox"
     ],
     "taps": [
+        "caskroom/cask",
         "caskroom/fonts",
         "caskroom/versions",
         "homebrew/binary",
@@ -85,6 +86,7 @@
         "homebrew/headonly",
         "homebrew/python",
         "homebrew/science",
+        "homebrew/services",
         "homebrew/versions",
         "jimbojsb/launchrocket",
         "nwoolls/cryptocoin",
