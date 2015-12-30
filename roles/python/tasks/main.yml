@@ -1,6 +1,6 @@
 ---
 
-- name: Install Pyenv
+- name: Install PyEnv
   tags: python
   homebrew:
     name: "{{ item }}"
@@ -10,7 +10,7 @@
     - ccache
     - zlib
 
-- name: Install pyenv plugins
+- name: Install PyEnv plugins
   tags: python
   git:
     repo: "{{ item.repo }}"
@@ -24,29 +24,33 @@
     - { repo: 'https://github.com/yyuu/pyenv-virtualenvwrapper.git', dest: '~/.pyenv/plugins/pyenv-virtualenvwrapper' }
     - { repo: 'https://github.com/yyuu/pyenv-which-ext.git', dest: '~/.pyenv/plugins/pyenv-which-ext' }
 
-- name: Update Pyenv
+- name: Update PyEnv
   tags: python
   command: pyenv update
 
 - name: Install Python Versions
   tags: python
-  environment:
-    CFLAGS: "-I$(xcrun --show-sdk-path)/usr/include"
-  command: creates=~/.pyenv/versions/{{ item }} pyenv install {{ item }}
+  #environment:
+  #  CFLAGS: "-I$(xcrun --show-sdk-path)/usr/include"
+  command: "pyenv install {{ item }}"
+  args:
+    creates: "~/.pyenv/versions/{{ item }}"
   with_items:
-    - 2.7.10
+    - 2.7.11
     - 3.4.3
-    - 3.5.0
+    - 3.5.1
 
 - name: Set Default Pyenv
   tags: python
-  command: pyenv global 2.7.10
+  command: pyenv global 2.7.11
 
 - name: Install Global Python Requirements
   tags: python
   environment:
     PIP_REQUIRE_VIRTUALENV: false
-  pip: "executable={{ ansible_env.HOME }}/.pyenv/shims/pip name={{ item }}"
+  pip:
+    executable: "{{ ansible_env.HOME }}/.pyenv/shims/pip"
+    name: "{{ item }}"
   with_items:
     - pip
     - pipsi
@@ -58,7 +62,9 @@
 
 - name: Install Pipsi Requirements
   tags: python
-  command: "creates=~/.local/bin/{{ item }} pipsi install {{ item }}"
+  command: "pipsi install {{ item }}"
+  args:
+    creates: "~/.local/bin/{{ item }}"
   ignore_errors: True
   with_items:
     - 1pass
