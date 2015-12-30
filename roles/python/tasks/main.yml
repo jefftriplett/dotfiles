@@ -1,6 +1,7 @@
 ---
 
 - name: Install Pyenv
+  tags: python
   homebrew:
     name: "{{ item }}"
     state: present
@@ -10,6 +11,7 @@
     - zlib
 
 - name: Install pyenv plugins
+  tags: python
   git:
     repo: "{{ item.repo }}"
     dest: "{{ item.dest }}"
@@ -23,9 +25,11 @@
     - { repo: 'https://github.com/yyuu/pyenv-which-ext.git', dest: '~/.pyenv/plugins/pyenv-which-ext' }
 
 - name: Update Pyenv
+  tags: python
   command: pyenv update
 
 - name: Install Python Versions
+  tags: python
   environment:
     CFLAGS: "-I$(xcrun --show-sdk-path)/usr/include"
   command: creates=~/.pyenv/versions/{{ item }} pyenv install {{ item }}
@@ -35,9 +39,11 @@
     - 3.5.0
 
 - name: Set Default Pyenv
+  tags: python
   command: pyenv global 2.7.10
 
 - name: Install Global Python Requirements
+  tags: python
   environment:
     PIP_REQUIRE_VIRTUALENV: false
   pip: "executable={{ ansible_env.HOME }}/.pyenv/shims/pip name={{ item }}"
@@ -51,6 +57,7 @@
     - virtualenvwrapper
 
 - name: Install Pipsi Requirements
+  tags: python
   command: "creates=~/.local/bin/{{ item }} pipsi install {{ item }}"
   ignore_errors: True
   with_items:

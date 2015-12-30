@@ -1,6 +1,7 @@
 ---
 
 - name: Update node.js Packages
+  tags: node
   npm:
     name: "{{ item }}"
     state: latest

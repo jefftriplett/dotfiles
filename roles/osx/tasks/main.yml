@@ -9,55 +9,94 @@
   command: nvram SystemAudioVolume=" "
 
 - name: Disable the “Are you sure you want to open this application?” dialog
-  sudo: yes
-  command: defaults write com.apple.LaunchServices LSQuarantine -bool false
+  osx_defaults:
+    domain: com.apple.LaunchServices
+    key: LSQuarantine
+    type: bool
+    value: false
 
 - name: Don’t display the annoying prompt when quitting iTerm
-  sudo: yes
-  command: defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+  osx_defaults:
+    domain: com.googlecode.iterm2
+    key: PromptOnQuit
+    type: bool
+    value: false
 
 - name: Finder - show all filename extensions
-  sudo: yes
-  command: defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+  osx_defaults:
+    domain: NSGlobalDomain
+    key: AppleShowAllExtensions
+    type: bool
+    value: true
 
 - name: QLEnableTextSelection
-  sudo: yes
-  command: defaults write com.apple.finder QLEnableTextSelection -bool true
+  osx_defaults:
+    domain: com.apple.finder
+    key: QLEnableTextSelection
+    type: bool
+    value: true
 
 - name: Display full POSIX path as Finder window title
-  sudo: yes
-  command: defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+  osx_defaults:
+    domain: com.apple.finder
+    key: _FXShowPosixPathInTitle
+    type: bool
+    value: true
 
 - name: Disable the warning when changing a file extension
-  sudo: yes
-  command: defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+  osx_defaults:
+    domain: com.apple.finder
+    key: FXEnableExtensionChangeWarning
+    type: bool
+    value: false
 
 - name: Empty trash securely
-  sudo: yes
-  command: defaults write com.apple.finder EmptyTrashSecurely -bool false
+  osx_defaults:
+    domain: com.apple.finder
+    key: EmptyTrashSecurely
+    type: bool
+    value: false
 
 - name: Avoid creating .DS_Store files on network volumes
-  sudo: yes
-  command: defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+  osx_defaults:
+    domain: com.apple.desktopservices
+    key: DSDontWriteNetworkStores
+    type: bool
+    value: true
 
 - name: Always show the Dock
-  sudo: yes
-  command: defaults write com.apple.dock autohide -bool false
+  osx_defaults:
+    domain: com.apple.dock
+    key: autohide
+    type: bool
+    value: false
 
 - name: Dock no-glass
-  sudo: yes
-  command: defaults write com.apple.dock no-glass -bool true
+  osx_defaults:
+    domain: com.apple.dock
+    key: no-glass
+    type: bool
+    value: true
 
 - name: dock mcx-expose-disabled
-  sudo: yes
-  command: defaults write com.apple.dock mcx-expose-disabled -bool true
+  osx_defaults:
+    domain: com.apple.dock
+    key: mcx-expose-disabled
+    type: bool
+    value: true
 
 # Bottom left screen corner → Start screen saver
 
 - name: dock wvous-bl-corner
-  sudo: yes
-  command: defaults write com.apple.dock wvous-bl-corner -int 5
+  osx_defaults:
+    domain: com.apple.dock
+    key: wvous-bl-corner
+    type: int
+    value: 5
 
 - name: dock wvous-bl-modifier
-  sudo: yes
-  command: defaults write com.apple.dock wvous-bl-modifier -int 0
+  osx_defaults:
+    domain: com.apple.dock
+    key: wvous-bl-modifier
+    type: int
+    value: 0

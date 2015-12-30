@@ -1,6 +1,7 @@
 ---
 
 - name: Update Ruby Gems
+  tags: ruby
   gem:
     name: "{{ item }}"
     state: latest

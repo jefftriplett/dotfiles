@@ -1,11 +1,13 @@
 ---
 
 - name: Update Homebrew
+  tags: homebrew
   homebrew:
     update_homebrew: yes
     upgrade_all: no
 
 - name: Install Homebrew Packages
+  tags: homebrew
   homebrew_tap:
     tap: "{{ item }}"
     state: present
@@ -29,6 +31,7 @@
     - yudai/gotty
 
 - name: Install Homebrew Packages
+  tags: homebrew
   homebrew:
       name: "{{ item }}"
       state: present
@@ -53,6 +56,7 @@
     - wget
 
 - name: Install Homebrew Cask Packages
+  tags: homebrew
   homebrew_cask:
     name: "{{ item }}"
     state: present
@@ -109,7 +113,9 @@
     - xquartz
 
 - name: Homebrew Cask Cleanup
+  tags: homebrew
   command: brew cask cleanup
 
 - name: Homebrew Cleanup
+  tags: homebrew
   command: brew cleanup
