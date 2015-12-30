@@ -27,14 +27,9 @@ fi
 # pyenv settings
 if which pyenv > /dev/null; then
     eval "$(pyenv init -)";
+    # eval "$(pyenv virtualenv-init -)";
+    pyenv virtualenvwrapper_lazy
 fi
-
-# if which pyenv-virtualenv-init > /dev/null; then
-#     eval "$(pyenv virtualenv-init -)";
-# fi
-
-# pyenv virtualenvwrapper
-pyenv virtualenvwrapper_lazy
 
 ## pip bash completion start
 _pip_completion()
