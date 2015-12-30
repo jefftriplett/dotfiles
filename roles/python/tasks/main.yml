@@ -1,0 +1,74 @@
+---
+
+- name: Install Pyenv
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - pyenv
+    - ccache
+    - zlib
+
+- name: Install pyenv plugins
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { repo: 'https://github.com/yyuu/pyenv-ccache.git', dest: '~/.pyenv/plugins/pyenv-ccache' }
+    - { repo: 'https://github.com/yyuu/pyenv-doctor.git', dest: '~/.pyenv/plugins/pyenv-doctor' }
+    - { repo: 'https://github.com/yyuu/pyenv-pip-migrate.git', dest: '~/.pyenv/plugins/pyenv-pip-migrate' }
+    - { repo: 'https://github.com/yyuu/pyenv-update.git', dest: '~/.pyenv/plugins/pyenv-update' }
+    - { repo: 'https://github.com/yyuu/pyenv-virtualenv.git', dest: '~/.pyenv/plugins/pyenv-virtualenv' }
+    - { repo: 'https://github.com/yyuu/pyenv-virtualenvwrapper.git', dest: '~/.pyenv/plugins/pyenv-virtualenvwrapper' }
+    - { repo: 'https://github.com/yyuu/pyenv-which-ext.git', dest: '~/.pyenv/plugins/pyenv-which-ext' }
+
+- name: Update Pyenv
+  command: pyenv update
+
+- name: Install Python Versions
+  environment:
+    CFLAGS: "-I$(xcrun --show-sdk-path)/usr/include"
+  command: creates=~/.pyenv/versions/{{ item }} pyenv install {{ item }}
+  with_items:
+    - 2.7.10
+    - 3.4.3
+    - 3.5.0
+
+- name: Set Default Pyenv
+  command: pyenv global 2.7.10
+
+- name: Install Global Python Requirements
+  environment:
+    PIP_REQUIRE_VIRTUALENV: false
+  pip: "executable={{ ansible_env.HOME }}/.pyenv/shims/pip name={{ item }}"
+  with_items:
+    - pip
+    - pipsi
+    - setuptools
+    - venv-dependencies
+    - virtualenv
+    - virtualenv-clone
+    - virtualenvwrapper
+
+- name: Install Pipsi Requirements
+  command: "creates=~/.local/bin/{{ item }} pipsi install {{ item }}"
+  ignore_errors: True
+  with_items:
+    - 1pass
+    - ansible
+    - autoenv
+    - automatic-tendril
+    - cider
+    - cookiecutter
+    - glances
+    - httpie
+    - invoke
+    - ispy
+    - itermocil
+    - mackup
+    - mercurial
+    - osx-openconnect-helper
+    - pgcli
+    - pythonpy
+    - tvnamer
+    - url2markdown-cli

@@ -1,0 +1,115 @@
+---
+
+- name: Update Homebrew
+  homebrew:
+    update_homebrew: yes
+    upgrade_all: no
+
+- name: Install Homebrew Packages
+  homebrew_tap:
+    tap: "{{ item }}"
+    state: present
+  with_items:
+    - caskroom/cask
+    - caskroom/fonts
+    - caskroom/versions
+    - homebrew/binary
+    - homebrew/command-not-found
+    - homebrew/dupes
+    - homebrew/games
+    - homebrew/headonly
+    - homebrew/python
+    - homebrew/science
+    - homebrew/services
+    - homebrew/versions
+    - jimbojsb/launchrocket
+    - nwoolls/cryptocoin
+    - ravenac95/sudolikeaboss
+    - watsonbox/cmu-sphinx
+    - yudai/gotty
+
+- name: Install Homebrew Packages
+  homebrew:
+      name: "{{ item }}"
+      state: present
+  with_items:
+    - aria2
+    - ccache
+    - chrome-cli
+    - coreutils
+    - gist
+    - git
+    - gotty
+    - gpg
+    - keybase
+    - phantomjs
+    - pyenv
+    - rbenv
+    - readline
+    - ruby-build
+    - sqlite
+    - sshrc
+    - sudolikeaboss
+    - wget
+
+- name: Install Homebrew Cask Packages
+  homebrew_cask:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - appcleaner
+    - arq
+    - bartender
+    - bittorrent-sync
+    - breach
+    - calibre
+    - charles
+    - chicken
+    - cleanmymac
+    - coconutbattery
+    - controlplane
+    - fluid
+    - font-hack
+    - font-ubuntu
+    - font-ubuntu-mono-powerline
+    - gitup
+    - google-chrome
+    - google-hangouts
+    - gpgtools
+    - handbrake
+    - handbrakebatch
+    - hipchat
+    - iterm2
+    - java
+    - karabiner
+    - launchrocket
+    - mactex
+    - mattr-slate
+    - minecraft
+    - mojibar
+    - numi
+    - plex-media-player
+    - plex-media-server
+    - reggy
+    - seil
+    - skype
+    - slack
+    - spotify
+    - sublime-text3
+    # - synergy
+    - timemachineeditor
+    - torbrowser
+    - transmission
+    - vagrant
+    - vagrant-manager
+    - virtualbox
+    - vlc
+    - wkhtmltopdf
+    - xld
+    - xquartz
+
+- name: Homebrew Cask Cleanup
+  command: brew cask cleanup
+
+- name: Homebrew Cleanup
+  command: brew cleanup

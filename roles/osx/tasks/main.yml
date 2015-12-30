@@ -1,0 +1,63 @@
+---
+
+- name: Set standby delay to 24 hours (default is 1 hour)
+  sudo: yes
+  command: pmset -a standbydelay 86400
+
+- name: Disable the sound effects on boot
+  sudo: yes
+  command: nvram SystemAudioVolume=" "
+
+- name: Disable the “Are you sure you want to open this application?” dialog
+  sudo: yes
+  command: defaults write com.apple.LaunchServices LSQuarantine -bool false
+
+- name: Don’t display the annoying prompt when quitting iTerm
+  sudo: yes
+  command: defaults write com.googlecode.iterm2 PromptOnQuit -bool false
+
+- name: Finder - show all filename extensions
+  sudo: yes
+  command: defaults write NSGlobalDomain AppleShowAllExtensions -bool true
+
+- name: QLEnableTextSelection
+  sudo: yes
+  command: defaults write com.apple.finder QLEnableTextSelection -bool true
+
+- name: Display full POSIX path as Finder window title
+  sudo: yes
+  command: defaults write com.apple.finder _FXShowPosixPathInTitle -bool true
+
+- name: Disable the warning when changing a file extension
+  sudo: yes
+  command: defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+
+- name: Empty trash securely
+  sudo: yes
+  command: defaults write com.apple.finder EmptyTrashSecurely -bool false
+
+- name: Avoid creating .DS_Store files on network volumes
+  sudo: yes
+  command: defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+
+- name: Always show the Dock
+  sudo: yes
+  command: defaults write com.apple.dock autohide -bool false
+
+- name: Dock no-glass
+  sudo: yes
+  command: defaults write com.apple.dock no-glass -bool true
+
+- name: dock mcx-expose-disabled
+  sudo: yes
+  command: defaults write com.apple.dock mcx-expose-disabled -bool true
+
+# Bottom left screen corner → Start screen saver
+
+- name: dock wvous-bl-corner
+  sudo: yes
+  command: defaults write com.apple.dock wvous-bl-corner -int 5
+
+- name: dock wvous-bl-modifier
+  sudo: yes
+  command: defaults write com.apple.dock wvous-bl-modifier -int 0

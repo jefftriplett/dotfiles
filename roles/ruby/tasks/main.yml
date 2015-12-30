@@ -1,0 +1,11 @@
+---
+
+- name: Update Ruby Gems
+  gem:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - desktop
+    - homesick
+    - maid
+    - whenever

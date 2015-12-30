@@ -1,0 +1,10 @@
+---
+
+- hosts: dotfiles
+  roles:
+    # - homebrew
+    # - python
+    # - node
+    # - ruby
+    - osx
+    # - dotfiles

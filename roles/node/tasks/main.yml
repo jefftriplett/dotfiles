@@ -1,0 +1,9 @@
+---
+
+- name: Update node.js Packages
+  npm:
+    name: "{{ item }}"
+    state: latest
+    global: yes
+  with_items:
+    - bower
