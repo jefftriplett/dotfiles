@@ -8,6 +8,10 @@
   sudo: yes
   command: nvram SystemAudioVolume=" "
 
+##############################
+# General UI/UX                                                               #
+##############################
+
 - name: Disable the “Are you sure you want to open this application?” dialog
   osx_defaults:
     domain: com.apple.LaunchServices
@@ -22,14 +26,21 @@
     type: bool
     value: false
 
-- name: Finder - show all filename extensions
+- name: Disable Notification Center and remove the menu bar icon
+  command: "launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null"
+
+##############################
+# Finder
+##############################
+
+- name: Show all filename extensions
   osx_defaults:
     domain: NSGlobalDomain
     key: AppleShowAllExtensions
     type: bool
     value: true
 
-- name: QLEnableTextSelection
+- name: Allow text selection in Quick Look
   osx_defaults:
     domain: com.apple.finder
     key: QLEnableTextSelection
@@ -50,19 +61,19 @@
     type: bool
     value: false
 
-- name: Empty trash securely
+- name: Empty Trash securely by default
   osx_defaults:
     domain: com.apple.finder
     key: EmptyTrashSecurely
     type: bool
     value: false
 
-- name: Avoid creating .DS_Store files on network volumes
-  osx_defaults:
-    domain: com.apple.desktopservices
-    key: DSDontWriteNetworkStores
-    type: bool
-    value: true
+- name: Show the ~/Library folder
+  command: chflags nohidden ~/Library
+
+##############################
+# Dock & hot corners
+##############################
 
 - name: Always show the Dock
   osx_defaults:
@@ -71,7 +82,7 @@
     type: bool
     value: false
 
-- name: Dock no-glass
+- name: Enable the 2D Dock
   osx_defaults:
     domain: com.apple.dock
     key: no-glass
@@ -85,18 +96,34 @@
     type: bool
     value: true
 
-# Bottom left screen corner → Start screen saver
-
-- name: dock wvous-bl-corner
+- name: Bottom left screen corner
   osx_defaults:
     domain: com.apple.dock
     key: wvous-bl-corner
     type: int
     value: 5
 
-- name: dock wvous-bl-modifier
+- name: Start screen saver
   osx_defaults:
     domain: com.apple.dock
     key: wvous-bl-modifier
     type: int
     value: 0
+
+- name: Disable mission control and spaces, and rejoice
+  osx_defaults:
+    domain: mcx-expose-disabled
+    key: wvous-bl-modifier
+    type: bool
+    value: true
+
+##############################
+# Misc
+##############################
+
+- name: Avoid creating .DS_Store files on network volumes
+  osx_defaults:
+    domain: com.apple.desktopservices
+    key: DSDontWriteNetworkStores
+    type: bool
+    value: true
