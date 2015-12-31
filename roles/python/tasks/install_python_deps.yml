@@ -1,0 +1,17 @@
+---
+
+- name: Install Global Python Requirements
+  tags: python
+  environment:
+    PIP_REQUIRE_VIRTUALENV: false
+  pip:
+    executable: "{{ ansible_env.HOME }}/.pyenv/shims/pip"
+    name: "{{ item }}"
+  with_items:
+    - pip
+    - pipsi
+    - setuptools
+    - venv-dependencies
+    - virtualenv
+    - virtualenv-clone
+    - virtualenvwrapper

@@ -1,0 +1,26 @@
+---
+
+- name: Install Pipsi Requirements
+  tags: python
+  command: "pipsi install {{ item }}"
+  args:
+    creates: "~/.local/bin/{{ item }}"
+  ignore_errors: True
+  with_items:
+    - 1pass
+    - ansible
+    - autoenv
+    - automatic-tendril
+    - cookiecutter
+    - glances
+    - httpie
+    - invoke
+    - ispy
+    - itermocil
+    - mackup
+    - mercurial
+    - osx-openconnect-helper
+    - pgcli
+    - pythonpy
+    - tvnamer
+    - url2markdown-cli

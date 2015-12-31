@@ -1,0 +1,45 @@
+---
+
+- name: Install PyEnv
+  tags: python
+  homebrew:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - pyenv
+    - ccache
+    - zlib
+
+- name: Install PyEnv plugins
+  tags: python
+  git:
+    repo: "{{ item.repo }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { repo: 'https://github.com/yyuu/pyenv-ccache.git', dest: '~/.pyenv/plugins/pyenv-ccache' }
+    - { repo: 'https://github.com/yyuu/pyenv-doctor.git', dest: '~/.pyenv/plugins/pyenv-doctor' }
+    - { repo: 'https://github.com/yyuu/pyenv-pip-migrate.git', dest: '~/.pyenv/plugins/pyenv-pip-migrate' }
+    - { repo: 'https://github.com/yyuu/pyenv-update.git', dest: '~/.pyenv/plugins/pyenv-update' }
+    - { repo: 'https://github.com/yyuu/pyenv-virtualenv.git', dest: '~/.pyenv/plugins/pyenv-virtualenv' }
+    - { repo: 'https://github.com/yyuu/pyenv-virtualenvwrapper.git', dest: '~/.pyenv/plugins/pyenv-virtualenvwrapper' }
+    - { repo: 'https://github.com/yyuu/pyenv-which-ext.git', dest: '~/.pyenv/plugins/pyenv-which-ext' }
+
+- name: Update PyEnv
+  tags: python
+  command: pyenv update
+
+- name: Install Python Versions
+  tags: python
+  #environment:
+  #  CFLAGS: "-I$(xcrun --show-sdk-path)/usr/include"
+  command: "pyenv install {{ item }}"
+  args:
+    creates: "~/.pyenv/versions/{{ item }}"
+  with_items:
+    - 2.7.11
+    - 3.4.3
+    - 3.5.1
+
+- name: Set Default Pyenv
+  tags: python
+  command: pyenv global 2.7.11
