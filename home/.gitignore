@@ -43,4 +43,3 @@ tmtags
 coverage/
 reports/
 .pip/download_cache
-.cider/.cache

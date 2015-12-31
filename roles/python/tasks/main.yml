@@ -71,7 +71,6 @@
     - ansible
     - autoenv
     - automatic-tendril
-    - cider
     - cookiecutter
     - glances
     - httpie
