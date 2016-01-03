@@ -11,7 +11,3 @@
     - pip
     - pipsi
     - setuptools
-    - venv-dependencies
-    - virtualenv
-    - virtualenv-clone
-    - virtualenvwrapper
