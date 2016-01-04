@@ -16,15 +16,21 @@ Installation
 
 1. Install pipsi
 
+    ```
     $ pip install pipsi
+    ```
 
 2. Install ansible
 
+    ```
     $ pipsi install ansible
+    ```
 
 3. Let ansible do it's thing
 
+    ```
     $ make setup
+    ```
 
 
 Terminal theme
