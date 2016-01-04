@@ -42,4 +42,5 @@
 
 - name: Set Default Pyenv
   tags: python
+  command: pyenv global 3.5.1
   command: pyenv global 2.7.11

@@ -10,7 +10,6 @@
     - 1pass
     - ansible
     - autoenv
-    - automatic-tendril
     - cookiecutter
     - glances
     - httpie
