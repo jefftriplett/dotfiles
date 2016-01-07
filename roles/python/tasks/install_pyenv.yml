@@ -9,6 +9,7 @@
     - pyenv
     - ccache
     - zlib
+    - readline
 
 - name: Install PyEnv plugins
   tags: python
