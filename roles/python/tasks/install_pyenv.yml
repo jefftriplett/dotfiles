@@ -30,8 +30,8 @@
 
 - name: Install Python Versions
   tags: python
-  #environment:
-  #  CFLAGS: "-I$(xcrun --show-sdk-path)/usr/include"
+  environment:
+    CFLAGS: "-I$(xcrun --show-sdk-path)/usr/include"
   command: "pyenv install {{ item }}"
   args:
     creates: "~/.pyenv/versions/{{ item }}"
