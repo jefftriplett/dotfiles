@@ -31,7 +31,8 @@
 - name: Install Python Versions
   tags: python
   environment:
-    CFLAGS: "-I$(xcrun --show-sdk-path)/usr/include"
+    CFLAGS: "-I$(brew --prefix openssl)/include -I$(xcrun --show-sdk-path)/usr/include"
+    LDFLAGS: "-L$(brew --prefix openssl)/lib"
   command: "pyenv install {{ item }}"
   args:
     creates: "~/.pyenv/versions/{{ item }}"
