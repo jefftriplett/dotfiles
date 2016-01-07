@@ -7,9 +7,6 @@ export LD_LIBRARY_PATH="/usr/local/lib"
 ## node
 PATH="${PATH}:/usr/local/share/npm/bin"
 
-## basher
-PATH="${HOME}/.basher/bin:${PATH}"
-
 if [[ -e ${HOME}/bin ]] ; then
   PATH="${HOME}/bin:${PATH}"
 fi
