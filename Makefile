@@ -33,6 +33,9 @@ dotfiles:
 homebrew:
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags homebrew
 
+nginx:
+	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags nginx
+
 node:
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags node
 
