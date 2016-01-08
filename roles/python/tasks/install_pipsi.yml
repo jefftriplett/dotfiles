@@ -7,9 +7,9 @@
     creates: "~/.local/bin/{{ item }}"
   ignore_errors: True
   with_items:
-    - 1pass
+    #- 1pass
     - ansible
-    - autoenv
+    #- autoenv
     - cookiecutter
     - glances
     - httpie
