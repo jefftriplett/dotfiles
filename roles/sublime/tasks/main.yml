@@ -12,6 +12,12 @@
     dest: "~/Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings"
   tags: sublime
 
+- name: Copy key bindings
+  copy:
+    src: Default (OSX).sublime-keymap
+    dest: "~/Library/Application Support/Sublime Text 3/Packages/User/Default (OSX).sublime-keymap"
+  tags: sublime
+
 - name: Setup "subl" terminal command
   file:
     src: "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
