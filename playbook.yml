@@ -8,4 +8,5 @@
     - ruby
     #- osx
     - nginx
+    - sublime
     - dotfiles

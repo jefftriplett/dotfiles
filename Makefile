@@ -23,7 +23,7 @@ facts:
 	ANSIBLE_NOCOWS=1 ansible all -i hosts -m setup -c local
 
 install:
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local
+	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --skip-tags sublime
 
 # Tags
 
@@ -44,3 +44,6 @@ python:
 
 ruby:
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags ruby
+
+sublime:
+	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags sublime

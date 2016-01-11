@@ -1,0 +1,111 @@
+{
+	"auto_complete": false,
+	"auto_complete_commit_on_tab": false,
+	"auto_complete_delay": 50,
+	"auto_complete_selector": "source - comment",
+	"auto_complete_size_limit": 4194304,
+	"auto_complete_triggers":
+	[
+		{
+			"characters": "<",
+			"selector": "text.html"
+		}
+	],
+	"auto_complete_with_fields": false,
+	"bold_folder_labels": true,
+	"caret_extra_bottom": 2,
+	"caret_extra_top": 2,
+	"caret_extra_width": 2,
+	"caret_style": "phase",
+	"color_scheme": "Packages/User/Tomorrow-Night (SL) (SublimePythonIDE).tmTheme",
+	"draw_white_space": true,
+	"enable_tab_scrolling": true,
+	"ensure_newline_at_eof_on_save": true,
+	"folder_exclude_patterns":
+	[
+		".git",
+		".hg",
+		".svn",
+		".tox",
+		"_build",
+		"__pycache__",
+		"CVS",
+		".SyncArchive"
+	],
+	"font_face": "Hack",
+	"font_options":
+	[
+		"subpixel_antialias"
+	],
+	"font_size": 14.0,
+	"highlight_line": true,
+	"highlight_modified_tabs": true,
+	"ignored_packages":
+	[
+		"INI",
+		"Markdown",
+		"Pylinter",
+		"requirementstxt",
+		"SublimeCodeIntel",
+		"SublimeREPL",
+		"Vintage"
+	],
+	"indent_guide_options":
+	[
+		"draw_normal",
+		"draw_active"
+	],
+	"index_exclude_patterns":
+	[
+		"*.log",
+		".SyncID"
+	],
+	"line_numbers": true,
+	"line_padding_bottom": 0,
+	"line_padding_top": 0,
+	"margin": 0,
+	"match_brackets": true,
+	"match_brackets_angle": true,
+	"match_brackets_braces": true,
+	"match_brackets_content": true,
+	"match_brackets_square": true,
+	"new_window_settings":
+	{
+		"show_minimap": false,
+		"show_tabs": true,
+		"side_bar_visible": false,
+		"status_bar_visible": true
+	},
+	"pep8_ignore":
+	[
+		"E501",
+		"F0401",
+		"R0201",
+		"R0903"
+	],
+	"phoenix_blur_current_tab": false,
+	"phoenix_color_expanded_folder": true,
+	"phoenix_color_orange": true,
+	"phoenix_dirty_bottom_bar_red": true,
+	"phoenix_highlight_current_tab": true,
+	"phoenix_sidebar_tree_medium": true,
+	"phoenix_solid_current_tab": true,
+	"phoenix_tabs_auto_width": true,
+	"phoenix_tabs_medium": true,
+	"rulers":
+	[
+		72,
+		79,
+		119
+	],
+	"scroll_past_end": false,
+	"shift_tab_unindent": true,
+	"spell_check": false,
+	"sublimelinter": true,
+	"tab_size": 4,
+	"theme": "Phoenix Dark.sublime-theme",
+	"translate_tabs_to_spaces": true,
+	"trim_automatic_white_space": true,
+	"trim_trailing_white_space_on_save": true,
+	"word_wrap": false
+}
