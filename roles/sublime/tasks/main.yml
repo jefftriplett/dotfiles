@@ -1,26 +1,22 @@
 ---
 
-- name: Copy Preferences
-  copy:
-    src: Preferences.sublime-settings
-    dest: "~/Library/Application Support/Sublime Text 3/Packages/User/Preferences.sublime-settings"
+- name: Remove Sublime config dir if it exists
   tags: sublime
+  file:
+    path: "~/Library/Application Support/Sublime Text 3/Packages/User"
+    state: absent
 
-- name: Copy Package Control
-  copy:
-    src: Package Control.sublime-settings
-    dest: "~/Library/Application Support/Sublime Text 3/Packages/User/Package Control.sublime-settings"
+- name: Symlink Sublime Text config
   tags: sublime
+  file:
+    src: "~/.homesick/repos/dotfiles/configs/sublime_text"
+    dest: "~/Library/Application Support/Sublime Text 3/Packages/User"
+    force: yes
+    state: link
 
-- name: Copy key bindings
-  copy:
-    src: Default (OSX).sublime-keymap
-    dest: "~/Library/Application Support/Sublime Text 3/Packages/User/Default (OSX).sublime-keymap"
+- name: Symlink Sublime Text to subl in terminal
   tags: sublime
-
-- name: Setup "subl" terminal command
   file:
     src: "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
     dest: "{{ lookup('env','HOME') }}/bin/subl"
     state: link
-  tags: sublime
