@@ -6,7 +6,7 @@
     update_homebrew: yes
     upgrade_all: no
 
-- name: Install Homebrew Packages
+- name: Install Taps
   tags: homebrew
   homebrew_tap:
     tap: "{{ item }}"
@@ -30,7 +30,7 @@
     - watsonbox/cmu-sphinx
     - yudai/gotty
 
-- name: Install Homebrew Packages
+- name: Install Apps
   tags: homebrew
   homebrew:
     name: "{{ item }}"
@@ -55,7 +55,7 @@
     - sudolikeaboss
     - wget
 
-- name: Install Homebrew Cask Packages
+- name: Install Mac Apps
   tags: homebrew
   homebrew_cask:
     name: "{{ item }}"
