@@ -3,10 +3,10 @@
 - hosts: dotfiles
   roles:
     - homebrew
-    - python
-    - node
-    - ruby
-    #- osx
     - nginx
+    - node
+    - osx
+    - python
+    - ruby
     - sublime
     - dotfiles

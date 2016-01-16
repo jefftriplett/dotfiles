@@ -1,10 +1,12 @@
 ---
 
 - name: Set standby delay to 24 hours (default is 1 hour)
+  tags: osx
   sudo: yes
   command: pmset -a standbydelay 86400
 
 - name: Disable the sound effects on boot
+  tags: osx
   sudo: yes
   command: nvram SystemAudioVolume=" "
 
@@ -13,20 +15,23 @@
 ##############################
 
 - name: Disable the “Are you sure you want to open this application?” dialog
+  tags: osx
   osx_defaults:
     domain: com.apple.LaunchServices
     key: LSQuarantine
-    type: bool
-    value: false
+    type: boolean
+    value: "false"
 
 - name: Don’t display the annoying prompt when quitting iTerm
+  tags: osx
   osx_defaults:
     domain: com.googlecode.iterm2
     key: PromptOnQuit
-    type: bool
-    value: false
+    type: int
+    value: "0"
 
 - name: Disable Notification Center and remove the menu bar icon
+  tags: osx
   command: "launchctl unload -w /System/Library/LaunchAgents/com.apple.notificationcenterui.plist 2> /dev/null"
 
 ##############################
@@ -34,41 +39,47 @@
 ##############################
 
 - name: Show all filename extensions
+  tags: osx
   osx_defaults:
     domain: NSGlobalDomain
     key: AppleShowAllExtensions
-    type: bool
-    value: true
+    type: integer
+    value: "1"
 
 - name: Allow text selection in Quick Look
+  tags: osx
   osx_defaults:
     domain: com.apple.finder
     key: QLEnableTextSelection
-    type: bool
-    value: true
+    type: boolean
+    value: "true"
 
 - name: Display full POSIX path as Finder window title
+  tags: osx
   osx_defaults:
     domain: com.apple.finder
     key: _FXShowPosixPathInTitle
-    type: bool
-    value: true
+    type: boolean
+    value: "true"
 
 - name: Disable the warning when changing a file extension
+  tags: osx
   osx_defaults:
     domain: com.apple.finder
     key: FXEnableExtensionChangeWarning
-    type: bool
-    value: false
+    type: boolean
+    value: "false"
 
 - name: Empty Trash securely by default
+  tags: osx
   osx_defaults:
     domain: com.apple.finder
     key: EmptyTrashSecurely
-    type: bool
-    value: false
+    type: integer
+    value: "0"
 
 - name: Show the ~/Library folder
+  tags: osx
   command: chflags nohidden ~/Library
 
 ##############################
@@ -76,54 +87,61 @@
 ##############################
 
 - name: Always show the Dock
+  tags: osx
   osx_defaults:
     domain: com.apple.dock
     key: autohide
-    type: bool
-    value: false
+    type: boolean
+    value: "false"
 
 - name: Enable the 2D Dock
+  tags: osx
   osx_defaults:
     domain: com.apple.dock
     key: no-glass
-    type: bool
-    value: true
+    type: boolean
+    value: "true"
 
 - name: dock mcx-expose-disabled
+  tags: osx
   osx_defaults:
     domain: com.apple.dock
     key: mcx-expose-disabled
-    type: bool
-    value: true
+    type: integer
+    value: "1"
 
 - name: Bottom left screen corner
+  tags: osx
   osx_defaults:
     domain: com.apple.dock
     key: wvous-bl-corner
     type: int
-    value: 5
+    value: "5"
 
 - name: Start screen saver
+  tags: osx
   osx_defaults:
     domain: com.apple.dock
     key: wvous-bl-modifier
     type: int
-    value: 0
+    value: "0"
 
 - name: Disable mission control and spaces, and rejoice
+  tags: osx
   osx_defaults:
     domain: mcx-expose-disabled
     key: wvous-bl-modifier
-    type: bool
-    value: true
+    type: boolean
+    value: "true"
 
 ##############################
 # Misc
 ##############################
 
 - name: Avoid creating .DS_Store files on network volumes
+  tags: osx
   osx_defaults:
     domain: com.apple.desktopservices
     key: DSDontWriteNetworkStores
-    type: bool
-    value: true
+    type: boolean
+    value: "true"
