@@ -1,12 +1,13 @@
-.PHONY: check clean-pyc dotfiles facts homebrew install node python ruby
+.PHONY: check clean-pyc dotfiles facts homebrew install node python ruby osx nginx sublime
 
 help:
 	@echo "check - run ansible checks"
 	@echo "facts - view ansible facts"
-	@echo "install - install everything"
 	@echo "dotfiles - install dotfiles into home"
 	@echo "homebrew - install homebrew packages"
+	@echo "install - install everything"
 	@echo "node - install node essentials"
+	@echo "osx - install osx configs"
 	@echo "python - install python essentials"
 	@echo "ruby - install ruby essentials"
 
@@ -38,6 +39,9 @@ nginx:
 
 node:
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags node
+
+osx:
+	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags osx -vvv
 
 python:
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags python
