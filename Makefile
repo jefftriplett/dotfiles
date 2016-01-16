@@ -41,7 +41,7 @@ node:
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags node
 
 osx:
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags osx -vvv
+	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags osx
 
 python:
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags python
