@@ -2,12 +2,12 @@
 
 - name: Set standby delay to 24 hours (default is 1 hour)
   tags: osx
-  sudo: yes
+  become: yes
   command: pmset -a standbydelay 86400
 
 - name: Disable the sound effects on boot
   tags: osx
-  sudo: yes
+  become: yes
   command: nvram SystemAudioVolume=" "
 
 ##############################
