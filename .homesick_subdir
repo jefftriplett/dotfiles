@@ -1,3 +1,4 @@
 .pyenv
 .sshrc.d
 .virtualenvs
+.config

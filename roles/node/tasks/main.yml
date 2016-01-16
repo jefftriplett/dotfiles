@@ -8,3 +8,4 @@
     global: yes
   with_items:
     - bower
+    - vmd
