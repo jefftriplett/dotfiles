@@ -33,8 +33,8 @@
 - name: Install Homebrew Packages
   tags: homebrew
   homebrew:
-      name: "{{ item }}"
-      state: present
+    name: "{{ item }}"
+    state: present
   with_items:
     - aria2
     - ccache
@@ -102,7 +102,6 @@
     - slack
     - spotify
     - sublime-text3
-    # - synergy
     - timemachineeditor
     - torbrowser
     - transmission
@@ -113,6 +112,7 @@
     - wkhtmltopdf
     - xld
     - xquartz
+    # - synergy
 
 - name: Homebrew Cask Cleanup
   tags: homebrew
