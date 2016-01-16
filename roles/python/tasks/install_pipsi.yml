@@ -8,8 +8,8 @@
   ignore_errors: True
   with_items:
     #- 1pass
-    - ansible
     #- autoenv
+    - ansible
     - cookiecutter
     - glances
     - httpie
