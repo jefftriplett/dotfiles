@@ -8,4 +8,5 @@
     global: yes
   with_items:
     - bower
+    - nativefier
     - vmd
