@@ -46,6 +46,7 @@ Inspiration / Thank you!
 - https://github.com/JohnColvin/.maid/blob/master/rules.rb
 - https://github.com/mathiasbynens/dotfiles/blob/master/.osx
 - https://github.com/mitchty/src/blob/master/dotfiles/maid/rules.rb
+- http://blog.palcu.ro/2014/06/dotfiles-and-dev-tools-provisioned-by.html
 
 [1]: https://github.com/technicalpickles/homesick
 [2]: https://github.com/benjaminoakes/maid
