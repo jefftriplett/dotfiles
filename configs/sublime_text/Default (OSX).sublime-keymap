@@ -1,0 +1,14 @@
+[
+    {
+        "keys": ["ctrl+option+command+d"],
+        "command": "toggle_side_bar"
+    },
+    {
+        "keys": ["f8"],
+        "command": "rss"
+    },
+    {
+        "keys": ["alt+;"],
+        "command": "open_url_under_cursor"
+    }
+]
