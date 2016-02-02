@@ -19,6 +19,7 @@
     - mackup
     - mercurial
     - osx-openconnect-helper
+    - pep257
     - pgcli
     - pythonpy
     - tvnamer
