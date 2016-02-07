@@ -100,7 +100,7 @@ end
 -- System Watchers --
 ---------------------
 
-app_watcher = hs.application.watcher.new(app_changed_callback):start()
+-- app_watcher = hs.application.watcher.new(app_changed_callback):start()
 battery_watcher = hs.battery.watcher.new(battery_changed_callback):start()
 caffeinate_watcher = hs.caffeinate.watcher.new(caffeinate_changed_callback):start()
 config_file_watcher = hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", config_changed_callback):start()
