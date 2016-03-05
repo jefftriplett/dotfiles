@@ -21,7 +21,7 @@ end)
 ----------
 
 hs.grid.GRIDWIDTH = 4
-hs.grid.GRIDHEIGHT = 3
+hs.grid.GRIDHEIGHT = 4
 hs.grid.MARGINX = 0
 hs.grid.MARGINY = 0
 
