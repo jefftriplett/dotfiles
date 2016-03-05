@@ -1,0 +1,4 @@
+node: "~> 5.5.0", file: "package.json"
+postgres: "~> 9.4.0"
+python: "~> 2.7.0", file: "requirements.txt"
+ruby: "~> 2.2.0", file: "Gemfile"
