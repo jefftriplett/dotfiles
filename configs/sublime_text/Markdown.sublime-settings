@@ -3,6 +3,8 @@
     //"font_face": "Courier Screenplay",
     //"font_face": "Courier Final Draft",
     "font_face": "Courier Prime",
-    "font_size": 18,
-    "wrap_width": 60
+    "font_size": 16,
+    "line_padding_top": 2,
+    "line_padding_bottom": 2,
+    "wrap_width": 90
 }
