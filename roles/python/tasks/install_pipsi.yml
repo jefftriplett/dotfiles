@@ -21,6 +21,7 @@
     - osx-openconnect-helper
     - pep257
     - pgcli
+    - proselint
     - pythonpy
     - tvnamer
     - url2markdown-cli
