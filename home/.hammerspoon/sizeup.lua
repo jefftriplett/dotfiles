@@ -289,7 +289,7 @@ end
 
 -- display title, save state and move win to unit
 function sizeup.set_frame(title, unit)
-  hs.alert.show(title)
+  -- hs.alert.show(title)
   local win = sizeup.win()
   sizeup.snapback_window_state[win:id()] = win:frame()
   return win:setFrame(unit)
