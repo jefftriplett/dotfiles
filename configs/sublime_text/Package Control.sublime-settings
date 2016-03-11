@@ -47,6 +47,7 @@
 		"SublimeCodeIntel",
 		"SublimeGit",
 		"SublimeLinter",
+		"SublimeLinter-contrib-proselint",
 		"SublimeLinter-pep257",
 		"SublimeLinter-pylint",
 		"SublimeLinter-rst",
