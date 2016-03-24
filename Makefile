@@ -1,53 +1,45 @@
 .PHONY: check clean-pyc dotfiles facts homebrew install node python ruby osx nginx sublime
 
 help:
-	@echo "check - run ansible checks"
-	@echo "facts - view ansible facts"
-	@echo "dotfiles - install dotfiles into home"
-	@echo "homebrew - install homebrew packages"
-	@echo "install - install everything"
-	@echo "node - install node essentials"
-	@echo "osx - install osx configs"
-	@echo "python - install python essentials"
-	@echo "ruby - install ruby essentials"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-24s\033[0m %s\n", $$1, $$2}'
 
-clean: clean-pyc
+clean: clean-pyc ## clean up temporary files
 
-clean-pyc:
+clean-pyc: ## remove stray pyc files
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 
-check:
+check: ## run ansible checks
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml --check --diff -c local
 
-facts:
+facts: ## view ansible facts
 	ANSIBLE_NOCOWS=1 ansible all -i hosts -m setup -c local
 
-install:
+install: ## install everything
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --skip-tags sublime
 
 # Tags
 
-dotfiles:
+dotfiles: ## install dotfiles into home
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags dotfiles
 
-homebrew:
+homebrew: ## install homebrew packages
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags homebrew
 
-nginx:
+nginx: ## install nginx reverse proxy
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags nginx
 
-node:
+node: ## install node essentials
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags node
 
-osx:
+osx: ## install osx configs
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags osx
 
-python:
+python: ## install python essentials
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags python
 
-ruby:
+ruby: ## install ruby essentials
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags ruby
 
-sublime:
+sublime: ## install sublimetext3 configs
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags sublime
