@@ -42,6 +42,7 @@
     - coreutils
     - gist
     - git
+    - git-standup
     - gotty
     - gpg
     - keybase
