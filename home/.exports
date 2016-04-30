@@ -14,12 +14,21 @@ fi
 # default terminal editor
 export EDITOR="nano"
 
+# Put Homebrew in "no touching" mode
+export HOMEBREW_NO_ANALYTICS=1
+
 ## i7 gcc / 4.2.1 hack - to fix some odd install errors... ala http://stackoverflow.com/questions/5366882/installing-pil-on-os-x-snow-leopard-w-xcode4-no-ppc-support
 export ARCHFLAGS="-Wno-error=unused-command-line-argument-hard-error-in-future"
 
+# Prefer US English and UTF-8
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
+
 ## history
-export HISTCONTROL="erasedups"
-export HISTSIZE=10000
+export HISTCONTROL="ignoredups"
+export HISTSIZE=50000000
+export HISTFILESIZE=$HISTSIZE
+export HISTIGNORE=" *:ls:cd:cd ~:date:exit:export:history:pwd:* --help"
 
 ## pip settings
 export PIP_DOWNLOAD_CACHE="/tmp/.pip/download_cache"
