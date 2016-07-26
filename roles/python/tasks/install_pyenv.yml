@@ -31,17 +31,17 @@
 
 - name: Install Python Versions
   tags: python
-  environment:
-    CFLAGS: "-I$(brew --prefix openssl)/include -I$(xcrun --show-sdk-path)/usr/include"
-    LDFLAGS: "-L$(brew --prefix openssl)/lib"
+  #environment:
+  #  CFLAGS: "-I$(brew --prefix openssl)/include -I$(xcrun --show-sdk-path)/usr/include"
+  #  LDFLAGS: "-L$(brew --prefix openssl)/lib"
   command: "pyenv install {{ item }}"
   args:
     creates: "~/.pyenv/versions/{{ item }}"
   with_items:
-    - 2.7.11
-    - 3.4.3
-    - 3.5.1
+    - 2.7.12
+    - 3.4.5
+    - 3.5.2
 
 - name: Set system-level Python versions
   tags: python
-  command: pyenv global 3.5.1 2.7.11 3.4.3
+  command: pyenv global 2.7.12 3.4.5 3.5.2
