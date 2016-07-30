@@ -1,7 +1,9 @@
 ---
 
 - name: Install PyEnv
-  tags: python
+  tags: 
+    - python
+    - pyenv
   homebrew:
     name: "{{ item }}"
     state: present
@@ -12,7 +14,9 @@
     - readline
 
 - name: Install PyEnv plugins
-  tags: python
+  tags: 
+    - python
+    - pyenv
   git:
     repo: "{{ item.repo }}"
     dest: "{{ item.dest }}"
@@ -26,11 +30,15 @@
     - { repo: 'https://github.com/yyuu/pyenv-which-ext.git', dest: '~/.pyenv/plugins/pyenv-which-ext' }
 
 - name: Update PyEnv
-  tags: python
+  tags: 
+    - python
+    - pyenv
   command: pyenv update
 
 - name: Install Python Versions
-  tags: python
+  tags: 
+    - python
+    - pyenv
   #environment:
   #  CFLAGS: "-I$(brew --prefix openssl)/include -I$(xcrun --show-sdk-path)/usr/include"
   #  LDFLAGS: "-L$(brew --prefix openssl)/lib"
@@ -43,5 +51,7 @@
     - 3.5.2
 
 - name: Set system-level Python versions
-  tags: python
+  tags: 
+    - python
+    - pyenv
   command: pyenv global 2.7.12 3.4.5 3.5.2

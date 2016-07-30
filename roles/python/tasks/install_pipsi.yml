@@ -1,7 +1,9 @@
 ---
 
 - name: Install Pipsi Requirements
-  tags: python
+  tags: 
+    - python
+    - pipsi
   command: "pipsi install {{ item }}"
   args:
     creates: "~/.local/bin/{{ item }}"
@@ -11,6 +13,7 @@
     #- autoenv
     - ansible
     - cookiecutter
+    - em
     - glances
     - httpie
     - invoke

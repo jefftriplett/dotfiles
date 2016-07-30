@@ -1,7 +1,8 @@
 ---
 
 - name: Install Global Python Requirements
-  tags: python
+  tags: 
+    - python
   environment:
     PIP_REQUIRE_VIRTUALENV: false
   pip:
