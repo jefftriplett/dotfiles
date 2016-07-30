@@ -35,6 +35,12 @@ node: ## install node essentials
 osx: ## install osx configs
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags osx
 
+pipsi: ## install pipsi (python)
+	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags pipsi
+
+pyenv: ## install pyenv (python)
+	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags pyenv
+
 python: ## install python essentials
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags python
 
