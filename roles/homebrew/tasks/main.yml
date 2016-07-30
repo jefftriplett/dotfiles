@@ -66,7 +66,6 @@
     - arq
     - bartender
     - bittorrent-sync
-    - breach
     - calibre
     - caprine
     - charles
@@ -87,6 +86,7 @@
     - handbrakebatch
     - hipchat
     - iterm2
+    - jadengeller-helium
     - java
     - karabiner
     - launchrocket
@@ -104,9 +104,10 @@
     - slack
     - spotify
     - sqlitebrowser
-    - sublime-text3
+    - sublime-text
     - timemachineeditor
     - torbrowser
+    - tower
     - transmission
     - vagrant
     - vagrant-manager
