@@ -29,9 +29,7 @@
     - homebrew/versions
     - jimbojsb/launchrocket
     - nwoolls/cryptocoin
-    - ravenac95/sudolikeaboss
     - watsonbox/cmu-sphinx
-    - yudai/gotty
 
 - name: Install Apps
   tags: 
@@ -47,7 +45,6 @@
     - gist
     - git
     - git-standup
-    - gotty
     - gpg
     - keybase
     - phantomjs
@@ -57,7 +54,6 @@
     - ruby-build
     - sqlite
     - sshrc
-    - sudolikeaboss
     - wget
 
 - name: Install Mac Apps
