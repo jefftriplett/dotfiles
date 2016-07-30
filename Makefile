@@ -26,6 +26,9 @@ dotfiles: ## install dotfiles into home
 homebrew: ## install homebrew packages
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags homebrew
 
+homebrew-casks: ## install homebrew casks packages
+	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags homebrew-casks
+
 nginx: ## install nginx reverse proxy
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags nginx
 

@@ -1,13 +1,16 @@
 ---
 
 - name: Update Homebrew
-  tags: homebrew
+  tags: 
+    - homebrew
   homebrew:
     update_homebrew: yes
     upgrade_all: no
 
 - name: Install Taps
-  tags: homebrew
+  tags: 
+    - homebrew
+    - homebrew-taps
   homebrew_tap:
     tap: "{{ item }}"
     state: present
@@ -31,7 +34,8 @@
     - yudai/gotty
 
 - name: Install Apps
-  tags: homebrew
+  tags: 
+    - homebrew
   homebrew:
     name: "{{ item }}"
     state: present
@@ -57,7 +61,10 @@
     - wget
 
 - name: Install Mac Apps
-  tags: homebrew
+  tags: 
+    - homebrew
+    - homebrew-casks
+    - casks
   homebrew_cask:
     name: "{{ item }}"
     state: present
@@ -119,9 +126,14 @@
     # - synergy
 
 - name: Homebrew Cask Cleanup
-  tags: homebrew
+  tags: 
+    - homebrew
+    - homebrew-casks
+    - casks
   command: brew cask cleanup
 
 - name: Homebrew Cleanup
-  tags: homebrew
+  tags: 
+    - homebrew
+    - homebrew-cleanup
   command: brew cleanup
