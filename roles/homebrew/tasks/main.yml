@@ -46,8 +46,10 @@
     - git
     - git-standup
     - gpg
+    - gpg-agent
     - keybase
     - phantomjs
+    - pinentry-mac
     - pyenv
     - rbenv
     - readline
