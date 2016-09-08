@@ -21,6 +21,8 @@ Temporary Items
 .apdisk
 
 # Mine
+*.cache
+*.crt
 *.last-run
 *.lock
 *.log
@@ -29,4 +31,3 @@ Temporary Items
 *.user-ca-bundle
 
 home/.maid/*.log.[0-9]
-*.cache
