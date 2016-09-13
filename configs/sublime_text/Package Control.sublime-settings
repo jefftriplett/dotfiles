@@ -5,7 +5,6 @@
 	],
 	"installed_packages":
 	[
-		"1337 Color Scheme",
 		"AdvancedNewFile",
 		"Alignment",
 		"API Blueprint",
@@ -36,7 +35,6 @@
 		"MarkdownEditing",
 		"Modific",
 		"nginx",
-		"Oceanic Color Scheme",
 		"Package Control",
 		"Project Specific Syntax Settings",
 		"Pylinter",
@@ -54,7 +52,6 @@
 		"SublimeLinter-rst",
 		"SublimePythonIDE",
 		"Theme - Phoenix",
-		"Theme - Soda",
 		"Tomorrow Color Schemes",
 		"WordCount",
 		"Wrap Plus"
