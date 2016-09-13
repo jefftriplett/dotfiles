@@ -21,7 +21,7 @@
 	"caret_extra_top": 2,
 	"caret_extra_width": 2,
 	"caret_style": "phase",
-	"color_scheme": "Packages/Tomorrow-Night (SL).tmTheme",
+	"color_scheme": "Packages/User/SublimeLinter/Tomorrow-Night (SL).tmTheme",
 	"draw_white_space": true,
 	"enable_tab_scrolling": true,
 	"ensure_newline_at_eof_on_save": true,
@@ -50,6 +50,7 @@
 		"Markdown",
 		"Pylinter",
 		"requirementstxt",
+		"SublimeCodeIntel",
 		"SublimeREPL",
 		"Vintage"
 	],
