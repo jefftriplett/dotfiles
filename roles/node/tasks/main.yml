@@ -8,5 +8,6 @@
     global: yes
   with_items:
     - bower
+    - browser-sync
     - nativefier
     - vmd
