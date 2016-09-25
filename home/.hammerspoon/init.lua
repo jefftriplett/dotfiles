@@ -7,33 +7,23 @@ require 'keys'
 require 'tabletools'
 require 'sizeup'
 
--------------------
--- reload script --
--------------------
+--------------------------------------------------
+-- Reload at the top in case we break something --
+--------------------------------------------------
 
+-- reload script --
 hs.hotkey.bind(hyper, "S", function()
     hs.reload()
 end)
 
-
-----------
--- Grid --
-----------
-
-hs.grid.GRIDWIDTH = 4
-hs.grid.GRIDHEIGHT = 4
-hs.grid.MARGINX = 0
-hs.grid.MARGINY = 0
-
-hs.hotkey.bind(hyper, 'g', hs.grid.show)
--- hs.hotkey.bind(hyper, 'Left', hs.grid.pushWindowLeft)
--- hs.hotkey.bind(hyper, 'Right', hs.grid.pushWindowRight)
--- hs.hotkey.bind(hyper, 'Up', hs.grid.pushWindowUp)
--- hs.hotkey.bind(hyper, 'Down', hs.grid.pushWindowDown)
+---------------------
+-- Initialize Grid --
+---------------------
 
 -- Monitor names
-local display_laptop = "Color LCD"
+local display_laptop = "1680x1050"
 local display_monitor = "Thunderbolt Display"
+local display_imac = "1920x1200"
 
 -- Watchers and other useful objects
 local app_watcher = nil
@@ -73,6 +63,8 @@ end
 function config_changed_callback(paths)
     print('config_changed_callback()')
     print(table.show(paths, "paths"))
+
+    setup_grid()
 end
 
 function screens_changed_callback()
@@ -83,6 +75,9 @@ function screens_changed_callback()
     for _, screen in pairs(hs.screen.allScreens()) do
         print(table.show(screen:currentMode(), "currentMode"))
     end
+
+    -- restructure the grid --
+    setup_grid()
 end
 
 function wifi_changed_callback()
@@ -128,9 +123,44 @@ function toggle_application(_app)
     end
 end
 
+------------------------
+-- Setup Default Grid --
+------------------------
+
+function setup_grid()
+    print('setup_grid()')
+
+    -- MacBook Pro --
+    if hs.screen.find(display_laptop) then
+        print('found', display_laptop)
+        hs.grid.setGrid('3x2', display_laptop)
+    end
+
+    -- 27" --
+    if hs.screen.find('2560x1440') then
+        print('found 2560x1440')
+        hs.grid.setGrid('3x2', '2560x1440')
+    end
+
+    -- iMac --
+    if hs.screen.find(display_imac) then
+        print('found', display_imac)
+        hs.grid.setGrid('6x2', display_imac)
+    end
+end
+
+---------------------
+-- Initialize Grid --
+---------------------
+
+setup_grid()
+
 -------------------------
 -- Application Hotkeys --
 -------------------------
+
+-- show grid --
+hs.hotkey.bind(hyper, 'g', hs.grid.show)
 
 -- debug watcher statuses
 hs.hotkey.bind(hyper, '0', function()
