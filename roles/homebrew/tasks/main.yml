@@ -1,14 +1,14 @@
 ---
 
 - name: Update Homebrew
-  tags: 
+  tags:
     - homebrew
   homebrew:
     update_homebrew: yes
     upgrade_all: no
 
 - name: Install Taps
-  tags: 
+  tags:
     - homebrew
     - homebrew-taps
   homebrew_tap:
@@ -32,7 +32,7 @@
     - watsonbox/cmu-sphinx
 
 - name: Install Apps
-  tags: 
+  tags:
     - homebrew
   homebrew:
     name: "{{ item }}"
@@ -59,7 +59,7 @@
     - wget
 
 - name: Install Mac Apps
-  tags: 
+  tags:
     - homebrew
     - homebrew-casks
     - casks
@@ -70,7 +70,6 @@
     - appcleaner
     - arq
     - bartender
-    - bittorrent-sync
     - calibre
     - caprine
     - charles
@@ -104,6 +103,7 @@
     - plex-media-player
     - plex-media-server
     - reggy
+    - resilio-sync
     - seil
     - skype
     - slack
@@ -111,7 +111,6 @@
     - sqlitebrowser
     - sublime-text
     - timemachineeditor
-    - torbrowser
     - tower
     - transmission
     - vagrant
@@ -121,17 +120,16 @@
     - wkhtmltopdf
     - xld
     - xquartz
-    # - synergy
 
 - name: Homebrew Cask Cleanup
-  tags: 
+  tags:
     - homebrew
     - homebrew-casks
     - casks
   command: brew cask cleanup
 
 - name: Homebrew Cleanup
-  tags: 
+  tags:
     - homebrew
     - homebrew-cleanup
   command: brew cleanup
