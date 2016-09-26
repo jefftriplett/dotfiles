@@ -1,4 +1,3 @@
-
 ----------------------
 -- Define hyper key --
 ----------------------
@@ -12,7 +11,7 @@ require 'sizeup'
 --------------------------------------------------
 
 -- reload script --
-hs.hotkey.bind(hyper, "S", function()
+hs.hotkey.bind(hyper, 's', function()
     hs.reload()
 end)
 
@@ -21,9 +20,20 @@ end)
 ---------------------
 
 -- Monitor names
-local display_laptop = "1680x1050"
-local display_monitor = "Thunderbolt Display"
-local display_imac = "1920x1200"
+local display_default = '1680x1050'
+local display_home = '2560x1440'
+local display_imac = '1920x1200'
+local display_retina = '1440x900@2x'
+local display_work = '2560x1600'
+local display_work_vertical = '1200x1920'
+
+-- Monitor grids
+local display_default_grid = '3x2'
+local display_home_grid = '3x2'
+local display_imac_grid = '6x2'
+local display_retina = '3x2'
+local display_work_grid = '6x4'
+local display_work_vertical_gird = '2x6'
 
 -- Watchers and other useful objects
 local app_watcher = nil
@@ -33,6 +43,54 @@ local config_file_watcher = nil
 local screen_watcher = nil
 local usb_watcher = nil
 local wifi_watcher = nil
+
+------------------------
+-- Setup Default Grid --
+------------------------
+
+function setup_grid()
+    print('setup_grid()')
+
+    -- MacBook Pro (default) --
+    if hs.screen.find(display_default) then
+        print('found', display_default)
+        hs.grid.setGrid(display_default_grid, display_default)
+    end
+
+    -- Home Display --
+    if hs.screen.find(display_home) then
+        print('found', display_home)
+        hs.grid.setGrid(display_home_grid, display_home)
+    end
+
+    -- iMac --
+    if hs.screen.find(display_imac) then
+        print('found', display_imac)
+        hs.grid.setGrid(display_imac_grid, display_imac)
+    end
+
+    -- Work Display(s) --
+    if hs.screen.find(display_retina) then
+        print('found', display_retina)
+        hs.grid.setGrid(display_retina_grid, display_retina)
+    end
+
+    if hs.screen.find(display_work) then
+        print('found', display_work)
+        hs.grid.setGrid(display_work_grid, display_work)
+    end
+
+    if hs.screen.find(display_work_vertical) then
+        print('found', display_work_vertical)
+        hs.grid.setGrid(display_work_vertical_grid, display_work_vertical)
+    end
+end
+
+---------------------
+-- Initialize Grid --
+---------------------
+
+setup_grid()
 
 ----------------------
 -- System Callbacks --
@@ -52,7 +110,7 @@ end
 function caffeinate_changed_callback(event_type)
     print('caffeinate_changed_callback()')
     print(event_type)
-    print(table.show(event_type, "event_type"))
+    print(table.show(event_type, 'event_type'))
     if (event_type == hs.caffeinate.watcher.screensDidSleep) then
         print('screensDidSleep')
     elseif (event_type == hs.caffeinate.watcher.screensDidWake) then
@@ -62,7 +120,7 @@ end
 
 function config_changed_callback(paths)
     print('config_changed_callback()')
-    print(table.show(paths, "paths"))
+    print(table.show(paths, 'paths'))
 
     setup_grid()
 end
@@ -71,9 +129,9 @@ function screens_changed_callback()
     print('screens_changed_callback()')
     number_of_screens = #hs.screen.allScreens()
     print('number_of_screens:', number_of_screens)
-    print(table.show(hs.screen.allScreens(), "allScreens"))
+    print(table.show(hs.screen.allScreens(), 'allScreens'))
     for _, screen in pairs(hs.screen.allScreens()) do
-        print(table.show(screen:currentMode(), "currentMode"))
+        print(table.show(screen:currentMode(), 'currentMode'))
     end
 
     -- restructure the grid --
@@ -88,7 +146,7 @@ end
 
 function usb_changed_callback(data)
     print('usb_changed_callback()')
-    print(table.show(data, "data"))
+    print(table.show(data, 'data'))
 end
 
 ---------------------
@@ -98,7 +156,7 @@ end
 -- app_watcher = hs.application.watcher.new(app_changed_callback):start()
 battery_watcher = hs.battery.watcher.new(battery_changed_callback):start()
 caffeinate_watcher = hs.caffeinate.watcher.new(caffeinate_changed_callback):start()
-config_file_watcher = hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", config_changed_callback):start()
+config_file_watcher = hs.pathwatcher.new(os.getenv('HOME') .. '/.hammerspoon/', config_changed_callback):start()
 screen_watcher = hs.screen.watcher.new(screens_changed_callback):start()
 usb_watcher = hs.usb.watcher.new(usb_changed_callback):start()
 wifi_watcher = hs.wifi.watcher.new(wifi_changed_callback):start()
@@ -123,38 +181,6 @@ function toggle_application(_app)
     end
 end
 
-------------------------
--- Setup Default Grid --
-------------------------
-
-function setup_grid()
-    print('setup_grid()')
-
-    -- MacBook Pro --
-    if hs.screen.find(display_laptop) then
-        print('found', display_laptop)
-        hs.grid.setGrid('3x2', display_laptop)
-    end
-
-    -- 27" --
-    if hs.screen.find('2560x1440') then
-        print('found 2560x1440')
-        hs.grid.setGrid('3x2', '2560x1440')
-    end
-
-    -- iMac --
-    if hs.screen.find(display_imac) then
-        print('found', display_imac)
-        hs.grid.setGrid('6x2', display_imac)
-    end
-end
-
----------------------
--- Initialize Grid --
----------------------
-
-setup_grid()
-
 -------------------------
 -- Application Hotkeys --
 -------------------------
@@ -174,11 +200,11 @@ hs.hotkey.bind(hyper, '0', function()
 end)
 
 hs.hotkey.bind(hyper, 'Q', function()
-    toggle_application("iTerm")
+    toggle_application('iTerm')
 end)
 
 hs.hotkey.bind(hyper, 'W', function()
-    toggle_application("Sublime Text")
+    toggle_application('Sublime Text')
 end)
 
 hs.hotkey.bind(hyper, '.', function()
@@ -190,4 +216,4 @@ hs.hotkey.bind(hyper, ',', function()
     screens_changed_callback()
 end)
 
-hs.alert.show("Config loaded")
+hs.alert.show('Config loaded')
