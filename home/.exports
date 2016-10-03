@@ -4,6 +4,10 @@ PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
 ## to fix geos not working with postgis
 export LD_LIBRARY_PATH="/usr/local/lib"
 
+export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
+export CPPFLAGS="-I/usr/local/opt/readline/include"
+export LDFLAGS="-L/usr/local/opt/readline/lib"
+
 ## node
 PATH="${PATH}:/usr/local/share/npm/bin"
 
