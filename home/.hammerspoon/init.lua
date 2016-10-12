@@ -28,8 +28,8 @@ local display_work = '2560x1600'
 local display_work_vertical = '1200x1920'
 
 -- Monitor grids
-local display_default_grid = '3x2'
-local display_home_grid = '3x2'
+local display_default_grid = '2x4'
+local display_home_grid = '3x4'
 local display_imac_grid = '6x2'
 local display_retina = '3x2'
 local display_work_grid = '6x4'
