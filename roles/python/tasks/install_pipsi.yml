@@ -1,7 +1,7 @@
 ---
 
 - name: Install Pipsi Requirements
-  tags: 
+  tags:
     - python
     - pipsi
   command: "pipsi install {{ item }}"
