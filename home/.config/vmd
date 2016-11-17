@@ -1,2 +1,4 @@
-zoom = 1.2
-highlight.theme = monokai
+zoom: 1.2
+highlight:
+  theme: monokai
+  # theme: github
