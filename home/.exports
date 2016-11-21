@@ -34,7 +34,10 @@ export HISTIGNORE=" *:ls:cd:cd ~:date:exit:export:history:pwd:* --help"
 export PIP_DOWNLOAD_CACHE="/tmp/.pip/download_cache"
 export PIP_REQUIRE_VIRTUALENV="true"
 export PIP_RESPECT_VIRTUALENV="true"
-#export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
+# export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
+
+## python settings
+export PYTHONDONTWRITEBYTECODE=1
 
 ## pyenv settings
 export PYENV_ROOT="${HOME}/.pyenv"
