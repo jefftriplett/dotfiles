@@ -11,7 +11,7 @@ require 'sizeup'
 --------------------------------------------------
 
 -- reload script --
-hs.hotkey.bind(hyper, 's', function()
+hs.hotkey.bind(hyper, 'r', function()
     hs.reload()
 end)
 
@@ -43,6 +43,12 @@ local config_file_watcher = nil
 local screen_watcher = nil
 local usb_watcher = nil
 local wifi_watcher = nil
+
+------------
+-- Config --
+------------
+
+hs.window.animationDuration = 0;
 
 ------------------------
 -- Setup Default Grid --
