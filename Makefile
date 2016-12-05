@@ -12,6 +12,10 @@ clean-pyc: ## remove stray pyc files
 check: ## run ansible checks
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml --check --diff -c local
 
+deploy: ## push dotfiles to all the places
+	git push origin master
+	git push github master
+
 facts: ## view ansible facts
 	ANSIBLE_NOCOWS=1 ansible all -i hosts -m setup -c local
 
