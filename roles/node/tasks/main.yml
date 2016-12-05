@@ -9,5 +9,6 @@
   with_items:
     - bower
     - browser-sync
+    - git-open
     - nativefier
     - vmd
