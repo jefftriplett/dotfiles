@@ -48,7 +48,7 @@ local wifi_watcher = nil
 -- Config --
 ------------
 
-hs.window.animationDuration = 0;
+hs.window.animationDuration = 0.1;
 
 ------------------------
 -- Setup Default Grid --
