@@ -22,7 +22,7 @@ export EDITOR="nano"
 export HOMEBREW_NO_ANALYTICS=1
 
 # Homebrew security via: https://github.com/drduh/macOS-Security-and-Privacy-Guide
-export HOMEBREW_CASK_OPTS=--require-sha.
+# export HOMEBREW_CASK_OPTS=--require-sha  # currently broken in brew cask
 export HOMEBREW_NO_INSECURE_REDIRECT=1
 
 ## i7 gcc / 4.2.1 hack - to fix some odd install errors... ala http://stackoverflow.com/questions/5366882/installing-pil-on-os-x-snow-leopard-w-xcode4-no-ppc-support
