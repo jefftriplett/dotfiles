@@ -3,12 +3,13 @@ My Dotfiles
 
 There are my personal dotfiles. They are managed using:
 
-- [Homebrew][4] for OS X package management
+- [Hammerspoon][5]: An macOS automation tool (tiling windows manager)
+- [Homebrew][4] for macOS package management
 - [Homesick][1] for managing dotfiles
 - [Maid][2] "Hazel for hackers" for automating various tasks
 - [pip][6]: The PyPA recommended tool for installing and managing Python packages.
 - [pipsi][7]: pip script installer. pipsi is a nice tool for Python tools which need to be installed system wide.
-- [Slate][5]: a window manager
+- [pyenv][8]: Simple Python version management
 - [Whenever][3] for automating cron jobs
 
 Installation
@@ -52,6 +53,7 @@ Inspiration / Thank you!
 [2]: https://github.com/benjaminoakes/maid
 [3]: https://github.com/javan/whenever
 [4]: http://brew.sh/
-[5]: https://github.com/jigish/slate
+[5]: http://www.hammerspoon.org/
 [6]: https://pip.pypa.io/en/latest/
 [7]: https://github.com/mitsuhiko/pipsi
+[8]: https://github.com/yyuu/pyenv
