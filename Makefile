@@ -2,6 +2,11 @@
 help:
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-24s\033[0m %s\n", $$1, $$2}'
 
+.PHONY: bootstrap
+bootstrap: ## install pre-dependencies needed to install everything
+	PIP_REQUIRE_VIRTUALENV=false pip install -U pipsi
+	pipsi install ansible
+
 .PHONY: clean
 clean: clean-pyc ## clean up temporary files
 
