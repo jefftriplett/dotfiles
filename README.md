@@ -6,32 +6,32 @@ There are my personal dotfiles. They are managed using:
 - [Hammerspoon][5]: An macOS automation tool (tiling windows manager)
 - [Homebrew][4] for macOS package management
 - [Homesick][1] for managing dotfiles
-- [Maid][2] "Hazel for hackers" for automating various tasks
 - [pip][6]: The PyPA recommended tool for installing and managing Python packages.
 - [pipsi][7]: pip script installer. pipsi is a nice tool for Python tools which need to be installed system wide.
 - [pyenv][8]: Simple Python version management
-- [Whenever][3] for automating cron jobs
+- ~~[Maid][2] "Hazel for hackers" for automating various tasks~~
+- ~~[Whenever][3] for automating cron jobs~~
 
 Installation
 ------------
 
 1. Install pipsi
 
-    ```
-    $ pip install pipsi
-    ```
+```bash
+$ pip install pipsi
+```
 
 2. Install ansible
 
-    ```
-    $ pipsi install ansible
-    ```
+```bash
+$ pipsi install ansible
+```
 
 3. Let ansible do it's thing
 
-    ```
-    $ make setup
-    ```
+```bash
+$ make install
+```
 
 
 Terminal theme
