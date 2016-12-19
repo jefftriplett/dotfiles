@@ -1,7 +1,7 @@
 ---
 
 - name: Install PyEnv
-  tags: 
+  tags:
     - python
     - pyenv
   homebrew:
@@ -14,7 +14,7 @@
     - readline
 
 - name: Install PyEnv plugins
-  tags: 
+  tags:
     - python
     - pyenv
   git:
@@ -30,13 +30,13 @@
     - { repo: 'https://github.com/yyuu/pyenv-which-ext.git', dest: '~/.pyenv/plugins/pyenv-which-ext' }
 
 - name: Update PyEnv
-  tags: 
+  tags:
     - python
     - pyenv
   command: pyenv update
 
 - name: Install Python Versions
-  tags: 
+  tags:
     - python
     - pyenv
   #environment:
@@ -46,12 +46,12 @@
   args:
     creates: "~/.pyenv/versions/{{ item }}"
   with_items:
-    - 2.7.12
+    - 2.7.13
     - 3.4.5
     - 3.5.2
 
 - name: Set system-level Python versions
-  tags: 
+  tags:
     - python
     - pyenv
-  command: pyenv global 2.7.12 3.4.5 3.5.2
+  command: pyenv global 2.7.13 3.4.5 3.5.2
