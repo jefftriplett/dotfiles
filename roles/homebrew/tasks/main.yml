@@ -42,6 +42,7 @@
     - ccache
     - chrome-cli
     - coreutils
+    - direnv
     - gist
     - git
     - git-standup

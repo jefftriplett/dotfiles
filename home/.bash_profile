@@ -43,6 +43,12 @@ complete -o default -F _pip_completion pip
 
 # python settings end
 
+
+if which direnv > /dev/null; then
+    eval "$(direnv hook bash)";
+fi
+
+
 # command-not-found-init settings
 if brew command command-not-found-init > /dev/null; then
   eval "$(brew command-not-found-init)";
