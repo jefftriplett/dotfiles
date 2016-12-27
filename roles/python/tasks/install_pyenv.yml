@@ -55,4 +55,4 @@
   tags:
     - python
     - pyenv
-  command: pyenv global 2.7.13 3.5.2 3.6.0
+  command: pyenv global 3.6.0 2.7.13 3.5.2
