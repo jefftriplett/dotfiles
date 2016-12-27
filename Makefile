@@ -70,6 +70,10 @@ pyenv: ## install pyenv (python)
 python: ## install python essentials
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags python
 
+.PHONY: python_deps
+python_deps: ## install python system dependencies
+	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags python_deps
+
 .PHONY: ruby
 ruby: ## install ruby essentials
 	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags ruby

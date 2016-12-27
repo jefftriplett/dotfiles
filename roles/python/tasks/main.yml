@@ -1,15 +1,17 @@
 ---
 
 - include: install_pyenv.yml
-  tags: 
+  tags:
     - python
+    - python_deps
     - pyenv
 
 - include: install_python_deps.yml
-  tags: 
-    - python
+  tags:
+    - python_deps
 
 - include: install_pipsi.yml
-  tags: 
+  tags:
     - python
+    - python_deps
     - pipsi
