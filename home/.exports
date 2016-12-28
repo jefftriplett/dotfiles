@@ -1,70 +1,74 @@
 
-PATH="/usr/local/bin:/usr/local/sbin:${PATH}"
+#PATH="${PATH}:/usr/local/bin"
+#PATH="${PATH}:/usr/local/sbin"
 
-## to fix geos not working with postgis
-export LD_LIBRARY_PATH="/usr/local/lib"
-
+export ARCHFLAGS="-Wno-error=unused-command-line-argument-hard-error-in-future"
 export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
 export CPPFLAGS="-I/usr/local/opt/readline/include"
+export HISTCONTROL="ignoredups"
+export HISTFILESIZE=50000000
+export HISTIGNORE=" *:ls:cd:cd ~:date:exit:export:history:pwd:* --help"
+export HISTSIZE=$HISTFILESIZE
+export LANG="en_US.UTF-8"
+export LC_ALL="en_US.UTF-8"
 export LDFLAGS="-L/usr/local/opt/readline/lib"
-
-## node
-PATH="${PATH}:/usr/local/share/npm/bin"
+export LD_LIBRARY_PATH="/usr/local/lib"
 
 if [[ -e ${HOME}/bin ]] ; then
   PATH="${HOME}/bin:${PATH}"
 fi
 
-# default terminal editor
-export EDITOR="nano"
-
-# Put Homebrew in "no touching" mode
-export HOMEBREW_NO_ANALYTICS=1
-
-# Homebrew security via: https://github.com/drduh/macOS-Security-and-Privacy-Guide
-# export HOMEBREW_CASK_OPTS=--require-sha  # currently broken in brew cask
-export HOMEBREW_NO_INSECURE_REDIRECT=1
-
-## i7 gcc / 4.2.1 hack - to fix some odd install errors... ala http://stackoverflow.com/questions/5366882/installing-pil-on-os-x-snow-leopard-w-xcode4-no-ppc-support
-export ARCHFLAGS="-Wno-error=unused-command-line-argument-hard-error-in-future"
-
-# Prefer US English and UTF-8
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
-
-## history
-export HISTCONTROL="ignoredups"
-export HISTSIZE=50000000
-export HISTFILESIZE=$HISTSIZE
-export HISTIGNORE=" *:ls:cd:cd ~:date:exit:export:history:pwd:* --help"
-
-## pip settings
-export PIP_DOWNLOAD_CACHE="/tmp/.pip/download_cache"
-export PIP_REQUIRE_VIRTUALENV="true"
-export PIP_RESPECT_VIRTUALENV="true"
-# export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python
+# --------------------------------------------------
+# python settings
+# --------------------------------------------------
 
 ## python settings
 export PYTHONDONTWRITEBYTECODE=1
 
+## pip settings ##
+export PIP_DOWNLOAD_CACHE="/tmp/.pip/download_cache"
+export PIP_REQUIRE_VIRTUALENV="true"
+export PIP_RESPECT_VIRTUALENV="true"
+
+## pipsi settings
+PATH="${PATH}:~/.local/bin"
+
 ## pyenv settings
 export PYENV_ROOT="${HOME}/.pyenv"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-PATH="${PYENV_ROOT}/bin:${PATH}"
+PATH="${PATH}:${PYENV_ROOT}/bin"
 
+# --------------------------------------------------
+# node settings
+# --------------------------------------------------
+
+PATH="${PATH}:/usr/local/share/npm/bin"
+PATH="${PATH}:/usr/local/node_modules/.bin"
+
+# --------------------------------------------------
 # ruby settings
-PATH="$(brew --prefix ruby)/bin:${PATH}"
-PATH="/usr/local/node_modules/.bin:${PATH}"
-PATH="~/.local/bin:${PATH}"
+# --------------------------------------------------
 
-# rbenv settings
+PATH="${PATH}:$(brew --prefix ruby)/bin"
+
+## rbenv settings
 export RBENV_ROOT="/usr/local/var/rbenv"
 
-# arcanist settings
-export DEV_HOME="${HOME}/dev/arcanist/bin"
-PATH="${DEV_HOME}:${PATH}"
-
+# --------------------------------------------------
 # Heroku Toolbelt settings
-PATH="/usr/local/heroku/bin:${PATH}"
+# --------------------------------------------------
+
+PATH="${PATH}:/usr/local/heroku/bin"
+
+# --------------------------------------------------
+# golang settings
+# --------------------------------------------------
+
+export GOPATH="$HOME/golang"
+export GOROOT=/usr/local/opt/go/libexec
+PATH="${PATH}:$GOPATH/bin"
+PATH="${PATH}:$GOROOT/bin"
+
+# --------------------------------------------------
 
 export PATH
