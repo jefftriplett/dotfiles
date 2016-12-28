@@ -46,6 +46,7 @@
     - gist
     - git
     - git-standup
+    - go
     - gpg
     - gpg-agent
     - keybase
