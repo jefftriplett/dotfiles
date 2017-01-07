@@ -5,10 +5,10 @@ for comp in \
     ~/.exports \
     ~/.aliases \
     ~/.github \
+    ~/.secrets \
     /usr/local/Library/Contributions/brew_bash_completion.sh \
-    /usr/local/etc/bash_completion.d/git-completion.bash \
-    /usr/local/etc/bash_completion.d/tmux \
-    ~/dev/arcanist/resources/shell/bash-completion
+    /usr/local/etc/bash_completion.d/git-completion.bash
+    #/usr/local/etc/bash_completion.d/tmux
     #/usr/local/bin/virtualenvwrapper.sh
 do
     [[ -e $comp ]] && source $comp
@@ -27,7 +27,6 @@ fi
 # pyenv settings
 if which pyenv > /dev/null; then
     eval "$(pyenv init -)";
-    # eval "$(pyenv virtualenv-init -)";
     pyenv virtualenvwrapper_lazy
 fi
 
