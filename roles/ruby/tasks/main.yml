@@ -8,5 +8,6 @@
   with_items:
     - desktop
     - homesick
+    - foreman
     - maid
     - whenever
