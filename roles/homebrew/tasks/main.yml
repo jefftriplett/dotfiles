@@ -50,6 +50,7 @@
     - gpg
     - gpg-agent
     - keybase
+    - libev
     - phantomjs
     - pinentry-mac
     - pyenv
@@ -79,6 +80,7 @@
     - cleanmymac
     - coconutbattery
     - controlplane
+    - corectl-app
     - duet
     - fluid
     - font-hack
@@ -97,6 +99,7 @@
     - jadengeller-helium
     - java
     - karabiner
+    - kube-solo
     - launchrocket
     - mactex
     - mattr-slate
