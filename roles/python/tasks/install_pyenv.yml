@@ -48,11 +48,11 @@
   with_items:
     - 2.7.13
     - 3.4.5
-    - 3.5.2
+    - 3.5.3
     - 3.6.0
 
 - name: Set system-level Python versions
   tags:
     - python
     - pyenv
-  command: pyenv global 3.6.0 2.7.13 3.5.2
+  command: pyenv global 3.6.0 2.7.13 3.5.3
