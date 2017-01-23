@@ -15,20 +15,15 @@
     tap: "{{ item }}"
     state: present
   with_items:
+    - buo/cask-upgrade
     - caskroom/cask
     - caskroom/fonts
     - caskroom/versions
-    - homebrew/binary
     - homebrew/command-not-found
     - homebrew/dupes
-    - homebrew/games
-    - homebrew/headonly
-    - homebrew/python
-    - homebrew/science
     - homebrew/services
     - homebrew/versions
     - jimbojsb/launchrocket
-    - nwoolls/cryptocoin
     - watsonbox/cmu-sphinx
 
 - name: Install Apps
@@ -94,7 +89,6 @@
     - hammerspoon
     - handbrake
     - handbrakebatch
-    - hipchat
     - iterm2
     - jadengeller-helium
     - java
