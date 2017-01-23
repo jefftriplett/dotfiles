@@ -8,8 +8,7 @@ for comp in \
     ~/.secrets \
     /usr/local/Library/Contributions/brew_bash_completion.sh \
     /usr/local/etc/bash_completion.d/git-completion.bash
-    #/usr/local/etc/bash_completion.d/tmux
-    #/usr/local/bin/virtualenvwrapper.sh
+    #/usr/local/etc/bash_completion.d/kubectl
 do
     [[ -e $comp ]] && source $comp
 done
