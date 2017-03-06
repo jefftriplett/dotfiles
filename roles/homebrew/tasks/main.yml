@@ -1,5 +1,4 @@
 ---
-
 - name: Update Homebrew
   tags:
     - homebrew
@@ -14,47 +13,34 @@
   homebrew_tap:
     tap: "{{ item }}"
     state: present
-  with_items:
-    - buo/cask-upgrade
-    - caskroom/cask
-    - caskroom/fonts
-    - caskroom/versions
-    - homebrew/command-not-found
-    - homebrew/dupes
-    - homebrew/services
-    - homebrew/versions
-    - jimbojsb/launchrocket
-    - watsonbox/cmu-sphinx
+  with_items: homebrew_taps
 
-- name: Install Apps
+- name: Check for Installed Console Apps
+  tags:
+    - homebrew
+  shell: brew list | grep {{ item }}
+  register: installed_homebrew_apps
+  with_items: homebrew_apps
+  ignore_errors: true
+
+- name: Install Console Apps
   tags:
     - homebrew
   homebrew:
     name: "{{ item }}"
     state: present
-  with_items:
-    - aria2
-    - ccache
-    - chrome-cli
-    - coreutils
-    - direnv
-    - gist
-    - git
-    - git-standup
-    - go
-    - gpg
-    - gpg-agent
-    - keybase
-    - libev
-    - phantomjs
-    - pinentry-mac
-    - pyenv
-    - rbenv
-    - readline
-    - ruby-build
-    - sqlite
-    - sshrc
-    - wget
+  with_items: homebrew_apps
+  when: item not in installed_homebrew_apps.results|map(attribute='stdout')
+
+- name: Check for Installed Mac Apps
+  tags:
+    - homebrew
+    - homebrew-casks
+    - casks
+  shell: brew cask list | grep {{ item }}
+  register: installed_homebrew_cask_apps
+  with_items: homebrew_cask_apps
+  ignore_errors: true
 
 - name: Install Mac Apps
   tags:
@@ -64,65 +50,8 @@
   homebrew_cask:
     name: "{{ item }}"
     state: present
-  with_items:
-    - appcleaner
-    - arq
-    - bartender
-    - calibre
-    - caprine
-    - charles
-    - chicken
-    - cleanmymac
-    - coconutbattery
-    - controlplane
-    - corectl-app
-    - duet
-    - fluid
-    - font-hack
-    - font-ubuntu
-    - font-ubuntu-mono-derivative-powerline
-    - gitup
-    - google-chrome
-    - google-featured-photos
-    - google-hangouts
-    - gpgtools
-    - hammerspoon
-    - handbrake
-    - handbrakebatch
-    - iterm2
-    - jadengeller-helium
-    - java
-    - karabiner
-    - kube-solo
-    - launchrocket
-    - mactex
-    - mattr-slate
-    - medis
-    - minecraft
-    - mojibar
-    - numi
-    - plex-media-player
-    - plex-media-server
-    - reggy
-    - resilio-sync
-    - seil
-    - skype
-    - slack
-    - sling
-    - spotify
-    - sqlitebrowser
-    - sublime-text
-    - tableflip
-    - timemachineeditor
-    - tower
-    - transmission
-    - vagrant
-    - vagrant-manager
-    - virtualbox
-    - vlc
-    - wkhtmltopdf
-    - xld
-    - xquartz
+  with_items: homebrew_cask_apps
+  when: item not in installed_homebrew_cask_apps.results|map(attribute='stdout')
 
 - name: Homebrew Cask Cleanup
   tags:

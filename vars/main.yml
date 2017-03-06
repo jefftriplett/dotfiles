@@ -1,0 +1,145 @@
+---
+homebrew_taps:
+  - buo/cask-upgrade
+  - caskroom/cask
+  - caskroom/fonts
+  - caskroom/versions
+  - homebrew/command-not-found
+  - homebrew/dupes
+  - homebrew/services
+  - homebrew/versions
+  - jimbojsb/launchrocket
+  - watsonbox/cmu-sphinx
+
+homebrew_apps:
+  - aria2
+  - ccache
+  - chrome-cli
+  - coreutils
+  - direnv
+  - dockutil
+  - gist
+  - git
+  - git-standup
+  - go
+  - gpg
+  - gpg-agent
+  - kubernetes-cli
+  - kubernetes-helm
+  - libev
+  - libpng
+  - maven
+  - mysql
+  - node
+  - phantomjs
+  - pinentry-mac
+  - postgresql
+  - pyenv
+  - pyenv-ccache
+  - pyenv-virtualenvwrapper
+  - rbenv
+  - readline
+  - redis
+  - ruby-build
+  - sqlite
+  - sshrc
+  - sudolikeaboss
+  - wget
+  - youtube-dl
+  - zlib
+
+homebrew_cask_apps:
+  - android-file-transfer
+  - appcleaner
+  - arq
+  - bartender
+  - calibre
+  - caprine
+  - charles
+  - chicken
+  - cleanmymac
+  - coconutbattery
+  - controlplane
+  - corectl-app
+  - dropbox
+  - duet
+  - fluid
+  - font-hack
+  - font-ubuntu
+  - font-ubuntu-mono-derivative-powerline
+  - gitup
+  - google-chrome
+  - google-featured-photos
+  - google-hangouts
+  - gpgtools
+  - hammerspoon
+  - handbrake
+  - handbrakebatch
+  - iterm2
+  - jadengeller-helium
+  - java
+  - karabiner
+  - keybase
+  - kitematic
+  - kube-solo
+  - launchrocket
+  - mactex
+  - mattr-slate
+  - medis
+  - minecraft
+  - mojibar
+  - musicbrainz-picard
+  - numi
+  - plex-media-player
+  - plex-media-server
+  - reggy
+  - resilio-sync
+  - seil
+  - skype
+  - slack
+  - sling
+  - spotify
+  - sqlitebrowser
+  - sublime-text
+  - tableflip
+  - timemachineeditor
+  - torbrowser
+  - tower
+  - transmission
+  - vlc
+  - wkhtmltopdf
+  - xld
+  - xquartz
+
+
+# Our Python Packages
+
+python_system_packages:
+  - pip
+  - pipsi
+  - setuptools
+  - virtualenv
+  - virtualenvwrapper
+
+pipsi_packages:
+  #- 1pass
+  #- autoenv
+  - ansible
+  - awscli
+  - cookiecutter
+  - em
+  - glances
+  - httpie
+  - invoke
+  - ispy
+  - itermocil
+  - mackup
+  - mercurial
+  - osx-openconnect-helper
+  - pep257
+  - pgcli
+  - proselint
+  - pur
+  - pythonpy
+  - tvnamer
+  - url2markdown-cli

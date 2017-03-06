@@ -8,24 +8,4 @@
   args:
     creates: "~/.local/bin/{{ item }}"
   ignore_errors: True
-  with_items:
-    #- 1pass
-    #- autoenv
-    - ansible
-    - cookiecutter
-    - em
-    - glances
-    - httpie
-    - invoke
-    - ispy
-    - itermocil
-    - mackup
-    - mercurial
-    - osx-openconnect-helper
-    - pep257
-    - pgcli
-    - proselint
-    - pur
-    - pythonpy
-    - tvnamer
-    - url2markdown-cli
+  with_items: pipsi_packages

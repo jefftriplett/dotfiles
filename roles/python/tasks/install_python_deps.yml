@@ -8,9 +8,4 @@
   pip:
     executable: "{{ ansible_env.HOME }}/.pyenv/shims/pip"
     name: "{{ item }}"
-  with_items:
-    - pip
-    - pipsi
-    - setuptools
-    - virtualenv
-    - virtualenvwrapper
+  with_items: python_system_packages
