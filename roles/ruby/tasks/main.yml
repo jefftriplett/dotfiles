@@ -5,9 +5,4 @@
   gem:
     name: "{{ item }}"
     state: latest
-  with_items:
-    - desktop
-    - homesick
-    - foreman
-    - maid
-    - whenever
+  with_items: ruby_system_packages

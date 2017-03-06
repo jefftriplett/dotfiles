@@ -1,4 +1,5 @@
 ---
+
 homebrew_taps:
   - buo/cask-upgrade
   - caskroom/cask
@@ -112,7 +113,7 @@ homebrew_cask_apps:
   - xquartz
 
 
-# Our Python Packages
+# Python Packages
 
 python_system_packages:
   - pip
@@ -143,3 +144,21 @@ pipsi_packages:
   - pythonpy
   - tvnamer
   - url2markdown-cli
+
+# Node Packages
+
+node_system_packages:
+  - bower
+  - browser-sync
+  - git-open
+  - nativefier
+  - vmd
+
+# Ruby Packages
+
+ruby_system_packages:
+  - desktop
+  - homesick
+  - foreman
+  - maid
+  - whenever

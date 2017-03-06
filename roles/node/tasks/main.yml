@@ -6,9 +6,4 @@
     name: "{{ item }}"
     state: latest
     global: yes
-  with_items:
-    - bower
-    - browser-sync
-    - git-open
-    - nativefier
-    - vmd
+  with_items: node_system_packages
