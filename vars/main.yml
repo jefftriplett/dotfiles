@@ -25,6 +25,7 @@ homebrew_apps:
   - go
   - gpg
   - gpg-agent
+  - guetzli
   - kubernetes-cli
   - kubernetes-helm
   - libev
