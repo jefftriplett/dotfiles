@@ -1,5 +1,7 @@
 ---
 
+# Homebrew Taps (to give us access to cool things like Casks)
+
 homebrew_taps:
   - buo/cask-upgrade
   - caskroom/cask
@@ -11,6 +13,8 @@ homebrew_taps:
   - homebrew/versions
   - jimbojsb/launchrocket
   - watsonbox/cmu-sphinx
+
+# Terminal Applications
 
 homebrew_apps:
   - aria2
@@ -49,6 +53,8 @@ homebrew_apps:
   - wget
   - youtube-dl
   - zlib
+
+# Mac Applications
 
 homebrew_cask_apps:
   - android-file-transfer
