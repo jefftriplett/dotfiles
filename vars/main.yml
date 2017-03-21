@@ -159,6 +159,7 @@ node_system_packages:
   - browser-sync
   - git-open
   - nativefier
+  - surge
   - vmd
 
 # Ruby Packages
