@@ -4,7 +4,7 @@
 
 #export ARCHFLAGS="-Wno-error=unused-command-line-argument-hard-error-in-future"
 export ARCHFLAGS="-Werror=unused-command-line-argument"
-export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
+# export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
 export CPPFLAGS="-I/usr/local/opt/readline/include"
 export HISTCONTROL="ignoredups"
 export HISTFILESIZE=50000000
