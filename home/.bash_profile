@@ -63,3 +63,17 @@ ssh-add ~/.ssh/id_ed25519 &> /dev/null
 if which itermocil > /dev/null; then
     complete -W "$(itermocil --list)" itermocil
 fi
+
+# TODO: move over the homebrew cask google-cloud-sdk
+# source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc'
+# source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/jefftriplett/Downloads/google-cloud-sdk/path.bash.inc' ]; then
+    source '/Users/jefftriplett/Downloads/google-cloud-sdk/path.bash.inc'
+fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/jefftriplett/Downloads/google-cloud-sdk/completion.bash.inc' ]; then
+    source '/Users/jefftriplett/Downloads/google-cloud-sdk/completion.bash.inc'
+fi
