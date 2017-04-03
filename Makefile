@@ -17,7 +17,7 @@ clean-pyc: ## remove stray pyc files
 
 .PHONY: check
 check: ## run ansible checks
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml --check --diff -c local
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml --check --diff -c local
 
 .PHONY: deploy
 deploy: ## push dotfiles to all the places
@@ -26,58 +26,58 @@ deploy: ## push dotfiles to all the places
 
 .PHONY: facts
 facts: ## view ansible facts
-	ANSIBLE_NOCOWS=1 ansible all -i hosts -m setup -c local
+	ANSIBLE_NOCOWS=1 ansible all -i ./playbooks/hosts -m setup -c local
 
 .PHONY: install
 install: ## install everything
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --skip-tags sublime
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --skip-tags sublime
 
 # Tags
 
 .PHONY: dotfiles
 dotfiles: ## install dotfiles into home
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags dotfiles
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags dotfiles
 
 .PHONY: homebrew
 homebrew: ## install homebrew packages
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags homebrew
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags homebrew
 
 .PHONY: homebrew-casks
 homebrew-casks: ## install homebrew casks packages
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags homebrew-casks
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags homebrew-casks
 
 .PHONY: nginx
 nginx: ## install nginx reverse proxy
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags nginx
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags nginx
 
 .PHONY: node
 node: ## install node essentials
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags node
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags node
 
 .PHONY: osx
 osx: ## install osx configs
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags osx
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags osx
 
 .PHONY: pipsi
 pipsi: ## install pipsi (python)
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags pipsi
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags pipsi
 
 .PHONY: pyenv
 pyenv: ## install pyenv (python)
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags pyenv
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags pyenv
 
 .PHONY: python
 python: ## install python essentials
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags python
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags python
 
 .PHONY: python_deps
 python_deps: ## install python system dependencies
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags python_deps
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags python_deps
 
 .PHONY: ruby
 ruby: ## install ruby essentials
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags ruby
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags ruby
 
 .PHONY: sublime
 sublime: ## install sublimetext3 configs
-	ANSIBLE_NOCOWS=1 ansible-playbook -i hosts playbook.yml -c local --tags sublime
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/playbook.yml -c local --tags sublime
