@@ -115,6 +115,7 @@ homebrew_cask_apps:
   - tower
   - transmission
   - vlc
+  - webcatalog
   - wkhtmltopdf
   - xld
   - xquartz
