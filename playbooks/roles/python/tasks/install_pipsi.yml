@@ -6,6 +6,6 @@
     - pipsi
   command: "pipsi install {{ item }}"
   args:
-    creates: "~/.local/bin/{{ item }}"
+    creates: "~/.local/venvs/{{ item }}"
   ignore_errors: True
   with_items: "{{ pipsi_packages }}"
