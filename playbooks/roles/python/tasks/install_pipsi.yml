@@ -8,4 +8,4 @@
   args:
     creates: "~/.local/bin/{{ item }}"
   ignore_errors: True
-  with_items: pipsi_packages
+  with_items: "{{ pipsi_packages }}"

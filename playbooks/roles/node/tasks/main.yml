@@ -6,4 +6,4 @@
     name: "{{ item }}"
     state: latest
     global: yes
-  with_items: node_system_packages
+  with_items: "{{ node_system_packages }}"
