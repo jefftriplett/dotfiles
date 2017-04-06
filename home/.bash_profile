@@ -55,9 +55,9 @@ if brew command command-not-found-init > /dev/null; then
 fi
 
 # add ssh keys
-ssh-add ~/.ssh/id_rsa &> /dev/null
-ssh-add ~/.ssh/id_dsa &> /dev/null
-ssh-add ~/.ssh/id_ed25519 &> /dev/null
+# ssh-add ~/.ssh/id_rsa &> /dev/null
+# ssh-add ~/.ssh/id_dsa &> /dev/null
+# ssh-add ~/.ssh/id_ed25519 &> /dev/null
 
 ## itermocil autocompletion
 if which itermocil > /dev/null; then
