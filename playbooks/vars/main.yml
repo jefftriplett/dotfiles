@@ -131,8 +131,11 @@ python_system_packages:
   - virtualenvwrapper
 
 pipsi_packages:
-  #- 1pass
-  #- autoenv
+  # - 1pass
+  # - autoenv
+  # - mercurial
+  # - osx-openconnect-helper
+  # - tvnamer
   - ansible
   - awscli
   - cookiecutter
@@ -143,14 +146,13 @@ pipsi_packages:
   - ispy
   - itermocil
   - mackup
-  - mercurial
-  - osx-openconnect-helper
   - pep257
+  - pew
   - pgcli
+  - pipenv
   - proselint
   - pur
   - pythonpy
-  - tvnamer
   - url2markdown-cli
 
 # Node Packages
