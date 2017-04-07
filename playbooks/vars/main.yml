@@ -8,6 +8,7 @@ homebrew_taps:
   - caskroom/fonts
   - caskroom/versions
   - homebrew/command-not-found
+  - homebrew/core
   - homebrew/dupes
   - homebrew/services
   - homebrew/versions
@@ -30,6 +31,7 @@ homebrew_apps:
   - gpg
   - gpg-agent
   - guetzli
+  - hub
   - kubernetes-cli
   - kubernetes-helm
   - libev
