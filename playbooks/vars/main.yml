@@ -50,6 +50,7 @@ homebrew_apps:
   - sqlite
   - sshrc
   - sudolikeaboss
+  - TomAnthony/brews/itermocil
   - wget
   - youtube-dl
   - zlib
@@ -144,7 +145,6 @@ pipsi_packages:
   - httpie
   - invoke
   - ispy
-  - itermocil
   - mackup
   - pep257
   - pew
