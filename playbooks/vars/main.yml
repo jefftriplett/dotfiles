@@ -161,6 +161,7 @@ node_system_packages:
   - bower
   - browser-sync
   - git-open
+  - gitignore
   - nativefier
   - surge
   - vmd
