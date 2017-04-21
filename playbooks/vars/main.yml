@@ -74,12 +74,14 @@ homebrew_cask_apps:
   - corectl-app
   - dropbox
   - duet
+  - etcher
   - fluid
   - font-hack
   - font-ubuntu
   - font-ubuntu-mono-derivative-powerline
   - gitup
   - google-chrome
+  - google-cloud-sdk
   - google-featured-photos
   - google-hangouts
   - gpgtools
@@ -123,7 +125,6 @@ homebrew_cask_apps:
   - xld
   - xquartz
 
-
 # Python Packages
 
 python_system_packages:
@@ -155,6 +156,7 @@ pipsi_packages:
   - proselint
   - pur
   - pythonpy
+  - speedtest-cli
   - url2markdown-cli
 
 # Node Packages
