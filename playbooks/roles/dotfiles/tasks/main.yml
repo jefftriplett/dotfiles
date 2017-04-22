@@ -1,9 +1,9 @@
 ---
 
 - name: Pull latest dotfiles via homesick
-  command: homesick pull
+  command: "homesick pull"
   tags: dotfiles
 
 - name: Update dotfiles via homesick
-  command: homesick symlink
+  command: "homesick symlink"
   tags: dotfiles

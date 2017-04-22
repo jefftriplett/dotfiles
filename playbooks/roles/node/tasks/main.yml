@@ -3,7 +3,7 @@
 - name: Update node.js Packages
   tags: node
   npm:
-    name: "{{ item }}"
+    name: "{{ item.name }}"
     state: latest
     global: yes
   with_items: "{{ node_system_packages }}"

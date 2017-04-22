@@ -7,5 +7,5 @@
     PIP_REQUIRE_VIRTUALENV: false
   pip:
     executable: "{{ ansible_env.HOME }}/.pyenv/shims/pip"
-    name: "{{ item }}"
+    name: "{{ item.name }}"
   with_items: "{{ python_system_packages }}"

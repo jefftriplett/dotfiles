@@ -4,8 +4,8 @@
   tags:
     - python
     - pipsi
-  command: "pipsi install {{ item }}"
+  command: "pipsi install {{ item.name }}"
   args:
-    creates: "~/.local/venvs/{{ item }}"
+    creates: "~/.local/venvs/{{ item.name }}"
   ignore_errors: True
   with_items: "{{ pipsi_packages }}"

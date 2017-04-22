@@ -3,178 +3,185 @@
 # Homebrew Taps (to give us access to cool things like Casks)
 
 homebrew_taps:
-  - buo/cask-upgrade
-  - caskroom/cask
-  - caskroom/fonts
-  - caskroom/versions
-  - homebrew/command-not-found
-  - homebrew/core
-  - homebrew/dupes
-  - homebrew/services
-  - homebrew/versions
-  - jimbojsb/launchrocket
-  - watsonbox/cmu-sphinx
+  - name: buo/cask-upgrade
+  - name: caskroom/cask
+  - name: caskroom/fonts
+  - name: caskroom/versions
+  - name: homebrew/command-not-found
+  - name: homebrew/core
+  - name: homebrew/dupes
+  - name: homebrew/services
+  - name: homebrew/versions
+  - name: jimbojsb/launchrocket
+  - name: watsonbox/cmu-sphinx
 
 # Terminal Applications
 
 homebrew_apps:
-  - aria2
-  - ccache
-  - chrome-cli
-  - coreutils
-  - direnv
-  - dockutil
-  - gist
-  - git
-  - git-standup
-  - go
-  - gpg
-  - gpg-agent
-  - guetzli
-  - hub
-  - kubernetes-cli
-  - kubernetes-helm
-  - libev
-  - libpng
-  - maven
-  - mysql
-  - node
-  - phantomjs
-  - pinentry-mac
-  - postgresql
-  - pyenv
-  - pyenv-ccache
-  - pyenv-virtualenvwrapper
-  - rbenv
-  - readline
-  - redis
-  - ruby-build
-  - sqlite
-  - sshrc
-  - sudolikeaboss
-  - TomAnthony/brews/itermocil
-  - wget
-  - youtube-dl
-  - zlib
+  - name: aria2
+  - name: ccache
+  - name: chrome-cli
+  - name: coreutils
+  - name: direnv
+  - name: dockutil
+  - name: gist
+  - name: git
+  - name: git-standup
+  - name: go
+  - name: gpg
+  - name: gpg-agent
+  - name: guetzli
+  - name: hub
+  - name: kubernetes-cli
+  - name: kubernetes-helm
+  - name: libev
+  - name: libpng
+  - name: maven
+  - name: mysql
+  - name: node
+  - name: phantomjs
+  - name: pinentry-mac
+  - name: postgresql
+  - name: pyenv
+  - name: pyenv-ccache
+  - name: pyenv-virtualenvwrapper
+  - name: rbenv
+  - name: readline
+  - name: redis
+  - name: ruby-build
+  - name: sqlite
+  - name: sshrc
+  - name: sudolikeaboss
+  - name: TomAnthony/brews/itermocil
+  - name: wget
+  - name: youtube-dl
+  - name: zlib
 
 # Mac Applications
 
 homebrew_cask_apps:
-  - android-file-transfer
-  - appcleaner
-  - arq
-  - bartender
-  - calibre
-  - caprine
-  - charles
-  - chicken
-  - cleanmymac
-  - coconutbattery
-  - controlplane
-  - corectl-app
-  - dropbox
-  - duet
-  - etcher
-  - fluid
-  - font-hack
-  - font-ubuntu
-  - font-ubuntu-mono-derivative-powerline
-  - gitup
-  - google-chrome
-  - google-cloud-sdk
-  - google-featured-photos
-  - google-hangouts
-  - gpgtools
-  - hammerspoon
-  - handbrake
-  - handbrakebatch
-  - iterm2
-  - jadengeller-helium
-  - java
-  - karabiner
-  - keybase
-  - kitematic
-  - kube-solo
-  - launchrocket
-  - mactex
-  - mattr-slate
-  - medis
-  - minecraft
-  - mojibar
-  - musicbrainz-picard
-  - numi
-  - plex-media-player
-  - plex-media-server
-  - reggy
-  - resilio-sync
-  - seil
-  - skype
-  - slack
-  - sling
-  - spotify
-  - sqlitebrowser
-  - sublime-text
-  - tableflip
-  - timemachineeditor
-  - torbrowser
-  - tower
-  - transmission
-  - vlc
-  - webcatalog
-  - wkhtmltopdf
-  - xld
-  - xquartz
+  - name: android-file-transfer
+  - name: appcleaner
+  - name: arq
+  - name: bartender
+  - name: calibre
+  - name: caprine
+  - name: charles
+  - name: chicken
+  - name: cleanmymac
+  - name: coconutbattery
+  - name: controlplane
+  - name: corectl-app
+  - name: dropbox
+  - name: duet
+  - name: etcher
+  - name: fluid
+  - name: font-hack
+  - name: font-ubuntu
+  - name: font-ubuntu-mono-derivative-powerline
+  - name: gitup
+  - name: google-chrome
+  - name: google-cloud-sdk
+  - name: google-featured-photos
+  - name: google-hangouts
+  - name: gpgtools
+  - name: hammerspoon
+  - name: handbrake
+  - name: handbrakebatch
+  - name: iterm2
+  - name: jadengeller-helium
+  - name: java
+  - name: karabiner
+  - name: keybase
+  - name: kitematic
+  - name: kube-solo
+  - name: launchrocket
+  - name: mactex
+  - name: mattr-slate
+  - name: medis
+  - name: minecraft
+  - name: mojibar
+  - name: musicbrainz-picard
+  - name: numi
+  - name: plex-media-player
+  - name: plex-media-server
+  - name: reggy
+  - name: resilio-sync
+  - name: seil
+  - name: skype
+  - name: slack
+  - name: sling
+  - name: spotify
+  - name: sqlitebrowser
+  - name: sublime-text
+  - name: tableflip
+  - name: timemachineeditor
+  - name: torbrowser
+  - name: tower
+  - name: transmission
+  - name: vlc
+  - name: webcatalog
+  - name: wkhtmltopdf
+  - name: xld
+  - name: xquartz
 
 # Python Packages
 
+pyenv_versions:
+  - name: 2.7.13
+  - name: 3.6.1
+  - name: 3.5.3
+
+pyenv_global_version: "3.6.1 2.7.13"
+
 python_system_packages:
-  - pip
-  - pipsi
-  - setuptools
-  - virtualenv
-  - virtualenvwrapper
+  - name: pip
+  - name: pipsi
+  - name: setuptools
+  - name: virtualenv
+  - name: virtualenvwrapper
 
 pipsi_packages:
-  # - 1pass
-  # - autoenv
-  # - mercurial
-  # - osx-openconnect-helper
-  # - tvnamer
-  - ansible
-  - awscli
-  - cookiecutter
-  - em
-  - glances
-  - httpie
-  - invoke
-  - ispy
-  - mackup
-  - pep257
-  - pew
-  - pgcli
-  - pipenv
-  - proselint
-  - pur
-  - pythonpy
-  - speedtest-cli
-  - url2markdown-cli
+  # - name: 1pass
+  # - name: autoenv
+  # - name: mercurial
+  # - name: osx-openconnect-helper
+  # - name: tvnamer
+  - name: ansible
+  - name: awscli
+  - name: cookiecutter
+  - name: em
+  - name: glances
+  - name: httpie
+  - name: invoke
+  - name: ispy
+  - name: mackup
+  - name: pep257
+  - name: pew
+  - name: pgcli
+  - name: pipenv
+  - name: proselint
+  - name: pur
+  - name: pythonpy
+  - name: speedtest-cli
+  - name: url2markdown-cli
 
 # Node Packages
 
 node_system_packages:
-  - bower
-  - browser-sync
-  - git-open
-  - gitignore
-  - nativefier
-  - surge
-  - vmd
+  - name: bower
+  - name: browser-sync
+  - name: git-open
+  - name: gitignore
+  - name: nativefier
+  - name: surge
+  - name: vmd
 
 # Ruby Packages
 
 ruby_system_packages:
-  - desktop
-  - homesick
-  - foreman
-  - maid
-  - whenever
+  - name: desktop
+  - name: homesick
+  - name: foreman
+  - name: maid
+  - name: whenever

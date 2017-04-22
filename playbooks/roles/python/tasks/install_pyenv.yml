@@ -5,7 +5,7 @@
 #     - python
 #     - pyenv
 #   homebrew:
-#     name: "{{ item }}"
+#     name: "{{ item.name }}"
 #     state: present
 #   with_items:
 #     - pyenv
@@ -40,7 +40,7 @@
   tags:
     - python
     - pyenv
-  command: pyenv update
+  command: "pyenv update"
 
 - name: Install Python Versions
   tags:
@@ -49,16 +49,13 @@
   #environment:
   #  CFLAGS: "-I$(brew --prefix openssl)/include -I$(xcrun --show-sdk-path)/usr/include"
   #  LDFLAGS: "-L$(brew --prefix openssl)/lib"
-  command: "pyenv install {{ item }}"
+  command: "pyenv install {{ item.name }}"
   args:
-    creates: "~/.pyenv/versions/{{ item }}"
-  with_items:
-    - 2.7.13
-    - 3.6.1
-    - 3.5.3
+    creates: "~/.pyenv/versions/{{ item.name }}"
+  with_items: "{{ pyenv_versions }}"
 
 - name: Set system-level Python versions
   tags:
     - python
     - pyenv
-  command: pyenv global 3.6.1 2.7.13 3.5.3
+  command: "pyenv global {{ pyenv_global_version }}"

@@ -3,12 +3,12 @@
 - name: Set standby delay to 24 hours (default is 1 hour)
   tags: osx
   become: yes
-  command: pmset -a standbydelay 86400
+  command: "pmset -a standbydelay 86400"
 
 - name: Disable the sound effects on boot
   tags: osx
   become: yes
-  command: nvram SystemAudioVolume=" "
+  command: "nvram SystemAudioVolume=' '"
 
 ##############################
 # General UI/UX                                                               #
@@ -80,7 +80,7 @@
 
 - name: Show the ~/Library folder
   tags: osx
-  command: chflags nohidden ~/Library
+  command: "chflags nohidden ~/Library"
 
 ##############################
 # Dock & hot corners

@@ -3,6 +3,6 @@
 - name: Update Ruby Gems
   tags: ruby
   gem:
-    name: "{{ item }}"
+    name: "{{ item.name }}"
     state: latest
   with_items: "{{ ruby_system_packages }}"
