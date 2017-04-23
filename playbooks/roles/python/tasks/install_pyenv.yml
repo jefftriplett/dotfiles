@@ -21,20 +21,20 @@
     repo: "{{ item.repo }}"
     dest: "{{ item.dest }}"
   with_items:
-    - repo: 'https://github.com/yyuu/pyenv-ccache.git'
-      dest: '~/.pyenv/plugins/pyenv-ccache'
-    - repo: 'https://github.com/yyuu/pyenv-doctor.git'
-      dest: '~/.pyenv/plugins/pyenv-doctor'
-    - repo: 'https://github.com/yyuu/pyenv-pip-migrate.git'
-      dest: '~/.pyenv/plugins/pyenv-pip-migrate'
-    - repo: 'https://github.com/yyuu/pyenv-update.git'
-      dest: '~/.pyenv/plugins/pyenv-update'
-    - repo: 'https://github.com/yyuu/pyenv-virtualenv.git'
-      dest: '~/.pyenv/plugins/pyenv-virtualenv'
-    - repo: 'https://github.com/yyuu/pyenv-virtualenvwrapper.git'
-      dest: '~/.pyenv/plugins/pyenv-virtualenvwrapper'
-    - repo: 'https://github.com/yyuu/pyenv-which-ext.git'
-      dest: '~/.pyenv/plugins/pyenv-which-ext'
+    - repo: "https://github.com/yyuu/pyenv-ccache.git"
+      dest: "~/.pyenv/plugins/pyenv-ccache"
+    - repo: "https://github.com/yyuu/pyenv-doctor.git"
+      dest: "~/.pyenv/plugins/pyenv-doctor"
+    - repo: "https://github.com/yyuu/pyenv-pip-migrate.git"
+      dest: "~/.pyenv/plugins/pyenv-pip-migrate"
+    - repo: "https://github.com/yyuu/pyenv-update.git"
+      dest: "~/.pyenv/plugins/pyenv-update"
+    - repo: "https://github.com/yyuu/pyenv-virtualenv.git"
+      dest: "~/.pyenv/plugins/pyenv-virtualenv"
+    - repo: "https://github.com/yyuu/pyenv-virtualenvwrapper.git"
+      dest: "~/.pyenv/plugins/pyenv-virtualenvwrapper"
+    - repo: "https://github.com/yyuu/pyenv-which-ext.git"
+      dest: "~/.pyenv/plugins/pyenv-which-ext"
 
 - name: Update PyEnv
   tags:
