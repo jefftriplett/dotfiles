@@ -1,3 +1,4 @@
+alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 alias gist="gist -p"
 alias got="git"
 alias nw="~/node_modules/nwjs/nwjs.app/Contents/MacOS/nwjs"
