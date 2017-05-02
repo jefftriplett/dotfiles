@@ -3,6 +3,7 @@
 # Homebrew Taps (to give us access to cool things like Casks)
 
 homebrew_taps:
+  #- name: homebrew/versions
   - name: buo/cask-upgrade
   - name: caskroom/cask
   - name: caskroom/fonts
@@ -11,7 +12,6 @@ homebrew_taps:
   - name: homebrew/core
   - name: homebrew/dupes
   - name: homebrew/services
-  - name: homebrew/versions
   - name: jimbojsb/launchrocket
   - name: watsonbox/cmu-sphinx
 
@@ -60,6 +60,7 @@ homebrew_apps:
 # Mac Applications
 
 homebrew_cask_apps:
+  # - name: dropbox
   - name: android-file-transfer
   - name: appcleaner
   - name: arq
@@ -72,7 +73,6 @@ homebrew_cask_apps:
   - name: coconutbattery
   - name: controlplane
   - name: corectl-app
-  - name: dropbox
   - name: duet
   - name: etcher
   - name: fluid
