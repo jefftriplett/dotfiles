@@ -8,10 +8,10 @@ for comp in \
     ~/.secrets \
     /usr/local/etc/bash_completion.d/brew \
     /usr/local/etc/bash_completion.d/git-completion.bash \
+    /usr/local/etc/bash_completion.d/helm \
     /usr/local/etc/bash_completion.d/hub.bash_completion.sh \
+    /usr/local/etc/bash_completion.d/kubectl \
     /usr/local/etc/bash_completion.d/npm
-    # /usr/local/etc/bash_completion.d/helm \
-    # /usr/local/etc/bash_completion.d/kubectl
 do
     [[ -e $comp ]] && source $comp
 done
