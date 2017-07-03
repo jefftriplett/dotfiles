@@ -1,17 +1,19 @@
 #!/bin/bash
 
-export DJANGO_SETTINGS_MODULE=app.settings
+# export DJANGO_SETTINGS_MODULE=app.settings
 
 if [ -d "$VIRTUAL_ENV/src" ]; then
   cd $VIRTUAL_ENV/src
 else
-  mkdir $VIRTUAL_ENV/src
-  add2virtualenv $VIRTUAL_ENV/src
+  mkdir -p $VIRTUAL_ENV/src
   cd $VIRTUAL_ENV/src
+  add2virtualenv .
+  touch .envrc
+  direnv allow
 fi
 
-#find . -name "*.pyc" -delete 2>&1 > /dev/null
+# find . -name "*.pyc" -delete 2>&1 > /dev/null
 
-#export GEM_HOME="$VIRTUAL_ENV/gems"
-#export GEM_PATH=""
-#export PATH=$PATH:$GEM_HOME/bin
+# export GEM_HOME="$VIRTUAL_ENV/gems"
+# export GEM_PATH=""
+# export PATH=$PATH:$GEM_HOME/bin
