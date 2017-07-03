@@ -132,7 +132,6 @@ homebrew_cask_apps:
 pyenv_versions:
   - name: 2.7.13
   - name: 3.6.1
-  - name: 3.5.3
 
 pyenv_global_version: "3.6.1 2.7.13"
 
@@ -164,6 +163,7 @@ pipsi_packages:
   - name: pipenv
   - name: proselint
   - name: pur
+  - name: pyhome
   - name: pythonpy
   - name: speedtest-cli
   - name: url2markdown-cli
