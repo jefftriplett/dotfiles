@@ -8,6 +8,7 @@ There are my personal dotfiles. They are managed using:
 - [Homesick][1] for managing dotfiles
 - [pip][6]: The PyPA recommended tool for installing and managing Python packages.
 - [pipsi][7]: pip script installer. pipsi is a nice tool for Python tools which need to be installed system wide.
+- [pipenv][9]: Pipenv is a project that aims to bring the best of all packaging worlds to the Python world.
 - [pyenv][8]: Simple Python version management
 - ~~[Maid][2] "Hazel for hackers" for automating various tasks~~
 - ~~[Whenever][3] for automating cron jobs~~
@@ -15,19 +16,13 @@ There are my personal dotfiles. They are managed using:
 Installation
 ------------
 
-1. Install pipsi
+1. Bootstrap our environment (install ansible via pipsi)
 
 ```bash
-$ pip install pipsi
+$ make bootstrap
 ```
 
-2. Install ansible
-
-```bash
-$ pipsi install ansible
-```
-
-3. Let ansible do it's thing
+2. Let ansible do it's thing
 
 ```bash
 $ make install
@@ -57,3 +52,4 @@ Inspiration / Thank you!
 [6]: https://pip.pypa.io/en/latest/
 [7]: https://github.com/mitsuhiko/pipsi
 [8]: https://github.com/yyuu/pyenv
+[9]: http://docs.pipenv.org/en/latest/
