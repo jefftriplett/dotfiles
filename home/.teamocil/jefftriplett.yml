@@ -1,0 +1,11 @@
+windows:
+
+  - name: vertigo-panes
+    root: /Users/jefftriplett/.virtualenvs/jefftriplett.github.io/src
+    layout: even-vertical
+    panes:
+      - commands:
+        - workon jefftriplett.github.io
+        focus: true
+      - commands:
+        - workon jefftriplett.github.io

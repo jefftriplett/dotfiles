@@ -1,0 +1,13 @@
+windows:
+
+  - name: vertigo-panes
+    root: /Users/jefftriplett/.virtualenvs/djangocon/src/2017.djangocon.us-git
+    layout: even-vertical
+    panes:
+      - commands:
+        - workon djangocon
+        - cd 2017.djangocon.us-git
+        focus: true
+      - commands:
+        - workon djangocon
+        - cd 2017.djangocon.us-git
