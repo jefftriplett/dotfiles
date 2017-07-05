@@ -14,13 +14,13 @@
 # General UI/UX                                                               #
 ##############################
 
-- name: Disable the “Are you sure you want to open this application?” dialog
+- name: Disable the "Are you sure you want to open this application?" dialog
   tags: osx
   osx_defaults:
     domain: com.apple.LaunchServices
     key: LSQuarantine
-    type: boolean
-    value: "false"
+    type: int
+    value: "0"
 
 - name: Don’t display the annoying prompt when quitting iTerm
   tags: osx
@@ -43,8 +43,8 @@
   osx_defaults:
     domain: NSGlobalDomain
     key: AppleShowAllExtensions
-    type: integer
-    value: "1"
+    type: boolean
+    value: "true"
 
 - name: Allow text selection in Quick Look
   tags: osx
@@ -107,8 +107,8 @@
   osx_defaults:
     domain: com.apple.dock
     key: mcx-expose-disabled
-    type: integer
-    value: "1"
+    type: boolean
+    value: "true"
 
 - name: Bottom left screen corner
   tags: osx
@@ -145,3 +145,11 @@
     key: DSDontWriteNetworkStores
     type: boolean
     value: "true"
+
+- name: Set our default screenshot location to use iCloud Drive
+  tags: osx
+  osx_defaults:
+    domain: com.apple.screencapture
+    key: location
+    type: string
+    value: "~/Library/Mobile\ Documents/com~apple~CloudDocs/Photos/Screenshots/"
