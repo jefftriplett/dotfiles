@@ -31,7 +31,7 @@
     name: "{{ item.name }}"
     state: present
   with_items: "{{ homebrew_apps }}"
-  when: item.name not in installed_homebrew_apps.results|map(attribute='stdout')
+  # when: item.name not in installed_homebrew_apps.results|map(attribute='stdout')
 
 - name: Check for Installed Mac Apps
   tags:
@@ -52,7 +52,7 @@
     name: "{{ item.name }}"
     state: present
   with_items: "{{ homebrew_cask_apps }}"
-  when: item.name not in installed_homebrew_cask_apps.results|map(attribute='stdout')
+  # when: item.name not in installed_homebrew_cask_apps.results|map(attribute='stdout')
 
 - name: Homebrew Cask Cleanup
   tags:
