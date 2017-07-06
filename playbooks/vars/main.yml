@@ -176,6 +176,7 @@ node_system_packages:
   - name: git-open
   - name: gitignore
   - name: nativefier
+  - name: prettier
   - name: surge
   - name: vmd
 
