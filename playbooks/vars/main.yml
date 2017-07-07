@@ -26,6 +26,7 @@ homebrew_apps:
   - name: coreutils
   - name: direnv
   - name: dockutil
+  - name: fish
   - name: gist
   - name: git
   - name: git-standup
@@ -157,6 +158,7 @@ pipsi_packages:
   - name: invoke
   - name: ispy
   - name: mackup
+  - name: mypy-lang
   - name: pep257
   - name: pew
   - name: pgcli
