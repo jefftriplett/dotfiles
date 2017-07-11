@@ -15,18 +15,43 @@ export LC_ALL="en_US.UTF-8"
 export LDFLAGS="-L/usr/local/opt/readline/lib"
 export LD_LIBRARY_PATH="/usr/local/lib"
 
+# experimental prompt
+export PS1='✨ \[\e[0;36m\]\[\e[0;36m\] \W\[\033[0;35m\]$(__git_ps1 " (%s)")\[\e[0m\]: '
+
 if [[ -e ${HOME}/bin ]] ; then
   PATH="${HOME}/bin:${PATH}"
 fi
 
 # --------------------------------------------------
+# git settings
+# --------------------------------------------------
+
+export GIT_PS1_SHOWDIRTYSTATE=true
+export GIT_PS1_SHOWUNTRACKEDFILES=true
+export GIT_PS1_SHOWCOLORHINTS=true
+
+# --------------------------------------------------
+# golang settings
+# --------------------------------------------------
+
+export GOPATH="$HOME/golang"
+export GOROOT=/usr/local/opt/go/libexec
+PATH="${PATH}:$GOPATH/bin"
+PATH="${PATH}:$GOROOT/bin"
+
+# --------------------------------------------------
+# Heroku Toolbelt settings
+# --------------------------------------------------
+
+PATH="${PATH}:/usr/local/heroku/bin"
+
+# --------------------------------------------------
 # python settings
 # --------------------------------------------------
 
-## python settings
 export PYTHONDONTWRITEBYTECODE=1
 
-## pip settings ##
+## pip settings
 export PIP_DOWNLOAD_CACHE="/tmp/.pip/download_cache"
 export PIP_REQUIRE_VIRTUALENV="true"
 export PIP_RESPECT_VIRTUALENV="true"
@@ -56,20 +81,7 @@ PATH="${PATH}:$(brew --prefix ruby)/bin"
 export RBENV_ROOT="/usr/local/var/rbenv"
 
 # --------------------------------------------------
-# Heroku Toolbelt settings
-# --------------------------------------------------
-
-PATH="${PATH}:/usr/local/heroku/bin"
-
-# --------------------------------------------------
-# golang settings
-# --------------------------------------------------
-
-export GOPATH="$HOME/golang"
-export GOROOT=/usr/local/opt/go/libexec
-PATH="${PATH}:$GOPATH/bin"
-PATH="${PATH}:$GOROOT/bin"
-
+# clean / done
 # --------------------------------------------------
 
 export PATH
