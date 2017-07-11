@@ -8,6 +8,7 @@ for comp in \
     ~/.secrets \
     /usr/local/etc/bash_completion.d/brew \
     /usr/local/etc/bash_completion.d/git-completion.bash \
+    /usr/local/etc/bash_completion.d/git-prompt.sh \
     /usr/local/etc/bash_completion.d/helm \
     /usr/local/etc/bash_completion.d/hub.bash_completion.sh \
     /usr/local/etc/bash_completion.d/kubectl \
