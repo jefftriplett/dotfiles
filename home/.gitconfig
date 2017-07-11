@@ -1,6 +1,7 @@
 [user]
 	email = jeff.triplett@gmail.com
 	name = Jeff Triplett
+	signingkey = 38BA20AB5F258B23
 
 [github]
     user = jefftriplett
@@ -60,3 +61,7 @@
     #default = simple
 [rerere]
 	enabled = true
+[commit]
+	gpgsign = true
+[gpg]
+	program = /usr/local/bin/gpg
