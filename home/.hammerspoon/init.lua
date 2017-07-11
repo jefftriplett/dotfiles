@@ -149,6 +149,7 @@ function screens_changed_callback()
     if (vertical) then
         hs.layout.apply({
             {"Caprine", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
+            {"HipChat", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
             {"Slack", nil, vertical, {x=0, y=0, w=1, h=0.5}, nil, nil},
             {"iTerm2", nil, main, hs.layout.maximized, nil, nil},
         })
