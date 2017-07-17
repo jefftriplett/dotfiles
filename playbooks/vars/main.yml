@@ -132,9 +132,9 @@ homebrew_cask_apps:
 
 pyenv_versions:
   - name: 2.7.13
-  - name: 3.6.1
+  - name: 3.6.2
 
-pyenv_global_version: "3.6.1 2.7.13"
+pyenv_global_version: "3.6.2 2.7.13"
 
 python_system_packages:
   - name: pip
