@@ -8,6 +8,7 @@
 
 - include: install_python_deps.yml
   tags:
+    - python
     - python_deps
 
 - include: install_pipsi.yml
