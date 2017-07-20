@@ -39,6 +39,7 @@ homebrew_apps:
   - name: kubernetes-helm
   - name: libev
   - name: libpng
+  - name: lua
   - name: maven
   - name: mysql
   - name: node
@@ -69,6 +70,7 @@ homebrew_cask_apps:
   - name: arq
   - name: bartender
   - name: calibre
+  - name: camtwist
   - name: caprine
   - name: charles
   - name: chicken
