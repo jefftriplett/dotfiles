@@ -101,6 +101,7 @@ homebrew_cask_apps:
   - name: kitematic
   - name: kube-solo
   - name: launchrocket
+  - name: love
   - name: mactex
   - name: mattr-slate
   - name: medis
