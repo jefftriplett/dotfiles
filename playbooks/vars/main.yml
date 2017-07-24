@@ -113,6 +113,7 @@ homebrew_cask_apps:
   - name: plex-media-server
   - name: reggy
   - name: resilio-sync
+  - name: rocket
   - name: seil
   - name: skype
   - name: slack
