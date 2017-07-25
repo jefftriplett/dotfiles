@@ -1,5 +1,7 @@
+alias brew-outdated="brew outdated --fetch-HEAD"
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 alias gist="gist -p"
 alias got="git"
 alias nw="~/node_modules/nwjs/nwjs.app/Contents/MacOS/nwjs"
 alias pip-outdated="PIP_REQUIRE_VIRTUALENV=false pip list --outdated"
+alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
