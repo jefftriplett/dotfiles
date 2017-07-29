@@ -21,6 +21,7 @@ homebrew_taps:
 homebrew_apps:
   - name: aria2
   - name: bash
+  - name: bower
   - name: ccache
   - name: chrome-cli
   - name: coreutils
@@ -29,6 +30,7 @@ homebrew_apps:
   - name: fish
   - name: gist
   - name: git
+  - name: git-open
   - name: git-standup
   - name: go
   - name: gpg
@@ -110,6 +112,7 @@ homebrew_cask_apps:
   - name: minecraft
   - name: mojibar
   - name: musicbrainz-picard
+  - name: nativefier
   - name: numi
   - name: obs
   - name: plex-media-player
@@ -180,11 +183,10 @@ pipsi_packages:
 # Node Packages
 
 node_system_packages:
-  - name: bower
+  # - name: bower
+  # - name: nativefier
   - name: browser-sync
-  - name: git-open
   - name: gitignore
-  - name: nativefier
   - name: prettier
   - name: surge
   - name: vmd
