@@ -61,7 +61,6 @@ homebrew_apps:
   - name: speexdsp
   - name: sqlite
   - name: sshrc
-  - name: sudolikeaboss
   - name: TomAnthony/brews/itermocil
   - name: wget
   - name: youtube-dl
