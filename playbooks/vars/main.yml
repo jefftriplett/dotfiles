@@ -27,6 +27,7 @@ homebrew_apps:
   - name: coreutils
   - name: direnv
   - name: dockutil
+  - name: exa
   - name: fish
   - name: gist
   - name: git
