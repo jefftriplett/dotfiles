@@ -46,6 +46,7 @@ homebrew_apps:
   - name: lua
   - name: maven
   - name: mysql
+  - name: nativefier
   - name: node
   - name: phantomjs
   - name: pinentry-mac
@@ -112,7 +113,6 @@ homebrew_cask_apps:
   - name: minecraft
   - name: mojibar
   - name: musicbrainz-picard
-  - name: nativefier
   - name: numi
   - name: obs
   - name: plex-media-player
@@ -183,8 +183,6 @@ pipsi_packages:
 # Node Packages
 
 node_system_packages:
-  # - name: bower
-  # - name: nativefier
   - name: browser-sync
   - name: gitignore
   - name: prettier
