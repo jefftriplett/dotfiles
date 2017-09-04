@@ -11,6 +11,7 @@ homebrew_taps:
   # - name: watsonbox/cmu-sphinx
   - name: caskroom/cask
   - name: caskroom/fonts
+  - name: homebrew/bundle
   - name: homebrew/command-not-found
   - name: homebrew/services
   - name: jimbojsb/launchrocket
@@ -45,6 +46,7 @@ homebrew_apps:
   - name: libpng
   - name: lua
   - name: maven
+  - name: mas
   - name: mysql
   - name: nativefier
   - name: node
@@ -70,6 +72,7 @@ homebrew_apps:
 # Mac Applications
 
 homebrew_cask_apps:
+  - name: alfred
   - name: android-file-transfer
   - name: appcleaner
   - name: arq
