@@ -2,9 +2,10 @@
 -- Define hyper key --
 ----------------------
 
+require 'hs.ipc'
 require 'keys'
-require 'tabletools'
 require 'sizeup'
+require 'tabletools'
 
 --------------------------------------------------
 -- Reload at the top in case we break something --
@@ -14,6 +15,13 @@ require 'sizeup'
 hs.hotkey.bind(hyper, 'r', function()
     hs.reload()
 end)
+
+-----------------------
+-- Initialize Logger --
+-----------------------
+
+hs.logger = require('hs.logger')
+hs.logger.historySize(200)
 
 ---------------------
 -- Initialize Grid --
