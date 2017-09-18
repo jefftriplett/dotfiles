@@ -3,5 +3,15 @@ alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 alias gist="gist -p"
 alias got="git"
 alias nw="~/node_modules/nwjs/nwjs.app/Contents/MacOS/nwjs"
+alias outdated="brew update; brew outdated; brew cask outdated; mas outdated"
 alias pip-outdated="PIP_REQUIRE_VIRTUALENV=false pip list --outdated"
 alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+
+pip_update() {
+    for version in $(pyenv versions --bare) ; do
+        echo "Upgrading Python $version"
+        pyenv shell $version
+        pyenv which python
+        PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pip virtualenv virtualenvwrapper wheel
+    done
+}
