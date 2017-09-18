@@ -18,6 +18,10 @@ export LD_LIBRARY_PATH="/usr/local/lib"
 # experimental prompt
 export PS1='✨ \[\e[0;36m\]\[\e[0;36m\] \W\[\033[0;35m\]$(__git_ps1 " (%s)")\[\e[0m\]: '
 
+# default badge
+export USER_BADGE_DEFAULT="✨"
+export USER_BADGE="${USER_BADGE_DEFAULT}"
+
 if [[ -e ${HOME}/bin ]] ; then
   PATH="${HOME}/bin:${PATH}"
 fi

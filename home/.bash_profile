@@ -90,3 +90,8 @@ if [ -f '/Users/jefftriplett/google-cloud-sdk/path.bash.inc' ]; then source '/Us
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/jefftriplett/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/jefftriplett/google-cloud-sdk/completion.bash.inc'; fi
+
+# iTerm2 Badges
+function iterm2_print_user_vars {
+    iterm2_set_user_var badge $USER_BADGE
+}

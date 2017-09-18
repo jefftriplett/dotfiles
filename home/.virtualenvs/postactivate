@@ -17,3 +17,6 @@ fi
 # export GEM_HOME="$VIRTUAL_ENV/gems"
 # export GEM_PATH=""
 # export PATH=$PATH:$GEM_HOME/bin
+
+# Set our user.badge back to our default
+export USER_BADGE="🐍"
