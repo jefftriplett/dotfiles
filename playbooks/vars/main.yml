@@ -61,6 +61,7 @@ homebrew_apps:
   - name: readline
   - name: redis
   - name: ruby-build
+  - name: screenfetch
   - name: speexdsp
   - name: sqlite
   - name: sshrc
@@ -120,6 +121,7 @@ homebrew_cask_apps:
   - name: obs
   - name: plex-media-player
   - name: plex-media-server
+  - name: podcastmenu
   - name: reggy
   - name: resilio-sync
   - name: rocket
