@@ -7,11 +7,18 @@ alias outdated="brew update; brew outdated; brew cask outdated; mas outdated"
 alias pip-outdated="PIP_REQUIRE_VIRTUALENV=false pip list --outdated"
 alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 
-pip_update() {
+pip-update() {
     for version in $(pyenv versions --bare) ; do
         echo "Upgrading Python $version"
         pyenv shell $version
         pyenv which python
         PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pip virtualenv virtualenvwrapper wheel
     done
+
+    # Update one-offs for our main "global" python
+    echo "Upgrading Global Python"
+    pyenv shell 3.6.2
+    pyenv which python
+    PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pipsi
+    pipsi upgrade pipenv
 }
