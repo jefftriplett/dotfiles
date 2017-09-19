@@ -21,4 +21,7 @@ pip-update() {
     pyenv which python
     PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pipsi
     pipsi upgrade pipenv
+
+    # To update everything under pipsi
+    # $ pipsi-tool upgrade-all
 }
