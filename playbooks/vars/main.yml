@@ -160,9 +160,6 @@ python_system_packages:
 
 pipsi_packages:
   # - name: 1pass
-  # - name: autoenv
-  # - name: mercurial
-  # - name: osx-openconnect-helper
   # - name: tvnamer
   - name: ansible
   - name: awscli
@@ -178,6 +175,7 @@ pipsi_packages:
   - name: pew
   - name: pgcli
   - name: pipenv
+  - name: pipsi-tool
   - name: proselint
   - name: pur
   - name: pyhome
