@@ -17,7 +17,7 @@ pip-update() {
 
     # Update one-offs for our main "global" python
     echo "Upgrading Global Python"
-    pyenv shell 3.6.2
+    pyenv shell 3.6.3
     pyenv which python
     PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pipsi
     pipsi upgrade pipenv
