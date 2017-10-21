@@ -196,6 +196,7 @@ pipsi_packages:
   - name: httpie
   - name: invoke
   - name: ispy
+  - name: jinja2-cli
   - name: mackup
   - name: mypy-lang
   - name: pew
