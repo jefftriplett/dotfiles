@@ -31,3 +31,7 @@ Temporary Items
 *.user-ca-bundle
 
 home/.maid/*.log.[0-9]
+
+apps/*/build/*
+roles
+Dockerfiles
