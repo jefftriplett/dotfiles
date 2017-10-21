@@ -52,6 +52,7 @@ homebrew_apps:
   - name: node
   - name: phantomjs
   - name: pinentry-mac
+  - name: pngpaste
   - name: postgresql
   - name: pyenv
   - name: pyenv-ccache
