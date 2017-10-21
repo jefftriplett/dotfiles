@@ -74,24 +74,24 @@ fi
 # source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/jefftriplett/Downloads/google-cloud-sdk/path.bash.inc' ]; then
-    source '/Users/jefftriplett/Downloads/google-cloud-sdk/path.bash.inc'
-fi
+# if [ -f '${HOME}/Downloads/google-cloud-sdk/path.bash.inc' ]; then
+#     source '${HOME}/Downloads/google-cloud-sdk/path.bash.inc'
+# fi
 
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/jefftriplett/Downloads/google-cloud-sdk/completion.bash.inc' ]; then
-    source '/Users/jefftriplett/Downloads/google-cloud-sdk/completion.bash.inc'
-fi
-
-test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+# # The next line enables shell command completion for gcloud.
+# if [ -f '${HOME}/Downloads/google-cloud-sdk/completion.bash.inc' ]; then
+#     source '${HOME}/Downloads/google-cloud-sdk/completion.bash.inc'
+# fi
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/jefftriplett/google-cloud-sdk/path.bash.inc' ]; then source '/Users/jefftriplett/google-cloud-sdk/path.bash.inc'; fi
+# if [ -f '${HOME}/google-cloud-sdk/path.bash.inc' ]; then source '${HOME}/google-cloud-sdk/path.bash.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/jefftriplett/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/jefftriplett/google-cloud-sdk/completion.bash.inc'; fi
+# if [ -f '${HOME}/google-cloud-sdk/completion.bash.inc' ]; then source '${HOME}/google-cloud-sdk/completion.bash.inc'; fi
 
-# iTerm2 Badges
+# iTerm2 settings
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
+
 function iterm2_print_user_vars {
     iterm2_set_user_var badge $USER_BADGE
 }
