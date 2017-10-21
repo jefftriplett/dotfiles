@@ -16,14 +16,6 @@
     state: present
   with_items: "{{ homebrew_taps }}"
 
-- name: Check for Installed Console Apps
-  tags:
-    - homebrew
-  shell: "brew list | grep {{ item.name }}"
-  register: installed_homebrew_apps
-  with_items: "{{ homebrew_apps }}"
-  ignore_errors: true
-
 - name: Install Console Apps
   tags:
     - homebrew
@@ -32,16 +24,6 @@
     state: present
   with_items: "{{ homebrew_apps }}"
   # when: item.name not in installed_homebrew_apps.results|map(attribute='stdout')
-
-- name: Check for Installed Mac Apps
-  tags:
-    - homebrew
-    - homebrew-casks
-    - casks
-  shell: "brew cask list | grep {{ item.name }}"
-  register: installed_homebrew_cask_apps
-  with_items: "{{ homebrew_cask_apps }}"
-  ignore_errors: true
 
 - name: Install Mac Apps
   tags:
