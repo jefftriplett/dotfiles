@@ -30,7 +30,7 @@ fi
 # pyenv settings
 if which pyenv > /dev/null; then
     eval "$(pyenv init -)";
-    eval "$(pyenv virtualenv-init -)"
+    # eval "$(pyenv virtualenv-init -)"
     pyenv virtualenvwrapper_lazy
 fi
 
