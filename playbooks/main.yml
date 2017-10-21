@@ -1,0 +1,20 @@
+---
+
+- hosts: all
+  connection: local
+
+  vars_files:
+    - default.config.yml
+
+  roles:
+    - homebrew
+    - nginx
+    - node
+    - osx
+    - python
+    - ruby
+    - sublime
+    - dotfiles
+    - role: geerlingguy.mas
+      when: mas_installed_apps
+      tags: ['mas']

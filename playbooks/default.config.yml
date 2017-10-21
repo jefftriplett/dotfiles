@@ -73,6 +73,7 @@ homebrew_apps:
 # Mac Applications
 
 homebrew_cask_apps:
+  - name: 1password-cli
   - name: alfred
   - name: android-file-transfer
   - name: appcleaner
@@ -143,6 +144,32 @@ homebrew_cask_apps:
   - name: xld
   - name: xquartz
 
+# Mac App Store Applications
+
+mas_installed_apps:
+  - { id: 866773894, name: "Quiver" }
+  - { id: 406056744, name: "Evernote" }
+  - { id: 986304488, name: "Kiwi for Gmail" }
+  - { id: 467038962, name: "Text2Speech" }
+  - { id: 1278508951, name: "Trello" }
+  - { id: 918858936, name: "Airmail 3" }
+  - { id: 418412301, name: "Clean" }
+  - { id: 408981381, name: "iPhoto" }
+  - { id: 425955336, name: "Skitch" }
+  - { id: 585829637, name: "Todoist" }
+  - { id: 451907568, name: "Paprika Recipe Manager" }
+  - { id: 407963104, name: "Pixelmator" }
+  - { id: 443987910, name: "1Password" }
+  - { id: 682658836, name: "GarageBand" }
+  - { id: 540348655, name: "Monosnap" }
+  - { id: 497799835, name: "Xcode" }
+  - { id: 847496013, name: "Deckset" }
+  - { id: 1006087419, name: "SnippetsLab" }
+  - { id: 896450579, name: "Textual 5" }
+  - { id: 408981434, name: "iMovie" }
+  - { id: 588726889, name: "ReadKit" }
+  - { id: 506189836, name: "Harvest" }
+
 # Python Packages
 
 pyenv_versions:
@@ -171,13 +198,13 @@ pipsi_packages:
   - name: ispy
   - name: mackup
   - name: mypy-lang
-  - name: pep257
   - name: pew
   - name: pgcli
   - name: pipenv
   - name: pipsi-tool
   - name: proselint
   - name: pur
+  - name: pydocstyle
   - name: pyhome
   - name: pythonpy
   - name: speedtest-cli
