@@ -33,5 +33,6 @@ Temporary Items
 home/.maid/*.log.[0-9]
 
 apps/*/build/*
+apps/*/*-darwin-x64/*
 roles
 Dockerfiles
