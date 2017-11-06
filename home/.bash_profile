@@ -4,6 +4,8 @@ set completion-ignore-case On
 for comp in \
     ~/.exports \
     ~/.aliases \
+    ~/.asdf/asdf.sh \
+    ~/.asdf/completions/asdf.bash \
     ~/.github \
     ~/.secrets \
     /usr/local/etc/bash_completion.d/brew \
