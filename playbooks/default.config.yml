@@ -200,6 +200,7 @@ pipsi_packages:
   - name: jinja2-cli
   - name: mackup
   - name: mypy-lang
+  - name: nodeenv
   - name: pew
   - name: pgcli
   - name: pipenv
@@ -209,6 +210,7 @@ pipsi_packages:
   - name: pydocstyle
   - name: pyhome
   - name: pythonpy
+  - name: rubyenv
   - name: speedtest-cli
   - name: url2markdown-cli
 
