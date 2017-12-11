@@ -93,6 +93,7 @@ homebrew_cask_apps:
   - name: etcher
   - name: fluid
   - name: font-hack
+  - name: font-ia-writer-duospace
   - name: font-ubuntu
   - name: font-ubuntu-mono-derivative-powerline
   - name: gitup
