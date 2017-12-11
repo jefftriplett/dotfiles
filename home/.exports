@@ -1,6 +1,6 @@
 
-#PATH="${PATH}:/usr/local/bin"
-#PATH="${PATH}:/usr/local/sbin"
+# For homebrew
+PATH="${PATH}:/usr/local/sbin"
 
 #export ARCHFLAGS="-Wno-error=unused-command-line-argument-hard-error-in-future"
 export ARCHFLAGS="-Werror=unused-command-line-argument"
