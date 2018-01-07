@@ -45,8 +45,8 @@ homebrew_apps:
   - name: libev
   - name: libpng
   - name: lua
-  - name: maven
   - name: mas
+  - name: maven
   - name: mysql
   - name: nativefier
   - name: node
@@ -66,6 +66,7 @@ homebrew_apps:
   - name: speexdsp
   - name: sqlite
   - name: sshrc
+  - name: thefuck
   - name: TomAnthony/brews/itermocil
   - name: wget
   - name: youtube-dl
@@ -126,6 +127,7 @@ homebrew_cask_apps:
   - name: plex-media-server
   - name: podcastmenu
   - name: reggy
+  - name: rescuetime
   - name: resilio-sync
   - name: rocket
   - name: seil
@@ -218,7 +220,9 @@ pipsi_packages:
 # Node Packages
 
 node_system_packages:
+  - name: alfred-fkill
   - name: browser-sync
+  - name: gh-rtfm
   - name: gitignore
   - name: prettier
   - name: surge
