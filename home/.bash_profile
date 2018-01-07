@@ -6,6 +6,7 @@ for comp in \
     ~/.aliases \
     ~/.asdf/asdf.sh \
     ~/.asdf/completions/asdf.bash \
+    ~/.dockerfunc \
     ~/.github \
     ~/.secrets \
     /usr/local/etc/bash_completion.d/brew \
@@ -97,3 +98,5 @@ test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shel
 function iterm2_print_user_vars {
     iterm2_set_user_var badge $USER_BADGE
 }
+
+alias gam="/Users/jefftriplett/bin/gam/gam"
