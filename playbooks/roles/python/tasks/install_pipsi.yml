@@ -9,3 +9,4 @@
     creates: "~/.local/venvs/{{ item.name }}"
   ignore_errors: True
   with_items: "{{ pipsi_packages }}"
+  # extra_args: --upgrade
