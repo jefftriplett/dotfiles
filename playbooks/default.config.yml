@@ -178,9 +178,9 @@ mas_installed_apps:
 
 pyenv_versions:
   - name: 2.7.14
-  - name: 3.6.3
+  - name: 3.6.4
 
-pyenv_global_version: "3.6.3 2.7.14"
+pyenv_global_version: "3.6.4 2.7.14"
 
 python_system_packages:
   - name: pip
@@ -216,6 +216,7 @@ pipsi_packages:
   - name: rubyenv
   - name: speedtest-cli
   - name: url2markdown-cli
+  - name: yapf
 
 # Node Packages
 
