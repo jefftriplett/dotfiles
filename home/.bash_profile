@@ -115,12 +115,6 @@ function iterm2_print_user_vars {
     iterm2_set_user_var badge $USER_BADGE
 }
 
-##############################################
-# command line management for Google G Suite #
-##############################################
-
-alias gam="/Users/jefftriplett/bin/gam/gam"
-
 #########################
 # What did I just type? #
 #########################
