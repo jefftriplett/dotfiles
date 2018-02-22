@@ -17,11 +17,13 @@ pip-update() {
     done
 
     # Update one-offs for our main "global" python
-    echo "Upgrading Global Python"
-    pyenv shell 3.6.4
+    version=3.6.4
+
+    echo "Upgrading Global Python ($version)"
+    pyenv shell $version
     pyenv which python
     PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pipsi > /dev/null 2>&1
-    pipsi upgrade pipenv
+    pipsi upgrade pipenv > /dev/null 2>&1
 
     # To update everything under pipsi
     # $ pipsi-tool upgrade-all
