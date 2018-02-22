@@ -120,3 +120,9 @@ function iterm2_print_user_vars {
 ##############################################
 
 alias gam="/Users/jefftriplett/bin/gam/gam"
+
+#########################
+# What did I just type? #
+#########################
+
+eval $(thefuck --alias)
