@@ -56,9 +56,20 @@ endef
 
 .PHONY: build
 build:
-	$(call build_app,"buffer","Buffer","https://buffer.com/")
-	$(call build_app,"toggl","Toggl","https://www.toggl.com/app")
+	# $(call build_app,"buffer","Buffer","https://buffer.com/")
+	# $(call build_app,"toggl","Toggl","https://www.toggl.com/app")
 
+	nativefier --overwrite --name "Asana" "https://asana.com/"
+	# nativefier --overwrite --name "Buffer" "https://buffer.com/"
+	nativefier --overwrite --name "Grammarly" "https://app.grammarly.com"
+	nativefier --overwrite --name "Mastodon" "https://mastodon.social"
+	nativefier --overwrite --name "MyFitnessPal" "http://www.myfitnesspal.com/"
+	nativefier --overwrite --name "Noisli" "https://www.noisli.com/"
+	nativefier --overwrite --name "Overcast" "https://overcast.fm/podcasts"
+	nativefier --overwrite --name "Plex" "https://www.plex.tv/"
+	nativefier --overwrite --name "Sling TV" "https://watch.sling.com"
+	nativefier --overwrite --name "Toggl" "https://www.toggl.com/app"
+	nativefier --overwrite --name "TweetDeck" "https://tweetdeck.twitter.com/"
 
 testing:
 	# $(call create_app,asana)
