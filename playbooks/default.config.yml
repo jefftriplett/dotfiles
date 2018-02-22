@@ -223,6 +223,7 @@ pipsi_packages:
 node_system_packages:
   - name: alfred-fkill
   - name: browser-sync
+  - name: codeofconduct
   - name: gh-rtfm
   - name: gitignore
   - name: prettier
