@@ -1,4 +1,7 @@
-## tab completions
+####################
+# bash completions #
+####################
+
 set completion-ignore-case On
 
 for comp in \
@@ -8,35 +11,43 @@ for comp in \
     ~/.asdf/completions/asdf.bash \
     ~/.dockerfunc \
     ~/.github \
-    ~/.secrets \
-    /usr/local/etc/bash_completion.d/brew \
-    /usr/local/etc/bash_completion.d/git-completion.bash \
-    /usr/local/etc/bash_completion.d/git-prompt.sh \
-    /usr/local/etc/bash_completion.d/helm \
-    /usr/local/etc/bash_completion.d/hub.bash_completion.sh \
-    /usr/local/etc/bash_completion.d/kubectl \
-    /usr/local/etc/bash_completion.d/npm
+    ~/.secrets
 do
     [[ -e $comp ]] && source $comp
 done
 
-## history
+# auto-load bash_completion.d
+if [ -d /usr/local/etc/bash_completion.d ]; then
+    for F in "/usr/local/etc/bash_completion.d/"*; do
+        if [ -f "${F}" ]; then
+            source "${F}";
+        fi
+    done
+fi
+
+################
+# bash history #
+################
+
 shopt -s histappend
 
-# rbenv
+#################
+# Ruby settings #
+#################
+
 if which rbenv > /dev/null; then
     eval "$(rbenv init -)";
 fi
 
-# python settings
+###################
+# Python settings #
+###################
 
 # pyenv settings
 if which pyenv > /dev/null; then
     eval "$(pyenv init -)";
-    # eval "$(pyenv virtualenv-init -)"
     pyenv virtualenvwrapper_lazy
 fi
-
 
 ## pip bash completion start
 _pip_completion()
@@ -46,31 +57,33 @@ _pip_completion()
                    PIP_AUTO_COMPLETE=1 $1 ) )
 }
 complete -o default -F _pip_completion pip
-## pip bash completion end
 
-# python settings end
-
+###################
+# direnv settings #
+###################
 
 if which direnv > /dev/null; then
     eval "$(direnv hook bash)";
 fi
 
-
-# command-not-found-init settings
+###################################
+# command-not-found-init settings #
+###################################
 
 if brew command command-not-found-init > /dev/null 2>&1; then
     eval "$(brew command-not-found-init)";
 fi
 
-# add ssh keys
-# ssh-add ~/.ssh/id_rsa &> /dev/null
-# ssh-add ~/.ssh/id_dsa &> /dev/null
-# ssh-add ~/.ssh/id_ed25519 &> /dev/null
+################
+# add ssh keys #
+################
+
+ssh-add -k &> /dev/null
 
 ## itermocil autocompletion
-if which itermocil > /dev/null; then
-    complete -W "$(itermocil --list)" itermocil
-fi
+# if which itermocil > /dev/null; then
+#     complete -W "$(itermocil --list)" itermocil
+# fi
 
 # TODO: move over the homebrew cask google-cloud-sdk
 # source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc'
@@ -92,11 +105,18 @@ fi
 # The next line enables shell command completion for gcloud.
 # if [ -f '${HOME}/google-cloud-sdk/completion.bash.inc' ]; then source '${HOME}/google-cloud-sdk/completion.bash.inc'; fi
 
-# iTerm2 settings
+###################
+# iTerm2 settings #
+###################
+
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
 function iterm2_print_user_vars {
     iterm2_set_user_var badge $USER_BADGE
 }
+
+##############################################
+# command line management for Google G Suite #
+##############################################
 
 alias gam="/Users/jefftriplett/bin/gam/gam"
