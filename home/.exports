@@ -1,5 +1,7 @@
+############
+# Homebrew #
+############
 
-# For homebrew
 PATH="${PATH}:/usr/local/sbin"
 
 #export ARCHFLAGS="-Wno-error=unused-command-line-argument-hard-error-in-future"
@@ -26,32 +28,32 @@ if [[ -e ${HOME}/bin ]] ; then
   PATH="${HOME}/bin:${PATH}"
 fi
 
-# --------------------------------------------------
-# git settings
-# --------------------------------------------------
+################
+# git settings #
+################
 
+export GIT_PS1_SHOWCOLORHINTS=true
 export GIT_PS1_SHOWDIRTYSTATE=true
 export GIT_PS1_SHOWUNTRACKEDFILES=true
-export GIT_PS1_SHOWCOLORHINTS=true
 
-# --------------------------------------------------
-# golang settings
-# --------------------------------------------------
+###################
+# golang settings #
+###################
 
 export GOPATH="$HOME/golang"
 export GOROOT=/usr/local/opt/go/libexec
 PATH="${PATH}:$GOPATH/bin"
 PATH="${PATH}:$GOROOT/bin"
 
-# --------------------------------------------------
-# Heroku Toolbelt settings
-# --------------------------------------------------
+############################
+# Heroku Toolbelt settings #
+############################
 
 PATH="${PATH}:/usr/local/heroku/bin"
 
-# --------------------------------------------------
-# python settings
-# --------------------------------------------------
+###################
+# python settings #
+###################
 
 export PYTHONDONTWRITEBYTECODE=1
 
@@ -68,24 +70,22 @@ export PYENV_ROOT="${HOME}/.pyenv"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 PATH="${PATH}:${PYENV_ROOT}/bin"
 
-# --------------------------------------------------
-# node settings
-# --------------------------------------------------
+#################
+# node settings #
+#################
 
 PATH="${PATH}:/usr/local/share/npm/bin"
 PATH="${PATH}:/usr/local/node_modules/.bin"
 
-# --------------------------------------------------
-# ruby settings
-# --------------------------------------------------
+########################
+# ruby / rbenvsettings #
+########################
 
+export RBENV_ROOT="/usr/local/var/rbenv"
 PATH="${PATH}:$(brew --prefix ruby)/bin"
 
-## rbenv settings
-export RBENV_ROOT="/usr/local/var/rbenv"
-
-# --------------------------------------------------
-# clean / done
-# --------------------------------------------------
+################
+# clean / done #
+################
 
 export PATH
