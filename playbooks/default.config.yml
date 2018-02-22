@@ -3,18 +3,17 @@
 # Homebrew Taps (to give us access to cool things like Casks)
 
 homebrew_taps:
-  # - name: buo/cask-upgrade
-  # - name: caskroom/versions
-  # - name: homebrew/core
   # - name: homebrew/dupes
   # - name: homebrew/versions
   # - name: watsonbox/cmu-sphinx
+  - name: buo/cask-upgrade
   - name: caskroom/cask
   - name: caskroom/fonts
+  - name: caskroom/versions
   - name: homebrew/bundle
   - name: homebrew/command-not-found
+  - name: homebrew/core
   - name: homebrew/services
-  - name: jimbojsb/launchrocket
   - name: tomanthony/brews  # for itermocil
 
 # Terminal Applications
