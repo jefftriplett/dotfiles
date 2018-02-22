@@ -225,6 +225,7 @@ node_system_packages:
   - name: codeofconduct
   - name: gh-rtfm
   - name: gitignore
+  - name: iterm2-tab-set
   - name: prettier
   - name: surge
   - name: vmd
