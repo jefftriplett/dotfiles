@@ -12,15 +12,15 @@ pip-update() {
     for version in $(pyenv versions --bare) ; do
         echo "Upgrading Python $version"
         pyenv shell $version
-        pyenv which python
-        PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pip virtualenv virtualenvwrapper wheel
+        # pyenv which python
+        PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pip virtualenv virtualenvwrapper wheel > /dev/null 2>&1
     done
 
     # Update one-offs for our main "global" python
     echo "Upgrading Global Python"
     pyenv shell 3.6.4
     pyenv which python
-    PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pipsi
+    PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pipsi > /dev/null 2>&1
     pipsi upgrade pipenv
 
     # To update everything under pipsi
