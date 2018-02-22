@@ -5,3 +5,5 @@ unset DJANGO_SETTINGS_MODULE
 
 # Set user.badge back to our default when exiting the virtualenv
 export USER_BADGE="${USER_BADGE_DEFAULT}"
+
+tabset --title "❓"

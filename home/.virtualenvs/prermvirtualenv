@@ -1,2 +1,17 @@
 #!/bin/sh
 # This hook is run before a virtualenv is deleted.
+
+VIRTUAL_ENV_NAME=`basename $VIRTUAL_ENV`
+
+echo "or am I deleting ${VIRTUAL_ENV_NAME}?"
+
+PROJECT_FILE="/Users/jefftriplett/Library/Application Support/Sublime Text 3/Packages/User/Projects/${VIRTUAL_ENV_NAME}.sublime-project"
+WORKSPACE_FILE="/Users/jefftriplett/Library/Application Support/Sublime Text 3/Packages/User/Projects/${VIRTUAL_ENV_NAME}.sublime-workspace"
+
+if [ -e "$PROJECT_FILE" ]; then
+  rm "${PROJECT_FILE}"
+fi
+
+if [ -e "$WORKSPACE_FILE" ]; then
+  rm "${WORKSPACE_FILE}"
+fi
