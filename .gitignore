@@ -36,3 +36,5 @@ apps/*/build/*
 apps/*/*-darwin-x64/*
 roles
 Dockerfiles
+
+apps/*-x64/*
