@@ -1,7 +1,7 @@
 [user]
-	email = jeff.triplett@gmail.com
-	name = Jeff Triplett
-	signingkey = 38BA20AB5F258B23
+    email = jeff.triplett@gmail.com
+    name = Jeff Triplett
+    signingkey = 38BA20AB5F258B23
 
 [github]
     user = jefftriplett
@@ -34,10 +34,10 @@
     diff = auto
     branch = auto
     status = auto
-	ui = true
+    ui = true
 
 [core]
-	excludesfile = ~/.gitignore
+    excludesfile = ~/.gitignore
     editor = nano
     #editor = subl
     rebase = true
@@ -46,27 +46,27 @@
     renames = true
 
 [difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
+    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+    path =
 
 [mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+    cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+    trustExitCode = true
 
 [mergetool]
-	keepBackup = true
+    keepBackup = true
 
 [push]
-	default = tracking
+    default = tracking
     #default = simple
 [rerere]
-	enabled = true
+    enabled = true
 [commit]
-	gpgsign = true
+    gpgsign = true
 [gpg]
-	program = /usr/local/bin/gpg
+    program = /usr/local/bin/gpg
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true

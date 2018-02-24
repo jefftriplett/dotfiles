@@ -5,7 +5,6 @@
 # Icon must end with two \r
 Icon
 
-
 # Thumbnails
 ._*
 
@@ -35,6 +34,11 @@ home/.maid/*.log.[0-9]
 apps/*/build/*
 apps/*/*-darwin-x64/*
 roles
-Dockerfiles
 
 apps/*-x64/*
+
+### start of include list...
+
+# track these files, if they exist
+!.gitignore
+!.editorconfig
