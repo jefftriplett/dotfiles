@@ -65,6 +65,7 @@ homebrew_apps:
   - name: speexdsp
   - name: sqlite
   - name: sshrc
+  - name: terminal-notifier
   - name: thefuck
   - name: TomAnthony/brews/itermocil
   - name: wget
