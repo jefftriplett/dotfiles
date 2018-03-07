@@ -30,6 +30,7 @@ hs.logger.historySize(200)
 -- Monitor names
 local display_default = '1680x1050'
 local display_home = '2560x1440'
+local display_home_4k = '2560x1440@1x'
 local display_imac = '1920x1200'
 local display_retina = '1440x900@2x'
 local display_work = '2560x1600'
@@ -37,6 +38,7 @@ local display_work_vertical = '1200x1920'
 
 -- Monitor grids
 local display_default_grid = '2x4'
+local display_home_4k_grid = '6x4'
 local display_home_grid = '6x4'
 local display_imac_grid = '6x2'
 local display_retina_grid = '3x2'
@@ -75,6 +77,12 @@ function setup_grid()
     if hs.screen.find(display_home) then
         print('found', display_home)
         hs.grid.setGrid(display_home_grid, display_home)
+    end
+
+    -- Home Display 4K --
+    if hs.screen.find(display_home_4k) then
+        print('found', display_home_4k)
+        hs.grid.setGrid(display_home_4k_grid, display_home_4k)
     end
 
     -- iMac --
@@ -158,8 +166,9 @@ function screens_changed_callback()
         hs.layout.apply({
             {"Caprine", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
             {"HipChat", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
-            {"Slack", nil, vertical, {x=0, y=0, w=1, h=0.5}, nil, nil},
             {"iTerm2", nil, main, hs.layout.maximized, nil, nil},
+            {"Messages", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
+            {"Slack", nil, vertical, {x=0, y=0, w=1, h=0.5}, nil, nil},
         })
     end
 end
@@ -186,7 +195,6 @@ config_file_watcher = hs.pathwatcher.new(os.getenv('HOME') .. '/.hammerspoon/', 
 screen_watcher = hs.screen.watcher.new(screens_changed_callback):start()
 usb_watcher = hs.usb.watcher.new(usb_changed_callback):start()
 wifi_watcher = hs.wifi.watcher.new(wifi_changed_callback):start()
-
 
 -- Toggle an application between being the frontmost app, and being hidden
 function toggle_application(_app)
