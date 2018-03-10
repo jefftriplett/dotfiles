@@ -74,6 +74,14 @@ if brew command command-not-found-init > /dev/null 2>&1; then
     eval "$(brew command-not-found-init)";
 fi
 
+####################
+# thefuck settings #
+####################
+
+if which thefuck > /dev/null; then
+    eval "$(thefuck --alias)";
+fi
+
 ################
 # add ssh keys #
 ################
