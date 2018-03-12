@@ -235,7 +235,8 @@ node_system_packages:
 
 ruby_system_packages:
   - name: desktop
-  - name: homesick
   - name: foreman
+  - name: homesick
   - name: maid
+  - name: teamocil
   - name: whenever
