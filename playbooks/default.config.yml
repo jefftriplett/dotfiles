@@ -138,6 +138,7 @@ homebrew_cask_apps:
   - name: sqlitebrowser
   - name: sublime-text
   - name: tableflip
+  - name: telegram-desktop
   - name: timemachineeditor
   - name: torbrowser
   - name: tower
@@ -173,6 +174,22 @@ mas_installed_apps:
   - { id: 408981434, name: "iMovie" }
   - { id: 588726889, name: "ReadKit" }
   - { id: 506189836, name: "Harvest" }
+
+# Node Packages
+
+node_system_packages:
+  - name: alfred-fkill
+  - name: browser-sync
+  - name: codeofconduct
+  - name: fkill-cli
+  - name: gh-rtfm
+  - name: git-sweep
+  - name: gitignore
+  - name: iterm2-tab-set
+  - name: prettier
+  - name: speedo-cli
+  - name: surge
+  - name: vmd
 
 # Python Packages
 
@@ -217,19 +234,6 @@ pipsi_packages:
   - name: speedtest-cli
   - name: url2markdown-cli
   - name: yapf
-
-# Node Packages
-
-node_system_packages:
-  - name: alfred-fkill
-  - name: browser-sync
-  - name: codeofconduct
-  - name: gh-rtfm
-  - name: gitignore
-  - name: iterm2-tab-set
-  - name: prettier
-  - name: surge
-  - name: vmd
 
 # Ruby Packages
 
