@@ -19,6 +19,7 @@ homebrew_taps:
 # Terminal Applications
 
 homebrew_apps:
+  - name: TomAnthony/brews/itermocil
   - name: aria2
   - name: bash
   - name: bower
@@ -67,7 +68,7 @@ homebrew_apps:
   - name: sshrc
   - name: terminal-notifier
   - name: thefuck
-  - name: TomAnthony/brews/itermocil
+  - name: tldr
   - name: wget
   - name: youtube-dl
   - name: zlib
@@ -195,9 +196,9 @@ node_system_packages:
 
 pyenv_versions:
   - name: 2.7.14
-  - name: 3.6.4
+  - name: 3.6.5
 
-pyenv_global_version: "3.6.4 2.7.14"
+pyenv_global_version: "3.6.5 2.7.14"
 
 python_system_packages:
   - name: pip
@@ -241,6 +242,7 @@ ruby_system_packages:
   - name: desktop
   - name: foreman
   - name: homesick
+  - name: lunchy
   - name: maid
   - name: teamocil
   - name: whenever
