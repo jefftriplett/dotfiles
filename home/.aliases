@@ -27,4 +27,5 @@ pip-update() {
 
     # To update everything under pipsi
     # $ pipsi-tool upgrade-all
+    pipsi upgrade pipenv
 }
