@@ -195,10 +195,10 @@ node_system_packages:
 # Python Packages
 
 pyenv_versions:
-  - name: 2.7.14
+  - name: 2.7.15
   - name: 3.6.5
 
-pyenv_global_version: "3.6.5 2.7.14"
+pyenv_global_version: "3.6.5 2.7.15"
 
 python_system_packages:
   - name: pip
@@ -212,6 +212,7 @@ pipsi_packages:
   # - name: tvnamer
   - name: ansible
   - name: awscli
+  - name: black
   - name: cookiecutter
   - name: em
   - name: glances
