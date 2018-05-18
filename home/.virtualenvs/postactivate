@@ -13,8 +13,6 @@ else
   direnv allow
 fi
 
-echo "...${VIRTUAL_ENV_NAME}..."
-
 PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
 
 if ! [ -e "$PROJECT_FILE" ]; then
@@ -41,7 +39,13 @@ fi
 # export PATH=$PATH:$GEM_HOME/bin
 
 # Set our user.badge back to our default
-export USER_BADGE="🐍"
+# export USER_BADGE="🐍"
 
 # set our tab name
 tabset --title "${VIRTUAL_ENV_NAME}"
+
+# TODO: Ansible go...
+# go get github.com/arsham/figurine
+if ! [ -e figurine ]; then
+  figurine "${VIRTUAL_ENV_NAME}"
+fi
