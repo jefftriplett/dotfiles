@@ -23,6 +23,7 @@ homebrew_apps:
   - name: aria2
   - name: bash
   - name: bower
+  - name: caddy
   - name: ccache
   - name: chrome-cli
   - name: coreutils
