@@ -71,6 +71,7 @@ homebrew_apps:
   - name: thefuck
   - name: tldr
   - name: wget
+  - name: xz
   - name: youtube-dl
   - name: zlib
 
