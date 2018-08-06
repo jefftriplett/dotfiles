@@ -39,6 +39,7 @@ homebrew_apps:
   - name: gpg
   - name: gpg-agent
   - name: guetzli
+  - name: hadolint  # for Docker linting
   - name: hub
   - name: jack
   - name: kubernetes-cli
@@ -193,15 +194,16 @@ node_system_packages:
   - name: speedo-cli
   - name: surge
   - name: vmd
+  - name: wipfred
 
 # Python Packages
 
 pyenv_versions:
   - name: 2.7.15
-  - name: 3.6.5
+  - name: 3.6.6
   - name: 3.7.0
 
-pyenv_global_version: "3.6.5 2.7.15"
+pyenv_global_version: "3.6.6 2.7.15"
 
 python_system_packages:
   - name: pip
