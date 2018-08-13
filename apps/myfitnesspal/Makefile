@@ -4,7 +4,6 @@ build:
 	@nativefier \
 		--overwrite \
 		--name "MyFitnessPal" \
-		--tray \
 		https://www.myfitnesspal.com/ \
 		build
 

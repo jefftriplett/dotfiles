@@ -4,7 +4,6 @@ build:
 	@nativefier \
 		--overwrite \
 		--name "WIP Chat" \
-		--tray \
 		https://wip.chat/ \
 		build
 

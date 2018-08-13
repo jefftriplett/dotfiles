@@ -4,7 +4,6 @@ build:
 	@nativefier \
 		--overwrite \
 		--name "Asana" \
-		--tray \
 		https://asana.com/ \
 		build
 

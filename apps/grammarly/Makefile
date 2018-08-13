@@ -4,7 +4,6 @@ build:
 	@nativefier \
 		--overwrite \
 		--name "Grammarly" \
-		--tray \
 		https://app.grammarly.com/ \
 		build
 

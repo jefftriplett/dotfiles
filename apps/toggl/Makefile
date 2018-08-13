@@ -4,7 +4,6 @@ build:
 	@nativefier \
 		--overwrite \
 		--name "Toggl" \
-		--tray \
 		https://www.toggl.com/app \
 		build
 
