@@ -31,6 +31,7 @@ hs.logger.historySize(200)
 local display_default = '1680x1050'
 local display_home = '2560x1440'
 local display_home_4k = '2560x1440@1x'
+local display_home_4k_dual = '3008x1692@2x'
 local display_imac = '1920x1200'
 local display_retina = '1440x900@2x'
 local display_work = '2560x1600'
@@ -38,6 +39,7 @@ local display_work_vertical = '1200x1920'
 
 -- Monitor grids
 local display_default_grid = '2x4'
+local display_home_4k_dual_grid = '6x4'
 local display_home_4k_grid = '6x4'
 local display_home_grid = '6x4'
 local display_imac_grid = '6x2'
@@ -83,6 +85,12 @@ function setup_grid()
     if hs.screen.find(display_home_4k) then
         print('found', display_home_4k)
         hs.grid.setGrid(display_home_4k_grid, display_home_4k)
+    end
+
+    -- Home Display 4K Dual --
+    if hs.screen.find(display_home_4k_dual) then
+        print('found', display_home_4k_dual)
+        hs.grid.setGrid(display_home_4k_dual_grid, display_home_4k_dual)
     end
 
     -- iMac --
