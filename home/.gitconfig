@@ -23,6 +23,7 @@
     llm = log -p master..
     b = branch
     undo = reset --soft HEAD^
+    delete-merged-branches = "!f() { git checkout --quiet master && git branch --merged | grep --invert-match '\\*' | xargs -n 1 git branch --delete; git checkout --quiet @{-1}; }; f"
 
 [apply]
     whitespace = fix
@@ -59,12 +60,16 @@
 [push]
     default = tracking
     #default = simple
+
 [rerere]
     enabled = true
+
 [commit]
     gpgsign = true
+
 [gpg]
     program = /usr/local/bin/gpg
+
 [filter "lfs"]
     clean = git-lfs clean -- %f
 	smudge = git-lfs smudge -- %f
