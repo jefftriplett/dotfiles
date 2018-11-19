@@ -12,12 +12,13 @@ export HISTCONTROL="ignoredups"
 export HISTFILESIZE=50000000
 export HISTIGNORE=" *:ls:cd:cd ~:date:exit:export:history:pwd:* --help"
 export HISTSIZE=$HISTFILESIZE
+export HISTTIMEFORMAT="%F %T "
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_UPGRADE_CLEANUP=1
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
-export LDFLAGS="-L/usr/local/opt/readline/lib"
 export LD_LIBRARY_PATH="/usr/local/lib"
+export LDFLAGS="-L/usr/local/opt/readline/lib"
 
 # experimental prompt
 export PS1='✨ \[\e[0;36m\]\[\e[0;36m\] \W\[\033[0;35m\]$(__git_ps1 " (%s)")\[\e[0m\]: '
@@ -71,13 +72,6 @@ PATH="${PATH}:~/.local/bin"
 export PYENV_ROOT="${HOME}/.pyenv"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 PATH="${PATH}:${PYENV_ROOT}/bin"
-
-#################
-# node settings #
-#################
-
-PATH="${PATH}:/usr/local/share/npm/bin"
-PATH="${PATH}:/usr/local/node_modules/.bin"
 
 ########################
 # ruby / rbenvsettings #

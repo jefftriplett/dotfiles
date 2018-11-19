@@ -182,6 +182,7 @@ mas_installed_apps:
 # Node Packages
 
 node_system_packages:
+  - name: alex
   - name: alfred-fkill
   - name: browser-sync
   - name: codeofconduct
