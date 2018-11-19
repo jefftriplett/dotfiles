@@ -203,7 +203,7 @@ pyenv_versions:
   - name: 3.6.6
   - name: 3.7.0
 
-pyenv_global_version: "3.6.6 2.7.15"
+pyenv_global_version: "3.7.0 2.7.15"
 
 python_system_packages:
   - name: pip
