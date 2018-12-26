@@ -78,6 +78,14 @@ if brew command command-not-found-init > /dev/null 2>&1; then
     eval "$(brew command-not-found-init)";
 fi
 
+##############################
+# mcfly bash history manager #
+##############################
+
+if [[ -f "$(brew --prefix)/opt/mcfly/mcfly.bash" ]]; then
+  source "$(brew --prefix)/opt/mcfly/mcfly.bash"
+fi
+
 ####################
 # thefuck settings #
 ####################

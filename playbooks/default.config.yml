@@ -7,6 +7,7 @@ homebrew_taps:
   # - name: homebrew/versions
   # - name: watsonbox/cmu-sphinx
   - name: buo/cask-upgrade
+  - name: cantino/mcfly https://github.com/cantino/mcfly  # mcfly
   - name: caskroom/cask
   - name: caskroom/fonts
   - name: caskroom/versions
@@ -49,6 +50,7 @@ homebrew_apps:
   - name: lua
   - name: mas
   - name: maven
+  - name: mcfly
   - name: mysql
   - name: nativefier
   - name: node
@@ -71,6 +73,7 @@ homebrew_apps:
   - name: terminal-notifier
   - name: thefuck
   - name: tldr
+  - name: up
   - name: wget
   - name: xz
   - name: youtube-dl
