@@ -28,14 +28,12 @@ Temporary Items
 *.merged-ca-bundle
 *.system-ca-bundle
 *.user-ca-bundle
-
-home/.maid/*.log.[0-9]
-
-apps/*/build/*
-apps/*/*-darwin-x64/*
-roles
-
+.secrets
 apps/*-x64/*
+apps/*/*-darwin-x64/*
+apps/*/build/*
+home/.maid/*.log.[0-9]
+roles
 
 ### start of include list...
 

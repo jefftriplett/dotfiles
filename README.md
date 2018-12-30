@@ -38,6 +38,7 @@ Terminal theme
 Inspiration / Thank you!
 ------------------------
 
+- [The Geeky Way: What are dotfiles?](http://www.thegeekyway.com/what-are-dotfiles/)
 - https://github.com/epicserve/dotfiles
 - https://github.com/geerlingguy/mac-dev-playbook
 - https://github.com/JohnColvin/.maid/blob/master/rules.rb
