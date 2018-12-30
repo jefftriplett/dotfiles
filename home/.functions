@@ -1,3 +1,26 @@
+
+pip-update() {
+    for version in $(pyenv versions --bare) ; do
+        echo "Upgrading Python ${version}"
+        pyenv shell "${version}"
+        # pyenv which python
+        PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pip virtualenv virtualenvwrapper wheel > /dev/null 2>&1
+    done
+
+    # Update one-offs for our main "global" python
+    version=3.6.8
+
+    echo "Upgrading Global Python (${version})"
+    pyenv shell $version
+    pyenv which python
+    PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pipsi > /dev/null 2>&1
+
+    # To update everything under pipsi
+    # $ pipsi-tool upgrade-all
+    # pipsi upgrade pipenv
+    pipsi upgrade pipenv > /dev/null 2>&1
+}
+
 ###########################
 # Docker Helper Functions #
 ###########################
@@ -98,7 +121,7 @@ chrome_docker(){
         --group-add audio \
         --group-add video \
         --name chrome \
-        ${DOCKER_REPO_PREFIX}/chrome --user-data-dir=/data \
+        "${DOCKER_REPO_PREFIX}/chrome" --user-data-dir=/data \
         --proxy-server="$proxy" \
         --host-resolver-rules="$map" "$args"
 }

@@ -1,13 +1,13 @@
 #!/bin/bash
 
-VIRTUAL_ENV_NAME=`basename $VIRTUAL_ENV`
+VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
 SUBLIME_TEXT_PROJECT_PATH="/Users/jefftriplett/Library/Application Support/Sublime Text 3/Packages/User/Projects"
 
-if [ -d "$VIRTUAL_ENV/src" ]; then
-  cd $VIRTUAL_ENV/src
+if [ -d "${VIRTUAL_ENV}/src" ]; then
+  cd "${VIRTUAL_ENV}/src" || exit
 else
-  mkdir -p $VIRTUAL_ENV/src
-  cd $VIRTUAL_ENV/src
+  mkdir -p "${VIRTUAL_ENV}/src"
+  cd "${VIRTUAL_ENV}/src" || exit
   add2virtualenv .
   touch .envrc
   direnv allow
@@ -15,13 +15,13 @@ fi
 
 PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
 
-if ! [ -e "$PROJECT_FILE" ]; then
+if ! [ -e "${PROJECT_FILE}" ]; then
   read -p "Would you like to create a new SublimeText project for this virtualenv? " -n 1 -r
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
-    echo "Creating $PROJECT_FILE"
-    cat >"$PROJECT_FILE" <<EOL
+    echo "Creating ${PROJECT_FILE}"
+    cat >"${PROJECT_FILE}" <<EOL
 {
     "folders":
     [

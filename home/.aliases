@@ -7,25 +7,3 @@ alias nw="~/node_modules/nwjs/nwjs.app/Contents/MacOS/nwjs"
 alias outdated="brew update; brew outdated; brew cask outdated; mas outdated"
 alias pip-outdated="PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated"
 alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
-
-pip-update() {
-    for version in $(pyenv versions --bare) ; do
-        echo "Upgrading Python $version"
-        pyenv shell $version
-        # pyenv which python
-        PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pip virtualenv virtualenvwrapper wheel > /dev/null 2>&1
-    done
-
-    # Update one-offs for our main "global" python
-    version=3.6.8
-
-    echo "Upgrading Global Python ($version)"
-    pyenv shell $version
-    pyenv which python
-    PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pipsi > /dev/null 2>&1
-
-    # To update everything under pipsi
-    # $ pipsi-tool upgrade-all
-    # pipsi upgrade pipenv
-    pipsi upgrade pipenv > /dev/null 2>&1
-}

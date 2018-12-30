@@ -83,6 +83,10 @@ python_deps: ## install python system dependencies
 ruby: ## install ruby essentials
 	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/main.yml -c local --tags ruby
 
+.PHONY: shellcheck
+shellcheck:
+	shellcheck
+
 .PHONY: sublime
 sublime: ## install sublimetext3 configs
 	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/main.yml -c local --tags sublime
