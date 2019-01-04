@@ -43,6 +43,7 @@ homebrew_apps:
   - name: hadolint  # for Docker linting
   - name: hub
   - name: jack
+  - name: jq
   - name: kubernetes-cli
   - name: kubernetes-helm
   - name: libev
@@ -51,6 +52,7 @@ homebrew_apps:
   - name: mas
   - name: maven
   - name: mcfly
+  - name: modd
   - name: mysql
   - name: nativefier
   - name: node
