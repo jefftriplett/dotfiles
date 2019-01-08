@@ -1,36 +1,34 @@
 #!/bin/bash
 
 VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
+VIRTUAL_ENV_SRC="${VIRTUAL_ENV}/src"
 SUBLIME_TEXT_PROJECT_PATH="/Users/jefftriplett/Library/Application Support/Sublime Text 3/Packages/User/Projects"
 
-if [ -d "${VIRTUAL_ENV}/src" ]; then
-  cd "${VIRTUAL_ENV}/src" || exit
+if [ -d "${VIRTUAL_ENV_SRC}" ]; then
+  cd "${VIRTUAL_ENV_SRC}" || exit
 else
-  mkdir -p "${VIRTUAL_ENV}/src"
-  cd "${VIRTUAL_ENV}/src" || exit
+  mkdir -p "${VIRTUAL_ENV_SRC}"
+  cd "${VIRTUAL_ENV_SRC}" || exit
   add2virtualenv .
   touch .envrc
-  direnv allow
+  if ! [ -e direnv ]; then
+    direnv allow
+  fi
 fi
 
 PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
+
+echo "${PROJECT_FILE}"
 
 if ! [ -e "${PROJECT_FILE}" ]; then
   read -p "Would you like to create a new SublimeText project for this virtualenv? " -n 1 -r
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]
   then
-    echo "Creating ${PROJECT_FILE}"
-    cat >"${PROJECT_FILE}" <<EOL
-{
-    "folders":
-    [
-        {
-            "path": "${VIRTUAL_ENV}/src"
-        }
-    ]
-}
-EOL
+    if ! [ -e jq ]; then
+      echo "Creating ${PROJECT_FILE}"
+      echo "{\"folders\": [{\"path\": \"${VIRTUAL_ENV_SRC}\"}]}" | jq > "${PROJECT_FILE}"
+    fi
   fi
 fi
 
@@ -42,7 +40,9 @@ fi
 # export USER_BADGE="🐍"
 
 # set our tab name
-tabset --title "${VIRTUAL_ENV_NAME}"
+if ! [ -e tabset ]; then
+  tabset --title "${VIRTUAL_ENV_NAME}"
+fi
 
 # TODO: Ansible go...
 # go get github.com/arsham/figurine
