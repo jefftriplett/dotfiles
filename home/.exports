@@ -13,6 +13,7 @@ export HISTFILESIZE=50000000
 export HISTIGNORE=" *:ls:cd:cd ~:date:exit:export:history:pwd:* --help"
 export HISTSIZE=$HISTFILESIZE
 export HISTTIMEFORMAT="%F %T "
+export HOMEBREW_INSTALL_CLEANUP=1
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_UPGRADE_CLEANUP=1
 export LANG="en_US.UTF-8"
