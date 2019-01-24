@@ -75,6 +75,7 @@ homebrew_apps:
   - name: terminal-notifier
   - name: thefuck
   - name: tldr
+  - name: tree
   - name: up
   - name: wget
   - name: xz
@@ -104,6 +105,7 @@ homebrew_cask_apps:
   - name: fluid
   - name: font-hack
   - name: font-ia-writer-duospace
+  - name: font-opendyslexic
   - name: font-ubuntu
   - name: font-ubuntu-mono-derivative-powerline
   - name: gitup
@@ -120,6 +122,7 @@ homebrew_cask_apps:
   - name: java
   - name: karabiner
   - name: keybase
+  - name: keycastr
   - name: kitematic
   - name: kube-solo
   - name: launchrocket
@@ -130,6 +133,7 @@ homebrew_cask_apps:
   - name: minecraft
   - name: mojibar
   - name: musicbrainz-picard
+  - name: muzzle
   - name: numi
   - name: obs
   - name: plex-media-player
@@ -157,6 +161,15 @@ homebrew_cask_apps:
   - name: wkhtmltopdf
   - name: xld
   - name: xquartz
+
+  ## Quicklook plugins https://github.com/sindresorhus/quick-look-plugins
+  - name: epubquicklook  # preview epubs, make nice icons
+  - name: qlcolorcode # syntax highlighting in preview
+  - name: qlmarkdown  # preview markdown files
+  - name: qlstephen  # preview plaintext files without extension
+  - name: quicklook-csv  # preview csvs
+  - name: quicklook-json  # preview json files
+
 
 # Mac App Store Applications
 
