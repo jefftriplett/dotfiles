@@ -172,12 +172,14 @@ function screens_changed_callback()
     local main = hs.screen.find(display_retina)
     if (vertical) then
         hs.layout.apply({
+            -- macbook pro display --
             {"iTerm2", nil, main, hs.layout.maximized, nil, nil},
 
+            -- top 1/2 of vertical monitor --
             {"Slack", nil, vertical, {x=0, y=0, w=1, h=0.5}, nil, nil},
 
+            -- bottom 1/2 of vertical monitor --
             {"Caprine", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
-            {"HipChat", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
             {"Messages", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
             {"Telegram", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
         })

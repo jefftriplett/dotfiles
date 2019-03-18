@@ -68,7 +68,7 @@
 	gpgsign = true
 
 [gpg]
-    program = /usr/local/bin/gpg
+	program = /usr/local/bin/gpg
 
 [filter "lfs"]
     clean = git-lfs clean -- %f

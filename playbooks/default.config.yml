@@ -60,6 +60,7 @@ homebrew_apps:
   - name: pinentry-mac
   - name: pngpaste
   - name: postgresql
+  - name: pre-commit
   - name: pyenv
   - name: pyenv-ccache
   - name: pyenv-virtualenvwrapper
@@ -164,7 +165,7 @@ homebrew_cask_apps:
 
   ## Quicklook plugins https://github.com/sindresorhus/quick-look-plugins
   - name: epubquicklook  # preview epubs, make nice icons
-  - name: qlcolorcode # syntax highlighting in preview
+  - name: qlcolorcode  # syntax highlighting in preview
   - name: qlmarkdown  # preview markdown files
   - name: qlstephen  # preview plaintext files without extension
   - name: quicklook-csv  # preview csvs
@@ -174,28 +175,28 @@ homebrew_cask_apps:
 # Mac App Store Applications
 
 mas_installed_apps:
-  - { id: 866773894, name: "Quiver" }
-  - { id: 406056744, name: "Evernote" }
-  - { id: 986304488, name: "Kiwi for Gmail" }
-  - { id: 467038962, name: "Text2Speech" }
-  - { id: 1278508951, name: "Trello" }
-  - { id: 918858936, name: "Airmail 3" }
-  - { id: 418412301, name: "Clean" }
-  - { id: 408981381, name: "iPhoto" }
-  - { id: 425955336, name: "Skitch" }
-  - { id: 585829637, name: "Todoist" }
-  - { id: 451907568, name: "Paprika Recipe Manager" }
-  - { id: 407963104, name: "Pixelmator" }
-  - { id: 443987910, name: "1Password" }
-  - { id: 682658836, name: "GarageBand" }
-  - { id: 540348655, name: "Monosnap" }
-  - { id: 497799835, name: "Xcode" }
-  - { id: 847496013, name: "Deckset" }
-  - { id: 1006087419, name: "SnippetsLab" }
-  - { id: 896450579, name: "Textual 5" }
-  - { id: 408981434, name: "iMovie" }
-  - { id: 588726889, name: "ReadKit" }
-  - { id: 506189836, name: "Harvest" }
+  - {id: 866773894, name: "Quiver"}
+  - {id: 406056744, name: "Evernote"}
+  - {id: 986304488, name: "Kiwi for Gmail"}
+  - {id: 467038962, name: "Text2Speech"}
+  - {id: 1278508951, name: "Trello"}
+  - {id: 918858936, name: "Airmail 3"}
+  - {id: 418412301, name: "Clean"}
+  - {id: 408981381, name: "iPhoto"}
+  - {id: 425955336, name: "Skitch"}
+  - {id: 585829637, name: "Todoist"}
+  - {id: 451907568, name: "Paprika Recipe Manager"}
+  - {id: 407963104, name: "Pixelmator"}
+  - {id: 443987910, name: "1Password"}
+  - {id: 682658836, name: "GarageBand"}
+  - {id: 540348655, name: "Monosnap"}
+  - {id: 497799835, name: "Xcode"}
+  - {id: 847496013, name: "Deckset"}
+  - {id: 1006087419, name: "SnippetsLab"}
+  - {id: 896450579, name: "Textual 5"}
+  - {id: 408981434, name: "iMovie"}
+  - {id: 588726889, name: "ReadKit"}
+  - {id: 506189836, name: "Harvest"}
 
 # Node Packages
 
