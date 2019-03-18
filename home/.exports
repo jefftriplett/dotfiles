@@ -8,14 +8,13 @@ PATH="${PATH}:/usr/local/sbin"
 export ARCHFLAGS="-Werror=unused-command-line-argument"
 # export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
 export CPPFLAGS="-I/usr/local/opt/readline/include"
-export HISTCONTROL="ignoredups"
+export HISTCONTROL="ignoreboth:erasedups"
 export HISTFILESIZE=50000000
 export HISTIGNORE=" *:ls:cd:cd ~:date:exit:export:history:pwd:* --help"
 export HISTSIZE=$HISTFILESIZE
 export HISTTIMEFORMAT="%F %T "
 export HOMEBREW_INSTALL_CLEANUP=1
 export HOMEBREW_NO_ANALYTICS=1
-export HOMEBREW_UPGRADE_CLEANUP=1
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
 export LD_LIBRARY_PATH="/usr/local/lib"
