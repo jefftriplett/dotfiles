@@ -11,6 +11,7 @@ homebrew_taps:
   - name: caskroom/cask
   - name: caskroom/fonts
   - name: caskroom/versions
+  - name: drone/drone
   - name: homebrew/bundle
   - name: homebrew/command-not-found
   - name: homebrew/core
@@ -23,6 +24,7 @@ homebrew_apps:
   - name: TomAnthony/brews/itermocil
   - name: aria2
   - name: bash
+  - name: bat
   - name: bower
   - name: caddy
   - name: ccache
@@ -30,6 +32,7 @@ homebrew_apps:
   - name: coreutils
   - name: direnv
   - name: dockutil
+  - name: drone  # via the drone/drone tap
   - name: exa
   - name: fish
   - name: gist
