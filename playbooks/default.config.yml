@@ -224,9 +224,9 @@ node_system_packages:
 pyenv_versions:
   - name: 2.7.15
   - name: 3.6.6
-  - name: 3.7.0
+  - name: 3.7.3
 
-pyenv_global_version: "3.7.0 2.7.15"
+pyenv_global_version: "3.7.3 2.7.15"
 
 python_system_packages:
   - name: pip
