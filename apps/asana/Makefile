@@ -7,6 +7,6 @@ build:
 		https://asana.com/ \
 		build
 
-	mv -f \
-		./build/Asana-darwin-x64/Asana.app \
-		~/Applications/
+	@rsync -a --delete-after \
+		./build/Asana-darwin-x64/Asana.app/ \
+		~/Applications/Asana.app
