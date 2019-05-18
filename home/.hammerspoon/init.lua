@@ -31,7 +31,8 @@ hs.logger.historySize(200)
 local display_default = '1680x1050'
 local display_home = '2560x1440'
 local display_home_4k = '2560x1440@1x'
-local display_home_4k_dual = '3008x1692@2x'
+-- local display_home_4k_dual = '3008x1692@2x'
+local display_home_4k_dual = '1920x1080@2x'
 local display_imac = '1920x1200'
 local display_retina = '1440x900@2x'
 local display_work = '2560x1600'
@@ -182,6 +183,11 @@ function screens_changed_callback()
             {"Caprine", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
             {"Messages", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
             {"Telegram", nil, vertical, {x=0, y=0.5, w=1, h=0.5}, nil, nil},
+        })
+    else
+        hs.layout.apply({
+            -- macbook pro display --
+            {"iTerm2", nil, main, hs.layout.maximized, nil, nil},
         })
     end
 end
