@@ -3,9 +3,6 @@
 # Homebrew Taps (to give us access to cool things like Casks)
 
 homebrew_taps:
-  # - name: homebrew/dupes
-  # - name: homebrew/versions
-  # - name: watsonbox/cmu-sphinx
   - name: buo/cask-upgrade
   - name: cantino/mcfly https://github.com/cantino/mcfly  # mcfly
   - name: caskroom/cask
@@ -174,32 +171,31 @@ homebrew_cask_apps:
   - name: quicklook-csv  # preview csvs
   - name: quicklook-json  # preview json files
 
-
 # Mac App Store Applications
 
 mas_installed_apps:
-  - {id: 866773894, name: "Quiver"}
-  - {id: 406056744, name: "Evernote"}
-  - {id: 986304488, name: "Kiwi for Gmail"}
-  - {id: 467038962, name: "Text2Speech"}
-  - {id: 1278508951, name: "Trello"}
-  - {id: 918858936, name: "Airmail 3"}
-  - {id: 418412301, name: "Clean"}
-  - {id: 408981381, name: "iPhoto"}
-  - {id: 425955336, name: "Skitch"}
-  - {id: 585829637, name: "Todoist"}
-  - {id: 451907568, name: "Paprika Recipe Manager"}
-  - {id: 407963104, name: "Pixelmator"}
-  - {id: 443987910, name: "1Password"}
-  - {id: 682658836, name: "GarageBand"}
-  - {id: 540348655, name: "Monosnap"}
-  - {id: 497799835, name: "Xcode"}
-  - {id: 847496013, name: "Deckset"}
-  - {id: 1006087419, name: "SnippetsLab"}
-  - {id: 896450579, name: "Textual 5"}
-  - {id: 408981434, name: "iMovie"}
-  - {id: 588726889, name: "ReadKit"}
-  - {id: 506189836, name: "Harvest"}
+  - {name: "1Password", id: 443987910}
+  - {name: "Airmail 3", id: 918858936}
+  - {name: "Clean", id: 418412301}
+  - {name: "Deckset", id: 847496013}
+  - {name: "Evernote", id: 406056744}
+  - {name: "GarageBand", id: 682658836}
+  - {name: "Harvest", id: 506189836}
+  - {name: "iMovie", id: 408981434}
+  - {name: "iPhoto", id: 408981381}
+  - {name: "Kiwi for Gmail", id: 986304488}
+  - {name: "Monosnap", id: 540348655}
+  - {name: "Paprika Recipe Manager", id: 451907568}
+  - {name: "Pixelmator", id: 407963104}
+  - {name: "Quiver", id: 866773894}
+  - {name: "ReadKit", id: 588726889}
+  - {name: "Skitch", id: 425955336}
+  - {name: "SnippetsLab", id: 1006087419}
+  - {name: "Text2Speech", id: 467038962}
+  - {name: "Textual 5", id: 896450579}
+  - {name: "Todoist", id: 585829637}
+  - {name: "Trello", id: 1278508951}
+  - {name: "Xcode", id: 497799835}
 
 # Node Packages
 
@@ -221,23 +217,7 @@ node_system_packages:
 
 # Python Packages
 
-pyenv_versions:
-  - name: 2.7.15
-  - name: 3.6.6
-  - name: 3.7.3
-
-pyenv_global_version: "3.7.3 2.7.15"
-
-python_system_packages:
-  - name: pip
-  - name: pipsi
-  - name: setuptools
-  - name: virtualenv
-  - name: virtualenvwrapper
-
 pipsi_packages:
-  # - name: 1pass
-  # - name: tvnamer
   - name: ansible
   - name: awscli
   - name: black
@@ -264,6 +244,20 @@ pipsi_packages:
   - name: speedtest-cli
   - name: url2markdown-cli
   - name: yapf
+
+pyenv_versions:
+  - name: 2.7.16
+  - name: 3.6.8
+  - name: 3.7.3
+
+pyenv_global_version: "3.7.3 2.7.16"
+
+python_system_packages:
+  - name: pip
+  - name: pipsi
+  - name: setuptools
+  - name: virtualenv
+  - name: virtualenvwrapper
 
 # Ruby Packages
 
