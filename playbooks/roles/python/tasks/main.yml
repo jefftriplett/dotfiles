@@ -16,3 +16,9 @@
     - python
     - python_deps
     - pipsi
+
+- include: install_pipx.yml
+  tags:
+    - python
+    - python_deps
+    - pipx

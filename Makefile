@@ -67,6 +67,10 @@ osx: ## install osx configs
 pipsi: ## install pipsi (python)
 	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/main.yml -c local --tags pipsi
 
+.PHONY: pipx
+pipx: ## install pipx (python)
+	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/main.yml -c local --tags pipx
+
 .PHONY: pyenv
 pyenv: ## install pyenv (python)
 	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/main.yml -c local --tags pyenv

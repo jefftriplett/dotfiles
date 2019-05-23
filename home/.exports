@@ -43,7 +43,7 @@ export GIT_PS1_SHOWUNTRACKEDFILES=true
 # golang settings #
 ###################
 
-export GOPATH="$HOME/golang"
+export GOPATH="${HOME}/golang"
 export GOROOT=/usr/local/opt/go/libexec
 PATH="${PATH}:$GOPATH/bin"
 PATH="${PATH}:$GOROOT/bin"
@@ -66,7 +66,7 @@ export PIP_REQUIRE_VIRTUALENV="true"
 export PIP_RESPECT_VIRTUALENV="true"
 
 ## pipsi settings
-PATH="${PATH}:~/.local/bin"
+PATH="${PATH}:${HOME}/.local/bin"
 
 ## pyenv settings
 export PYENV_ROOT="${HOME}/.pyenv"

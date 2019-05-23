@@ -56,8 +56,8 @@ homebrew_apps:
   - name: mysql
   - name: nativefier
   - name: node
-  - name: phantomjs
   - name: pinentry-mac
+  - name: pip-completion
   - name: pngpaste
   - name: postgresql
   - name: pre-commit
@@ -218,6 +218,34 @@ node_system_packages:
 # Python Packages
 
 pipsi_packages:
+  - name: ansible
+  - name: awscli
+  - name: black
+  - name: cookiecutter
+  - name: em
+  - name: glances
+  - name: httpie
+  - name: invoke
+  - name: ispy
+  - name: jinja2-cli
+  - name: mackup
+  - name: mypy-lang
+  - name: nodeenv
+  - name: pew
+  - name: pgcli
+  - name: pipenv
+  - name: pipsi-tool
+  - name: proselint
+  - name: pur
+  - name: pydocstyle
+  - name: pyhome
+  - name: pythonpy
+  - name: rubyenv
+  - name: speedtest-cli
+  - name: url2markdown-cli
+  - name: yapf
+
+pipx_packages:
   - name: ansible
   - name: awscli
   - name: black

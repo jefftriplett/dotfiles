@@ -1,15 +1,17 @@
 
-for file in ~/.{exports,aliases,functions,secrets}; do
-    [ -r "${file}" ] && source "${file}"
+for filename in "${HOME}"/.{exports,aliases,functions,secrets}; do
+    if [[ -r "${filename}" ]] ; then
+        source "${filename}"
+    fi
 done
-unset file
-
+unset filename
 
 # Detect and load OS specific settigs
-platform='unknown'
 unamestr=$(uname)
-if [[ "${unamestr}" == 'Linux' ]]; then
-   source ~/.linux
-elif [[ "${unamestr}" == 'Darwin' ]]; then
-   source ~/.osx
+if [[ "${unamestr}" == 'Darwin' ]]; then
+    # shellcheck source=~/.osx
+   source "${HOME}/.osx"
+elif [[ "${unamestr}" == 'Linux' ]]; then
+    # shellcheck source=~/.linux
+   source "${HOME}/.linux"
 fi
