@@ -10,8 +10,8 @@ unset filename
 unamestr=$(uname)
 if [[ "${unamestr}" == 'Darwin' ]]; then
     # shellcheck source=~/.osx
-   source "${HOME}/.osx"
+    source "${HOME}/.osx"
 elif [[ "${unamestr}" == 'Linux' ]]; then
     # shellcheck source=~/.linux
-   source "${HOME}/.linux"
+    source "${HOME}/.linux"
 fi
