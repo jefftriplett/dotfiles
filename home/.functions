@@ -8,22 +8,17 @@ pip-update() {
     done
 
     # Update one-offs for our main "global" python
-    version=3.7.3
+    version=3.7.4
 
     echo "Upgrading Global Python (${version})"
     pyenv shell $version
     pyenv which python
 
-    echo "Upgrading pipsi"
-    PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pipsi > /dev/null 2>&1
-
     echo "Upgrading pipx"
     PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pipx > /dev/null 2>&1
 
-    # To update everything under pipsi
-    # $ pipsi-tool upgrade-all
-    # pipsi upgrade pipenv
-    pipsi upgrade pipenv > /dev/null 2>&1
+    # To update everything under pipx
+    # $ pipx upgrade-all
 }
 
 # inspired by: https://philna.sh/blog/2019/01/10/how-to-start-a-node-js-project/
