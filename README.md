@@ -3,30 +3,37 @@ My Dotfiles
 
 There are my personal dotfiles. They are managed using:
 
-- [direnv][10]: Securely loads or unloads environment variables depending on the current directory
+## GUI
+
+- [Alfred][alfred]: Productivity tool. 
+- [Alfred Powerpack][alfred-powerpack]: These Power Ups unlock the best of Alfred.
 - [Hammerspoon][5]: An macOS automation tool (tiling windows manager)
+
+## CLI
+
+- [direnv][10]: Securely loads or unloads environment variables depending on the current directory
 - [Homebrew][4] for macOS package management
 - [Homesick][1] for managing dotfiles
+
+## Python
+
 - [pip][6]: The PyPA recommended tool for installing and managing Python packages.
 - [pipenv][9]: Pipenv is a project that aims to bring the best of all packaging worlds to the Python world.
-- [pipx][11]: 
+- [pipx][11]: execute binaries from Python packages in isolated environments
 - [pyenv][8]: Simple Python version management
-- ~~[Maid][2] "Hazel for hackers" for automating various tasks~~
-- ~~[pipsi][7]: pip script installer. pipsi is a nice tool for Python tools which need to be installed system wide.
-- ~~[Whenever][3] for automating cron jobs~~
 
 Installation
 ------------
 
 1. Bootstrap our environment (install ansible via pipsi)
 
-```bash
+```shell
 $ make bootstrap
 ```
 
 2. Let ansible do it's thing
 
-```bash
+```shell
 $ make install
 ```
 
@@ -47,17 +54,15 @@ Inspiration / Thank you!
 - http://blog.palcu.ro/2014/06/dotfiles-and-dev-tools-provisioned-by.html
 
 [1]: https://github.com/technicalpickles/homesick
-[2]: https://github.com/benjaminoakes/maid
-[3]: https://github.com/javan/whenever
 [4]: http://brew.sh/
 [5]: http://www.hammerspoon.org/
 [6]: https://pip.pypa.io/en/latest/
-[7]: https://github.com/mitsuhiko/pipsi
 [8]: https://github.com/yyuu/pyenv
 [9]: http://docs.pipenv.org/en/latest/
 [10]: https://direnv.net/
 [11]: https://pipxproject.github.io/pipx/
-
+[alfred]: https://www.alfredapp.com/
+[alfred-powerpack]: https://www.alfredapp.com/powerpack/
 ## Contact / Social Media
 
 Here are a few ways to keep up with me online. If you have a question about this project, please consider opening a GitHub Issue. 
