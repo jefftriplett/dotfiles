@@ -104,6 +104,7 @@ homebrew_cask_apps:
   - name: duet
   - name: etcher
   - name: fluid
+  - name: font-b612
   - name: font-hack
   - name: font-ia-writer-duospace
   - name: font-opendyslexic
