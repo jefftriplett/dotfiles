@@ -9,9 +9,10 @@ There are my personal dotfiles. They are managed using:
 - [Homesick][1] for managing dotfiles
 - [pip][6]: The PyPA recommended tool for installing and managing Python packages.
 - [pipenv][9]: Pipenv is a project that aims to bring the best of all packaging worlds to the Python world.
-- [pipsi][7]: pip script installer. pipsi is a nice tool for Python tools which need to be installed system wide.
+- [pipx][11]: 
 - [pyenv][8]: Simple Python version management
 - ~~[Maid][2] "Hazel for hackers" for automating various tasks~~
+- ~~[pipsi][7]: pip script installer. pipsi is a nice tool for Python tools which need to be installed system wide.
 - ~~[Whenever][3] for automating cron jobs~~
 
 Installation
@@ -28,7 +29,6 @@ $ make bootstrap
 ```bash
 $ make install
 ```
-
 
 Terminal theme
 --------------
@@ -56,6 +56,7 @@ Inspiration / Thank you!
 [8]: https://github.com/yyuu/pyenv
 [9]: http://docs.pipenv.org/en/latest/
 [10]: https://direnv.net/
+[11]: https://pipxproject.github.io/pipx/
 
 ## Contact / Social Media
 
