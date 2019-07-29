@@ -46,6 +46,14 @@
     type: boolean
     value: "true"
 
+- name: Disable polluting my desktop with files
+  tags: osx
+  osx_defaults:
+    domain: com.apple.finder
+    key: CreateDesktop
+    type: boolean
+    value: "false"
+
 - name: Allow text selection in Quick Look
   tags: osx
   osx_defaults:
