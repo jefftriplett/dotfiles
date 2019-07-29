@@ -7,20 +7,21 @@ There are my personal dotfiles. They are managed using:
 
 - [Alfred][alfred]: Productivity tool. 
 - [Alfred Powerpack][alfred-powerpack]: These Power Ups unlock the best of Alfred.
-- [Hammerspoon][5]: An macOS automation tool (tiling windows manager)
+- [Hammerspoon][hammerspoon]: An macOS automation tool (tiling windows manager)
 
 ## CLI
 
-- [direnv][10]: Securely loads or unloads environment variables depending on the current directory
-- [Homebrew][4] for macOS package management
-- [Homesick][1] for managing dotfiles
+- [direnv][direnv]: Securely loads or unloads environment variables depending on the current directory
+- [Homebrew][homebrew] for macOS package management
+- [Homesick][homesick] for managing dotfiles
+- [Modd][modd] A flexible developer tool that runs processes and responds to filesystem changes
 
 ## Python
 
-- [pip][6]: The PyPA recommended tool for installing and managing Python packages.
-- [pipenv][9]: Pipenv is a project that aims to bring the best of all packaging worlds to the Python world.
-- [pipx][11]: execute binaries from Python packages in isolated environments
-- [pyenv][8]: Simple Python version management
+- [pip][pip]: The PyPA recommended tool for installing and managing Python packages.
+- [pipenv][pipenv]: Pipenv is a project that aims to bring the best of all packaging worlds to the Python world.
+- [pipx][pipx]: execute binaries from Python packages in isolated environments
+- [pyenv][pyenv]: Simple Python version management
 
 Installation
 ------------
@@ -53,16 +54,18 @@ Inspiration / Thank you!
 - https://github.com/mitchty/src/blob/master/dotfiles/maid/rules.rb
 - http://blog.palcu.ro/2014/06/dotfiles-and-dev-tools-provisioned-by.html
 
-[1]: https://github.com/technicalpickles/homesick
-[4]: http://brew.sh/
-[5]: http://www.hammerspoon.org/
-[6]: https://pip.pypa.io/en/latest/
-[8]: https://github.com/yyuu/pyenv
-[9]: http://docs.pipenv.org/en/latest/
-[10]: https://direnv.net/
-[11]: https://pipxproject.github.io/pipx/
-[alfred]: https://www.alfredapp.com/
 [alfred-powerpack]: https://www.alfredapp.com/powerpack/
+[alfred]: https://www.alfredapp.com/
+[direnv]: https://direnv.net/
+[hammerspoon]: http://www.hammerspoon.org/
+[homebrew]: http://brew.sh/
+[homesick]: https://github.com/technicalpickles/homesick
+[modd]: https://github.com/cortesi/modd
+[pip]: https://pip.pypa.io/en/latest/
+[pipenv]: http://docs.pipenv.org/en/latest/
+[pipx]: https://pipxproject.github.io/pipx/
+[pyenv]: https://github.com/yyuu/pyenv
+
 ## Contact / Social Media
 
 Here are a few ways to keep up with me online. If you have a question about this project, please consider opening a GitHub Issue. 
