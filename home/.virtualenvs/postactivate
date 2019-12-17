@@ -10,7 +10,12 @@ else
   mkdir -p "${VIRTUAL_ENV_SRC}"
   cd "${VIRTUAL_ENV_SRC}" || exit
   add2virtualenv .
+
   touch .envrc
+  echo "export PIP_DISABLE_PIP_VERSION_CHECK=1" >> .envrc
+  echo "export PYTHONDONTWRITEBYTECODE=true" >> .envrc
+  echo "export PYTHONUNBUFFERED=1" >> .envrc
+
   if ! [ -e direnv ]; then
     direnv allow
   fi
