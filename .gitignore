@@ -40,3 +40,8 @@ roles
 # track these files, if they exist
 !.gitignore
 !.editorconfig
+
+home/bin/.docker-slim-state/
+home/bin/docker-slim
+home/bin/docker-slim-sensor
+home/bin/gam
