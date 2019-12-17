@@ -8,7 +8,6 @@ homebrew_taps:
   - name: caskroom/cask
   - name: caskroom/fonts
   - name: caskroom/versions
-  - name: drone/drone
   - name: homebrew/bundle
   - name: homebrew/command-not-found
   - name: homebrew/core
@@ -18,7 +17,6 @@ homebrew_taps:
 # Terminal Applications
 
 homebrew_apps:
-  - name: TomAnthony/brews/itermocil
   - name: aria2
   - name: bash
   - name: bat
@@ -28,8 +26,8 @@ homebrew_apps:
   - name: chrome-cli
   - name: coreutils
   - name: direnv
+  - name: docker-slim
   - name: dockutil
-  - name: drone  # via the drone/drone tap
   - name: exa
   - name: fish
   - name: gist
@@ -61,6 +59,7 @@ homebrew_apps:
   - name: pngpaste
   - name: postgresql
   - name: pre-commit
+  - name: prettier
   - name: pyenv
   - name: pyenv-ccache
   - name: pyenv-virtualenvwrapper
@@ -76,6 +75,7 @@ homebrew_apps:
   - name: terminal-notifier
   - name: thefuck
   - name: tldr
+  - name: TomAnthony/brews/itermocil
   - name: tree
   - name: up
   - name: wget
