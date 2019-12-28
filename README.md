@@ -26,7 +26,7 @@ There are my personal dotfiles. They are managed using:
 Installation
 ------------
 
-1. Bootstrap our environment (install ansible via pipsi)
+1. Bootstrap our environment (install ansible via pipx)
 
 ```shell
 $ make bootstrap

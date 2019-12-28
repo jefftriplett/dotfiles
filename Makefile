@@ -5,7 +5,7 @@ help:
 .PHONY: bootstrap
 bootstrap: ## install pre-dependencies needed to install everything
 	PIP_REQUIRE_VIRTUALENV=false pip install -U -r requirements.txt
-	pipsi install ansible
+	pipx install ansible
 	ansible-galaxy install -r requirements.yml
 
 .PHONY: clean
@@ -62,10 +62,6 @@ node: ## install node essentials
 .PHONY: osx
 osx: ## install osx configs
 	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/main.yml -c local --tags osx
-
-.PHONY: pipsi
-pipsi: ## install pipsi (python)
-	ANSIBLE_NOCOWS=1 ansible-playbook -i ./playbooks/hosts ./playbooks/main.yml -c local --tags pipsi
 
 .PHONY: pipx
 pipx: ## install pipx (python)

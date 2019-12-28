@@ -218,58 +218,49 @@ node_system_packages:
 
 # Python Packages
 
-pipsi_packages:
-  - name: ansible
-  - name: awscli
-  - name: black
-  - name: cookiecutter
-  - name: em
-  - name: glances
-  - name: httpie
-  - name: invoke
-  - name: ispy
-  - name: jinja2-cli
-  - name: mackup
-  - name: mypy-lang
-  - name: nodeenv
-  - name: pew
-  - name: pgcli
-  - name: pipenv
-  - name: proselint
-  - name: pur
-  - name: pydocstyle
-  - name: pyhome
-  - name: pythonpy
-  - name: rubyenv
-  - name: speedtest-cli
-  - name: url2markdown-cli
-  - name: yapf
-
 pipx_packages:
   - name: ansible
   - name: awscli
   - name: black
+  - name: bumpversion
+  - name: contributors
   - name: cookiecutter
+  - name: dotenv-linter
   - name: em
+  - name: flake8
+  - name: frontmatter-cli
+  - name: gitignore-cli
   - name: glances
   - name: httpie
   - name: invoke
   - name: ispy
   - name: jinja2-cli
+  - name: jinjalint
   - name: mackup
+  - name: mercurial
   - name: mypy-lang
   - name: nodeenv
+  - name: organize-tool
+  # - name: osx-openconnect-helper
   - name: pew
   - name: pgcli
   - name: pipenv
+  - name: poetry
   - name: proselint
   - name: pur
   - name: pydocstyle
   - name: pyhome
+  - name: python-cfonts
+  - name: python-language-server
   - name: pythonpy
   - name: rubyenv
   - name: speedtest-cli
+  - name: standup
+  - name: toot
+  - name: tvnamer
+  - name: updatable
   - name: url2markdown-cli
+  - name: whale-linter
   - name: yapf
 
 pyenv_versions:
