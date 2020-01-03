@@ -103,8 +103,10 @@ homebrew_cask_apps:
   - name: corectl-app
   - name: duet
   - name: etcher
+  - name: figma
   - name: fluid
   - name: font-b612
+  - name: font-cascadia-mono
   - name: font-hack
   - name: font-ia-writer-duospace
   - name: font-opendyslexic
@@ -136,6 +138,7 @@ homebrew_cask_apps:
   - name: mojibar
   - name: musicbrainz-picard
   - name: muzzle
+  - name: n
   - name: numi
   - name: obs
   - name: plex-media-player
