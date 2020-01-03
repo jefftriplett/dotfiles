@@ -1,10 +1,5 @@
-[user]
-    email = jeff.triplett@gmail.com
-    name = Jeff Triplett
-	signingkey = BD6DAFC4D1A381EA
-
-[github]
-    user = jefftriplett
+[include]
+    path = .gitconfig.personal
 
 [alias]
     st = status

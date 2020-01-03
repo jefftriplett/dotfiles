@@ -41,7 +41,10 @@ roles
 !.gitignore
 !.editorconfig
 
+.gitconfig.personal
+
 home/bin/.docker-slim-state/
 home/bin/docker-slim
 home/bin/docker-slim-sensor
 home/bin/gam
+home/.gitlab.yml
