@@ -15,8 +15,8 @@ jobs:
             set -ex
 
             shellcheck --version
-            shellcheck ./home/*.sh
             shellcheck ./home/.bash_*
+            # shellcheck ./home/*.sh
 
   # lint_dockerfile:
   #   runs-on: [ubuntu-latest]
