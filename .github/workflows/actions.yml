@@ -15,7 +15,7 @@ jobs:
             set -ex
 
             shellcheck --version
-            shellcheck ./home/.bash_*
+            shellcheck ./home/.bash_* --exclude=SC1090
             # shellcheck ./home/*.sh
 
   # lint_dockerfile:
