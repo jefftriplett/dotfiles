@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 alias brew-outdated="brew outdated --fetch-HEAD"
 alias cat="bat -p"
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"

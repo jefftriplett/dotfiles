@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 
 pip-update() {
     for version in $(pyenv versions --bare) ; do
