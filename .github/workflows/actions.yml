@@ -1,0 +1,33 @@
+name: CI
+
+on: [push]
+
+jobs:
+  lint_shellscripts:
+    runs-on: [ubuntu-latest]
+    container:
+      image: koalaman/shellcheck-alpine:latest
+      options: --entrypoint /bin/sh
+    steps:
+      - uses: actions/checkout@v1
+      - run: |
+            #!/usr/bin/env sh
+            set -ex
+
+            shellcheck --version
+            shellcheck ./home/*.sh
+            shellcheck ./home/.bash_*
+
+  # lint_dockerfile:
+  #   runs-on: [ubuntu-latest]
+  #   container:
+  #     image: hadolint/hadolint:latest-debian
+  #     options: --entrypoint /bin/sh
+  #   steps:
+  #     - uses: actions/checkout@v1
+  #     - run: |
+  #           #!/usr/bin/env sh
+  #           set -ex
+
+  #           hadolint --version
+  #           hadolint Dockerfile
