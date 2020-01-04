@@ -28,6 +28,7 @@ Temporary Items
 *.merged-ca-bundle
 *.system-ca-bundle
 *.user-ca-bundle
+.bash_secrets
 .secrets
 apps/*-x64/*
 apps/*/*-darwin-x64/*
