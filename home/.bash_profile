@@ -1,4 +1,4 @@
-for filename in "${HOME}"/.{bash_exports,bash_aliases,bash_functions,bash_secrets}; do
+for filename in "${HOME}"/.{bash_exports,bash_aliases,bash_functions,bash_secrets,docker_alias}; do
     if [[ -r "${filename}" ]] ; then
         source "${filename}"
     fi
