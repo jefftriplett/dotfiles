@@ -4,6 +4,6 @@
   tags: node
   npm:
     name: "{{ item.name }}"
-    state: latest
+    state: present
     global: yes
   with_items: "{{ node_system_packages }}"

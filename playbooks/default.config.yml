@@ -3,11 +3,11 @@
 # Homebrew Taps (to give us access to cool things like Casks)
 
 homebrew_taps:
+  # - name: cantino/mcfly https://github.com/cantino/mcfly  # mcfly
+  # - name: caskroom/cask
+  # - name: caskroom/fonts
+  # - name: caskroom/versions
   - name: buo/cask-upgrade
-  - name: cantino/mcfly https://github.com/cantino/mcfly  # mcfly
-  - name: caskroom/cask
-  - name: caskroom/fonts
-  - name: caskroom/versions
   - name: homebrew/bundle
   - name: homebrew/command-not-found
   - name: homebrew/core
@@ -17,52 +17,99 @@ homebrew_taps:
 # Terminal Applications
 
 homebrew_apps:
+  # - name: gpg-agent
+  # - name: mcfly
+  # - name: sshrc
+  - name: adns
   - name: aria2
+  - name: autoconf
   - name: bash
   - name: bat
+  - name: berkeley-db
   - name: bower
   - name: caddy
   - name: ccache
   - name: chrome-cli
   - name: coreutils
   - name: direnv
+  - name: docker
+  - name: docker-compose
   - name: docker-slim
   - name: dockutil
   - name: exa
   - name: fish
+  - name: flac
+  - name: gdbm
+  - name: gettext
   - name: gist
   - name: git
+  - name: git-flow
   - name: git-open
   - name: git-standup
+  - name: gmp
+  - name: gnupg
+  - name: gnutls
   - name: go
   - name: gpg
-  - name: gpg-agent
   - name: guetzli
+  - name: hadolint
   - name: hadolint  # for Docker linting
+  - name: helm
   - name: hub
+  - name: icu4c
+  - name: itermocil
   - name: jack
   - name: jq
+  - name: krb5
   - name: kubernetes-cli
   - name: kubernetes-helm
+  - name: libassuan
   - name: libev
+  - name: libevent
+  - name: libffi
+  - name: libgcrypt
+  - name: libgpg-error
+  - name: libidn2
+  - name: libksba
+  - name: libogg
   - name: libpng
+  - name: libsamplerate
+  - name: libsndfile
+  - name: libssh2
+  - name: libtasn1
+  - name: libunistring
+  - name: libusb
+  - name: libvorbis
+  - name: libyaml
+  - name: libzip
   - name: lua
   - name: mas
   - name: maven
-  - name: mcfly
   - name: modd
   - name: mysql
   - name: nativefier
+  - name: nettle
   - name: node
+  - name: npth
+  - name: oniguruma
+  - name: openjdk
+  - name: openssl@1.1
+  - name: p11-kit
+  - name: pcre2
+  - name: pinentry
   - name: pinentry-mac
   - name: pip-completion
+  - name: pkg-config
   - name: pngpaste
   - name: postgresql
   - name: pre-commit
   - name: prettier
+  - name: protobuf
   - name: pyenv
   - name: pyenv-ccache
   - name: pyenv-virtualenvwrapper
+  - name: python@3.8
+  - name: qt
   - name: qt5
   - name: rbenv
   - name: readline
@@ -71,12 +118,13 @@ homebrew_apps:
   - name: screenfetch
   - name: speexdsp
   - name: sqlite
-  - name: sshrc
+  - name: starship
   - name: terminal-notifier
   - name: thefuck
   - name: tldr
   - name: TomAnthony/brews/itermocil
   - name: tree
+  - name: unbound
   - name: up
   - name: wget
   - name: xz
@@ -223,6 +271,7 @@ node_system_packages:
 
 pipx_packages:
   - name: ansible
+  - name: ansible-lint
   - name: awscli
   - name: black
   - name: bumpversion
@@ -267,14 +316,10 @@ pipx_packages:
   - name: yapf
 
 pyenv_versions:
-  - name: 2.7.15
   - name: 3.8.0
   - name: 3.7.5
   - name: 3.6.9
-  - name: 3.5.4
-  - name: 3.4.5
-
-pyenv_global_version: "3.7.5 2.7.15 3.8.0 3.6.9 3.5.4 3.4.5"
+  - name: 2.7.15
 
 python_system_packages:
   - name: pip

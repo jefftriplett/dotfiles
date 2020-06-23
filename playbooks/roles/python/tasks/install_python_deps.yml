@@ -8,4 +8,5 @@
   pip:
     executable: "{{ ansible_env.HOME }}/.pyenv/shims/pip"
     name: "{{ item.name }}"
+    state: present
   with_items: "{{ python_system_packages }}"

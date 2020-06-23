@@ -7,14 +7,14 @@
     update_homebrew: yes
     upgrade_all: no
 
-- name: Install Taps
-  tags:
-    - homebrew
-    - homebrew-taps
-  homebrew_tap:
-    tap: "{{ item.name }}"
-    state: present
-  with_items: "{{ homebrew_taps }}"
+# - name: Install Taps
+#   tags:
+#     - homebrew
+#     - homebrew-taps
+#   homebrew_tap:
+#     tap: "{{ item.name }}"
+#     state: present
+#   with_items: "{{ homebrew_taps }}"
 
 - name: Install Console Apps
   tags:
@@ -25,23 +25,23 @@
   with_items: "{{ homebrew_apps }}"
   # when: item.name not in installed_homebrew_apps.results|map(attribute='stdout')
 
-- name: Install Mac Apps
-  tags:
-    - homebrew
-    - homebrew-casks
-    - casks
-  homebrew_cask:
-    name: "{{ item.name }}"
-    state: present
-  with_items: "{{ homebrew_cask_apps }}"
-  # when: item.name not in installed_homebrew_cask_apps.results|map(attribute='stdout')
+# - name: Install Mac Apps
+#   tags:
+#     - homebrew
+#     - homebrew-casks
+#     - casks
+#   homebrew_cask:
+#     name: "{{ item.name }}"
+#     state: present
+#   with_items: "{{ homebrew_cask_apps }}"
+#   # when: item.name not in installed_homebrew_cask_apps.results|map(attribute='stdout')
 
-- name: Homebrew Cask Cleanup
-  tags:
-    - homebrew
-    - homebrew-casks
-    - casks
-  command: "brew cask cleanup"
+# - name: Homebrew Cask Cleanup
+#   tags:
+#     - homebrew
+#     - homebrew-casks
+#     - casks
+#   command: "brew cask cleanup"
 
 - name: Homebrew Cleanup
   tags:

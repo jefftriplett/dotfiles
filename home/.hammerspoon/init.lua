@@ -35,6 +35,7 @@ local display_home_4k_dual = '1920x1080@2x' -- '3008x1692@2x'
 local display_home_4k_low = '2048x1152@2x'
 local display_imac = '1920x1200'
 local display_retina = '1440x900@2x'
+local display_retina_2020 = '1792x1120@2x'
 local display_work = '2560x1600'
 local display_work_vertical = '1200x1920'
 
@@ -46,6 +47,7 @@ local display_home_4k_low_grid = '6x4'
 local display_home_grid = '6x4'
 local display_imac_grid = '6x2'
 local display_retina_grid = '3x2'
+local display_retina_2020_grid = '6x4'
 local display_work_grid = '6x4'
 local display_work_vertical_grid = '2x6'
 
@@ -113,6 +115,11 @@ function setup_grid()
         hs.grid.setGrid(display_retina_grid, display_retina)
     end
 
+    if hs.screen.find(display_retina_2020) then
+        print('found', display_retina_2020)
+        hs.grid.setGrid(display_retina_2020_grid, display_retina_2020)
+    end
+
     if hs.screen.find(display_work) then
         print('found', display_work)
         hs.grid.setGrid(display_work_grid, display_work)
@@ -177,7 +184,14 @@ function screens_changed_callback()
 
     -- arrange apps for work --
     local vertical = hs.screen.find(display_work_vertical)
-    local main = hs.screen.find(display_retina)
+    local main = hs.screen.find(display_retina_2020)
+
+    if not main then
+        main = hs.screen.find(display_retina)
+    end
+
+    print('main:', main)
+
     if (vertical) then
         hs.layout.apply({
             -- macbook pro display --

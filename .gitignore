@@ -28,13 +28,13 @@ Temporary Items
 *.merged-ca-bundle
 *.system-ca-bundle
 *.user-ca-bundle
+./roles
 .bash_secrets
 .secrets
 apps/*-x64/*
 apps/*/*-darwin-x64/*
 apps/*/build/*
 home/.maid/*.log.[0-9]
-roles
 
 ### start of include list...
 

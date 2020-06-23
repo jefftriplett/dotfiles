@@ -4,5 +4,5 @@
   tags: ruby
   gem:
     name: "{{ item.name }}"
-    state: latest
+    state: present
   with_items: "{{ ruby_system_packages }}"

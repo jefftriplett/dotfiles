@@ -14,9 +14,6 @@
 #     - readline
 
 - name: Install PyEnv plugins
-  tags:
-    - python
-    - pyenv
   git:
     repo: "{{ item.repo }}"
     dest: "{{ item.dest }}"
@@ -35,27 +32,30 @@
       dest: "~/.pyenv/plugins/pyenv-virtualenvwrapper"
     - repo: "https://github.com/yyuu/pyenv-which-ext.git"
       dest: "~/.pyenv/plugins/pyenv-which-ext"
+  tags:
+    - python
+    - pyenv
 
 - name: Update PyEnv
+  command: pyenv update
   tags:
     - python
     - pyenv
-  command: "pyenv update"
 
 - name: Install Python Versions
-  tags:
-    - python
-    - pyenv
   #environment:
   #  CFLAGS: "-I$(brew --prefix openssl)/include -I$(xcrun --show-sdk-path)/usr/include"
   #  LDFLAGS: "-L$(brew --prefix openssl)/lib"
-  command: "pyenv install {{ item.name }}"
+  command: pyenv install {{ item.name }}
   args:
     creates: "~/.pyenv/versions/{{ item.name }}"
   with_items: "{{ pyenv_versions }}"
-
-- name: Set system-level Python versions
   tags:
     - python
     - pyenv
-  command: "pyenv global {{ pyenv_global_version }}"
+
+- name: Set system-level Python versions
+  command: pyenv global {{ pyenv_versions|join(" ") }}
+  tags:
+    - python
+    - pyenv

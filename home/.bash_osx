@@ -31,6 +31,14 @@ fi
 
 shopt -s histappend
 
+################
+# custom shell #
+################
+
+if command -v starship > /dev/null; then
+    eval "$(starship init bash)"
+fi
+
 #################
 # Ruby settings #
 #################

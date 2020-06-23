@@ -9,7 +9,7 @@ pip-update() {
     done
 
     # Update one-offs for our main "global" python
-    version=3.7.5
+    version=3.7.7
 
     echo "Upgrading Global Python (${version})"
     pyenv shell $version

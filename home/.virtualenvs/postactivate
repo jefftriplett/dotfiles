@@ -12,8 +12,10 @@ else
   add2virtualenv .
 
   touch .envrc
+  echo "export COMPOSE_DOCKER_CLI_BUILD=1" >> .envrc
+  echo "export DOCKER_BUILDKIT=1" >> .envrc
   echo "export PIP_DISABLE_PIP_VERSION_CHECK=1" >> .envrc
-  echo "export PYTHONDONTWRITEBYTECODE=true" >> .envrc
+  echo "export PYTHONDONTWRITEBYTECODE=1" >> .envrc
   echo "export PYTHONUNBUFFERED=1" >> .envrc
 
   if ! [ -e direnv ]; then
@@ -25,11 +27,17 @@ PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
 
 echo "${PROJECT_FILE}"
 
+CONTINUE=false
+
 if ! [ -e "${PROJECT_FILE}" ]; then
-  read -p "Would you like to create a new SublimeText project for this virtualenv? " -n 1 -r
+  read -p "Would you like to create a new SublimeText project for this virtualenv? " -n 1 -r response
   echo
-  if [[ $REPLY =~ ^[Yy]$ ]]
-  then
+
+  if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+    CONTINUE=true
+  fi
+
+  if $CONTINUE; then
     if ! [ -e jq ]; then
       echo "Creating ${PROJECT_FILE}"
       echo "{\"folders\": [{\"path\": \"${VIRTUAL_ENV_SRC}\"}]}" | jq > "${PROJECT_FILE}"
@@ -45,6 +53,7 @@ fi
 # export USER_BADGE="🐍"
 
 # set our tab name
+# npm install -g iterm2-tab-set
 if ! [ -e tabset ]; then
   tabset --title "${VIRTUAL_ENV_NAME}"
 fi
