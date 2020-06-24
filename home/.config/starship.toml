@@ -1,0 +1,20 @@
+add_newline = false
+
+[aws]
+disabled = true
+
+# [aws.region_aliases]
+# us-east-1 = "va"
+
+[kubernetes]
+disabled = true
+
+[memory_usage]
+disabled = true
+show_percentage = true
+
+[nodejs]
+disabled = true
+
+[package]
+disabled = true

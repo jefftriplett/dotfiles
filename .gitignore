@@ -28,7 +28,7 @@ Temporary Items
 *.merged-ca-bundle
 *.system-ca-bundle
 *.user-ca-bundle
-./roles
+roles/*
 .bash_secrets
 .secrets
 apps/*-x64/*
