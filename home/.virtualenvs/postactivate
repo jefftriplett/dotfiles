@@ -1,6 +1,7 @@
 #!/bin/bash
 
 VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
+VIRTUAL_ENV_BIN="${VIRTUAL_ENV}/bin"
 VIRTUAL_ENV_SRC="${VIRTUAL_ENV}/src"
 SUBLIME_TEXT_PROJECT_PATH="/Users/jefftriplett/Library/Application Support/Sublime Text 3/Packages/User/Projects"
 
