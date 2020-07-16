@@ -6,15 +6,9 @@
 
 set completion-ignore-case On
 
-for completion in \
-    "${HOME}/.asdf/asdf.sh" \
-    "${HOME}/.asdf/completions/asdf.bash"
-do
-    if [[ -e "${completion}" ]] ; then
-        source "${completion}"
-    fi
-done
-unset completion
+if command asdf > /dev/null 2>&1; then
+    eval ". $(brew --prefix asdf)/asdf.sh";
+fi
 
 # auto-load bash_completion.d
 if [ -d /usr/local/etc/bash_completion.d ]; then
