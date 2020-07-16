@@ -2,7 +2,6 @@
 .PHONY: build
 build:
 	@nativefier \
-		--overwrite \
 		--name "MyFitnessPal" \
 		https://www.myfitnesspal.com/ \
 		build

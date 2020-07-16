@@ -2,7 +2,6 @@
 .PHONY: build
 build:
 	@nativefier \
-		--overwrite \
 		--name "Toggl" \
 		https://www.toggl.com/app \
 		build

@@ -2,7 +2,6 @@
 .PHONY: build
 build:
 	@nativefier \
-		--overwrite \
 		--name "WIP Chat" \
 		https://wip.chat/ \
 		build

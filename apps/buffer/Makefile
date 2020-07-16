@@ -2,7 +2,6 @@
 .PHONY: build
 build:
 	@nativefier \
-		--overwrite \
 		--name "Buffer" \
 		https://buffer.com/ \
 		build

@@ -2,7 +2,6 @@
 .PHONY: build
 build:
 	@nativefier \
-		--overwrite \
 		--name "Grammarly" \
 		https://app.grammarly.com/ \
 		build
