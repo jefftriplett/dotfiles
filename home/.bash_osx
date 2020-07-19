@@ -14,6 +14,7 @@ fi
 if [ -d /usr/local/etc/bash_completion.d ]; then
     for filename in "/usr/local/etc/bash_completion.d/"*; do
         if [ -f "${filename}" ]; then
+            # shellcheck source=/dev/null
             source "${filename}"
         fi
     done
@@ -42,6 +43,7 @@ if command -v rbenv > /dev/null; then
 fi
 
 if [[ -s "${HOME}/.rvm/scripts/rvm" ]]; then
+    # shellcheck source=/dev/null
     source "${HOME}/.rvm/scripts/rvm"
 fi
 
@@ -76,6 +78,7 @@ fi
 ##############################
 
 if [[ -f "$(brew --prefix)/opt/mcfly/mcfly.bash" ]]; then
+  # shellcheck source=/dev/null
   source "$(brew --prefix)/opt/mcfly/mcfly.bash"
 fi
 
@@ -92,11 +95,10 @@ fi
 ################
 
 ssh-add -k &> /dev/null
+
 ###################
 # iTerm2 settings #
 ###################
-
-test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
 
 function iterm2_print_user_vars {
     iterm2_set_user_var badge "${USER_BADGE}"
@@ -106,38 +108,3 @@ function iterm2_print_user_vars {
 # if command -v itermocil > /dev/null; then
 #     complete -W "$(itermocil --list)" itermocil
 # fi
-
-####################
-# Google Cloud SDK #
-####################
-
-# # The next line updates PATH for the Google Cloud SDK.
-# if [ -f '/Users/jefftriplett/Downloads/google-cloud-sdk/path.bash.inc' ]; then
-#     . '/Users/jefftriplett/Downloads/google-cloud-sdk/path.bash.inc';
-# fi
-
-# # The next line enables shell command completion for gcloud.
-# if [ -f '/Users/jefftriplett/Downloads/google-cloud-sdk/completion.bash.inc' ]; then
-#     . '/Users/jefftriplett/Downloads/google-cloud-sdk/completion.bash.inc';
-# fi
-
-
-# TODO: move over the homebrew cask google-cloud-sdk
-# source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc'
-# source '/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc'
-
-# The next line updates PATH for the Google Cloud SDK.
-# if [ -f '${HOME}/Downloads/google-cloud-sdk/path.bash.inc' ]; then
-#     source '${HOME}/Downloads/google-cloud-sdk/path.bash.inc'
-# fi
-
-# # The next line enables shell command completion for gcloud.
-# if [ -f '${HOME}/Downloads/google-cloud-sdk/completion.bash.inc' ]; then
-#     source '${HOME}/Downloads/google-cloud-sdk/completion.bash.inc'
-# fi
-
-# The next line updates PATH for the Google Cloud SDK.
-# if [ -f '${HOME}/google-cloud-sdk/path.bash.inc' ]; then source '${HOME}/google-cloud-sdk/path.bash.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-# if [ -f '${HOME}/google-cloud-sdk/completion.bash.inc' ]; then source '${HOME}/google-cloud-sdk/completion.bash.inc'; fi

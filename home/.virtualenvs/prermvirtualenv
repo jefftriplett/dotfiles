@@ -13,8 +13,8 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   CONTINUE=true
 fi
 
-PROJECT_FILE="/Users/jefftriplett/Library/Application Support/Sublime Text 3/Packages/User/Projects/${VIRTUAL_ENV_NAME}.sublime-project"
-WORKSPACE_FILE="/Users/jefftriplett/Library/Application Support/Sublime Text 3/Packages/User/Projects/${VIRTUAL_ENV_NAME}.sublime-workspace"
+PROJECT_FILE="${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects/${VIRTUAL_ENV_NAME}.sublime-project"
+WORKSPACE_FILE="${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects/${VIRTUAL_ENV_NAME}.sublime-workspace"
 
 if $CONTINUE; then
   if [ -e "${PROJECT_FILE}" ]; then

@@ -32,7 +32,7 @@ else
 fi
 
 # Create a SublimeText Project for our project
-SUBLIME_TEXT_PROJECT_PATH="/Users/jefftriplett/Library/Application Support/Sublime Text 3/Packages/User/Projects"
+SUBLIME_TEXT_PROJECT_PATH="${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects"
 PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
 CONTINUE=false
 
