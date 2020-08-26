@@ -1,10 +1,17 @@
 add_newline = false
 
-[aws]
-disabled = true
+# [aws]
+# disabled = true
 
 # [aws.region_aliases]
 # us-east-1 = "va"
+
+# [character]
+# use_symbol_for_status = true
+
+# [docker_context]
+# disabled = false
+# only_with_files = false
 
 [kubernetes]
 disabled = true
