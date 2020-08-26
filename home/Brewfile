@@ -62,7 +62,6 @@ brew "parallel"
 brew "pinentry-mac"
 brew "pip-completion"
 brew "pngpaste"
-brew "polipo"
 brew "postgresql", restart_service: true
 brew "pre-commit"
 brew "prettier"

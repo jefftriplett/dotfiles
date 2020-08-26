@@ -316,10 +316,10 @@ pipx_packages:
   - name: yapf
 
 pyenv_versions:
-  - name: 3.8.0
-  - name: 3.7.5
-  - name: 3.6.9
-  - name: 2.7.15
+  - name: 3.8.5
+  - name: 3.7.8
+  # - name: 3.6.9
+  # - name: 2.7.15
 
 python_system_packages:
   - name: pip
