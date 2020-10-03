@@ -13,7 +13,13 @@ add_newline = false
 # disabled = false
 # only_with_files = false
 
+[character]
+symbol = "$"
+
 [kubernetes]
+disabled = true
+
+[line_break]
 disabled = true
 
 [memory_usage]
