@@ -1,5 +1,5 @@
 [include]
-    path = .gitconfig.personal
+    path = .personal.gitconfig
 
 [alias]
     st = status
@@ -41,16 +41,8 @@
 [diff]
     renames = true
 
-[difftool "sourcetree"]
-    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-    path =
-
-[mergetool "sourcetree"]
-    cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-    trustExitCode = true
-
 [mergetool]
-    keepBackup = true
+	keepBackup = false
 
 [push]
     default = tracking
@@ -70,5 +62,6 @@
 	smudge = git-lfs smudge -- %f
 	process = git-lfs filter-process
     required = true
+
 [init]
 	defaultBranch = main

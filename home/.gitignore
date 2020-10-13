@@ -13,10 +13,13 @@
 *.tmp
 *~
 .\#*
+.coverage
 .DS_Store
 .hg
 .hgignore
 .installed.cfg
+.personal.gitconfig
+.pip/download_cache
 .Python
 .sass-cache
 .sass-cache/*
@@ -24,6 +27,7 @@
 .svn/*
 .tox
 \#*.*\#
+coverage/
 develop-eggs
 development.ini
 development_*.ini
@@ -33,13 +37,10 @@ include/
 lighttpd.**
 parts
 production.ini
+reports/
 src/*-git/*
 src/*-hg/*
 src/*-svn/*
 src/*.egg-info
 staging.ini
 tmtags
-.coverage
-coverage/
-reports/
-.pip/download_cache
