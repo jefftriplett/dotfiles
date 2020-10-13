@@ -19,8 +19,8 @@ symbol = "$"
 [kubernetes]
 disabled = true
 
-[line_break]
-disabled = true
+# [line_break]
+# disabled = true
 
 [memory_usage]
 disabled = true
