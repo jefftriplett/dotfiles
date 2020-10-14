@@ -3,18 +3,20 @@ My Dotfiles
 
 There are my personal dotfiles. They are managed using:
 
+## CLI
+
+- [direnv][direnv]: Securely loads or unloads environment variables depending on the current directory.
+- [Homebrew][homebrew] for macOS package management.
+- [Homesick][homesick] for managing dotfiles.
+- [Modd][modd] A flexible developer tool that runs processes and responds to filesystem changes.
+- [Spacegray][spacegray] terminal theme.
+- [Starship][starship] The minimal, blazing-fast, and infinitely customizable prompt for any shell.
+
 ## GUI
 
 - [Alfred][alfred]: Productivity tool. 
 - [Alfred Powerpack][alfred-powerpack]: These Power Ups unlock the best of Alfred.
 - [Hammerspoon][hammerspoon]: An macOS automation tool (tiling windows manager)
-
-## CLI
-
-- [direnv][direnv]: Securely loads or unloads environment variables depending on the current directory
-- [Homebrew][homebrew] for macOS package management
-- [Homesick][homesick] for managing dotfiles
-- [Modd][modd] A flexible developer tool that runs processes and responds to filesystem changes
 
 ## Python
 
@@ -32,7 +34,7 @@ Installation
 $ make bootstrap
 ```
 
-2. Let ansible do it's thing
+2. Let ansible do its thing
 
 ```shell
 $ make install
@@ -65,6 +67,8 @@ Inspiration / Thank you!
 [pipenv]: http://docs.pipenv.org/en/latest/
 [pipx]: https://pipxproject.github.io/pipx/
 [pyenv]: https://github.com/yyuu/pyenv
+[spacegray]:https://github.com/mbadolato/iTerm2-Color-Schemes/tree/master/terminal
+[starship]: https://starship.rs/
 
 ## Contact / Social Media
 
