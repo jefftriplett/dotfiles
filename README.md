@@ -14,8 +14,9 @@ There are my personal dotfiles. They are managed using:
 
 ## GUI
 
-- [Alfred][alfred]: Productivity tool. 
 - [Alfred Powerpack][alfred-powerpack]: These Power Ups unlock the best of Alfred.
+- [Alfred][alfred]: Productivity tool. 
+- [Espanso][espanso]: Cross-platform Text Expander written in Rust |
 - [Hammerspoon][hammerspoon]: An macOS automation tool (tiling windows manager)
 
 ## Python
@@ -59,6 +60,7 @@ Inspiration / Thank you!
 [alfred-powerpack]: https://www.alfredapp.com/powerpack/
 [alfred]: https://www.alfredapp.com/
 [direnv]: https://direnv.net/
+[espanso]: https://espanso.org/
 [hammerspoon]: http://www.hammerspoon.org/
 [homebrew]: http://brew.sh/
 [homesick]: https://github.com/technicalpickles/homesick
@@ -69,6 +71,7 @@ Inspiration / Thank you!
 [pyenv]: https://github.com/yyuu/pyenv
 [spacegray]:https://github.com/mbadolato/iTerm2-Color-Schemes/tree/master/terminal
 [starship]: https://starship.rs/
+
 
 ## Contact / Social Media
 
