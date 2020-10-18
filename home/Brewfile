@@ -1,4 +1,5 @@
 tap "buo/cask-upgrade"
+tap "federico-terzi/espanso"
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/cask-drivers"
@@ -14,24 +15,36 @@ brew "asdf"
 brew "automake"
 brew "bash"
 brew "bat"
+brew "bfg"
 brew "bower"
 brew "caddy"
+brew "cfn-lint"
+brew "chamber"
 brew "chrome-cli"
+brew "composer"
 brew "coreutils"
+brew "devd"
 brew "direnv"
-brew "docker-compose"
-brew "docker-slim"
 brew "docker"
+brew "docker-compose", link: false
+brew "docker-slim"
 brew "dockutil"
+brew "doctl"
+brew "enchant"
 brew "exa"
+brew "fargatecli"
 brew "fd"
+brew "federico-terzi/espanso/espanso"
 brew "ffmpeg"
 brew "fish"
+brew "gh"
+brew "ghq"
 brew "gist"
+brew "git"
 brew "git-flow"
 brew "git-open"
 brew "git-standup"
-brew "git"
+brew "glow"
 brew "gnupg"
 brew "go"
 brew "graphviz"
@@ -43,6 +56,7 @@ brew "hugo"
 brew "imagemagick"
 brew "jack"
 brew "jq"
+brew "just"
 brew "kubernetes-cli"
 brew "libev"
 brew "libgit2"
@@ -52,11 +66,13 @@ brew "mas"
 brew "maven"
 brew "modd"
 brew "mosh"
+brew "mr"
 brew "mysql"
 brew "nativefier"
 brew "nektos/tap/act"
 brew "nginx"
 brew "nodenv"
+brew "openjdk"
 brew "pandoc"
 brew "parallel"
 brew "pinentry-mac"
@@ -65,19 +81,29 @@ brew "pngpaste"
 brew "postgresql", restart_service: true
 brew "pre-commit"
 brew "prettier"
+brew "pyenv"
 brew "pyenv-ccache"
 brew "pyenv-virtualenvwrapper"
-brew "pyenv"
 brew "qt"
 brew "rbenv"
+brew "rclone"
 brew "redis"
 brew "rename"
 brew "rust"
 brew "screenfetch"
+brew "sd"
+brew "sdl2"
+brew "sdl2_gfx"
+brew "sdl2_image"
+brew "sdl2_mixer"
+brew "sdl2_net"
+brew "sdl2_ttf"
 brew "shellcheck"
+brew "silicon"
 brew "speexdsp"
 brew "starship"
 brew "terminal-notifier"
+brew "terraform"
 brew "thefuck"
 brew "tldr"
 brew "tmux"
@@ -95,12 +121,14 @@ brew "youtube-dl"
 brew "zlib"
 cask "1password-cli"
 cask "adobe-air"
+cask "airserver"
 cask "alfred"
 cask "appcleaner"
 cask "aws-vault"
 cask "background-music"
 cask "balenaetcher"
 cask "bluestacks"
+cask "captain"
 cask "charles"
 cask "chicken"
 cask "chromedriver"
@@ -109,7 +137,10 @@ cask "controlplane"
 cask "dash"
 cask "displaycal"
 cask "elgato-game-capture-hd"
+cask "ferdi"
+cask "focus"
 cask "font-cascadia"
+cask "font-cascadia-pl"
 cask "gitup"
 cask "google-chrome"
 cask "google-cloud-sdk"
@@ -118,6 +149,10 @@ cask "iterm2"
 cask "java"
 cask "kindle"
 cask "monitorcontrol"
+cask "musicbrainz-picard"
+cask "obs-virtualcam"
+cask "streamlabs-obs"
+cask "sublime-merge"
 cask "visual-studio-code"
 mas "1Blocker", id: 1107421413
 mas "1Keyboard", id: 766939888
@@ -126,7 +161,6 @@ mas "Airmail", id: 918858936
 mas "Annotate", id: 918207447
 mas "Bear", id: 1091189122
 mas "Clean", id: 418412301
-mas "Deckset", id: 847496013
 mas "Directive", id: 1503550067
 mas "Evernote", id: 406056744
 mas "Fenêtre Lite", id: 1288451627
@@ -137,6 +171,7 @@ mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
 mas "Kiwi for Gmail", id: 986304488
 mas "Meeter", id: 1510445899
+mas "Mic Drop", id: 1489816366
 mas "Microsoft Remote Desktop", id: 1295203466
 mas "Monosnap", id: 540348655
 mas "Numbers", id: 409203825
@@ -146,9 +181,11 @@ mas "Pixelmator Pro", id: 1289583905
 mas "Pixelmator", id: 407963104
 mas "Quiver", id: 866773894
 mas "ReadKit", id: 588726889
+mas "Recordia", id: 1529006487
 mas "ScreenFocus", id: 1337028713
 mas "Skitch", id: 425955336
 mas "SnippetsLab", id: 1006087419
+mas "Super Easy Timer", id: 1353137878
 mas "Textual IRC Client", id: 1262957439
 mas "The Unarchiver", id: 425424353
 mas "Todoist", id: 585829637
@@ -156,6 +193,5 @@ mas "ToothFairy", id: 1191449274
 mas "Trello", id: 1278508951
 mas "Webcam Settings Control", id: 1172053162
 mas "Whalebird", id: 1378283354
-mas "WIP", id: 1456413506
 mas "Xcode", id: 497799835
 whalebrew "whalebrew/whalesay"
