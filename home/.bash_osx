@@ -6,10 +6,6 @@
 
 set completion-ignore-case On
 
-if command asdf > /dev/null 2>&1; then
-    eval ". $(brew --prefix asdf)/asdf.sh";
-fi
-
 # auto-load bash_completion.d
 if [ -d /usr/local/etc/bash_completion.d ]; then
     for filename in "/usr/local/etc/bash_completion.d/"*; do
@@ -47,11 +43,10 @@ if [[ -s "${HOME}/.rvm/scripts/rvm" ]]; then
     source "${HOME}/.rvm/scripts/rvm"
 fi
 
-###################
-# Python settings #
-###################
+###########################
+# Python / pyenv settings #
+###########################
 
-# pyenv settings
 if command -v pyenv > /dev/null; then
     eval "$(pyenv init -)";
     pyenv virtualenvwrapper_lazy
@@ -69,8 +64,9 @@ fi
 # command-not-found-init settings #
 ###################################
 
-if brew command command-not-found-init > /dev/null 2>&1; then
-    eval "$(brew command-not-found-init)";
+HB_CNF_HANDLER="$(brew --prefix)/Homebrew/Library/Taps/homebrew/homebrew-command-not-found/handler.sh"
+if [ -f "$HB_CNF_HANDLER" ]; then
+    source "$HB_CNF_HANDLER";
 fi
 
 ##############################
@@ -78,8 +74,8 @@ fi
 ##############################
 
 if [[ -f "$(brew --prefix)/opt/mcfly/mcfly.bash" ]]; then
-  # shellcheck source=/dev/null
-  source "$(brew --prefix)/opt/mcfly/mcfly.bash"
+    # shellcheck source=/dev/null
+    source "$(brew --prefix)/opt/mcfly/mcfly.bash"
 fi
 
 ####################
@@ -107,4 +103,8 @@ function iterm2_print_user_vars {
 ## itermocil autocompletion
 # if command -v itermocil > /dev/null; then
 #     complete -W "$(itermocil --list)" itermocil
+# fi
+
+# if command asdf > /dev/null 2>&1; then
+#     eval ". $(brew --prefix asdf)/asdf.sh";
 # fi
