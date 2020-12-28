@@ -1,3 +1,4 @@
+*.bak
 *.DS_Store
 *.egg-info
 *.html.py
