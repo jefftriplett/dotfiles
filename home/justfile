@@ -1,0 +1,47 @@
+@_default:
+    just --list
+
+@freeze:
+    cd "$HOME/.homesick/repos/dotfiles/home" && \
+    mv Brewfile Brewfile.bak && \
+    brew bundle dump
+
+@outdated:
+    brew update
+    brew outdated
+    PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
+    #pipx
+
+@restart:
+    brew services restart yabai
+    # brew services restart spacebar
+    brew services restart skhd
+
+@services:
+    brew services
+
+@symlink:
+    homesick symlink
+
+@update:
+    brew update
+
+@upgrade:
+    just update
+    just upgrade-homebrew
+
+@upgrade-homebrew:
+    brew outdated
+    brew upgrade || true
+    brew cleanup --prune=0
+
+@upgrade-postgresql:
+    brew unpin postgresql
+    brew upgrade postgresql
+    brew pin postgresql
+    brew postgresql-upgrade-database
+
+@update-python:
+    PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pip pipx virtualenv virtualenvwrapper
+    pyenv update
+    pyenv global 3.7.9 3.8.6 3.9.1 3.6.12 3.5.10 2.7.18
