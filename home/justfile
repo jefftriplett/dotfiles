@@ -1,3 +1,16 @@
+PYTHON-27 := "2.7.18"
+PYTHON-35 := "3.5.10"
+PYTHON-36 := "3.6.12"
+PYTHON-37 := "3.7.9"
+PYTHON-38 := "3.8.7"
+PYTHON-39 := "3.9.1"
+PYTHON-310 := "3.10-dev"
+PYTHON-ALL := PYTHON-37 + " " + PYTHON-38 + " " + PYTHON-39 + " " + PYTHON-310 + " " + PYTHON-36 + " " + PYTHON-35 + " " + PYTHON-27
+
+alias restart := services-restart
+alias symlink := homesick-symlink
+alias update := homebrew-update
+
 @_default:
     just --list
 
@@ -6,42 +19,76 @@
     mv Brewfile Brewfile.bak && \
     brew bundle dump
 
-@outdated:
-    brew update
-    brew outdated
-    PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
-    #pipx
-
-@restart:
-    brew services restart yabai
-    # brew services restart spacebar
-    brew services restart skhd
-
-@services:
-    brew services
-
-@symlink:
-    homesick symlink
-
-@update:
+@homebrew-update:
     brew update
 
-@upgrade:
-    just update
-    just upgrade-homebrew
-
-@upgrade-homebrew:
+@homebrew-upgrade:
     brew outdated
     brew upgrade || true
     brew cleanup --prune=0
 
-@upgrade-postgresql:
+@homesick-symlink:
+    homesick symlink
+
+@outdated:
+    brew update
+    brew outdated
+    PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
+
+@pip-update:
+    for version in `pyenv versions --bare`; do \
+        echo "Upgrading Python ${version}"; \
+    done
+
+    echo {{PYTHON-ALL}}
+    pyenv shell {{PYTHON-ALL}}
+
+    # #!/usr/bin/env sh
+    # set -euxo pipefail
+    # for version in `pyenv versions --bare` ; do \
+    #     echo "Upgrading Python ${version}"; \
+    #     # pyenv shell ${version}; \
+    # done
+    # pyenv shell {{PYTHON-ALL}}
+
+@pipx-upgrade:
+    pipx upgrade-all --force
+
+@postgresql-upgrade:
     brew unpin postgresql
     brew upgrade postgresql
     brew pin postgresql
     brew postgresql-upgrade-database
 
-@update-python:
-    PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade pip pipx virtualenv virtualenvwrapper
+@pyenv-install opts="--force":
+    pyenv install {{opts}} {{PYTHON-35}}
+    pyenv install {{opts}} {{PYTHON-36}}
+    pyenv install {{opts}} {{PYTHON-37}}
+    pyenv install {{opts}} {{PYTHON-38}}
+    pyenv install {{opts}} {{PYTHON-39}}
+    pyenv install {{opts}} {{PYTHON-310}}
+    pyenv install {{opts}} {{PYTHON-27}}
+
+@pyenv-upgrade opts="--skip-existing":
+    just pyenv-install {{opts}}
+
+@python-update:
+    PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade \
+        pip \
+        pipx \
+        virtualenv \
+        virtualenvwrapper
     pyenv update
-    pyenv global 3.7.9 3.8.6 3.9.1 3.6.12 3.5.10 2.7.18
+    pyenv global {{PYTHON-ALL}}
+
+@services:
+    brew services
+
+@services-restart:
+    brew services restart yabai
+    # brew services restart spacebar
+    # brew services restart skhd
+
+@upgrade:
+    just update
+    just homebrew-upgrade
