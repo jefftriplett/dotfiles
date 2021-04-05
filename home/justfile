@@ -1,18 +1,34 @@
-PYTHON-27 := "2.7.18"
-PYTHON-35 := "3.5.10"
-PYTHON-36 := "3.6.12"
-PYTHON-37 := "3.7.9"
-PYTHON-38 := "3.8.7"
-PYTHON-39 := "3.9.1"
-PYTHON-310 := "3.10-dev"
-PYTHON-ALL := PYTHON-37 + " " + PYTHON-38 + " " + PYTHON-39 + " " + PYTHON-310 + " " + PYTHON-36 + " " + PYTHON-35 + " " + PYTHON-27
+PYPY_27 := "pypy2.7-7.3.2"
+PYPY_36 := "pypy3.6-7.3.2"
+
+PYTHON_27 := `pyenv latest --print 2.7`
+PYTHON_310 := "3.10-dev"
+PYTHON_35 := `pyenv latest --print 3.5`
+PYTHON_36 := `pyenv latest --print 3.6`
+PYTHON_37 := `pyenv latest --print 3.7`
+PYTHON_38 := `pyenv latest --print 3.8`
+PYTHON_39 := `pyenv latest --print 3.9`
+PYTHON_ALL := PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_310 + " " + PYTHON_36 + " " + PYTHON_35 + " " + PYTHON_27
+
+DEFAULT_PYTHON_VERSION := PYTHON_37
 
 alias restart := services-restart
+alias stop := services-stop
 alias symlink := homesick-symlink
 alias update := homebrew-update
 
 @_default:
+    echo {{PYTHON_ALL}}
     just --list
+
+@bootstrap:
+    if [ -f "Brewfile" ] && [ "$(uname -s)" = "Darwin" ]; then \
+        echo "==> Installing Homebrew dependencies..."; \
+        brew bundle install; \
+    fi
+
+@cleanup:
+    brew cleanup --prune=0
 
 @freeze:
     cd "$HOME/.homesick/repos/dotfiles/home" && \
@@ -25,10 +41,13 @@ alias update := homebrew-update
 @homebrew-upgrade:
     brew outdated
     brew upgrade || true
-    brew cleanup --prune=0
+    just cleanup
 
 @homesick-symlink:
     homesick symlink
+
+@install-xcode:
+    sudo xcode-select --install
 
 @outdated:
     brew update
@@ -40,8 +59,7 @@ alias update := homebrew-update
         echo "Upgrading Python ${version}"; \
     done
 
-    echo {{PYTHON-ALL}}
-    pyenv shell {{PYTHON-ALL}}
+    eval "$(pyenv init -)" && pyenv shell {{PYTHON_ALL}}
 
     # #!/usr/bin/env sh
     # set -euxo pipefail
@@ -49,7 +67,7 @@ alias update := homebrew-update
     #     echo "Upgrading Python ${version}"; \
     #     # pyenv shell ${version}; \
     # done
-    # pyenv shell {{PYTHON-ALL}}
+    # pyenv shell {{PYTHON_ALL}}
 
 @pipx-upgrade:
     pipx upgrade-all --force
@@ -60,17 +78,25 @@ alias update := homebrew-update
     brew pin postgresql
     brew postgresql-upgrade-database
 
-@pyenv-install opts="--force":
-    pyenv install {{opts}} {{PYTHON-35}}
-    pyenv install {{opts}} {{PYTHON-36}}
-    pyenv install {{opts}} {{PYTHON-37}}
-    pyenv install {{opts}} {{PYTHON-38}}
-    pyenv install {{opts}} {{PYTHON-39}}
-    pyenv install {{opts}} {{PYTHON-310}}
-    pyenv install {{opts}} {{PYTHON-27}}
+@pyenv-install +ARGS="--skip-existing":
+    -pyenv install {{ARGS}} {{PYTHON_35}}
+    -pyenv install {{ARGS}} {{PYTHON_36}}
+    -pyenv install {{ARGS}} {{PYTHON_37}}
+    -pyenv install {{ARGS}} {{PYTHON_38}}
+    -pyenv install {{ARGS}} {{PYTHON_39}}
+    -pyenv install {{ARGS}} {{PYTHON_310}}
+    -pyenv install {{ARGS}} {{PYTHON_27}}
 
-@pyenv-upgrade opts="--skip-existing":
-    just pyenv-install {{opts}}
+@pyenv-update +ARGS="--skip-existing":
+    just pyenv-install {{ARGS}}
+
+@pyenv-upgrade +ARGS="--skip-existing":
+    just pyenv-install {{ARGS}}
+    just pyenv-global
+    just python-update
+
+@pyenv-global:
+    pyenv global {{PYTHON_ALL}}
 
 @python-update:
     PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade \
@@ -79,7 +105,7 @@ alias update := homebrew-update
         virtualenv \
         virtualenvwrapper
     pyenv update
-    pyenv global {{PYTHON-ALL}}
+    pyenv global {{PYTHON_ALL}}
 
 @services:
     brew services
@@ -89,6 +115,31 @@ alias update := homebrew-update
     # brew services restart spacebar
     # brew services restart skhd
 
+@services-stop:
+    -brew services stop yabai
+    -brew services stop spacebar
+    -brew services stop skhd
+
+@topalias:
+    topalias
+
 @upgrade:
     just update
     just homebrew-upgrade
+
+@upgrade-xcode:
+    sudo rm -rf /Library/Developer/CommandLineTools
+    just install-xcode
+
+# @workon:
+#     for filename in $(ls -d ~/.virtualenvs/*); do \
+#         echo $filename; \
+#     done
+
+@workon:
+    for filename in $(ls -d ~/.virtualenvs/*/); do \
+        echo "$filename"; \
+        $filename/bin/python --version; \
+        $filename/bin/pip --version; \
+        echo; \
+    done
