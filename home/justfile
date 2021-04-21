@@ -1,6 +1,5 @@
 PYPY_27 := "pypy2.7-7.3.2"
 PYPY_36 := "pypy3.6-7.3.2"
-
 PYTHON_27 := `pyenv latest --print 2.7`
 PYTHON_310 := "3.10-dev"
 PYTHON_35 := `pyenv latest --print 3.5`
@@ -10,7 +9,7 @@ PYTHON_38 := `pyenv latest --print 3.8`
 PYTHON_39 := `pyenv latest --print 3.9`
 PYTHON_ALL := PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_310 + " " + PYTHON_36 + " " + PYTHON_35 + " " + PYTHON_27
 
-DEFAULT_PYTHON_VERSION := PYTHON_37
+DEFAULT_PYTHON_VERSION := PYTHON_39
 
 alias restart := services-restart
 alias stop := services-stop
@@ -90,7 +89,14 @@ alias update := homebrew-update
     brew pin postgresql
     brew postgresql-upgrade-database
 
-@pyenv-install +ARGS="--skip-existing":
+@pyenv-global:
+    pyenv global {{PYTHON_ALL}}
+
+@pyenv-upgrade +ARGS="--skip-existing":
+    just pyenv-upgrade-all {{ARGS}}
+    just python-update
+
+@pyenv-upgrade-all +ARGS="--skip-existing":
     -pyenv install {{ARGS}} {{PYTHON_35}}
     -pyenv install {{ARGS}} {{PYTHON_36}}
     -pyenv install {{ARGS}} {{PYTHON_37}}
@@ -98,17 +104,7 @@ alias update := homebrew-update
     -pyenv install {{ARGS}} {{PYTHON_39}}
     -pyenv install {{ARGS}} {{PYTHON_310}}
     -pyenv install {{ARGS}} {{PYTHON_27}}
-
-@pyenv-update +ARGS="--skip-existing":
-    just pyenv-install {{ARGS}}
-
-@pyenv-upgrade +ARGS="--skip-existing":
-    just pyenv-install {{ARGS}}
-    just pyenv-global
-    just python-update
-
-@pyenv-global:
-    pyenv global {{PYTHON_ALL}}
+    -just pyenv-global
 
 @python-update:
     PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade \
