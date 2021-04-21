@@ -105,6 +105,6 @@ function iterm2_print_user_vars {
 #     complete -W "$(itermocil --list)" itermocil
 # fi
 
-# if command asdf > /dev/null 2>&1; then
-#     eval ". $(brew --prefix asdf)/asdf.sh";
-# fi
+if command asdf > /dev/null 2>&1; then
+    eval ". $(brew --prefix asdf)/asdf.sh";
+fi

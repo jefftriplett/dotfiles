@@ -21,6 +21,18 @@ alias update := homebrew-update
     echo {{PYTHON_ALL}}
     just --list
 
+@asdf-install:
+    asdf install direnv latest
+    asdf install nodejs latest
+    asdf install ruby latest
+    asdf install rust latest
+    asdf install starship latest
+
+    # asdf add golang 1.16.3
+    # asdf add nodejs 16.0.0
+    # asdf add ruby 3.0.1
+    # asdf add starship 0.44.0
+
 @bootstrap:
     if [ -f "Brewfile" ] && [ "$(uname -s)" = "Darwin" ]; then \
         echo "==> Installing Homebrew dependencies..."; \
