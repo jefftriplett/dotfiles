@@ -36,6 +36,9 @@ downloads
 eggs
 include/
 lighttpd.**
+minica-key.pem
+minica.pem
+package-lock.json
 parts
 production.ini
 reports/
