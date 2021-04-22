@@ -1,5 +1,4 @@
-My Dotfiles
-===========
+# My Dotfiles
 
 There are my personal dotfiles. They are managed using:
 
@@ -26,8 +25,7 @@ There are my personal dotfiles. They are managed using:
 - [pipx][pipx]: execute binaries from Python packages in isolated environments
 - [pyenv][pyenv]: Simple Python version management
 
-Installation
-------------
+## Installation
 
 1. Bootstrap our environment (install ansible via pipx)
 
@@ -41,13 +39,18 @@ $ make bootstrap
 $ make install
 ```
 
-Terminal theme
---------------
+## Keyboard Shortcuts
+
+| Action | Key Combination |
+| ------ | --------------- |
+| move to left half | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>cmd</kbd> + <kbd>left</kbd> |
+| move to right half | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>cmd</kbd> + <kbd>right</kbd> |
+
+## Terminal theme
 
 - https://github.com/mdo/ocean-terminal
 
-Inspiration / Thank you!
-------------------------
+## Inspiration / Thank you!
 
 - [The Geeky Way: What are dotfiles?](http://www.thegeekyway.com/what-are-dotfiles/)
 - https://github.com/epicserve/dotfiles
