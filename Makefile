@@ -85,7 +85,7 @@ ruby: ## install ruby essentials
 
 .PHONY: shellcheck
 shellcheck:
-	shellcheck
+	shellcheck home/.bash*
 
 .PHONY: sublime
 sublime: ## install sublimetext3 configs
