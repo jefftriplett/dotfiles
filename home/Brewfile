@@ -30,6 +30,7 @@ brew "bat"
 brew "openjdk"
 brew "bfg"
 brew "blueutil"
+brew "libev"
 brew "bower"
 brew "brew-gem"
 brew "pkg-config"
@@ -53,7 +54,6 @@ brew "fargatecli"
 brew "sdl2"
 brew "fceux"
 brew "fd"
-brew "libev"
 brew "xvid"
 brew "ffmpeg"
 brew "fish"
@@ -104,7 +104,7 @@ brew "parallel"
 brew "pinentry-mac"
 brew "pip-completion"
 brew "pngpaste"
-brew "postgresql"
+brew "postgresql", restart_service: true
 brew "postgresql@12"
 brew "pre-commit"
 brew "prettier"
@@ -174,6 +174,7 @@ cask "controlplane"
 cask "dash"
 cask "displaycal"
 cask "elgato-game-capture-hd"
+cask "epoccam"
 cask "eul"
 cask "ferdi"
 cask "flutter"
@@ -201,15 +202,17 @@ cask "streamlabs-obs"
 cask "sublime-merge"
 cask "tweeten"
 cask "visual-studio-code"
-mas "1Blocker", id: 1107421413
+mas "1Blocker (Old)", id: 1107421413
 mas "1Keyboard", id: 766939888
 mas "Affiliate", id: 789724698
 mas "Airmail", id: 918858936
 mas "Annotate", id: 918207447
 mas "Bear", id: 1091189122
 mas "Clean", id: 418412301
+mas "Craft", id: 1487937127
 mas "Directive", id: 1503550067
 mas "Evernote", id: 406056744
+mas "Fantastical", id: 975937182
 mas "Fenêtre Lite", id: 1288451627
 mas "Front and Center", id: 1493996622
 mas "GarageBand", id: 682658836
