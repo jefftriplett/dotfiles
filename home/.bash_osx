@@ -65,6 +65,7 @@ fi
 ###################################
 
 HB_CNF_HANDLER="$(brew --prefix)/Homebrew/Library/Taps/homebrew/homebrew-command-not-found/handler.sh"
+# shellcheck source=/dev/null
 if [ -f "$HB_CNF_HANDLER" ]; then
     source "$HB_CNF_HANDLER";
 fi
