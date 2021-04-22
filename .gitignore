@@ -44,8 +44,18 @@ home/.maid/*.log.[0-9]
 
 .gitconfig.personal
 
+# my files
+home/.asdf/
+home/.config/configstore/
+home/.config/enchant/
+home/.config/gcloud/
+home/.config/gh/
+home/.config/MusicBrainz/
+home/.config/rclone/
+home/.config/thefuck/
+home/.gitlab.yml
+home/.mrconfig
 home/bin/.docker-slim-state/
 home/bin/docker-slim
 home/bin/docker-slim-sensor
 home/bin/gam
-home/.gitlab.yml
