@@ -232,7 +232,7 @@ end
 battery_watcher = hs.battery.watcher.new(battery_changed_callback):start()
 caffeinate_watcher = hs.caffeinate.watcher.new(caffeinate_changed_callback):start()
 config_file_watcher = hs.pathwatcher.new(os.getenv('HOME') .. '/.hammerspoon/', config_changed_callback):start()
-screen_watcher = hs.screen.watcher.new(screens_changed_callback):start()
+-- screen_watcher = hs.screen.watcher.new(screens_changed_callback):start()
 usb_watcher = hs.usb.watcher.new(usb_changed_callback):start()
 wifi_watcher = hs.wifi.watcher.new(wifi_changed_callback):start()
 

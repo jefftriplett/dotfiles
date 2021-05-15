@@ -1,3 +1,4 @@
+direnv 2.28.0
 golang 1.16.3
 nodejs 16.0.0
 ruby 3.0.1
