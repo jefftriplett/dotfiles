@@ -52,13 +52,6 @@ if ! [ -e "${PROJECT_FILE}" ]; then
   fi
 fi
 
-# export GEM_HOME="$VIRTUAL_ENV/gems"
-# export GEM_PATH=""
-# export PATH=$PATH:$GEM_HOME/bin
-
-# Set our user.badge back to our default
-# export USER_BADGE="🐍"
-
 # Set our iTerm2 tab's title to our virtualenv name
 #   `npm install -g iterm2-tab-set`
 if ! [ -e tabset ]; then
@@ -66,7 +59,7 @@ if ! [ -e tabset ]; then
 fi
 
 # Print our virtualenv's virtualenv name to the console
-# `go get github.com/arsham/figurine`
+#   `go get github.com/arsham/figurine`
 if ! [ -e figurine ]; then
   figurine "${VIRTUAL_ENV_NAME}"
 fi
