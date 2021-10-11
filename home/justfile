@@ -1,19 +1,26 @@
 PYPY_27 := "pypy2.7-7.3.2"
 PYPY_36 := "pypy3.6-7.3.2"
 PYTHON_27 := `pyenv latest --print 2.7`
-PYTHON_310 := "3.10-dev"
 PYTHON_35 := `pyenv latest --print 3.5`
-PYTHON_36 := `pyenv latest --print 3.6`
+PYTHON_36 := "3.6.13"
 PYTHON_37 := `pyenv latest --print 3.7`
 PYTHON_38 := `pyenv latest --print 3.8`
 PYTHON_39 := `pyenv latest --print 3.9`
+# PYTHON_310 := "3.10.0rc1"
+PYTHON_310 := `pyenv latest --print 3.10`
+# PYTHON_311 := "3.11-dev"
 PYTHON_ALL := PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_310 + " " + PYTHON_36 + " " + PYTHON_35 + " " + PYTHON_27
 DEFAULT_PYTHON_VERSION := PYTHON_39
 
-alias restart := services-restart
-alias stop := services-stop
+# homebrew updates
+alias cleanup := homebrew-cleanup
+alias outdated := homebrew-outdated
 alias symlink := homesick-symlink
 alias update := homebrew-update
+
+# service updates
+alias restart := services-restart
+alias stop := services-stop
 
 @_default:
     just --list
@@ -36,13 +43,18 @@ alias update := homebrew-update
         brew bundle install; \
     fi
 
-@cleanup:
-    brew cleanup --prune=0
-
 @freeze:
     cd "$HOME/.homesick/repos/dotfiles/home" && \
     mv Brewfile Brewfile.bak && \
     brew bundle dump
+
+@homebrew-cleanup:
+    brew cleanup --prune=0
+
+@homebrew-outdated:
+    brew update
+    brew outdated
+    PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
 @homebrew-update:
     brew update
@@ -57,11 +69,6 @@ alias update := homebrew-update
 
 @install-xcode:
     sudo xcode-select --install
-
-@outdated:
-    brew update
-    brew outdated
-    PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
 @pip-update:
     for version in `pyenv versions --bare`; do \
@@ -147,11 +154,10 @@ pyenv-global:
 
 @workon:
     for filename in $(ls -d ~/.virtualenvs/*/); do \
-        echo "$filename"; \
-        $filename/bin/python --version; \
-        $filename/bin/python -m pip --version; \
+        echo "$($filename/bin/python --version;) $filename"; \
         echo; \
     done
+    # $filename/bin/python -m pip --version; \
 
 @virtualenv-upgrade:
     for filename in $(ls -d ~/.virtualenvs/*/); do \
@@ -161,3 +167,11 @@ pyenv-global:
         $filename/bin/python -m pip install --upgrade pip; \
         echo; \
     done
+
+# @virtualenv-upgrade:
+#     # TODO: https://stackoverflow.com/questions/44692668/python-how-can-i-update-python-version-in-pyenv-virtual-environment
+#     # pip freeze > requirements-lock.txt
+#     # pyenv virtualenv-delete a-virtualenv-name
+#     # pyenv virtualenv 3.9.0 a-virtualenv-name
+#     # pip install -r requirements-lock.txt
+#     # rm requirements-lock.txt
