@@ -6,10 +6,9 @@ PYTHON_36 := "3.6.13"
 PYTHON_37 := `pyenv latest --print 3.7`
 PYTHON_38 := `pyenv latest --print 3.8`
 PYTHON_39 := `pyenv latest --print 3.9`
-# PYTHON_310 := "3.10.0rc1"
 PYTHON_310 := `pyenv latest --print 3.10`
-# PYTHON_311 := "3.11-dev"
-PYTHON_ALL := PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_310 + " " + PYTHON_36 + " " + PYTHON_35 + " " + PYTHON_27
+PYTHON_311 := "3.11-dev"
+PYTHON_ALL := PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_310 + " " + PYTHON_311 + " " + PYTHON_36 + " " + PYTHON_35 + " " + PYTHON_27
 DEFAULT_PYTHON_VERSION := PYTHON_39
 
 # homebrew updates
@@ -108,6 +107,7 @@ pyenv-global:
     -pyenv install {{ ARGS }} {{ PYTHON_38 }}
     -pyenv install {{ ARGS }} {{ PYTHON_39 }}
     -pyenv install {{ ARGS }} {{ PYTHON_310 }}
+    -pyenv install {{ ARGS }} {{ PYTHON_311 }}
     -pyenv install {{ ARGS }} {{ PYTHON_27 }}
     -just pyenv-global
 
