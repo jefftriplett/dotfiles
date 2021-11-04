@@ -22,8 +22,8 @@ check: ## run ansible checks
 
 .PHONY: deploy
 deploy: ## push dotfiles to all the places
-	git push origin master
-	git push github master
+	git push origin main
+	git push github main
 
 .PHONY: facts
 facts: ## view ansible facts
