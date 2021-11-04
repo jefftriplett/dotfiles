@@ -7,23 +7,22 @@ There are my personal dotfiles. They are managed using:
 - [direnv][direnv]: Securely loads or unloads environment variables depending on the current directory.
 - [Homebrew][homebrew] for macOS package management.
 - [Homesick][homesick] for managing dotfiles.
+- [Just](https://github.com/casey/just) 🤖 Just a command runner.
 - [Modd][modd] A flexible developer tool that runs processes and responds to filesystem changes.
 - [Spacegray][spacegray] terminal theme.
 - [Starship][starship] The minimal, blazing-fast, and infinitely customizable prompt for any shell.
 
 ## GUI
 
-- [Alfred Powerpack][alfred-powerpack]: These Power Ups unlock the best of Alfred.
-- [Alfred][alfred]: Productivity tool. 
-- [Espanso][espanso]: Cross-platform Text Expander written in Rust |
+- [Alfred][alfred]: Productivity tool and [Alfred Powerpack][alfred-powerpack].
 - [Hammerspoon][hammerspoon]: An macOS automation tool (tiling windows manager)
 
 ## Python
 
 - [pip][pip]: The PyPA recommended tool for installing and managing Python packages.
 - [pipenv][pipenv]: Pipenv is a project that aims to bring the best of all packaging worlds to the Python world.
-- [pipx][pipx]: execute binaries from Python packages in isolated environments
-- [pyenv][pyenv]: Simple Python version management
+- [pipx][pipx]: execute binaries from Python packages in isolated environments.
+- [pyenv][pyenv]: Simple Python version management.
 
 ## Installation
 
