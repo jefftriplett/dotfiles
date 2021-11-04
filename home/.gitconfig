@@ -28,6 +28,7 @@
     editor = nano
     #editor = subl
     rebase = true
+	# pager = git-split-diffs --color | less -RFX
 
 [diff]
     renames = true
@@ -45,7 +46,7 @@
     defaultBranch = main
 
 [mergetool]
-	keepBackup = false
+	keepBackup = true
 
 [push]
     default = tracking
@@ -67,6 +68,7 @@
 
 [fetch]
     fsckObjects = true
+	prune = true
 
 [receive]
     fsckObjects = true
