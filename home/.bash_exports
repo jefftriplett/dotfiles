@@ -10,12 +10,15 @@ PATH="${PATH}:/usr/local/sbin"
 # export ARCHFLAGS="-Wno-error=unused-command-line-argument-hard-error-in-future"
 export ARCHFLAGS="-Werror=unused-command-line-argument"
 export CPPFLAGS="-I/usr/local/opt/readline/include"
+export DOCKER_SCAN_SUGGEST=false
 export HISTCONTROL="ignoreboth:erasedups"
 export HISTFILESIZE=50000000
 export HISTIGNORE=" *:ls:cd:cd ~:date:exit:export:history:pwd:* --help"
 export HISTSIZE=$HISTFILESIZE
 export HISTTIMEFORMAT="%F %T "
+export HOMEBREW_CLEANUP_MAX_AGE_DAYS=7
 export HOMEBREW_INSTALL_CLEANUP=1
+# export HOMEBREW_INSTALL_FROM_API=1
 export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 export LANG="en_US.UTF-8"
@@ -24,7 +27,7 @@ export LD_LIBRARY_PATH="/usr/local/lib"
 export LDFLAGS="-L/usr/local/opt/readline/lib"
 
 # experimental prompt
-export PS1='✨ \[\e[0;36m\]\[\e[0;36m\] \W\[\033[0;35m\]$(__git_ps1 " (%s)")\[\e[0m\]: '
+# export PS1='✨ \[\e[0;36m\]\[\e[0;36m\] \W\[\033[0;35m\]$(__git_ps1 " (%s)")\[\e[0m\]: '
 
 # default badge
 export USER_BADGE_DEFAULT="✨"
