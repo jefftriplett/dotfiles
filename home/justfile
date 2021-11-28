@@ -47,6 +47,9 @@ alias stop := services-stop
 @docs-update:
     cog -Pr ~/.homesick/repos/dotfiles/README.md
 
+@fmt:
+    just --fmt --unstable
+
 @freeze:
     cd "$HOME/.homesick/repos/dotfiles/home" && \
     mv Brewfile Brewfile.bak && \

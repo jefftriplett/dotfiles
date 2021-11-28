@@ -50,6 +50,7 @@ Available recipes:
     asdf-install
     bootstrap
     docs-update
+    fmt
     freeze
     homebrew-cleanup
     cleanup            # alias for `homebrew-cleanup`
