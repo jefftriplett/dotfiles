@@ -42,7 +42,7 @@ $ make install
 
 | Action | Key Combination |
 | ------ | --------------- |
-| hyper | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>cmd</kbd> |
+| hyper | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>cmd</kbd> |
 | meta | <kbd>cmd</kbd> + <kbd>shift</kbd> |
 | reload config | <kbd>hyper</kbd> + <kbd>r</kbd> |
 | show grid | <kbd>hyper</kbd> + <kbd>g</kbd> |
@@ -52,12 +52,12 @@ $ make install
 | move to right half | <kbd>hyper</kbd> + <kbd>right</kbd> |
 | move to top half | <kbd>hyper</kbd> + <kbd>up</kbd> |
 | move to lower half | <kbd>hyper</kbd> + <kbd>down</kbd> |
-| move to next monitor | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>right</kbd> |
-| move to previous monitor | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>left</kbd> |
-| move to upper left (25%) | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>shift</kbd> + <kbd>left</kbd> |
-| move to upper right (25%) | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>shift</kbd> + <kbd>up</kbd> |
-| move to lower left (25%) | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>shift</kbd> + <kbd>down</kbd> |
-| move to lower right (25%) | <kbd>ctrl</kbd> + <kbd>alt</kbd> + <kbd>shift</kbd> + <kbd>right</kbd> |
+| move to next monitor | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>right</kbd> |
+| move to previous monitor | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>left</kbd> |
+| move to upper left (25%) | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>shift</kbd> + <kbd>left</kbd> |
+| move to upper right (25%) | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>shift</kbd> + <kbd>up</kbd> |
+| move to lower left (25%) | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>shift</kbd> + <kbd>down</kbd> |
+| move to lower right (25%) | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>shift</kbd> + <kbd>right</kbd> |
 
 ## Terminal theme
 
