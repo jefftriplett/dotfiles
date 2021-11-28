@@ -1,7 +1,7 @@
 add_newline = false
 
-# [aws]
-# disabled = true
+[aws]
+disabled = true
 
 # [aws.region_aliases]
 # us-east-1 = "va"
