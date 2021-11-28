@@ -44,6 +44,9 @@ alias stop := services-stop
         brew bundle install; \
     fi
 
+@docs-update:
+    cog -Pr ~/.homesick/repos/dotfiles/README.md
+
 @freeze:
     cd "$HOME/.homesick/repos/dotfiles/home" && \
     mv Brewfile Brewfile.bak && \

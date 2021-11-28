@@ -38,7 +38,51 @@ $ make bootstrap
 $ make install
 ```
 
-## Keyboard Shortcuts
+# Justfile Usage
+<!-- [[[cog
+from scripts.run_command import run
+run("just", with_console=True)
+]]] -->
+
+```console
+$ just
+Available recipes:
+    asdf-install
+    bootstrap
+    docs-update
+    freeze
+    homebrew-cleanup
+    cleanup            # alias for `homebrew-cleanup`
+    homebrew-outdated
+    outdated           # alias for `homebrew-outdated`
+    homebrew-update
+    update             # alias for `homebrew-update`
+    homebrew-upgrade
+    homesick-symlink
+    symlink            # alias for `homesick-symlink`
+    install-xcode
+    pip-update
+    pipx-upgrade
+    postgresql-upgrade
+    pyenv-global
+    pyenv-upgrade +ARGS="--skip-existing"
+    pyenv-upgrade-all +ARGS="--skip-existing"
+    python-update
+    services
+    services-restart
+    restart            # alias for `services-restart`
+    services-stop
+    stop               # alias for `services-stop`
+    topalias
+    upgrade
+    upgrade-xcode
+    virtualenv-upgrade
+    workon
+```
+
+<!-- [[[end]]] -->
+
+## Hammerspoon Keyboard Shortcuts
 
 | Action                    | Key Combination                                                        |
 | ------------------------- | ---------------------------------------------------------------------- |
@@ -52,12 +96,12 @@ $ make install
 | move to right half        | <kbd>hyper</kbd> + <kbd>right</kbd>                                    |
 | move to top half          | <kbd>hyper</kbd> + <kbd>up</kbd>                                       |
 | move to lower half        | <kbd>hyper</kbd> + <kbd>down</kbd>                                     |
-| move to next monitor      | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>right</kbd>                    |
-| move to previous monitor  | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>left</kbd>                     |
 | move to upper left (25%)  | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>shift</kbd> + <kbd>left</kbd>  |
 | move to upper right (25%) | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>shift</kbd> + <kbd>up</kbd>    |
 | move to lower left (25%)  | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>shift</kbd> + <kbd>down</kbd>  |
 | move to lower right (25%) | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>shift</kbd> + <kbd>right</kbd> |
+| move to next monitor      | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>right</kbd>                    |
+| move to previous monitor  | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>left</kbd>                     |
 
 ## Terminal theme
 
