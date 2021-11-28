@@ -52,7 +52,6 @@ homebrew_apps:
   - name: go
   - name: gpg
   - name: guetzli
-  - name: hadolint
   - name: hadolint  # for Docker linting
   - name: helm
   - name: hub
