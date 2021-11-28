@@ -51,9 +51,10 @@ Available recipes:
     bootstrap
     docs-update
     fmt
-    freeze
     homebrew-cleanup
     cleanup            # alias for `homebrew-cleanup`
+    homebrew-freeze
+    freeze             # alias for `homebrew-freeze`
     homebrew-outdated
     outdated           # alias for `homebrew-outdated`
     homebrew-update
