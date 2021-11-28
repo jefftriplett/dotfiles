@@ -1,3 +1,5 @@
+set dotenv-load := false
+
 PYPY_27 := "pypy2.7-7.3.2"
 PYPY_36 := "pypy3.6-7.3.2"
 PYTHON_27 := `pyenv latest --print 2.7`
