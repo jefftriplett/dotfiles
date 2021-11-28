@@ -46,7 +46,7 @@ alias stop := services-stop
     fi
 
 @docs-update:
-    cog -Pr ~/.homesick/repos/dotfiles/README.md
+    cog -Pr "$HOME/.homesick/repos/dotfiles/README.md"
 
 @fmt:
     just --fmt --unstable
