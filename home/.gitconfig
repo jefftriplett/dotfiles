@@ -24,6 +24,7 @@
     gpgsign = true
 
 [core]
+    attributesFile = ~/.gitattributes
     excludesfile = ~/.gitignore
     editor = nano
     #editor = subl
@@ -75,3 +76,7 @@
 
 [transfer]
     fsckObjects = true
+
+[diff "image"]
+	textconv = imgcat
+	command = imgdiff
