@@ -270,17 +270,31 @@ node_system_packages:
 # Python Packages
 
 pipx_packages:
-  - name: ansible
+  - name: all-repos
   - name: ansible-lint
   - name: awscli
   - name: black
+  - name: blacken-docs
   - name: bumpversion
+  - name: codespell
+  - name: cogapp
   - name: contributors
   - name: cookiecutter
+  - name: copier
+  - name: curlylint
+  - name: datasette
+  - name: dead
+  - name: django-codemod
+  - name: djhtml
+  - name: docker-tidy
   - name: dotenv-linter
+  - name: editorconfig-checker
   - name: em
   - name: flake8
+  - name: flakehell
   - name: frontmatter-cli
+  - name: future
+  - name: git-delete-merged-branches
   - name: gitignore-cli
   - name: glances
   - name: httpie
@@ -288,31 +302,49 @@ pipx_packages:
   - name: ispy
   - name: jinja2-cli
   - name: jinjalint
-  - name: mackup
-  - name: mercurial
-  - name: mypy-lang
+  - name: jprq
+  - name: modernize
+  - name: mypy
+  - name: nitpick
   - name: nodeenv
   - name: organize-tool
-  # - name: osx-openconnect-helper
+  - name: pdm
   - name: pew
-  - name: pgcli
+  - name: pip-tools
   - name: pipenv
+  - name: pipreqs
+  # - name: pipx  # playing with pipx-in-pipx
   - name: poetry
   - name: proselint
   - name: pur
   - name: pydocstyle
   - name: pyhome
+  - name: pylint
+  - name: pypistats
+  - name: pypyp
+  - name: pypyr
+  - name: pyseoanalyzer
   - name: python-cfonts
   - name: python-language-server
-  - name: pythonpy
+  - name: pyupgrade-directories
   - name: rubyenv
+  - name: rush-cli
+  - name: setup-cfg-fmt
+  - name: setup-py-upgrade
   - name: speedtest-cli
   - name: standup
+  - name: starcli
+  - name: toggl-standup
   - name: toot
+  - name: topalias
+  - name: tryceratops
   - name: tvnamer
+  - name: unimport
   - name: updatable
   - name: url2markdown-cli
+  - name: vulture
   - name: whale-linter
+  - name: yamllint
   - name: yapf
 
 pyenv_versions:
