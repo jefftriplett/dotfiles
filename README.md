@@ -47,7 +47,6 @@ run("just", with_console=True)
 ```console
 $ just
 Available recipes:
-    asdf-install
     bootstrap
     docs-update
     fmt
@@ -62,6 +61,7 @@ Available recipes:
     homebrew-upgrade
     homesick-symlink
     symlink            # alias for `homesick-symlink`
+    install-asdf
     install-xcode
     pip-update
     pipx-upgrade

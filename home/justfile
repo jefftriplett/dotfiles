@@ -27,18 +27,6 @@ alias stop := services-stop
 @_default:
     just --list
 
-@asdf-install:
-    asdf install direnv latest
-    asdf install golang latest
-    asdf install nodejs latest
-    asdf install ruby latest
-    asdf install rust latest
-    asdf install starship latest
-
-    # asdf add nodejs 16.0.0
-    # asdf add ruby 3.0.1
-    # asdf add starship 0.44.0
-
 @bootstrap:
     if [ -f "Brewfile" ] && [ "$(uname -s)" = "Darwin" ]; then \
         echo "==> Installing Homebrew dependencies..."; \
@@ -75,6 +63,14 @@ alias stop := services-stop
 @homesick-symlink:
     homesick symlink
 
+@install-asdf:
+    asdf install direnv latest
+    asdf install golang latest
+    asdf install nodejs latest
+    asdf install ruby latest
+    asdf install rust latest
+    asdf install starship latest
+
 @install-xcode:
     sudo xcode-select --install
 
@@ -102,7 +98,7 @@ alias stop := services-stop
     brew pin postgresql
     brew postgresql-upgrade-database
 
-pyenv-global:
+@pyenv-global:
     pyenv global {{ PYTHON_ALL }}
 
 @pyenv-upgrade +ARGS="--skip-existing":
@@ -127,7 +123,7 @@ pyenv-global:
         virtualenv \
         virtualenvwrapper
     pyenv update
-    pyenv global {{ PYTHON_ALL }}
+    just pyenv-global
 
     # pipx install python-language-server[all]
     # pipx inject python-language-server pyls-black mypy-ls pyls-isort
