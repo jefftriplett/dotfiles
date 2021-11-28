@@ -37,7 +37,7 @@ hs.hotkey.bind({"ctrl", "alt", "shift"}, "Left", function()
   sizeup.send_window_upper_left()
 end)
 -- Send Window Upper Right
-hs.hotkey.bind({"ctrl","alt", "shift"}, "Up", function()
+hs.hotkey.bind({"ctrl", "alt", "shift"}, "Up", function()
   sizeup.send_window_upper_right()
 end)
 -- Send Window Lower Left
