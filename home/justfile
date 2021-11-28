@@ -12,12 +12,14 @@ PYTHON_ALL := PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_310 +
 DEFAULT_PYTHON_VERSION := PYTHON_39
 
 # homebrew updates
+
 alias cleanup := homebrew-cleanup
 alias outdated := homebrew-outdated
 alias symlink := homesick-symlink
 alias update := homebrew-update
 
 # service updates
+
 alias restart := services-restart
 alias stop := services-stop
 
