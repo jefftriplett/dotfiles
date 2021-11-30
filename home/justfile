@@ -46,8 +46,8 @@ alias stop := services-stop
 
 @homebrew-freeze:
     cd "$HOME/.homesick/repos/dotfiles/home" && \
-    mv Brewfile Brewfile.bak && \
-    brew bundle dump
+        mv Brewfile Brewfile.bak && \
+        brew bundle dump
 
 @homebrew-outdated:
     brew update
@@ -60,7 +60,7 @@ alias stop := services-stop
 @homebrew-upgrade:
     brew outdated
     brew upgrade || true
-    just cleanup
+    just homebrew-cleanup
 
 @homesick-symlink:
     homesick symlink
