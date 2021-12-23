@@ -36,6 +36,7 @@ local display_home_4k_low = '2048x1152@2x'
 local display_imac = '1920x1200'
 local display_retina = '1440x900@2x'
 local display_retina_2020 = '1792x1120@2x'
+local display_sidecar = '1366x1024@2x'
 local display_work = '2560x1600'
 local display_work_vertical = '1200x1920'
 
@@ -46,8 +47,9 @@ local display_home_4k_grid = '6x4'
 local display_home_4k_low_grid = '6x4'
 local display_home_grid = '6x4'
 local display_imac_grid = '6x2'
-local display_retina_grid = '3x2'
 local display_retina_2020_grid = '6x4'
+local display_retina_grid = '3x2'
+local display_sidecar_grid = '6x4'
 local display_work_grid = '6x4'
 local display_work_vertical_grid = '2x6'
 
@@ -118,6 +120,11 @@ function setup_grid()
     if hs.screen.find(display_retina_2020) then
         print('found', display_retina_2020)
         hs.grid.setGrid(display_retina_2020_grid, display_retina_2020)
+    end
+
+    if hs.screen.find(display_sidecar) then
+        print('found', display_sidecar)
+        hs.grid.setGrid(display_sidecar_grid, display_sidecar)
     end
 
     if hs.screen.find(display_work) then
