@@ -83,7 +83,7 @@ brew "hub"
 brew "hugo"
 brew "imagemagick"
 brew "iproute2mac"
-brew "jack", restart_service: true
+brew "jack", arestart_service: false
 brew "jq"
 brew "just"
 brew "kubernetes-cli"
@@ -104,7 +104,7 @@ brew "mosh"
 brew "mr"
 brew "mydumper"
 brew "nativefier"
-brew "nginx", restart_service: true
+brew "nginx", arestart_service: false
 brew "node-build"
 brew "nodenv"
 brew "nushell"
@@ -116,7 +116,7 @@ brew "parallel"
 brew "pinentry-mac"
 brew "pip-completion"
 brew "pngpaste"
-brew "postgresql", restart_service: true
+brew "postgresql", arestart_service: false
 brew "pre-commit"
 brew "prettier"
 brew "pup"
@@ -127,7 +127,7 @@ brew "python-launcher"
 brew "ruby-build"
 brew "rbenv"
 brew "rclone"
-brew "redis", restart_service: true
+brew "redis", arestart_service: false
 brew "rename"
 brew "ripgrep"
 brew "rust", link: false
@@ -150,7 +150,7 @@ brew "terraform"
 brew "thefuck"
 brew "tldr"
 brew "tmux"
-brew "tor", restart_service: true
+brew "tor", arestart_service: false
 brew "tree"
 brew "unison"
 brew "up"
