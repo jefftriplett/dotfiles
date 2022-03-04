@@ -41,14 +41,14 @@ $ make install
 # Justfile Usage
 <!-- [[[cog
 from scripts.run_command import run
-run("just", with_console=True)
+run("just --justfile=./home/justfile", with_console=True)
 ]]] -->
+
 ```console
-$ just
+$ just --justfile=./home/justfile
 Available recipes:
     bootstrap
     cleanup
-    docs-update
     fmt
     freeze
     homebrew-services
@@ -74,7 +74,8 @@ Available recipes:
     virtualenv-upgrade
     workon
 ```
-<!-- [[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e) -->
+
+<!-- [[[end]]] -->
 
 ## Hammerspoon Keyboard Shortcuts
 
