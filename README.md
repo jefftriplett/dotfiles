@@ -43,6 +43,37 @@ $ make install
 from scripts.run_command import run
 run("just", with_console=True)
 ]]] -->
+```console
+$ just
+Available recipes:
+    bootstrap
+    cleanup
+    docs-update
+    fmt
+    freeze
+    homebrew-services
+    homesick-symlink
+    outdated
+    pip-update
+    pipx-upgrade
+    postgresql-upgrade
+    pyenv-global
+    pyenv-upgrade +ARGS="--skip-existing"
+    pyenv-upgrade-all +ARGS="--skip-existing"
+    python-update
+    restart
+    stop
+    symlink
+    timemachine
+    topalias
+    update
+    update-readme-docs
+    upgrade
+    upgrade-xcode
+    virtualenv-scan
+    virtualenv-upgrade
+    workon
+```
 <!-- [[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e) -->
 
 ## Hammerspoon Keyboard Shortcuts
