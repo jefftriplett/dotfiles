@@ -13,11 +13,6 @@ PYTHON_311 := "3.11.0a4"
 PYTHON_ALL := PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_310 + " " + PYTHON_311 + " " + PYTHON_36 + " " + PYTHON_27
 DEFAULT_PYTHON_VERSION := PYTHON_39
 
-# service updates
-
-alias restart := homebrew-services-restart
-alias stop := homebrew-services-stop
-
 @_default:
     just --list
 
@@ -31,6 +26,12 @@ alias stop := homebrew-services-stop
 
 @outdated:
     just _homebrew-outdated
+
+@restart:
+    just _homebrew-services-restart
+
+@stop:
+    just _homebrew-services-stop
 
 @symlink:
     just homesick-symlink
@@ -66,6 +67,19 @@ alias stop := homebrew-services-stop
     brew update
     brew outdated
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
+
+@homebrew-services:
+    brew services
+
+@_homebrew-services-restart:
+    brew services restart yabai
+    # brew services restart spacebar
+    # brew services restart skhd
+
+@_homebrew-services-stop:
+    -brew services stop yabai
+    -brew services stop spacebar
+    -brew services stop skhd
 
 @homesick-symlink:
     homesick symlink
@@ -144,19 +158,6 @@ alias stop := homebrew-services-stop
 
     # pipx install python-language-server[all]
     # pipx inject python-language-server pyls-black mypy-ls pyls-isort
-
-@homebrew-services:
-    brew services
-
-@homebrew-services-restart:
-    brew services restart yabai
-    # brew services restart spacebar
-    # brew services restart skhd
-
-@homebrew-services-stop:
-    -brew services stop yabai
-    -brew services stop spacebar
-    -brew services stop skhd
 
 @topalias:
     topalias
