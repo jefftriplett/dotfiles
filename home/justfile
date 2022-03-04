@@ -39,6 +39,11 @@ DEFAULT_PYTHON_VERSION := PYTHON_39
 @update:
     just _homebrew-update
 
+@upgrade:
+    just _homebrew-update
+    just _homebrew-upgrade
+    just _homebrew-cleanup
+
 # everything else
 
 @bootstrap:
@@ -61,7 +66,6 @@ DEFAULT_PYTHON_VERSION := PYTHON_39
         brew bundle dump
 
 @_homebrew-outdated:
-    brew update
     brew outdated
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
@@ -85,9 +89,7 @@ DEFAULT_PYTHON_VERSION := PYTHON_39
     brew update
 
 @_homebrew-upgrade:
-    brew outdated
     brew upgrade || true
-    just _homebrew-cleanup
 
 @_install-asdf:
     asdf install direnv latest
@@ -161,10 +163,6 @@ DEFAULT_PYTHON_VERSION := PYTHON_39
 
 @update-readme-docs:
     cd "$HOME/.homesick/repos/dotfiles" && cog -Pr ./README.md
-
-@upgrade:
-    just _homebrew-update
-    just _homebrew-upgrade
 
 @upgrade-xcode:
     sudo rm -rf /Library/Developer/CommandLineTools
