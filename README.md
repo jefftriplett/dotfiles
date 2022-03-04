@@ -43,46 +43,7 @@ $ make install
 from scripts.run_command import run
 run("just", with_console=True)
 ]]] -->
-
-```console
-$ just
-Available recipes:
-    bootstrap
-    docs-update
-    fmt
-    homebrew-cleanup
-    cleanup            # alias for `homebrew-cleanup`
-    homebrew-freeze
-    freeze             # alias for `homebrew-freeze`
-    homebrew-outdated
-    outdated           # alias for `homebrew-outdated`
-    homebrew-update
-    update             # alias for `homebrew-update`
-    homebrew-upgrade
-    homesick-symlink
-    symlink            # alias for `homesick-symlink`
-    install-asdf
-    install-xcode
-    pip-update
-    pipx-upgrade
-    postgresql-upgrade
-    pyenv-global
-    pyenv-upgrade +ARGS="--skip-existing"
-    pyenv-upgrade-all +ARGS="--skip-existing"
-    python-update
-    services
-    services-restart
-    restart            # alias for `services-restart`
-    services-stop
-    stop               # alias for `services-stop`
-    topalias
-    upgrade
-    upgrade-xcode
-    virtualenv-upgrade
-    workon
-```
-
-<!-- [[[end]]] -->
+<!-- [[[end]]] (checksum: d41d8cd98f00b204e9800998ecf8427e) -->
 
 ## Hammerspoon Keyboard Shortcuts
 

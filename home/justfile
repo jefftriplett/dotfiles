@@ -9,31 +9,44 @@ PYTHON_37 := `pyenv latest --print 3.7`
 PYTHON_38 := `pyenv latest --print 3.8`
 PYTHON_39 := `pyenv latest --print 3.9`
 PYTHON_310 := `pyenv latest --print 3.10`
-PYTHON_311 := "3.11.0a2"
-PYTHON_ALL := PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_310 + " " + PYTHON_311 + " " + PYTHON_36 + " " + PYTHON_35 + " " + PYTHON_27
+PYTHON_311 := "3.11.0a4"
+PYTHON_ALL := PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_310 + " " + PYTHON_311 + " " + PYTHON_36 + " " + PYTHON_27
 DEFAULT_PYTHON_VERSION := PYTHON_39
-
-# homebrew updates
-
-alias cleanup := homebrew-cleanup
-alias freeze := homebrew-freeze
-alias outdated := homebrew-outdated
-alias symlink := homesick-symlink
-alias update := homebrew-update
 
 # service updates
 
-alias restart := services-restart
-alias stop := services-stop
+alias restart := homebrew-services-restart
+alias stop := homebrew-services-stop
 
 @_default:
     just --list
+
+# homebrew and general wrappers
+
+@cleanup:
+    just _homebrew-cleanup
+
+@freeze:
+    just _homebrew-freeze
+
+@outdated:
+    just _homebrew-outdated
+
+@symlink:
+    just homesick-symlink
+
+@update:
+    just _homebrew-update
+
+# everything else
 
 @bootstrap:
     if [ -f "Brewfile" ] && [ "$(uname -s)" = "Darwin" ]; then \
         echo "==> Installing Homebrew dependencies..."; \
         brew bundle install; \
     fi
+    just _install-asdf
+    just _install-xcode
 
 @docs-update:
     cog -Pr "$HOME/.homesick/repos/dotfiles/README.md"
@@ -41,31 +54,31 @@ alias stop := services-stop
 @fmt:
     just --fmt --unstable
 
-@homebrew-cleanup:
+@_homebrew-cleanup:
     brew cleanup --prune=0
 
-@homebrew-freeze:
+@_homebrew-freeze:
     cd "$HOME/.homesick/repos/dotfiles/home" && \
         mv Brewfile Brewfile.bak && \
         brew bundle dump
 
-@homebrew-outdated:
+@_homebrew-outdated:
     brew update
     brew outdated
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
-@homebrew-update:
-    brew update
-
-@homebrew-upgrade:
-    brew outdated
-    brew upgrade || true
-    just homebrew-cleanup
-
 @homesick-symlink:
     homesick symlink
 
-@install-asdf:
+@_homebrew-update:
+    brew update
+
+@_homebrew-upgrade:
+    brew outdated
+    brew upgrade || true
+    just _homebrew-cleanup
+
+@_install-asdf:
     asdf install direnv latest
     asdf install golang latest
     asdf install nodejs latest
@@ -73,8 +86,8 @@ alias stop := services-stop
     asdf install rust latest
     asdf install starship latest
 
-@install-xcode:
-    sudo xcode-select --install
+@_install-xcode:
+    sudo xcode-select --_install
 
 @pip-update:
     for version in `pyenv versions --bare`; do \
@@ -122,23 +135,25 @@ alias stop := services-stop
     PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade \
         pip \
         pipx \
+        setuptools \
         virtualenv \
-        virtualenvwrapper
+        virtualenvwrapper \
+        wheel
     pyenv update
     just pyenv-global
 
     # pipx install python-language-server[all]
     # pipx inject python-language-server pyls-black mypy-ls pyls-isort
 
-@services:
+@homebrew-services:
     brew services
 
-@services-restart:
+@homebrew-services-restart:
     brew services restart yabai
     # brew services restart spacebar
     # brew services restart skhd
 
-@services-stop:
+@homebrew-services-stop:
     -brew services stop yabai
     -brew services stop spacebar
     -brew services stop skhd
@@ -146,13 +161,16 @@ alias stop := services-stop
 @topalias:
     topalias
 
+@update-readme-docs:
+    cd ~/.homesick/repos/dotfiles && cog -c -r ./README.md
+
 @upgrade:
-    just homebrew-update
-    just homebrew-upgrade
+    just _homebrew-update
+    just _homebrew-upgrade
 
 @upgrade-xcode:
     sudo rm -rf /Library/Developer/CommandLineTools
-    just install-xcode
+    just _install-xcode
 
 @workon:
     for filename in $(ls -d ~/.virtualenvs/*/); do \
@@ -162,6 +180,12 @@ alias stop := services-stop
         echo; \
     done
 
+@timemachine:
+    # PSA: https://apple.stackexchange.com/questions/382772/time-machine-in-the-cleaning-up-state-forever
+    sudo sysctl debug.lowpri_throttle_enabled=0
+    # once done
+    # sudo sysctl debug.lowpri_throttle_enabled=1
+
 @virtualenv-upgrade:
     for filename in $(ls -d ~/.virtualenvs/*/); do \
         echo "$filename"; \
@@ -170,6 +194,27 @@ alias stop := services-stop
         $filename/bin/python -m pip install --upgrade pip; \
         echo; \
     done
+
+virtualenv-scan:
+    #!/usr/bin/env python
+    import subprocess
+    from pathlib import Path
+
+    folders = [folder for folder in Path(Path.home(), ".virtualenvs").glob("*/bin/python")]
+    print(len(folders))
+    for command in folders:
+        print(command)
+        try:
+            # grab python version
+            output = subprocess.run(f"{command} --version".split(), capture_output=True, text=True)
+            print(output.stdout.strip() or output.stderr.strip())
+
+            # grab pip version
+            # output = subprocess.run(f"{command} --version".replace("python", "pip").split(), capture_output=True, text=True)
+            # print(output.stdout.strip() or output.stderr.strip())
+
+        except FileNotFoundError as e:
+            pass
 
 # @virtualenv-upgrade:
 #     # TODO: https://stackoverflow.com/questions/44692668/python-how-can-i-update-python-version-in-pyenv-virtual-environment
