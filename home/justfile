@@ -94,10 +94,12 @@ DEFAULT_PYTHON_VERSION := PYTHON_39
 @_install-asdf:
     asdf install direnv latest
     asdf install golang latest
-    asdf install nodejs latest
+    # asdf install nodejs latest
+    asdf install nodejs lts
     asdf install ruby latest
     asdf install rust latest
-    asdf install starship latest
+    # asdf install starship latest
+    asdf reshim
 
 @_install-xcode:
     sudo xcode-select --_install
