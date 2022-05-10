@@ -193,7 +193,7 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
         echo; \
     done
 
-virtualenv-scan:
+@virtualenv-scan:
     #!/usr/bin/env python
     import subprocess
     from pathlib import Path
