@@ -9,9 +9,9 @@ PYTHON_37 := `pyenv latest --print 3.7`
 PYTHON_38 := `pyenv latest --print 3.8`
 PYTHON_39 := `pyenv latest --print 3.9`
 PYTHON_310 := `pyenv latest --print 3.10`
-PYTHON_311 := "3.11.0a4"
-PYTHON_ALL := PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_310 + " " + PYTHON_311 + " " + PYTHON_36 + " " + PYTHON_27
-DEFAULT_PYTHON_VERSION := PYTHON_39
+PYTHON_311 := "3.11.0a4"  # "3.11.0b1"
+PYTHON_ALL := PYTHON_310 + " " + PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_311 + " " + PYTHON_36 + " " + PYTHON_27
+DEFAULT_PYTHON_VERSION := PYTHON_310
 
 @_default:
     just --list
