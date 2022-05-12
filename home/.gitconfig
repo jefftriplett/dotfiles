@@ -30,6 +30,7 @@
     #editor = subl
     rebase = true
 	# pager = git-split-diffs --color | less -RFX
+    pager = delta
 
 [diff]
     renames = true
@@ -46,7 +47,15 @@
 [init]
     defaultBranch = main
 
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true  # use n and N to move between diff sections
+    light = false    # set to
+
 [mergetool]
+    conflictstyle = diff3
 	keepBackup = true
 
 [push]
@@ -78,5 +87,6 @@
     fsckObjects = true
 
 [diff "image"]
-	textconv = imgcat
-	command = imgdiff
+    command = imgdiff
+    textconv = imgcat
+    colorMoved = default
