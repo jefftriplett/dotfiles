@@ -9,8 +9,7 @@ PYTHON_37 := `pyenv latest --print 3.7`
 PYTHON_38 := `pyenv latest --print 3.8`
 PYTHON_39 := `pyenv latest --print 3.9`
 PYTHON_310 := `pyenv latest --print 3.10`
-PYTHON_311 := "3.11.0a4"  # "3.11.0b1"
-PYTHON_ALL := PYTHON_310 + " " + PYTHON_39 + " " + PYTHON_38 + " " + PYTHON_37 + " " + PYTHON_311 + " " + PYTHON_36 + " " + PYTHON_27
+PYTHON_311 := "3.11.0b1"
 DEFAULT_PYTHON_VERSION := PYTHON_310
 
 @_default:
@@ -92,13 +91,10 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     brew upgrade || true
 
 @_install-asdf:
-    asdf install direnv latest
     asdf install golang latest
-    # asdf install nodejs latest
     asdf install nodejs lts
     asdf install ruby latest
     asdf install rust latest
-    # asdf install starship latest
     asdf reshim
 
 @_install-xcode:

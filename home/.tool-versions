@@ -1,8 +1,7 @@
-# nodejs 14.17.0
-# nodejs 16.13.1
-# starship 0.44.0
-direnv 2.31.0
-golang 1.16.3
+# direnv latest
+# starship latest
+golang latest
+kubectl lts
 nodejs lts
-ruby 3.0.1
-rust 1.59.0
+ruby latest
+rust lts
