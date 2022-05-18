@@ -100,20 +100,24 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
 @_install-xcode:
     sudo xcode-select --_install
 
-@pip-update:
-    for version in `pyenv versions --bare`; do \
-        echo "Upgrading Python ${version}"; \
-    done
+# Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
+@kill-tabs:
+    npx kill-tabs
 
-    eval "$(pyenv init --path)" && eval "$(pyenv init -)" && pyenv shell {{ PYTHON_ALL }}
-
-    # #!/usr/bin/env sh
-    # set -euxo pipefail
-    # for version in `pyenv versions --bare` ; do \
-    #     echo "Upgrading Python ${version}"; \
-    #     # pyenv shell ${version}; \
-    # done
-    # pyenv shell {{ PYTHON_ALL }}
+# @pip-update:
+#     for version in `pyenv versions --bare`; do \
+#         echo "Upgrading Python ${version}"; \
+#     done
+#
+#     eval "$(pyenv init --path)" && eval "$(pyenv init -)" && pyenv shell {{ PYTHON_ALL }}
+#
+#     # #!/usr/bin/env sh
+#     # set -euxo pipefail
+#     # for version in `pyenv versions --bare` ; do \
+#     #     echo "Upgrading Python ${version}"; \
+#     #     # pyenv shell ${version}; \
+#     # done
+#     # pyenv shell {{ PYTHON_ALL }}
 
 @pipx-upgrade:
     pipx upgrade-all --force
@@ -124,8 +128,15 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     brew pin postgresql
     brew postgresql-upgrade-database
 
-@pyenv-global:
-    pyenv global {{ PYTHON_ALL }}
+@pyenv-set-global:
+    pyenv global \
+        {{ PYTHON_310 }} \
+        {{ PYTHON_39 }} \
+        {{ PYTHON_38 }} \
+        {{ PYTHON_37 }} \
+        {{ PYTHON_311 }} \
+        {{ PYTHON_36 }} \
+        {{ PYTHON_27 }}
 
 @pyenv-upgrade +ARGS="--skip-existing":
     just pyenv-upgrade-all {{ ARGS }}
@@ -140,7 +151,7 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     -pyenv install {{ ARGS }} 3.10:latest
     -pyenv install {{ ARGS }} 3.11:latest
     -pyenv install {{ ARGS }} 2.7:latest
-    -just pyenv-global
+    just pyenv-set-global
 
 @python-update:
     PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade \
@@ -151,7 +162,7 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
         virtualenvwrapper \
         wheel
     pyenv update
-    just pyenv-global
+    just pyenv-set-global
 
     # pipx install python-language-server[all]
     # pipx inject python-language-server pyls-black mypy-ls pyls-isort
