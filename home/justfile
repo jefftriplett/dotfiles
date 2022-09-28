@@ -112,7 +112,7 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     asdf global rust latest
 
 @_install-xcode:
-    sudo xcode-select --_install
+    sudo xcode-select --install
 
 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
 @kill-tabs:
