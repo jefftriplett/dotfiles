@@ -100,6 +100,7 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     asdf install golang latest
     asdf install kubectl latest
     asdf install nodejs latest
+    asdf install nodejs lts
     asdf install ruby latest
     asdf install rust latest
 
