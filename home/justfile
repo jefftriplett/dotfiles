@@ -112,6 +112,8 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     asdf global ruby latest
     asdf global rust latest
 
+    asdf current
+
 @_install-xcode:
     sudo xcode-select --install
 
