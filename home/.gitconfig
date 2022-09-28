@@ -60,6 +60,7 @@
 
 [push]
     default = tracking
+	autoSetupRemote = true
     #default = simple
 
 [rerere]
@@ -86,7 +87,7 @@
 [transfer]
     fsckObjects = true
 
-[diff "image"]
-    command = imgdiff
-    textconv = imgcat
-    colorMoved = default
+# [diff "image"]
+#     command = imgdiff
+#     textconv = imgcat
+#     colorMoved = default
