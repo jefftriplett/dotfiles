@@ -1,7 +1,11 @@
 # direnv latest
+# golang latest
+# nodejs lts
+# ruby 3.0.1
+# rust 1.61.0
 # starship latest
-golang latest
-kubectl lts
-nodejs lts
-ruby latest
-rust lts
+golang 1.19.1
+kubectl 1.22.2
+nodejs 18.9.1
+ruby 3.1.2
+rust 1.64.0

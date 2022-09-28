@@ -91,11 +91,25 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     brew upgrade || true
 
 @_install-asdf:
+    asdf plugin update golang
+    asdf plugin update kubectl
+    asdf plugin update nodejs
+    asdf plugin update ruby
+    asdf plugin update rust
+
     asdf install golang latest
-    asdf install nodejs lts
+    asdf install kubectl latest
+    asdf install nodejs latest
     asdf install ruby latest
     asdf install rust latest
+
     asdf reshim
+
+    asdf global golang latest
+    asdf global kubectl 1.22.2
+    asdf global nodejs latest
+    asdf global ruby latest
+    asdf global rust latest
 
 @_install-xcode:
     sudo xcode-select --_install
