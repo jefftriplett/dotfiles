@@ -4,12 +4,12 @@ PYPY_27 := "pypy2.7-7.3.2"
 PYPY_36 := "pypy3.6-7.3.2"
 PYTHON_27 := `pyenv latest --print 2.7`
 PYTHON_35 := `pyenv latest --print 3.5`
-PYTHON_36 := "3.6.13"
+PYTHON_36 := `pyenv latest --print 3.6`  # "3.6.13"
 PYTHON_37 := `pyenv latest --print 3.7`
 PYTHON_38 := `pyenv latest --print 3.8`
 PYTHON_39 := `pyenv latest --print 3.9`
 PYTHON_310 := `pyenv latest --print 3.10`
-PYTHON_311 := "3.11.0b1"
+PYTHON_311 := "3.11.0rc2"  # TODO: rc2
 DEFAULT_PYTHON_VERSION := PYTHON_310
 
 @_default:
@@ -17,8 +17,8 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
 
 # homebrew and general wrappers
 
-@cleanup:
-    just _homebrew-cleanup
+@cleanup DAYS="0":
+    just _homebrew-cleanup {{ DAYS }}
 
 @freeze:
     just _homebrew-freeze
@@ -56,8 +56,8 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
 @fmt:
     just --fmt --unstable
 
-@_homebrew-cleanup:
-    brew cleanup --prune=0
+@_homebrew-cleanup DAYS="0":
+    brew cleanup --prune={{ DAYS }}
 
 @_homebrew-freeze:
     cd "$HOME/.homesick/repos/dotfiles/home" && \
@@ -158,17 +158,21 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
 
 @pyenv-upgrade-all +ARGS="--skip-existing":
     -pyenv install {{ ARGS }} 3.5:latest
+    -pyenv install {{ ARGS }} 3.6:latest
     -pyenv install {{ ARGS }} 3.6.13
     -pyenv install {{ ARGS }} 3.7:latest
     -pyenv install {{ ARGS }} 3.8:latest
     -pyenv install {{ ARGS }} 3.9:latest
     -pyenv install {{ ARGS }} 3.10:latest
-    -pyenv install {{ ARGS }} 3.11:latest
+    # -pyenv install {{ ARGS }} 3.11:latest
     -pyenv install {{ ARGS }} 2.7:latest
     just pyenv-set-global
 
 @python-update:
-    PIP_REQUIRE_VIRTUALENV=false python -m pip install --upgrade \
+    PIP_REQUIRE_VIRTUALENV=false python -m pip install \
+            --disable-pip-version-check \
+            --no-compile \
+            --upgrade \
         pip \
         pipx \
         setuptools \
