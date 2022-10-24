@@ -9,3 +9,4 @@ kubectl 1.22.2
 nodejs 18.9.1
 ruby 3.1.2
 rust 1.64.0
+yarn 1.22.19
