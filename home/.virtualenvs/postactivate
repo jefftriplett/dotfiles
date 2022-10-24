@@ -37,10 +37,12 @@ PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
 CONTINUE=false
 
 if ! [ -e "${PROJECT_FILE}" ]; then
-  read -p "Would you like to create a new SublimeText project for this virtualenv? " -n 1 -r response
+  echo "Would you like to create a new SublimeText project for this virtualenv?"
+  CONFIRM=$(gum choose "yes" "no")
+
   echo
 
-  if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
+  if [[ $CONFIRM =~ "yes" ]]; then
     CONTINUE=true
   fi
 
