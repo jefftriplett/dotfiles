@@ -114,6 +114,8 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
 
     asdf current
 
+    asdf list
+
 @_install-xcode:
     sudo xcode-select --install
 
@@ -148,10 +150,10 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
 @pyenv-set-global:
     pyenv global \
         {{ PYTHON_310 }} \
+        {{ PYTHON_311 }} \
         {{ PYTHON_39 }} \
         {{ PYTHON_38 }} \
         {{ PYTHON_37 }} \
-        {{ PYTHON_311 }} \
         {{ PYTHON_36 }} \
         {{ PYTHON_27 }}
 
@@ -182,7 +184,9 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
         virtualenv \
         virtualenvwrapper \
         wheel
+
     pyenv update
+
     just pyenv-set-global
 
     # pipx install python-language-server[all]
