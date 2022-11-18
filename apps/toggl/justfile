@@ -1,0 +1,25 @@
+@_default:
+    just --list
+
+@build:
+    nativefier \
+        --darwin-dark-mode-support \
+        --name "Toggl" \
+        https://www.toggl.com/app \
+        build
+
+    rsync -av --delete-after \
+        build/Toggl-darwin-x64/Toggl.app/ \
+        ~/Applications/Toggl.app
+
+@clean:
+    rm -rf build
+
+@upgrade:
+    nativefier \
+        --upgrade \
+        build/Toggl-darwin-x64/Toggl.app/
+
+    rsync -av --delete-after \
+        build/Toggl-darwin-x64/Toggl.app/ \
+        ~/Applications/Toggl.app

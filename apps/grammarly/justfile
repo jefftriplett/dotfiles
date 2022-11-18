@@ -1,0 +1,25 @@
+@_default:
+    just --list
+
+@build:
+    nativefier \
+        --darwin-dark-mode-support \
+        --name "Grammarly" \
+        https://app.grammarly.com/ \
+        build
+
+    rsync -av --delete-after \
+        build/Grammarly-darwin-x64/Grammarly.app/ \
+        ~/Applications/Grammarly.app
+
+@clean:
+    rm -rf build
+
+@upgrade:
+    nativefier \
+        --upgrade \
+        build/Grammarly-darwin-x64/Grammarly.app/
+
+    rsync -av --delete-after \
+        build/Grammarly-darwin-x64/Grammarly.app/ \
+        ~/Applications/Grammarly.app

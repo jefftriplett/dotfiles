@@ -1,0 +1,19 @@
+@_default:
+    just --list
+
+@_cmd *ARGS="--help":
+    cd github && just {{ ARGS }}
+    cd grammarly && just {{ ARGS }}
+    cd toggl && just {{ ARGS }}
+
+@build:
+    just cmd build
+
+@fmt:
+    just --fmt --unstable
+
+@clean:
+    just cmd clean
+
+@upgrade:
+    just cmd upgrade
