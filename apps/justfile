@@ -4,16 +4,17 @@
 @_cmd *ARGS="--help":
     cd github && just {{ ARGS }}
     cd grammarly && just {{ ARGS }}
+    cd mastodon && just {{ ARGS }}
     cd toggl && just {{ ARGS }}
 
 @build:
-    just cmd build
+    just _cmd build
+
+@clean:
+    just _cmd clean
 
 @fmt:
     just --fmt --unstable
 
-@clean:
-    just cmd clean
-
 @upgrade:
-    just cmd upgrade
+    just _cmd upgrade
