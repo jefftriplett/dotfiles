@@ -2,10 +2,11 @@
     just --list
 
 @_cmd *ARGS="--help":
-    cd github && just {{ ARGS }}
-    cd grammarly && just {{ ARGS }}
-    cd mastodon && just {{ ARGS }}
-    cd toggl && just {{ ARGS }}
+    for folder in `ls .`; do \
+        if [ -d "$folder" ]; then \
+            cd $folder && just {{ ARGS }} && cd ..; \
+        fi \
+    done
 
 @build:
     just _cmd build
@@ -15,6 +16,7 @@
 
 @fmt:
     just --fmt --unstable
+    just _cmd fmt
 
 @upgrade:
     just _cmd upgrade
