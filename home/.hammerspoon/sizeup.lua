@@ -239,7 +239,11 @@ function sizeup.snapback()
 end
 
 function sizeup.maximize()
-  sizeup.set_frame("Full Screen", sizeup.screen())
+  -- sizeup.set_frame("Full Screen", sizeup.screen())
+  local win = sizeup.win()
+  print('window:maximize:', hs.layout.maximized)
+  win:move(hs.layout.maximized)
+  -- return win:maximize()
 end
 
 --- move_to_center_relative(size)
@@ -277,7 +281,8 @@ end
 ------------------
 
 -- SizeUp uses no animations
-hs.window.animation_duration = 0.0
+-- hs.window.animation_duration = 0.0
+hs.window.animationDuration = 0.0
 
 -- Initialize Snapback state
 sizeup.snapback_window_state = { }
@@ -293,12 +298,26 @@ function sizeup.set_frame(title, unit)
   local win = sizeup.win()
   sizeup.snapback_window_state[win:id()] = win:frame()
   return win:setFrame(unit)
+  -- return win:setFrameWithWorkarounds(unit)
 end
 
 -- screen is the available rect inside the screen edge margins
 function sizeup.screen()
   local screen = sizeup.win():screen():frame()
   local sem = sizeup.screen_edge_margins
+
+  print('screen.x', screen.x)
+  print('screen.y', screen.y)
+  print('screen.w', screen.w)
+  print('screen.h', screen.h)
+  print('---')
+
+  print('sem.bottom', sem.bottom)
+  print('sem.left', sem.left)
+  print('sem.right', sem.right)
+  print('sem.top', sem.top)
+  print('---')
+
   return {
     x = screen.x + sem.left,
     y = screen.y + sem.top,
