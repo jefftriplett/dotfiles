@@ -15,6 +15,9 @@
 @clean:
     rm -rf build
 
+@fmt:
+    just --fmt --unstable
+
 @upgrade:
     nativefier \
         --upgrade \

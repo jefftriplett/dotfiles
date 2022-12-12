@@ -1,0 +1,28 @@
+@_default:
+    just --list
+
+@build:
+    nativefier \
+        --darwin-dark-mode-support \
+        --name "NovelAI" \
+        https://novelai.net/stories \
+        build
+
+    rsync -av --delete-after \
+        build/NovelAI-darwin-x64/NovelAI.app/ \
+        ~/Applications/NovelAI.app
+
+@clean:
+    rm -rf build
+
+@fmt:
+    just --fmt --unstable
+
+@upgrade:
+    nativefier \
+        --upgrade \
+        build/NovelAI-darwin-x64/NovelAI.app/
+
+    rsync -av --delete-after \
+        build/NovelAI-darwin-x64/NovelAI.app/ \
+        ~/Applications/NovelAI.app

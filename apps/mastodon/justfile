@@ -1,0 +1,28 @@
+@_default:
+    just --list
+
+@build:
+    nativefier \
+        --darwin-dark-mode-support \
+        --name "Mastodon" \
+        https://mastodon.social/ \
+        build
+
+    rsync -av --delete-after \
+        build/Mastodon-darwin-x64/Mastodon.app/ \
+        ~/Applications/Mastodon.app
+
+@clean:
+    rm -rf build
+
+@fmt:
+    just --fmt --unstable
+
+@upgrade:
+    nativefier \
+        --upgrade \
+        build/Mastodon-darwin-x64/Mastodon.app/
+
+    rsync -av --delete-after \
+        build/Mastodon-darwin-x64/Mastodon.app/ \
+        ~/Applications/Mastodon.app

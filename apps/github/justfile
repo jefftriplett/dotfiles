@@ -2,18 +2,21 @@
     just --list
 
 @build:
-	nativefier \
-		--darwin-dark-mode-support \
-		--name "GitHub" \
-		https://github.com/jefftriplett?tab=projects \
-		build
+    nativefier \
+    	--darwin-dark-mode-support \
+    	--name "GitHub" \
+    	https://github.com/jefftriplett?tab=projects \
+    	build
 
-	rsync -av --delete-after \
-		build/GitHub-darwin-x64/GitHub.app/ \
-		~/Applications/GitHub.app
+    rsync -av --delete-after \
+    	build/GitHub-darwin-x64/GitHub.app/ \
+    	~/Applications/GitHub.app
 
 @clean:
     rm -rf build
+
+@fmt:
+    just --fmt --unstable
 
 @upgrade:
     nativefier \
