@@ -195,7 +195,7 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     topalias
 
 @update-readme-docs:
-    cd "$HOME/.homesick/repos/dotfiles" && cog -Pr ./README.md
+    cd "$HOME/.homesick/repos/dotfiles" && pipx run cog -Pr ./README.md
 
 @upgrade-xcode:
     sudo rm -rf /Library/Developer/CommandLineTools
