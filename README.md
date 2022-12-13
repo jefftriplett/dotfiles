@@ -48,16 +48,16 @@ run("just --justfile=./home/justfile", with_console=True)
 $ just --justfile=./home/justfile
 Available recipes:
     bootstrap
-    cleanup
+    cleanup DAYS="0"
     fmt
     freeze
     homebrew-services
     homesick-symlink
+    kill-tabs          # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
     outdated
-    pip-update
     pipx-upgrade
     postgresql-upgrade
-    pyenv-global
+    pyenv-set-global
     pyenv-upgrade +ARGS="--skip-existing"
     pyenv-upgrade-all +ARGS="--skip-existing"
     python-update
