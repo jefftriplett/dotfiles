@@ -69,10 +69,10 @@ Available recipes:
     update
     update-readme-docs
     upgrade
-    upgrade-xcode
     virtualenv-scan
     virtualenv-upgrade
     workon
+    xcode-upgrade
 ```
 
 <!-- [[[end]]] -->
