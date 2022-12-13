@@ -9,7 +9,7 @@ There are my personal dotfiles. They are managed using:
 - [Homesick][homesick] for managing dotfiles.
 - [Just](https://github.com/casey/just) 🤖 Just a command runner.
 - [Modd][modd] A flexible developer tool that runs processes and responds to filesystem changes.
-- [Spacegray][spacegray] terminal theme.
+- [Dracula][dracula] Dark theme for iTerm and 294+ apps.
 - [Starship][starship] The minimal, blazing-fast, and infinitely customizable prompt for any shell.
 
 ## GUI
@@ -115,6 +115,7 @@ Available recipes:
 [alfred-powerpack]: https://www.alfredapp.com/powerpack/
 [alfred]: https://www.alfredapp.com/
 [direnv]: https://direnv.net/
+[dracula]: https://draculatheme.com/iterm
 [espanso]: https://espanso.org/
 [hammerspoon]: http://www.hammerspoon.org/
 [homebrew]: http://brew.sh/
@@ -124,9 +125,7 @@ Available recipes:
 [pipenv]: http://docs.pipenv.org/en/latest/
 [pipx]: https://pipxproject.github.io/pipx/
 [pyenv]: https://github.com/yyuu/pyenv
-[spacegray]:https://github.com/mbadolato/iTerm2-Color-Schemes/tree/master/terminal
 [starship]: https://starship.rs/
-
 
 ## Contact / Social Media
 
