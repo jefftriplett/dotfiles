@@ -10,6 +10,7 @@ PYTHON_38 := `pyenv latest 3.8`
 PYTHON_39 := `pyenv latest 3.9`
 PYTHON_310 := `pyenv latest 3.10`
 PYTHON_311 := `pyenv latest 3.11`
+PYTHON_312 := `pyenv latest 3.12-dev`
 DEFAULT_PYTHON_VERSION := PYTHON_310
 
 @_default:
@@ -151,6 +152,7 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     pyenv global \
         {{ PYTHON_310 }} \
         {{ PYTHON_311 }} \
+        {{ PYTHON_312 }} \
         {{ PYTHON_39 }} \
         {{ PYTHON_38 }} \
         {{ PYTHON_37 }} \
@@ -169,6 +171,7 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     -pyenv install {{ ARGS }} 3.9:latest
     -pyenv install {{ ARGS }} 3.10:latest
     -pyenv install {{ ARGS }} 3.11:latest
+    -pyenv install {{ ARGS }} 3.12:dev
     -pyenv install {{ ARGS }} 2.7:latest
     just pyenv-set-global
 
