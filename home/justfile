@@ -10,7 +10,7 @@ PYTHON_38 := `pyenv latest 3.8`
 PYTHON_39 := `pyenv latest 3.9`
 PYTHON_310 := `pyenv latest 3.10`
 PYTHON_311 := `pyenv latest 3.11`
-PYTHON_312 := `pyenv latest 3.12-dev`
+PYTHON_312 := "3.12-dev"
 DEFAULT_PYTHON_VERSION := PYTHON_310
 
 @_default:
@@ -198,7 +198,7 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     topalias
 
 @update-readme-docs:
-    cd "$HOME/.homesick/repos/dotfiles" && pipx run cog -Pr ./README.md
+    cd "$HOME/.homesick/repos/dotfiles" && pipx run --spec cogapp cog -Pr ./README.md
 
 @upgrade-xcode:
     sudo rm -rf /Library/Developer/CommandLineTools
