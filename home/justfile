@@ -51,11 +51,13 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
         echo "==> Installing Homebrew dependencies..."; \
         brew bundle install; \
     fi
-    just _install-asdf
-    just _install-xcode
+    just _asdf-install
+    just _xcode-install
 
 @fmt:
     just --fmt --unstable
+
+# homebrew: https://brew.sh/
 
 @_homebrew-cleanup DAYS="0":
     brew cleanup --prune={{ DAYS }}
@@ -91,7 +93,9 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
 @_homebrew-upgrade:
     brew upgrade || true
 
-@_install-asdf:
+# asdf: https://asdf-vm.com/
+
+@_asdf-install:
     asdf plugin update golang
     asdf plugin update kubectl
     asdf plugin update nodejs
@@ -117,8 +121,13 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
 
     asdf list
 
-@_install-xcode:
+# Xcode
+@_xcode-install:
     sudo xcode-select --install
+
+@xcode-upgrade:
+    sudo rm -rf /Library/Developer/CommandLineTools
+    just _xcode-install
 
 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
 @kill-tabs:
@@ -138,15 +147,20 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
 #     #     # pyenv shell ${version}; \
 #     # done
 #     # pyenv shell {{ PYTHON_ALL }}
+# pipx: https://pypa.github.io/pipx/
 
 @pipx-upgrade:
     pipx upgrade-all --force
+
+# Postgres related
 
 @postgresql-upgrade:
     brew unpin postgresql
     brew upgrade postgresql
     brew pin postgresql
     brew postgresql-upgrade-database
+
+# pyenv: https://github.com/pyenv/pyenv
 
 @pyenv-set-global:
     pyenv global \
@@ -175,6 +189,8 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
     -pyenv install {{ ARGS }} 2.7:latest
     just pyenv-set-global
 
+# Python
+
 @python-update:
     PIP_REQUIRE_VIRTUALENV=false python -m pip install \
             --disable-pip-version-check \
@@ -200,32 +216,13 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
 @update-readme-docs:
     cd "$HOME/.homesick/repos/dotfiles" && pipx run --spec cogapp cog -Pr ./README.md
 
-@upgrade-xcode:
-    sudo rm -rf /Library/Developer/CommandLineTools
-    just _install-xcode
-
-@workon:
-    for filename in $(ls -d ~/.virtualenvs/*/); do \
-        echo "$filename"; \
-        $filename/bin/python --version; \
-        $filename/bin/python -m pip --version; \
-        echo; \
-    done
-
 @timemachine:
     # PSA: https://apple.stackexchange.com/questions/382772/time-machine-in-the-cleaning-up-state-forever
     sudo sysctl debug.lowpri_throttle_enabled=0
     # once done
     # sudo sysctl debug.lowpri_throttle_enabled=1
 
-@virtualenv-upgrade:
-    for filename in $(ls -d ~/.virtualenvs/*/); do \
-        echo "$filename"; \
-        $filename/bin/python --version; \
-        $filename/bin/python -m pip --version; \
-        $filename/bin/python -m pip install --upgrade pip; \
-        echo; \
-    done
+# virtualenv: https://virtualenv.pypa.io/en/latest/
 
 @virtualenv-scan:
     #!/usr/bin/env python
@@ -248,10 +245,27 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
         except FileNotFoundError as e:
             pass
 
+@virtualenv-upgrade:
+    for filename in $(ls -d ~/.virtualenvs/*/); do \
+        echo "$filename"; \
+        $filename/bin/python --version; \
+        $filename/bin/python -m pip --version; \
+        $filename/bin/python -m pip install --upgrade pip; \
+        echo; \
+    done
+
 # @virtualenv-upgrade:
 #     # TODO: https://stackoverflow.com/questions/44692668/python-how-can-i-update-python-version-in-pyenv-virtual-environment
 #     # pip freeze > requirements-lock.txt
 #     # pyenv virtualenv-delete a-virtualenv-name
 #     # pyenv virtualenv 3.9.0 a-virtualenv-name
 #     # pip install -r requirements-lock.txt
-#     # rm requirements-lock.txt
+# # rm requirements-lock.txt
+
+@workon:
+    for filename in $(ls -d ~/.virtualenvs/*/); do \
+        echo "$filename"; \
+        $filename/bin/python --version; \
+        $filename/bin/python -m pip --version; \
+        echo; \
+    done
