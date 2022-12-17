@@ -1,5 +1,6 @@
 tap "1password/tap"
 tap "buo/cask-upgrade"
+tap "charmbracelet/tap"
 tap "cmacrae/formulae"
 tap "federico-terzi/espanso"
 tap "goodwithtech/r"
@@ -15,8 +16,8 @@ tap "homeport/tap"
 tap "hynek/tap"
 tap "jzaleski/jzaleski"
 tap "koekeishiya/formulae"
+tap "robotsandpencils/made"
 brew "act"
-brew "openssl@1.1"
 brew "aria2"
 brew "autoconf"
 brew "automake"
@@ -37,6 +38,7 @@ brew "node"
 brew "bower"
 brew "brew-gem"
 brew "bzip2"
+brew "caddy"
 brew "libgit2"
 brew "cargo-c"
 brew "cfn-lint"
@@ -81,6 +83,7 @@ brew "gist"
 brew "git"
 brew "git-delta"
 brew "git-flow"
+brew "git-lfs"
 brew "git-open"
 brew "git-standup"
 brew "glow"
@@ -101,6 +104,7 @@ brew "jack"
 brew "jq"
 brew "just"
 brew "kubernetes-cli"
+brew "lazygit"
 brew "libev"
 brew "libxml2"
 brew "libxmlsec1"
@@ -119,6 +123,7 @@ brew "mr"
 brew "zlib"
 brew "mydumper"
 brew "nativefier"
+brew "nghttp2"
 brew "nginx"
 brew "node-build"
 brew "nodenv"
@@ -170,9 +175,11 @@ brew "tldr"
 brew "tmux"
 brew "tor"
 brew "tree"
+brew "ttyd", args: ["HEAD"]
 brew "unison"
 brew "up"
 brew "vale"
+brew "vhs", args: ["HEAD"]
 brew "watch"
 brew "watchexec"
 brew "webkit2png"
@@ -229,6 +236,8 @@ cask "font-cascadia-pl"
 cask "font-comic-mono"
 cask "font-fira-code"
 cask "font-fontawesome"
+cask "font-ia-writer-mono"
+cask "font-ia-writer-quattro"
 cask "gitify"
 cask "gitup"
 cask "google-chrome"
@@ -262,7 +271,6 @@ cask "tweeten"
 cask "visual-studio-code"
 cask "vivaldi"
 cask "xbar"
-cask "xcodes"
 cask "yubico-authenticator"
 cask "yubico-yubikey-manager"
 cask "yubico-yubikey-personalization-gui"
@@ -299,8 +307,8 @@ mas "Paprika Recipe Manager", id: 451907568
 mas "Pixelmator", id: 407963104
 mas "Pixelmator Pro", id: 1289583905
 mas "Primitive", id: 1175103038
-mas "ReadKit", id: 1615798039
 mas "ReadKit", id: 588726889
+mas "ReadKit", id: 1615798039
 mas "Recordia", id: 1529006487
 mas "ScreenFocus", id: 1337028713
 mas "Signals", id: 1453293391
@@ -316,4 +324,5 @@ mas "Trello", id: 1278508951
 mas "Ulysses", id: 1225570693
 mas "Webcam Settings Control", id: 1172053162
 mas "Whalebird", id: 1378283354
+mas "Xcode", id: 497799835
 whalebrew "whalebrew/whalesay"
