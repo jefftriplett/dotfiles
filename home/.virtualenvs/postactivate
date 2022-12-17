@@ -38,7 +38,7 @@ CONTINUE=false
 
 if ! [ -e "${PROJECT_FILE}" ]; then
   echo "Would you like to create a new SublimeText project for this virtualenv?"
-  CONFIRM=$(gum choose "yes" "no")
+  CONFIRM=$(gum choose "yes" "no" --selected="yes")
 
   echo
 
