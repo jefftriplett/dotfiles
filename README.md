@@ -9,7 +9,6 @@ There are my personal dotfiles. They are managed using:
 - [Homesick][homesick] for managing dotfiles.
 - [Just](https://github.com/casey/just) 🤖 Just a command runner.
 - [Modd][modd] A flexible developer tool that runs processes and responds to filesystem changes.
-- [Dracula][dracula] Dark theme for iTerm and 294+ apps.
 - [Starship][starship] The minimal, blazing-fast, and infinitely customizable prompt for any shell.
 
 ## GUI
@@ -44,8 +43,9 @@ from scripts.run_command import run
 run("just --justfile=./home/justfile", with_console=True)
 ]]] -->
 
-```console
+```shell
 $ just --justfile=./home/justfile
+
 Available recipes:
     bootstrap
     cleanup DAYS="0"
@@ -100,7 +100,7 @@ Available recipes:
 
 ## Terminal theme
 
-- https://github.com/mdo/ocean-terminal
+- [Dracula][dracula] Dark theme for iTerm and 294+ apps.
 
 ## Inspiration / Thank you!
 
