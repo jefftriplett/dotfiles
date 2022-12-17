@@ -108,5 +108,5 @@ function iterm2_print_user_vars {
 # fi
 
 if command asdf > /dev/null 2>&1; then
-    eval ". $(brew --prefix asdf)/asdf.sh";
+    eval ". $(brew --prefix asdf)/libexec/asdf.sh";
 fi
