@@ -57,6 +57,11 @@ DEFAULT_PYTHON_VERSION := PYTHON_310
 @fmt:
     just --fmt --unstable
 
+# vs-code
+
+@_code-freeze:
+    code --list-extensions > vs-code-extensions.txt
+
 # homebrew: https://brew.sh/
 
 @_homebrew-cleanup DAYS="0":
