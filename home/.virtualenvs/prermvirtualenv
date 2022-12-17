@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # This hook is run before a virtualenv is deleted.
 
 VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
