@@ -1,0 +1,28 @@
+@_default:
+    just --list
+
+@build:
+    nativefier \
+        --darwin-dark-mode-support \
+        --name "ChatGPT" \
+        https://chat.openai.com/chat \
+        build
+
+    rsync -av --delete-after \
+        build/ChatGPT-darwin-x64/ChatGPT.app/ \
+        ~/Applications/ChatGPT.app
+
+@clean:
+    rm -rf build
+
+@fmt:
+    just --fmt --unstable
+
+@upgrade:
+    nativefier \
+        --upgrade \
+        build/ChatGPT-darwin-x64/ChatGPT.app/
+
+    rsync -av --delete-after \
+        build/ChatGPT-darwin-x64/ChatGPT.app/ \
+        ~/Applications/ChatGPT.app
