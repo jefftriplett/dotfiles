@@ -3,14 +3,14 @@
 
 @build:
     nativefier \
-    	--darwin-dark-mode-support \
-    	--name "GitHub" \
-    	https://github.com/jefftriplett?tab=projects \
-    	build
+        --darwin-dark-mode-support \
+        --name "GitHub" \
+        https://github.com/jefftriplett?tab=projects \
+        build
 
     rsync -av --delete-after \
-    	build/GitHub-darwin-x64/GitHub.app/ \
-    	~/Applications/GitHub.app
+        build/GitHub-darwin-x64/GitHub.app/ \
+        ~/Applications/GitHub.app
 
 @clean:
     rm -rf build
