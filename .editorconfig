@@ -1,4 +1,4 @@
-# http://editorconfig.org
+ # http://editorconfig.org
 
 root = true
 
@@ -10,15 +10,27 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[*.{conf,css,html,js,json,sass,scss,vue,yaml,yml}]
+indent_size = 2
+indent_style = space
+
 [*.py]
 max_line_length = 100
+multi_line_output=3
 
-[*.{css,html,js,json,sass,scss,vue,yaml,yml}]
-indent_size = 2
+[*.{py,rst,ini}]
+indent_size = 4
+indent_style = space
 
 [*.md]
+indent_size = 4
+indent_style = space
 trim_trailing_whitespace = false
 
-[{*.mk,Makefile}]
+[{*.mk,Makefile,modd.conf}]
 indent_size = 4
 indent_style = tab
+
+[justfile]
+indent_size = 4
+indent_style = space
