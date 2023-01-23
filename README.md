@@ -47,31 +47,32 @@ run("just --justfile=./home/justfile", with_console=True)
 $ just --justfile=./home/justfile
 
 Available recipes:
-    bootstrap
+    bootstrap          # installs/updates all dependencies
+    cibuild            # invoked by continuous integration servers to run tests
     cleanup DAYS="0"
-    fmt
+    fmt                # format and overwrite justfile
     freeze
     homebrew-services
-    homesick-symlink
     kill-tabs          # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
     outdated
     pipx-upgrade
     postgresql-upgrade
-    pyenv-set-global
     pyenv-upgrade +ARGS="--skip-existing"
     pyenv-upgrade-all +ARGS="--skip-existing"
     python-update
     restart
+    setup              # sets up a project to be used for the first time
     stop
     symlink
+    test               # runs tests
     timemachine
     topalias
-    update
+    update             # updates a project to run at its current version
     update-readme-docs
     upgrade
     virtualenv-scan
     virtualenv-upgrade
-    workon
+    virtualenv-workon
     xcode-upgrade
 ```
 
