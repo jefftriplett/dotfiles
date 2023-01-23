@@ -4,6 +4,8 @@
 @build:
     nativefier \
         --darwin-dark-mode-support \
+        --icon openai.png \
+        --lang "en-US" \
         --name "ChatGPT" \
         https://chat.openai.com/chat \
         build
