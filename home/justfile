@@ -9,7 +9,6 @@ PYTHON_310 := `pyenv latest 3.10`
 PYTHON_311 := `pyenv latest 3.11`
 PYTHON_312 := `pyenv latest 3.12`
 DEFAULT_PYTHON_VERSION := PYTHON_310
-
 RICH_THEME := "dracula"
 
 # ----------------------------------------------------------------
@@ -33,8 +32,10 @@ RICH_THEME := "dracula"
         echo "==> Installing Homebrew dependencies..."; \
         brew bundle install; \
     fi
-    just _asdf-install
-    just _xcode-install
+
+    just _xcode-bootstrap
+    just _asdf-bootstrap
+    just _python-bootstrap
 
 # invoked by continuous integration servers to run tests
 @cibuild:
@@ -118,7 +119,7 @@ RICH_THEME := "dracula"
 # asdf - https://asdf-vm.com/
 # ----------------------------------------------------------------
 
-@_asdf-install:
+@_asdf-bootstrap:
     asdf plugin update golang
     asdf plugin update kubectl
     asdf plugin update nodejs
@@ -158,17 +159,21 @@ RICH_THEME := "dracula"
 # Python
 # ----------------------------------------------------------------
 
-@python-update:
+@_python-bootstrap:
     PIP_REQUIRE_VIRTUALENV=false python -m pip install \
             --disable-pip-version-check \
             --no-compile \
             --upgrade \
         pip \
         pipx \
-        rich-cli \
         virtualenv \
         virtualenvwrapper \
-        wheel
+        wheel \
+        cogapp \
+        rich-cli
+
+@python-update:
+    just _python-bootstrap
 
     just _pyenv-update
 
@@ -180,7 +185,6 @@ RICH_THEME := "dracula"
 # ----------------------------------------------------------------
 # Python / pip
 # ----------------------------------------------------------------
-
 # @pip-update:
 #     for version in `pyenv versions --bare`; do \
 #         echo "Upgrading Python ${version}"; \
@@ -196,7 +200,6 @@ RICH_THEME := "dracula"
 #     # done
 #     # pyenv shell {{ PYTHON_ALL }}
 # pipx: https://pypa.github.io/pipx/
-
 # ----------------------------------------------------------------
 # Python / pipx - https://pypa.github.io/pipx/
 # ----------------------------------------------------------------
@@ -320,10 +323,9 @@ RICH_THEME := "dracula"
 # Xcode
 # ----------------------------------------------------------------
 
-@_xcode-install:
+@_xcode-bootstrap:
     sudo xcode-select --install
 
 @xcode-upgrade:
     sudo rm -rf /Library/Developer/CommandLineTools
-    just _xcode-install
-
+    just _xcode-bootstrap

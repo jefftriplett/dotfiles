@@ -17,7 +17,9 @@ tap "hynek/tap"
 tap "jzaleski/jzaleski"
 tap "koekeishiya/formulae"
 tap "robotsandpencils/made"
+tap "rosszurowski/tap"
 brew "act"
+brew "xz"
 brew "aria2"
 brew "autoconf"
 brew "automake"
@@ -25,7 +27,6 @@ brew "coreutils"
 brew "libtool"
 brew "libyaml"
 brew "asdf"
-brew "xz"
 brew "awscli"
 brew "bash"
 brew "bat"
@@ -103,7 +104,7 @@ brew "iproute2mac"
 brew "jack"
 brew "jq"
 brew "just"
-brew "kubernetes-cli"
+brew "kubernetes-cli", link: false
 brew "lazygit"
 brew "libev"
 brew "libxml2"
@@ -111,6 +112,7 @@ brew "libxmlsec1"
 brew "loc"
 brew "lolcat"
 brew "lua"
+brew "m-cli"
 brew "make"
 brew "mas"
 brew "maven"
@@ -176,18 +178,20 @@ brew "tmux"
 brew "tor"
 brew "tree"
 brew "ttyd", args: ["HEAD"]
+brew "ttygif"
 brew "unison"
 brew "up"
 brew "vale"
-brew "vhs", args: ["HEAD"]
 brew "watch"
 brew "watchexec"
 brew "webkit2png"
+brew "webpack"
 brew "wget"
 brew "whalebrew"
 brew "woof"
 brew "yarn"
 brew "youtube-dl"
+brew "charmbracelet/tap/vhs"
 brew "cmacrae/formulae/spacebar"
 brew "federico-terzi/espanso/espanso"
 brew "goodwithtech/r/dockle"
@@ -195,6 +199,7 @@ brew "homeport/tap/termshot"
 brew "jzaleski/jzaleski/apg"
 brew "koekeishiya/formulae/skhd"
 brew "koekeishiya/formulae/yabai"
+brew "rosszurowski/tap/tandem"
 cask "1password-cli"
 cask "8bitdo-firmware-updater"
 cask "8bitdo-ultimate-software"
@@ -205,13 +210,13 @@ cask "android-platform-tools"
 cask "appcleaner"
 cask "applepi-baker"
 cask "aws-vault"
-cask "background-music"
 cask "balenaetcher"
 cask "basictex"
 cask "bluestacks"
 cask "bunch"
 cask "chicken"
 cask "chromedriver"
+cask "cleanmymac"
 cask "clipy"
 cask "codeql"
 cask "controlplane"
@@ -223,13 +228,11 @@ cask "dolphin"
 cask "elgato-game-capture-hd"
 cask "enjoyable"
 cask "epoccam"
-cask "eul"
 cask "fanny"
 cask "ferdi"
 cask "firefox"
 cask "flameshot"
 cask "flutter"
-cask "focus"
 cask "font-awesome-terminal-fonts"
 cask "font-cascadia"
 cask "font-cascadia-pl"
@@ -256,11 +259,13 @@ cask "obsidian"
 cask "openemu"
 cask "paw"
 cask "pennywise"
+cask "polypane"
 cask "postman"
 cask "pycharm"
 cask "secretive"
 cask "skype"
 cask "stats"
+cask "steam"
 cask "streamlabs-obs"
 cask "sublime-merge"
 cask "swiftbar"
@@ -287,7 +292,6 @@ mas "Directive", id: 1503550067
 mas "EasyRes", id: 688211836
 mas "Evernote", id: 406056744
 mas "Fantastical", id: 975937182
-mas "Fenêtre Lite", id: 1288451627
 mas "Front and Center", id: 1493996622
 mas "GarageBand", id: 682658836
 mas "Hand Mirror", id: 1502839586
@@ -298,9 +302,7 @@ mas "Meeter", id: 1510445899
 mas "MenubarX", id: 1575588022
 mas "Mic Drop", id: 1489816366
 mas "Microsoft Remote Desktop", id: 1295203466
-mas "Monosnap", id: 540348655
 mas "Numbers", id: 409203825
-mas "One Thing", id: 1604176982
 mas "Pages", id: 409201541
 mas "Pandan", id: 1569600264
 mas "Paprika Recipe Manager", id: 451907568
@@ -310,19 +312,15 @@ mas "Primitive", id: 1175103038
 mas "ReadKit", id: 588726889
 mas "ReadKit", id: 1615798039
 mas "Recordia", id: 1529006487
-mas "ScreenFocus", id: 1337028713
 mas "Signals", id: 1453293391
 mas "Skitch", id: 425955336
 mas "SnippetsLab", id: 1006087419
-mas "Super Easy Timer", id: 1353137878
 mas "Tailscale", id: 1475387142
 mas "Textual IRC Client", id: 1262957439
 mas "The Unarchiver", id: 425424353
-mas "Todoist", id: 585829637
+mas "Toggl Track", id: 1291898086
 mas "ToothFairy", id: 1191449274
-mas "Trello", id: 1278508951
 mas "Ulysses", id: 1225570693
 mas "Webcam Settings Control", id: 1172053162
-mas "Whalebird", id: 1378283354
 mas "Xcode", id: 497799835
 whalebrew "whalebrew/whalesay"
