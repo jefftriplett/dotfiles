@@ -3,6 +3,7 @@
 VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
 VIRTUAL_ENV_BIN="${VIRTUAL_ENV}/bin"
 VIRTUAL_ENV_SRC="${VIRTUAL_ENV}/src"
+VIRTUAL_ENV_ENVRC="${VIRTUAL_ENV_SRC}/.envrc"
 
 if [ -d "${VIRTUAL_ENV_SRC}" ]; then
   # If our {{virtualenv}}/src folder exists, CD into that folder
@@ -14,7 +15,9 @@ else
 
   # Add {{virtualenv}}/src to our virtualenv
   add2virtualenv .
+fi
 
+if ! [ -e "${VIRTUAL_ENV_ENVRC}" ]; then
   # Create direnv file for our project
   touch .envrc
 
