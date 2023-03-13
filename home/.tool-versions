@@ -4,7 +4,7 @@
 # ruby 3.0.1
 # rust 1.61.0
 # starship latest
-golang 1.19.1
+golang 1.19.5
 kubectl 1.22.2
 nodejs 18.9.1
 ruby 3.1.2
