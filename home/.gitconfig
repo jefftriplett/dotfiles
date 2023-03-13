@@ -86,8 +86,3 @@
 
 [transfer]
     fsckObjects = true
-
-# [diff "image"]
-#     command = imgdiff
-#     textconv = imgcat
-#     colorMoved = default
