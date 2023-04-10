@@ -4,7 +4,7 @@
 @build:
     nativefier \
         --darwin-dark-mode-support \
-        --icon openai.png \
+        --icon logo.png \
         --lang "en-US" \
         --name "ChatGPT" \
         https://chat.openai.com/chat \
@@ -19,6 +19,9 @@
 
 @fmt:
     just --fmt --unstable
+
+@logo:
+    wget --output-document=logo.png https://logo.clearbit.com/chat.openai.com
 
 @upgrade:
     nativefier \

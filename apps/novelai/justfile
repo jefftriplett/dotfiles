@@ -4,6 +4,8 @@
 @build:
     nativefier \
         --darwin-dark-mode-support \
+        --icon logo.png \
+        --lang "en-US" \
         --name "NovelAI" \
         https://novelai.net/stories \
         build
@@ -17,6 +19,9 @@
 
 @fmt:
     just --fmt --unstable
+
+@logo:
+    wget --output-document=logo.png https://logo.clearbit.com/novelai.net
 
 @upgrade:
     nativefier \

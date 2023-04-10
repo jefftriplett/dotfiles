@@ -4,6 +4,8 @@
 @build:
     nativefier \
         --darwin-dark-mode-support \
+        --icon logo.png \
+        --lang "en-US" \
         --name "Mastodon" \
         https://mastodon.social/ \
         build
@@ -17,6 +19,9 @@
 
 @fmt:
     just --fmt --unstable
+
+@logo:
+    wget --output-document=logo.png https://logo.clearbit.com/mastodon.social
 
 @upgrade:
     nativefier \

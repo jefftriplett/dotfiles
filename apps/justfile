@@ -18,5 +18,8 @@
     just --fmt --unstable
     just _cmd fmt
 
+@logo:
+    just _cmd logo
+
 @upgrade:
     just _cmd upgrade
