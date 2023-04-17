@@ -1,15 +1,18 @@
 set dotenv-load := false
+set export := true
 
-PYTHON_27 := `pyenv latest 2.7`
-PYTHON_36 := `pyenv latest 3.6`
-PYTHON_37 := `pyenv latest 3.7`
-PYTHON_38 := `pyenv latest 3.8`
-PYTHON_39 := `pyenv latest 3.9`
-PYTHON_310 := `pyenv latest 3.10`
-PYTHON_311 := `pyenv latest 3.11`
-PYTHON_312 := `pyenv latest 3.12.0a5`
-DEFAULT_PYTHON_VERSION := PYTHON_310
+HOMEBREW_NO_ENV_HINTS := "true"
+# HOMEBREW_NO_AUTO_UPDATE := "true"
 RICH_THEME := "dracula"
+
+python_27 := `pyenv latest 2.7`
+python_36 := `pyenv latest 3.6`
+python_37 := `pyenv latest 3.7`
+python_38 := `pyenv latest 3.8`
+python_39 := `pyenv latest 3.9`
+python_310 := `pyenv latest 3.10`
+python_311 := `pyenv latest 3.11`
+python_312 := `pyenv latest 3.12.0a6`
 
 # ----------------------------------------------------------------
 # Just nice-to-haves
@@ -97,14 +100,14 @@ RICH_THEME := "dracula"
     brew services
 
 @_homebrew-services-restart:
-    # brew services restart yabai
-    # brew services restart spacebar
-    # brew services restart skhd
+    # -brew services restart yabai
+    # -brew services restart spacebar
+    # -brew services restart skhd
 
 @_homebrew-services-stop:
-    -brew services stop yabai
-    -brew services stop spacebar
-    -brew services stop skhd
+    # -brew services stop yabai
+    # -brew services stop spacebar
+    # -brew services stop skhd
 
 @_homebrew-update:
     brew update
@@ -213,13 +216,13 @@ RICH_THEME := "dracula"
 
 @_pyenv-set-global:
     pyenv global \
-        {{ PYTHON_310 }} \
-        {{ PYTHON_311 }} \
-        {{ PYTHON_39 }} \
-        {{ PYTHON_38 }} \
-        {{ PYTHON_37 }} \
-        {{ PYTHON_36 }} \
-        {{ PYTHON_27 }}
+        {{ python_310 }} \
+        {{ python_311 }} \
+        {{ python_39 }} \
+        {{ python_38 }} \
+        {{ python_37 }} \
+        {{ python_36 }} \
+        {{ python_27 }}
 
 @_pyenv-update:
     pyenv update
@@ -278,11 +281,11 @@ RICH_THEME := "dracula"
     # TODO: finish researching this pattern...
     # https://stackoverflow.com/questions/44692668/python-how-can-i-update-python-version-in-pyenv-virtual-environment
 
-    # pip freeze > requirements-lock.txt
+    # pip freeze > requirements.lock
     # pyenv virtualenv-delete a-virtualenv-name
     # pyenv virtualenv 3.9.0 a-virtualenv-name
-    # pip install -r requirements-lock.txt
-    # rm requirements-lock.txt
+    # pip install -r requirements.lock
+    # rm requirements.lock
 
 @virtualenv-workon:
     for filename in $(ls -d ~/.virtualenvs/*/); do \
@@ -300,17 +303,31 @@ RICH_THEME := "dracula"
 @kill-tabs:
     npx kill-tabs
 
-@timemachine:
-    # PSA: https://apple.stackexchange.com/questions/382772/time-machine-in-the-cleaning-up-state-forever
-    sudo sysctl debug.lowpri_throttle_enabled=0
-    # once done
-    # sudo sysctl debug.lowpri_throttle_enabled=1
-
 @topalias:
     topalias
 
 @update-readme-docs:
     cd "$HOME/.homesick/repos/dotfiles" && pipx run --spec cogapp cog -Pr ./README.md
+
+# ----------------------------------------------------------------
+# Time Machine
+# ----------------------------------------------------------------
+
+@timemachine-boost:
+    # bump IO priority to finish more quickly
+    # https://apple.stackexchange.com/questions/382772/time-machine-in-the-cleaning-up-state-forever
+
+    sudo sysctl debug.lowpri_throttle_enabled=0
+
+@timemachine-boost-complete:
+    # once done
+    sudo sysctl debug.lowpri_throttle_enabled=1
+
+@timemachine-delete *ARGS:
+    sudo tmutil delete {{ ARGS }}
+
+@timemachine-list:
+    sudo tmutil listbackups
 
 # ----------------------------------------------------------------
 # VS Code
@@ -329,3 +346,66 @@ RICH_THEME := "dracula"
 @xcode-upgrade:
     sudo rm -rf /Library/Developer/CommandLineTools
     just _xcode-bootstrap
+
+# ----------------------------------------------------------------
+# virtualenvwrapper
+# ----------------------------------------------------------------
+
+get_env_details:
+    #!/usr/bin/env sh
+    rich --print "[green]get_env_details[/green]"
+
+initialize:
+    #!/usr/bin/env sh
+    rich --print "[green]initialize[/green]"
+
+postactivate:
+    #!/usr/bin/env sh
+    VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
+    rich --print "[green]postactivate[/green]"
+
+postdeactivate:
+    #!/usr/bin/env sh
+    # VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
+    rich --print "[green]postdeactivate[/green]"
+
+postmkproject:
+    #!/usr/bin/env sh
+    rich --print "[green]postmkproject[/green]"
+
+postmkvirtualenv:
+    #!/usr/bin/env sh
+    rich --print "[green]postmkvirtualenv[/green]"
+
+postrmproject:
+    #!/usr/bin/env sh
+    rich --print "[green]postrmproject[/green]"
+
+postrmvirtualenv:
+    #!/usr/bin/env sh
+    rich --print "[green]postrmvirtualenv[/green]"
+
+preactivate:
+    #!/usr/bin/env sh
+    # VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
+    rich --print "[green]preactivate[/green]"
+
+predeactivate:
+    #!/usr/bin/env sh
+    rich --print "[green]predeactivate[/green]"
+
+premkproject:
+    #!/usr/bin/env sh
+    rich --print "[green]premkproject[/green]"
+
+premkvirtualenv:
+    #!/usr/bin/env sh
+    rich --print "[green]premkvirtualenv[/green]"
+
+prermproject:
+    #!/usr/bin/env sh
+    rich --print "[green]prermproject[/green]"
+
+prermvirtualenv:
+    #!/usr/bin/env sh
+    rich --print "[green]prermvirtualenv[/green]"

@@ -22,8 +22,8 @@ if ! [ -e "${VIRTUAL_ENV_ENVRC}" ]; then
   touch .envrc
 
   # Let's set some default ENV values
-  echo "export COMPOSE_DOCKER_CLI_BUILD=1" >> .envrc
-  echo "export DOCKER_BUILDKIT=1" >> .envrc
+  # echo "export COMPOSE_DOCKER_CLI_BUILD=1" >> .envrc
+  # echo "export DOCKER_BUILDKIT=1" >> .envrc
   echo "export PIP_DISABLE_PIP_VERSION_CHECK=1" >> .envrc
   echo "export PYTHONDONTWRITEBYTECODE=1" >> .envrc
   echo "export PYTHONUNBUFFERED=1" >> .envrc
@@ -68,3 +68,5 @@ fi
 if ! [ -e figurine ]; then
   figurine "${VIRTUAL_ENV_NAME}"
 fi
+
+just --justfile=${HOME}/justfile postactivate

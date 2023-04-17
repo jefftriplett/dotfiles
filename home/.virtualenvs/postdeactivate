@@ -7,3 +7,5 @@ unset DJANGO_SETTINGS_MODULE
 export USER_BADGE="${USER_BADGE_DEFAULT}"
 
 tabset --title "❓"
+
+just --justfile=${HOME}/justfile postdeactivate
