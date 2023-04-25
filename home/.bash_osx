@@ -14,6 +14,13 @@ if [ -d /usr/local/etc/bash_completion.d ]; then
             source "${filename}"
         fi
     done
+elif [ -d /opt/homebrew/etc/bash_completion.d ]; then
+    for filename in "/opt/homebrew/etc/bash_completion.d/"*; do
+        if [ -f "${filename}" ]; then
+            # shellcheck source=/dev/null
+            source "${filename}"
+        fi
+    done
 fi
 
 ################

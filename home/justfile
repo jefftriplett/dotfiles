@@ -5,14 +5,12 @@ HOMEBREW_NO_ENV_HINTS := "true"
 # HOMEBREW_NO_AUTO_UPDATE := "true"
 RICH_THEME := "dracula"
 
-python_27 := `pyenv latest 2.7`
-python_36 := `pyenv latest 3.6`
-python_37 := `pyenv latest 3.7`
+# python_37 := `pyenv latest 3.7`
 python_38 := `pyenv latest 3.8`
 python_39 := `pyenv latest 3.9`
 python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
-python_312 := `pyenv latest 3.12.0a6`
+# python_312 := `pyenv latest 3.12-dev`
 
 # ----------------------------------------------------------------
 # Just nice-to-haves
@@ -219,10 +217,7 @@ python_312 := `pyenv latest 3.12.0a6`
         {{ python_310 }} \
         {{ python_311 }} \
         {{ python_39 }} \
-        {{ python_38 }} \
-        {{ python_37 }} \
-        {{ python_36 }} \
-        {{ python_27 }}
+        {{ python_38 }}
 
 @_pyenv-update:
     pyenv update
@@ -232,15 +227,15 @@ python_312 := `pyenv latest 3.12.0a6`
     just python-update
 
 @pyenv-upgrade-all +ARGS="--skip-existing":
-    -pyenv install {{ ARGS }} 3.5:latest
-    -pyenv install {{ ARGS }} 3.6:latest
+    # -pyenv install {{ ARGS }} 3.5:latest
+    # -pyenv install {{ ARGS }} 3.6:latest
     # -pyenv install {{ ARGS }} 3.7:latest
     -pyenv install {{ ARGS }} 3.8:latest
     -pyenv install {{ ARGS }} 3.9:latest
     -pyenv install {{ ARGS }} 3.10:latest
     -pyenv install {{ ARGS }} 3.11:latest
-    -pyenv install {{ ARGS }} 3.12:latest
-    -pyenv install {{ ARGS }} 2.7:latest
+    # -pyenv install {{ ARGS }} 3.12:latest
+    # -pyenv install {{ ARGS }} 2.7:latest
 
     just _pyenv-set-global
 

@@ -4,12 +4,19 @@
 # Homebrew #
 ############
 
-PATH="${PATH}:/usr/local/sbin"
+architecture=$(uname -m)
+
+if [ "$architecture" = "arm64" ]; then
+  PATH="${PATH}:/opt/homebrew/sbin:/opt/homebrew/bin"
+elif [ "$architecture" = "x86_64" ]; then
+  PATH="${PATH}:/usr/local/sbin:/usr/local/bin"
+fi
+
 
 # export CFLAGS="-I$(xcrun --show-sdk-path)/usr/include"
 # export ARCHFLAGS="-Wno-error=unused-command-line-argument-hard-error-in-future"
 export ARCHFLAGS="-Werror=unused-command-line-argument"
-export CPPFLAGS="-I/usr/local/opt/readline/include"
+# export CPPFLAGS="-I/usr/local/opt/readline/include"
 export DOCKER_SCAN_SUGGEST=false
 export HISTCONTROL="ignoreboth:erasedups"
 export HISTFILESIZE=50000000
@@ -23,8 +30,8 @@ export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
-export LD_LIBRARY_PATH="/usr/local/lib"
-export LDFLAGS="-L/usr/local/opt/readline/lib"
+# export LD_LIBRARY_PATH="/usr/local/lib"
+# export LDFLAGS="-L/usr/local/opt/readline/lib"
 
 # experimental prompt
 # export PS1='✨ \[\e[0;36m\]\[\e[0;36m\] \W\[\033[0;35m\]$(__git_ps1 " (%s)")\[\e[0m\]: '
@@ -49,16 +56,17 @@ export GIT_PS1_SHOWUNTRACKEDFILES=true
 # golang settings #
 ###################
 
-export GOPATH="${HOME}/golang"
-export GOROOT=/usr/local/opt/go/libexec
-PATH="${PATH}:$GOPATH/bin"
-PATH="${PATH}:$GOROOT/bin"
+# export GOPATH="${HOME}/golang"
+# export GOROOT=/usr/local/opt/go/libexec
+# export GOROOT=/usr/local/opt/go/libexec
+# PATH="${PATH}:$GOPATH/bin"
+# PATH="${PATH}:$GOROOT/bin"
 
 ############################
 # Heroku Toolbelt settings #
 ############################
 
-PATH="${PATH}:/usr/local/heroku/bin"
+# PATH="${PATH}:/usr/local/heroku/bin"
 
 ###################
 # python settings #
@@ -83,8 +91,8 @@ PATH="${PATH}:${PYENV_ROOT}/bin"
 # ruby / rbenvsettings #
 ########################
 
-export RBENV_ROOT="/usr/local/var/rbenv"
-PATH="${PATH}:$(brew --prefix ruby)/bin"
+# export RBENV_ROOT="/usr/local/var/rbenv"
+# PATH="${PATH}:$(brew --prefix ruby)/bin"
 
 ################
 # clean / done #
