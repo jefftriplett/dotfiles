@@ -4,17 +4,38 @@ scan_timeout = 1000
 
 [aws]
 disabled = true
+style = "bold #ffb86c"
 
 # [aws.region_aliases]
 # us-east-1 = "va"
 
 # [character]
-# success_symbol = "[➜](bold green) "
-# error_symbol = "[✗](bold red) "
+# error_symbol = "[λ](bold #ff5555)"
+# success_symbol = "[λ](bold #50fa7b)"
+
+[character]
+error_symbol = "[✗](bold #ff5555)"
+success_symbol = "[➜](bold #50fa7b)"
+
+[cmd_duration]
+style = "bold #f1fa8c"
+
+[directory]
+style = "bold #50fa7b"
 
 # [docker_context]
 # disabled = false
 # only_with_files = false
+
+
+[git_branch]
+style = "bold #ff79c6"
+
+[git_status]
+style = "bold #ff5555"
+
+[hostname]
+style = "bold #bd93f9"
 
 [kubernetes]
 disabled = true
@@ -24,3 +45,7 @@ disabled = true
 
 [package]
 disabled = true
+
+[username]
+format = "[$user]($style) on "
+style_user = "bold #8be9fd"
