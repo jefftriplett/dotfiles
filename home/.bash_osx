@@ -11,17 +11,22 @@ if [ -d /usr/local/etc/bash_completion.d ]; then
     for filename in "/usr/local/etc/bash_completion.d/"*; do
         if [ -f "${filename}" ]; then
             # shellcheck source=/dev/null
-            source "${filename}"
-        fi
-    done
-elif [ -d /opt/homebrew/etc/bash_completion.d ]; then
-    for filename in "/opt/homebrew/etc/bash_completion.d/"*; do
-        if [ -f "${filename}" ]; then
-            # shellcheck source=/dev/null
-            source "${filename}"
+            # source "${filename}"
+            echo "${filename}"
         fi
     done
 fi
+
+# elif [ -d /opt/homebrew/etc/bash_completion.d ]; then
+#     for filename in "/opt/homebrew/etc/bash_completion.d/"*; do
+#         if [ -f "${filename}" ]; then
+#             # shellcheck source=/dev/null
+#             source "${filename}"
+#         fi
+#     done
+# fi
+
+[[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
 ################
 # bash history #
