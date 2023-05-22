@@ -35,7 +35,12 @@ if ! [ -e "${VIRTUAL_ENV_ENVRC}" ]; then
 fi
 
 # Create a SublimeText Project for our project
-SUBLIME_TEXT_PROJECT_PATH="${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects"
+if [ -d "${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects" ]; then
+  SUBLIME_TEXT_PROJECT_PATH="${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects"
+elif [ -d "${HOME}/Library/Application Support/Sublime Text/Packages/User/Projects" ]; then
+  SUBLIME_TEXT_PROJECT_PATH="${HOME}/Library/Application Support/Sublime Text/Packages/User/Projects"
+fi
+
 PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
 CONTINUE=false
 
@@ -60,11 +65,11 @@ fi
 # Set our iTerm2 tab's title to our virtualenv name
 #   `npm install -g iterm2-tab-set`
 if ! [ -e tabset ]; then
-  tabset --title "${VIRTUAL_ENV_NAME}"
+  npx iterm2-tab-set --title "${VIRTUAL_ENV_NAME}"
 fi
 
 # Print our virtualenv's virtualenv name to the console
-#   `go get github.com/arsham/figurine`
+#   `go install github.com/arsham/figurine@latest`
 if ! [ -e figurine ]; then
   figurine "${VIRTUAL_ENV_NAME}"
 fi
