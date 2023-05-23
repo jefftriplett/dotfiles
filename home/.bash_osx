@@ -34,9 +34,9 @@ fi
 
 shopt -s histappend
 
-################
-# custom shell #
-################
+###########################
+# starship - custom shell #
+###########################
 
 if command -v starship > /dev/null; then
     eval "$(starship init bash)"
@@ -87,18 +87,18 @@ fi
 # mcfly bash history manager #
 ##############################
 
-if [[ -f "$(brew --prefix)/opt/mcfly/mcfly.bash" ]]; then
-    # shellcheck source=/dev/null
-    source "$(brew --prefix)/opt/mcfly/mcfly.bash"
-fi
+# if [[ -f "$(brew --prefix)/opt/mcfly/mcfly.bash" ]]; then
+#     # shellcheck source=/dev/null
+#     source "$(brew --prefix)/opt/mcfly/mcfly.bash"
+# fi
 
 ####################
 # thefuck settings #
 ####################
 
-if command -v thefuck > /dev/null; then
-    eval "$(thefuck --alias)";
-fi
+# if command -v thefuck > /dev/null; then
+#     eval "$(thefuck --alias)";
+# fi
 
 ################
 # add ssh keys #
