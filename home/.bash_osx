@@ -11,8 +11,8 @@ if [ -d /usr/local/etc/bash_completion.d ]; then
     for filename in "/usr/local/etc/bash_completion.d/"*; do
         if [ -f "${filename}" ]; then
             # shellcheck source=/dev/null
-            # source "${filename}"
-            echo "${filename}"
+            source "${filename}"
+            # echo "${filename}"
         fi
     done
 fi
