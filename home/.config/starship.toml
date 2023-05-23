@@ -27,7 +27,6 @@ style = "bold #50fa7b"
 # disabled = false
 # only_with_files = false
 
-
 [git_branch]
 style = "bold #ff79c6"
 
