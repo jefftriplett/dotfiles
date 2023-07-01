@@ -306,6 +306,9 @@ python_311 := `pyenv latest 3.11`
 # TODO: ...
 # ----------------------------------------------------------------
 
+@open-syncthing:
+    open http://127.0.0.1:8384
+
 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
 @kill-tabs:
     npx kill-tabs
