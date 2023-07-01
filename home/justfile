@@ -146,6 +146,18 @@ python_311 := `pyenv latest 3.11`
 
     asdf list
 
+@_rtx-bootstrap:
+    rtx install golang
+    rtx install node
+    rtx install ruby
+    rtx install rust
+
+    rtx reshim
+
+    # rtx current
+
+    # rtx list
+
 # ----------------------------------------------------------------
 # Postgres related
 # ----------------------------------------------------------------
