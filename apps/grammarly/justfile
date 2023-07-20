@@ -11,7 +11,7 @@
         build
 
     rsync -av --delete-after \
-        build/Grammarly-darwin-x64/Grammarly.app/ \
+        build/Grammarly-darwin-*/Grammarly.app/ \
         ~/Applications/Grammarly.app
 
 @clean:
@@ -26,8 +26,8 @@
 @upgrade:
     nativefier \
         --upgrade \
-        build/Grammarly-darwin-x64/Grammarly.app/
+        build/Grammarly-darwin-*/Grammarly.app/
 
     rsync -av --delete-after \
-        build/Grammarly-darwin-x64/Grammarly.app/ \
+        build/Grammarly-darwin-*/Grammarly.app/ \
         ~/Applications/Grammarly.app

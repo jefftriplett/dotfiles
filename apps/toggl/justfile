@@ -11,7 +11,7 @@
         build
 
     rsync -av --delete-after \
-        build/Toggl-darwin-x64/Toggl.app/ \
+        build/Toggl-darwin-*/Toggl.app/ \
         ~/Applications/Toggl.app
 
 @clean:
@@ -26,8 +26,8 @@
 @upgrade:
     nativefier \
         --upgrade \
-        build/Toggl-darwin-x64/Toggl.app/
+        build/Toggl-darwin-*/Toggl.app/
 
     rsync -av --delete-after \
-        build/Toggl-darwin-x64/Toggl.app/ \
+        build/Toggl-darwin-*/Toggl.app/ \
         ~/Applications/Toggl.app

@@ -11,7 +11,7 @@
         build
 
     rsync -av --delete-after \
-        build/Mastodon-darwin-x64/Mastodon.app/ \
+        build/Mastodon-darwin-*/Mastodon.app/ \
         ~/Applications/Mastodon.app
 
 @clean:
@@ -26,8 +26,8 @@
 @upgrade:
     nativefier \
         --upgrade \
-        build/Mastodon-darwin-x64/Mastodon.app/
+        build/Mastodon-darwin-*/Mastodon.app/
 
     rsync -av --delete-after \
-        build/Mastodon-darwin-x64/Mastodon.app/ \
+        build/Mastodon-darwin-*/Mastodon.app/ \
         ~/Applications/Mastodon.app

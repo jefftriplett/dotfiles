@@ -11,7 +11,7 @@
         build
 
     rsync -av --delete-after \
-        build/NovelAI-darwin-x64/NovelAI.app/ \
+        build/NovelAI-darwin-*/NovelAI.app/ \
         ~/Applications/NovelAI.app
 
 @clean:
@@ -26,8 +26,8 @@
 @upgrade:
     nativefier \
         --upgrade \
-        build/NovelAI-darwin-x64/NovelAI.app/
+        build/NovelAI-darwin-*/NovelAI.app/
 
     rsync -av --delete-after \
-        build/NovelAI-darwin-x64/NovelAI.app/ \
+        build/NovelAI-darwin-*/NovelAI.app/ \
         ~/Applications/NovelAI.app

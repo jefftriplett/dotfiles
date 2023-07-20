@@ -11,7 +11,7 @@
         build
 
     rsync -av --delete-after \
-        build/ChatGPT-darwin-x64/ChatGPT.app/ \
+        build/ChatGPT-darwin-*/ChatGPT.app/ \
         ~/Applications/ChatGPT.app
 
 @clean:
@@ -26,8 +26,8 @@
 @upgrade:
     nativefier \
         --upgrade \
-        build/ChatGPT-darwin-x64/ChatGPT.app/
+        build/ChatGPT-darwin-*/ChatGPT.app/
 
     rsync -av --delete-after \
-        build/ChatGPT-darwin-x64/ChatGPT.app/ \
+        build/ChatGPT-darwin-*/ChatGPT.app/ \
         ~/Applications/ChatGPT.app

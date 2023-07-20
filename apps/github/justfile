@@ -11,7 +11,7 @@
         build
 
     rsync -av --delete-after \
-        build/GitHub-darwin-x64/GitHub.app/ \
+        build/GitHub-darwin-*/GitHub.app/ \
         ~/Applications/GitHub.app
 
 @clean:
@@ -26,8 +26,8 @@
 @upgrade:
     nativefier \
         --upgrade \
-        build/GitHub-darwin-x64/GitHub.app/
+        build/GitHub-darwin-*/GitHub.app/
 
     rsync -av --delete-after \
-        build/GitHub-darwin-x64/GitHub.app/ \
+        build/GitHub-darwin-*/GitHub.app/ \
         ~/Applications/GitHub.app
