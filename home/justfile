@@ -361,61 +361,63 @@ python_311 := `pyenv latest 3.11`
 # virtualenvwrapper
 # ----------------------------------------------------------------
 
-get_env_details:
+_get_env_details:
     #!/usr/bin/env sh
     rich --print "[green]get_env_details[/green]"
 
-initialize:
+_initialize:
     #!/usr/bin/env sh
     rich --print "[green]initialize[/green]"
 
-postactivate:
+_postactivate:
     #!/usr/bin/env sh
     VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
     rich --print "[green]postactivate[/green]"
 
-postdeactivate:
+_postdeactivate:
     #!/usr/bin/env sh
     # VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
     rich --print "[green]postdeactivate[/green]"
 
-postmkproject:
+_postmkproject:
     #!/usr/bin/env sh
     rich --print "[green]postmkproject[/green]"
 
-postmkvirtualenv:
+_postmkvirtualenv:
     #!/usr/bin/env sh
     rich --print "[green]postmkvirtualenv[/green]"
+    python -m pip install --upgrade pip
+    python -m pip install --upgrade pip-tools
 
-postrmproject:
+_postrmproject:
     #!/usr/bin/env sh
     rich --print "[green]postrmproject[/green]"
 
-postrmvirtualenv:
+_postrmvirtualenv:
     #!/usr/bin/env sh
     rich --print "[green]postrmvirtualenv[/green]"
 
-preactivate:
+_preactivate:
     #!/usr/bin/env sh
     # VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
     rich --print "[green]preactivate[/green]"
 
-predeactivate:
+_predeactivate:
     #!/usr/bin/env sh
     rich --print "[green]predeactivate[/green]"
 
-premkproject:
+_premkproject:
     #!/usr/bin/env sh
     rich --print "[green]premkproject[/green]"
 
-premkvirtualenv:
+_premkvirtualenv:
     #!/usr/bin/env sh
     rich --print "[green]premkvirtualenv[/green]"
 
-prermproject:
+_prermproject:
     #!/usr/bin/env sh
     rich --print "[green]prermproject[/green]"
 
-prermvirtualenv:
+_prermvirtualenv:
     #!/usr/bin/env sh
     rich --print "[green]prermvirtualenv[/green]"

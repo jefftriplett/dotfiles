@@ -70,8 +70,8 @@ fi
 
 # Print our virtualenv's virtualenv name to the console
 #   `go install github.com/arsham/figurine@latest`
-if ! [ -e figurine ]; then
-  figurine "${VIRTUAL_ENV_NAME}"
-fi
+# if ! [ -e figurine ]; then
+#   figurine "${VIRTUAL_ENV_NAME}"
+# fi
 
-just --justfile=${HOME}/justfile postactivate
+just --justfile=${HOME}/justfile _postactivate

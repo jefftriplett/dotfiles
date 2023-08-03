@@ -10,4 +10,4 @@ if ! [ -e tabset ]; then
   npx iterm2-tab-set --title "❓"
 fi
 
-just --justfile=${HOME}/justfile postdeactivate
+just --justfile=${HOME}/justfile _postdeactivate
