@@ -9,6 +9,9 @@ style = "bold #ffb86c"
 # [aws.region_aliases]
 # us-east-1 = "va"
 
+[battery]
+disabled = true
+
 [character]
 # error_symbol = "[λ](bold #ff5555)"
 error_symbol = "[✗](bold #ff5555)"
