@@ -1,6 +1,3 @@
-[include]
-    path = .personal.gitconfig
-
 [alias]
     ci = commit -v
     cia = commit -v -a
@@ -20,6 +17,7 @@
     status = auto
     ui = true
 
+# override in .gitconfig.override
 [commit]
     gpgsign = true
 
@@ -41,6 +39,7 @@
     process = git-lfs filter-process
     required = true
 
+# override in .gitconfig.override
 [gpg]
     program = /usr/local/bin/gpg
 
@@ -86,3 +85,6 @@
 
 [transfer]
     fsckObjects = true
+
+[include]
+    path = .gitconfig-override

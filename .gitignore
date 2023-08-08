@@ -43,6 +43,7 @@ home/.maid/*.log.[0-9]
 !.editorconfig
 
 .gitconfig.personal
+.gitconfig-override
 
 # my files
 home/.asdf/

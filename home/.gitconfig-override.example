@@ -1,0 +1,14 @@
+[commit]
+    gpgsign = false
+
+[github]
+    user =
+
+[user]
+    email =
+    name =
+    signingkey =
+
+[gpg]
+    # for M1/M2s
+    program = /opt/homebrew/bin/gpg
