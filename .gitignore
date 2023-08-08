@@ -42,8 +42,8 @@ home/.maid/*.log.[0-9]
 !.gitignore
 !.editorconfig
 
-.gitconfig.personal
 .gitconfig-override
+.gitconfig.personal
 
 # my files
 home/.asdf/
