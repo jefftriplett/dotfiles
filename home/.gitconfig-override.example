@@ -4,11 +4,11 @@
 [github]
     user =
 
+[gpg]
+    # for M1/M2s
+    program = /opt/homebrew/bin/gpg
+
 [user]
     email =
     name =
     signingkey =
-
-[gpg]
-    # for M1/M2s
-    program = /opt/homebrew/bin/gpg

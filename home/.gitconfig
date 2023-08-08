@@ -30,8 +30,16 @@
 	# pager = git-split-diffs --color | less -RFX
     pager = delta
 
+[delta]
+    navigate = true  # use n and N to move between diff sections
+    light = false    # set to
+
 [diff]
     renames = true
+
+[fetch]
+    fsckObjects = true
+    prune = true
 
 [filter "lfs"]
     clean = git-lfs clean -- %f
@@ -41,17 +49,13 @@
 
 # override in .gitconfig.override
 [gpg]
-    program = /usr/local/bin/gpg
+	program = /opt/homebrew/bin/gpg
 
 [init]
     defaultBranch = main
 
 [interactive]
     diffFilter = delta --color-only
-
-[delta]
-    navigate = true  # use n and N to move between diff sections
-    light = false    # set to
 
 [mergetool]
     conflictstyle = diff3
@@ -62,26 +66,14 @@
 	autoSetupRemote = true
     #default = simple
 
+[receive]
+    fsckObjects = true
+
 [rerere]
     enabled = true
 
 [submodule]
 	recurse = true
-
-# some tips:
-
-# [protocol "http"]
-# allow = never
-
-# [protocol "git"]
-# allow = never
-
-[fetch]
-    fsckObjects = true
-	prune = true
-
-[receive]
-    fsckObjects = true
 
 [transfer]
     fsckObjects = true
