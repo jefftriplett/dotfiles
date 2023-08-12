@@ -13,10 +13,11 @@ style = "bold #ffb86c"
 disabled = true
 
 [character]
-# error_symbol = "[λ](bold #ff5555)"
 error_symbol = "[✗](bold #ff5555)"
-# success_symbol = "[λ](bold #50fa7b)"
 success_symbol = "[➜](bold #50fa7b)"
+# dracula style...
+# error_symbol = "[λ](bold #ff5555)"
+# success_symbol = "[λ](bold #50fa7b)"
 
 [cmd_duration]
 style = "bold #f1fa8c"
