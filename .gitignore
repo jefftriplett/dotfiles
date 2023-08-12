@@ -46,6 +46,7 @@ home/.maid/*.log.[0-9]
 .gitconfig.personal
 
 # my files
+apps/**/logo.png
 home/.asdf/
 home/.config/configstore/
 home/.config/enchant/
