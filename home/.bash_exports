@@ -34,6 +34,8 @@ export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
+export OLLAMA_HOST=0.0.0.0:11434
+export OLLAMA_ORIGINS=*
 
 # experimental prompt
 # export PS1='✨ \[\e[0;36m\]\[\e[0;36m\] \W\[\033[0;35m\]$(__git_ps1 " (%s)")\[\e[0m\]: '
