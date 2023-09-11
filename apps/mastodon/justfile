@@ -1,16 +1,26 @@
 @_default:
     just --list
 
-@build:
+build:
+    #!/usr/bin/env bash
+
+    if [ ! -f logo.png ]; then \
+        just logo; \
+    fi
+
     nativefier \
         --darwin-dark-mode-support \
         --icon logo.png \
         --lang "en-US" \
         --name "Mastodon" \
+        --quiet \
         https://mastodon.social/ \
         build
 
-    rsync -av --delete-after \
+    rsync \
+        --archive \
+        --delete-after \
+        --quiet \
         build/Mastodon-darwin-*/Mastodon.app/ \
         ~/Applications/Mastodon.app
 
@@ -21,13 +31,20 @@
     just --fmt --unstable
 
 @logo:
-    wget --output-document=logo.png https://logo.clearbit.com/mastodon.social
+    wget \
+        --quiet \
+        --output-document=logo.png \
+        https://logo.clearbit.com/mastodon.social
 
 @upgrade:
     nativefier \
+        --quiet \
         --upgrade \
         build/Mastodon-darwin-*/Mastodon.app/
 
-    rsync -av --delete-after \
+    rsync \
+        --archive \
+        --delete-after \
+        --quiet \
         build/Mastodon-darwin-*/Mastodon.app/ \
         ~/Applications/Mastodon.app

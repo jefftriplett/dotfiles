@@ -1,16 +1,26 @@
 @_default:
     just --list
 
-@build:
+build:
+    #!/usr/bin/env bash
+
+    if [ ! -f logo.png ]; then \
+        just logo; \
+    fi
+
     nativefier \
         --darwin-dark-mode-support \
         --icon logo.png \
         --lang "en-US" \
         --name "Toggl" \
+        --quiet \
         https://www.toggl.com/app \
         build
 
-    rsync -av --delete-after \
+    rsync \
+        --archive \
+        --delete-after \
+        --quiet \
         build/Toggl-darwin-*/Toggl.app/ \
         ~/Applications/Toggl.app
 
@@ -21,13 +31,20 @@
     just --fmt --unstable
 
 @logo:
-    wget --output-document=logo.png https://logo.clearbit.com/www.toggl.com
+    wget \
+        --quiet \
+        --output-document=logo.png \
+        https://logo.clearbit.com/www.toggl.com
 
 @upgrade:
     nativefier \
+        --quiet \
         --upgrade \
         build/Toggl-darwin-*/Toggl.app/
 
-    rsync -av --delete-after \
+    rsync \
+        --archive \
+        --delete-after \
+        --quiet \
         build/Toggl-darwin-*/Toggl.app/ \
         ~/Applications/Toggl.app

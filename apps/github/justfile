@@ -1,16 +1,26 @@
 @_default:
     just --list
 
-@build:
+build:
+    #!/usr/bin/env bash
+
+    if [ ! -f logo.png ]; then \
+        just logo; \
+    fi
+
     nativefier \
         --darwin-dark-mode-support \
         --icon logo.png \
         --lang "en-US" \
         --name "GitHub" \
+        --quiet \
         https://github.com/jefftriplett?tab=projects \
         build
 
-    rsync -av --delete-after \
+    rsync \
+        --archive \
+        --delete-after \
+        --quiet \
         build/GitHub-darwin-*/GitHub.app/ \
         ~/Applications/GitHub.app
 
@@ -21,13 +31,20 @@
     just --fmt --unstable
 
 @logo:
-    wget --output-document=logo.png https://logo.clearbit.com/github.com
+    wget \
+        --quiet \
+        --output-document=logo.png \
+        https://logo.clearbit.com/github.com
 
 @upgrade:
     nativefier \
+        --quiet \
         --upgrade \
         build/GitHub-darwin-*/GitHub.app/
 
-    rsync -av --delete-after \
+    rsync \
+        --archive \
+        --delete-after \
+        --quiet \
         build/GitHub-darwin-*/GitHub.app/ \
         ~/Applications/GitHub.app
