@@ -306,6 +306,9 @@ python_311 := `pyenv latest 3.11`
 # TODO: ...
 # ----------------------------------------------------------------
 
+@ollama:
+    OLLAMA_HOST=0.0.0.0:11434 OLLAMA_ORIGINS=* ollama serve
+
 @open-syncthing:
     open http://127.0.0.1:8384
 
