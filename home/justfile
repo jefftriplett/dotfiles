@@ -169,6 +169,9 @@ python_311 := `pyenv latest 3.11`
     # https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values
     # https://github.com/jmorganca/ollama/blob/main/examples/python/client.py
     # https://github.com/jmorganca/ollama/pull/405/files#diff-7f12e314e14b1321e41971e2e84a07a9e200b99b6ecac2a5c7a6b98d887f3305
+    just ollama-download-codellama
+    just ollama-download-llama2
+    just ollama-download-llama2-uncensored
 
 @ollama-download-codellama:
     -ollama pull codellama:latest
@@ -186,7 +189,7 @@ python_311 := `pyenv latest 3.11`
 @ollama-download-llama2-uncensored:
     -ollama pull llama2-uncensored:latest
     -ollama pull llama2-uncensored:7b
-    -ollama pull llama2-uncensored:7b-chat
+    # -ollama pull llama2-uncensored:7b-chat
     # -ollama pull llama2-uncensored:70b
 
 @ollama-download-llama2:
@@ -196,7 +199,7 @@ python_311 := `pyenv latest 3.11`
 
 @ollama-download-codellama:
     -ollama pull wizard-vicuna:latest
-    -ollama pull wizard-vicuna-uncensored:30b
+    # -ollama pull wizard-vicuna-uncensored:30b
 
 # ----------------------------------------------------------------
 # Postgres related
