@@ -197,7 +197,7 @@ python_311 := `pyenv latest 3.11`
     -ollama pull llama2:13b
     # -ollama pull llama2:70b
 
-@ollama-download-codellama:
+@ollama-download-wizard-vicuna:
     -ollama pull wizard-vicuna:latest
     # -ollama pull wizard-vicuna-uncensored:30b
 
