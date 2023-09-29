@@ -2,14 +2,18 @@ set dotenv-load := false
 set export := true
 
 HOMEBREW_NO_ENV_HINTS := "true"
+
 # HOMEBREW_NO_AUTO_UPDATE := "true"
+
 RICH_THEME := "dracula"
 
 # python_37 := `pyenv latest 3.7`
+
 python_38 := `pyenv latest 3.8`
 python_39 := `pyenv latest 3.9`
 python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
+
 # python_312 := `pyenv latest 3.12-dev`
 
 # ----------------------------------------------------------------
@@ -160,8 +164,8 @@ python_311 := `pyenv latest 3.11`
 
 # ----------------------------------------------------------------
 # Ollama related
-
 # ----------------------------------------------------------------
+
 @ollama:
     OLLAMA_HOST=0.0.0.0:11434 OLLAMA_ORIGINS=http://* ollama serve
 
@@ -172,6 +176,9 @@ python_311 := `pyenv latest 3.11`
     just ollama-download-codellama
     just ollama-download-llama2
     just ollama-download-llama2-uncensored
+
+@ollama-download-codeup:
+    -ollama pull codeup:latest
 
 @ollama-download-codellama:
     -ollama pull codellama:latest
@@ -184,7 +191,7 @@ python_311 := `pyenv latest 3.11`
 @ollama-download-falcon:
     -ollama pull falcon:latest
     -ollama pull falcon:7b
-    # -ollama pull falcon:40b
+    -ollama pull falcon:40b
 
 @ollama-download-llama2-uncensored:
     -ollama pull llama2-uncensored:latest
@@ -269,12 +276,13 @@ python_311 := `pyenv latest 3.11`
 
 @_pyenv-set-global:
     pyenv global \
-        {{ python_310 }} \
         {{ python_311 }} \
+        {{ python_310 }} \
         {{ python_39 }} \
         {{ python_38 }}
 
 @_pyenv-update:
+    # git clone https://github.com/pyenv/pyenv-update.git $(pyenv root)/plugins/pyenv-update
     pyenv update
 
 @pyenv-upgrade +ARGS="--skip-existing":
