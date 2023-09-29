@@ -7,12 +7,12 @@
 architecture=$(uname -m)
 
 if [ "$architecture" = "arm64" ]; then
-  PATH="${PATH}:/opt/homebrew/sbin:/opt/homebrew/bin"
+  PATH="/opt/homebrew/sbin:/opt/homebrew/bin:${PATH}"
   export CPPFLAGS="-I/opt/homebrew/opt/readline/include"
   export LD_LIBRARY_PATH="/opt/homebrew/lib"
   export LDFLAGS="-L/opt/homebrew/opt/readline/lib"
 elif [ "$architecture" = "x86_64" ]; then
-  PATH="${PATH}:/usr/local/sbin:/usr/local/bin"
+  PATH="/usr/local/sbin:/usr/local/bin:${PATH}"
   export CPPFLAGS="-I/usr/local/opt/readline/include"
   export LD_LIBRARY_PATH="/usr/local/lib"
   export LDFLAGS="-L/usr/local/opt/readline/lib"

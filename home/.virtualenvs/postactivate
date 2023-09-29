@@ -36,11 +36,23 @@ if ! [ -e "${VIRTUAL_ENV_ENVRC}" ]; then
 fi
 
 # Create a SublimeText Project for our project
-if [ -d "${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects" ]; then
-  SUBLIME_TEXT_PROJECT_PATH="${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects"
-elif [ -d "${HOME}/Library/Application Support/Sublime Text/Packages/User/Projects" ]; then
-  SUBLIME_TEXT_PROJECT_PATH="${HOME}/Library/Application Support/Sublime Text/Packages/User/Projects"
+# if [ -d "${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects" ]; then
+#   SUBLIME_TEXT_PROJECT_PATH="${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects"
+# if [ -d "${HOME}/Library/Application Support/Sublime Text/Packages/User/Projects" ]; then
+#   SUBLIME_TEXT_PROJECT_PATH="${HOME}/Library/Application Support/Sublime Text/Packages/User/Projects"
+# fi
+
+PARENT_DIR="${HOME}/Library/Application Support/Sublime Text/Packages/User"
+SUBLIME_TEXT_PROJECT_PATH="${PARENT_DIR}/Projects"
+
+if [ -d "${PARENT_DIR}" ]; then
+  if [ ! -d "${SUBLIME_TEXT_PROJECT_PATH}" ]; then
+    mkdir "${SUBLIME_TEXT_PROJECT_PATH}"
+  fi
+else
+  echo "Parent directory does not exist: ${PARENT_DIR}"
 fi
+
 
 PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
 CONTINUE=false
