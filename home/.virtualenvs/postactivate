@@ -24,7 +24,7 @@ if ! [ -e "${VIRTUAL_ENV_ENVRC}" ]; then
   # Let's set some default ENV values
   # echo "export COMPOSE_DOCKER_CLI_BUILD=1" >> .envrc
   # echo "export DOCKER_BUILDKIT=1" >> .envrc
-  # echo "export DOCKER_CONTEXT=desktop-linux" >> .envrc
+  echo "export DOCKER_CONTEXT=desktop-linux" >> .envrc
   echo "export PIP_DISABLE_PIP_VERSION_CHECK=1" >> .envrc
   echo "export PYTHONDONTWRITEBYTECODE=1" >> .envrc
   echo "export PYTHONUNBUFFERED=1" >> .envrc
