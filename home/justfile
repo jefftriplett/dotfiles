@@ -1,6 +1,8 @@
 set dotenv-load := false
 set export := true
 
+host := `hostname -s`
+
 HOMEBREW_NO_ENV_HINTS := "true"
 
 # HOMEBREW_NO_AUTO_UPDATE := "true"
@@ -13,7 +15,6 @@ python_38 := `pyenv latest 3.8`
 python_39 := `pyenv latest 3.9`
 python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
-
 # python_312 := `pyenv latest 3.12-dev`
 
 # ----------------------------------------------------------------
@@ -179,6 +180,7 @@ python_311 := `pyenv latest 3.11`
 
 @ollama-download-codeup:
     -ollama pull codeup:latest
+    -ollama pull codeup:13b
 
 @ollama-download-codellama:
     -ollama pull codellama:latest

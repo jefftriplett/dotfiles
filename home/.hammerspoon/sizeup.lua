@@ -241,8 +241,10 @@ end
 function sizeup.maximize()
   -- sizeup.set_frame("Full Screen", sizeup.screen())
   local win = sizeup.win()
-  print('window:maximize:', hs.layout.maximized)
-  win:move(hs.layout.maximized)
+  win:maximize()
+
+  -- print('window:maximize:', hs.layout.maximized)
+  -- win:move(hs.layout.maximized)
   -- return win:maximize()
 end
 
@@ -252,13 +254,38 @@ end
 --- The argument is a size with each key being between 0.0 and 1.0.
 --- Example: win:move_to_center_relative(w=0.5, h=0.5) -- window is now centered and is half the width and half the height of screen
 function sizeup.move_to_center_relative(unit)
-  local s = sizeup.screen()
+  local screen = sizeup.screen()
+
+  -- local win = sizeup.win()
+  -- local winFrame = sizeup.frame()
+
+  print('unit.h', unit.h)
+  print('unit.w', unit.w)
+  print('unit.x', unit.x)
+  print('unit.y', unit.y)
+
+  print('screen.h', screen.h)
+  print('screen.w', screen.w)
+  print('screen.x', screen.x)
+  print('screen.y', screen.y)
+
   sizeup.set_frame("Center", {
-    x = s.x + (s.w * ((1 - unit.w) / 2)),
-    y = s.y + (s.h * ((1 - unit.h) / 2)),
-    w = s.w * unit.w,
-    h = s.h * unit.h
+    x = screen.x + (screen.w * ((1 - unit.w) / 2)),
+    y = screen.y + (screen.h * ((1 - unit.h) / 2)),
+    w = screen.w * unit.w,
+    h = screen.h * unit.h
   })
+    -- local win = hs.window.focusedWindow()
+    -- if win then
+    --     local screen = win:screen()
+    --     local screenFrame = screen:frame()
+    --     local winFrame = win:frame()
+
+    --     winFrame.x = (screenFrame.w - winFrame.w) / 2 + screenFrame.x
+    --     winFrame.y = (screenFrame.h - winFrame.h) / 2 + screenFrame.y
+
+    --     win:setFrame(winFrame)
+    -- end
 end
 
 --- move_to_center_absolute(size)
