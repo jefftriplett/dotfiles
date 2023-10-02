@@ -9,13 +9,11 @@ HOMEBREW_NO_ENV_HINTS := "true"
 
 RICH_THEME := "dracula"
 
-# python_37 := `pyenv latest 3.7`
-
 python_38 := `pyenv latest 3.8`
 python_39 := `pyenv latest 3.9`
 python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
-# python_312 := `pyenv latest 3.12-dev`
+# python_312 := `pyenv latest 3.12`
 
 # ----------------------------------------------------------------
 # Just nice-to-haves
@@ -299,7 +297,7 @@ python_311 := `pyenv latest 3.11`
     -pyenv install {{ ARGS }} 3.9:latest
     -pyenv install {{ ARGS }} 3.10:latest
     -pyenv install {{ ARGS }} 3.11:latest
-    # -pyenv install {{ ARGS }} 3.12:latest
+    -pyenv install {{ ARGS }} 3.12:latest
     # -pyenv install {{ ARGS }} 2.7:latest
 
     just _pyenv-set-global
