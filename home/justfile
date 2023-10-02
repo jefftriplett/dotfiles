@@ -13,7 +13,7 @@ python_38 := `pyenv latest 3.8`
 python_39 := `pyenv latest 3.9`
 python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
-# python_312 := `pyenv latest 3.12`
+python_312 := `pyenv latest 3.12`
 
 # ----------------------------------------------------------------
 # Just nice-to-haves
@@ -277,6 +277,7 @@ python_311 := `pyenv latest 3.11`
 @_pyenv-set-global:
     pyenv global \
         {{ python_311 }} \
+        {{ python_312 }} \
         {{ python_310 }} \
         {{ python_39 }} \
         {{ python_38 }}
