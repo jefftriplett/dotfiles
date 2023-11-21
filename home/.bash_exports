@@ -34,8 +34,6 @@ export HOMEBREW_NO_ANALYTICS=1
 export HOMEBREW_NO_AUTO_UPDATE=1
 export LANG="en_US.UTF-8"
 export LC_ALL="en_US.UTF-8"
-export OLLAMA_HOST=0.0.0.0:11434
-export OLLAMA_ORIGINS=*
 
 # experimental prompt
 # export PS1='✨ \[\e[0;36m\]\[\e[0;36m\] \W\[\033[0;35m\]$(__git_ps1 " (%s)")\[\e[0m\]: '
@@ -65,12 +63,6 @@ export GIT_PS1_SHOWUNTRACKEDFILES=true
 # PATH="${PATH}:$GOPATH/bin"
 # PATH="${PATH}:$GOROOT/bin"
 
-############################
-# Heroku Toolbelt settings #
-############################
-
-# PATH="${PATH}:/usr/local/heroku/bin"
-
 ###################
 # python settings #
 ###################
@@ -82,20 +74,33 @@ export PIP_DOWNLOAD_CACHE="/tmp/.pip/download_cache"
 export PIP_REQUIRE_VIRTUALENV="true"
 export PIP_RESPECT_VIRTUALENV="true"
 
-## pipsi settings
+###########################
+# python / pipsi settings #
+###########################
+
 PATH="${PATH}:${HOME}/.local/bin"
 
-## pyenv settings
+###########################
+# python / pyenv settings #
+###########################
+
 export PYENV_ROOT="${HOME}/.pyenv"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 PATH="${PATH}:${PYENV_ROOT}/bin"
 
-########################
-# ruby / rbenvsettings #
-########################
+#########################
+# ruby / rbenv settings #
+#########################
 
 export RBENV_ROOT="$(brew --prefix ruby)"
 PATH="${PATH}:$(brew --prefix ruby)/bin"
+
+################
+# rust / cargo #
+################
+
+export CARGO_ROOT="${HOME}/.cargo"
+PATH="${PATH}:${CARGO_ROOT}/bin"
 
 ################
 # clean / done #
