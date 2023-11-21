@@ -2,13 +2,11 @@ set dotenv-load := false
 set export := true
 
 host := `hostname -s`
-
 HOMEBREW_NO_ENV_HINTS := "true"
 
 # HOMEBREW_NO_AUTO_UPDATE := "true"
 
 RICH_THEME := "dracula"
-
 python_38 := `pyenv latest 3.8`
 python_39 := `pyenv latest 3.9`
 python_310 := `pyenv latest 3.10`
