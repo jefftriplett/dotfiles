@@ -1,18 +1,24 @@
 set dotenv-load := false
 set export := true
 
+export OLLAMA_HOST := "0.0.0.0:11434"
+export OLLAMA_ORIGINS := "http://*"
 host := `hostname -s`
 HOMEBREW_NO_ENV_HINTS := "true"
 
 # HOMEBREW_NO_AUTO_UPDATE := "true"
 
 RICH_THEME := "dracula"
+
+# python_37 := `pyenv latest 3.7`
+
 python_38 := `pyenv latest 3.8`
 python_39 := `pyenv latest 3.9`
 python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
 python_312 := `pyenv latest 3.12`
 
+# python_312 := `pyenv latest 3.12-dev`
 # ----------------------------------------------------------------
 # Just nice-to-haves
 # ----------------------------------------------------------------
@@ -163,8 +169,8 @@ python_312 := `pyenv latest 3.12`
 # Ollama related
 # ----------------------------------------------------------------
 
-@ollama:
-    OLLAMA_HOST=0.0.0.0:11434 OLLAMA_ORIGINS=http://* ollama serve
+@ollama *ARGS:
+    ollama *ARGS
 
 @ollama-download:
     # https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values
@@ -173,6 +179,7 @@ python_312 := `pyenv latest 3.12`
     just ollama-download-codellama
     just ollama-download-llama2
     just ollama-download-llama2-uncensored
+    just ollama-download-orca2
 
 @ollama-download-codeup:
     -ollama pull codeup:latest
@@ -202,9 +209,19 @@ python_312 := `pyenv latest 3.12`
     -ollama pull llama2:13b
     # -ollama pull llama2:70b
 
+@ollama-download-orca2:
+    -ollama pull orca2:latest
+    -ollama pull orca2:13b
+
 @ollama-download-wizard-vicuna:
     -ollama pull wizard-vicuna:latest
     # -ollama pull wizard-vicuna-uncensored:30b
+
+@ollama-list:
+    ollama list
+
+@ollama-serve *ARGS:
+    ollama serve {{ ARGS }}
 
 # ----------------------------------------------------------------
 # Postgres related

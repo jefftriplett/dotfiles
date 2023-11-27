@@ -32,8 +32,8 @@ build:
 
 @logo:
     wget \
-        --quiet \
         --output-document=logo.png \
+        --quiet \
         https://logo.clearbit.com/grammarly.com
 
 @upgrade:
