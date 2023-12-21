@@ -39,6 +39,7 @@ local display_retina_2020 = '1792x1120@2x'
 local display_sidecar = '1366x1024@2x'
 local display_work = '2560x1600'
 local display_work_vertical = '1200x1920'
+local display_work_vertical_2 = '1600x2560'
 
 -- Monitor grids
 local display_default_grid = '2x4'
@@ -52,6 +53,7 @@ local display_retina_grid = '3x2'
 local display_sidecar_grid = '6x4'
 local display_work_grid = '6x4'
 local display_work_vertical_grid = '2x6'
+local display_work_vertical_2_grid = '1x3'
 
 -- Watchers and other useful objects
 local app_watcher = nil
@@ -135,6 +137,11 @@ function setup_grid()
     if hs.screen.find(display_work_vertical) then
         print('found', display_work_vertical)
         hs.grid.setGrid(display_work_vertical_grid, display_work_vertical)
+    end
+
+    if hs.screen.find(display_work_vertical_2) then
+        print('found', display_work_vertical_2)
+        hs.grid.setGrid(display_work_vertical_2_grid, display_work_vertical_2)
     end
 end
 
