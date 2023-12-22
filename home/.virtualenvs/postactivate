@@ -75,6 +75,26 @@ if ! [ -e "${PROJECT_FILE}" ]; then
   fi
 fi
 
+
+# Syncthing .stignore file...
+
+STIGNORE_FILE="${VIRTUAL_ENV_SRC}/.stignore"
+
+if ! [ -e "${STIGNORE_FILE}" ]; then
+    touch ${STIGNORE_FILE}
+    echo "*.pyc" >> ${STIGNORE_FILE}
+    echo "*.pyi" >> ${STIGNORE_FILE}
+    echo ".*-cache/" >> ${STIGNORE_FILE}
+    echo ".DS_Store" >> ${STIGNORE_FILE}
+    echo ".jekyll-cache/" >> ${STIGNORE_FILE}
+    echo ".mypy_cache/" >> ${STIGNORE_FILE}
+    echo ".nox/" >> ${STIGNORE_FILE}
+    echo ".pytest_cache/" >> ${STIGNORE_FILE}
+    echo ".ruff_cache/" >> ${STIGNORE_FILE}
+    echo "docker-compose.override.yml" >> ${STIGNORE_FILE}
+fi
+
+
 # Set our iTerm2 tab's title to our virtualenv name
 #   `npm install -g iterm2-tab-set`
 if ! [ -e tabset ]; then
