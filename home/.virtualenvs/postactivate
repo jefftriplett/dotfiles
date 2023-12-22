@@ -4,6 +4,7 @@ VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
 VIRTUAL_ENV_BIN="${VIRTUAL_ENV}/bin"
 VIRTUAL_ENV_SRC="${VIRTUAL_ENV}/src"
 VIRTUAL_ENV_ENVRC="${VIRTUAL_ENV_SRC}/.envrc"
+VIRTUAL_ENV_STIGNORE="${VIRTUAL_ENV_SRC}/.stignore"
 
 if [ -d "${VIRTUAL_ENV_SRC}" ]; then
   # If our {{virtualenv}}/src folder exists, CD into that folder
@@ -33,6 +34,22 @@ if ! [ -e "${VIRTUAL_ENV_ENVRC}" ]; then
   if ! [ -e direnv ]; then
     direnv allow
   fi
+fi
+
+# Syncthing .stignore file...
+
+if ! [ -e "${VIRTUAL_ENV_STIGNORE}" ]; then
+    touch ${VIRTUAL_ENV_STIGNORE}
+    echo "*.pyc" >> ${VIRTUAL_ENV_STIGNORE}
+    echo "*.pyi" >> ${VIRTUAL_ENV_STIGNORE}
+    echo ".*-cache/" >> ${VIRTUAL_ENV_STIGNORE}
+    echo ".DS_Store" >> ${VIRTUAL_ENV_STIGNORE}
+    echo ".jekyll-cache/" >> ${VIRTUAL_ENV_STIGNORE}
+    echo ".mypy_cache/" >> ${VIRTUAL_ENV_STIGNORE}
+    echo ".nox/" >> ${VIRTUAL_ENV_STIGNORE}
+    echo ".pytest_cache/" >> ${VIRTUAL_ENV_STIGNORE}
+    echo ".ruff_cache/" >> ${VIRTUAL_ENV_STIGNORE}
+    echo "docker-compose.override.yml" >> ${VIRTUAL_ENV_STIGNORE}
 fi
 
 # Create a SublimeText Project for our project
@@ -73,25 +90,6 @@ if ! [ -e "${PROJECT_FILE}" ]; then
       echo "{\"folders\": [{\"path\": \"${VIRTUAL_ENV_SRC}\"}]}" | jq > "${PROJECT_FILE}"
     fi
   fi
-fi
-
-
-# Syncthing .stignore file...
-
-STIGNORE_FILE="${VIRTUAL_ENV_SRC}/.stignore"
-
-if ! [ -e "${STIGNORE_FILE}" ]; then
-    touch ${STIGNORE_FILE}
-    echo "*.pyc" >> ${STIGNORE_FILE}
-    echo "*.pyi" >> ${STIGNORE_FILE}
-    echo ".*-cache/" >> ${STIGNORE_FILE}
-    echo ".DS_Store" >> ${STIGNORE_FILE}
-    echo ".jekyll-cache/" >> ${STIGNORE_FILE}
-    echo ".mypy_cache/" >> ${STIGNORE_FILE}
-    echo ".nox/" >> ${STIGNORE_FILE}
-    echo ".pytest_cache/" >> ${STIGNORE_FILE}
-    echo ".ruff_cache/" >> ${STIGNORE_FILE}
-    echo "docker-compose.override.yml" >> ${STIGNORE_FILE}
 fi
 
 
