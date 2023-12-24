@@ -58,10 +58,11 @@ export GIT_PS1_SHOWUNTRACKEDFILES=true
 # golang settings #
 ###################
 
-# export GOPATH="${HOME}/golang"
-# export GOROOT=/usr/local/opt/go/libexec
-# PATH="${PATH}:$GOPATH/bin"
-# PATH="${PATH}:$GOROOT/bin"
+export GOPATH="${HOME}/golang"
+export GOROOT=/usr/local/opt/go/libexec
+
+PATH="${PATH}:$GOPATH/bin"
+PATH="${PATH}:$GOROOT/bin"
 
 ###################
 # python settings #
@@ -86,6 +87,7 @@ PATH="${PATH}:${HOME}/.local/bin"
 
 export PYENV_ROOT="${HOME}/.pyenv"
 export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+
 PATH="${PATH}:${PYENV_ROOT}/bin"
 
 #########################
@@ -93,6 +95,7 @@ PATH="${PATH}:${PYENV_ROOT}/bin"
 #########################
 
 export RBENV_ROOT="$(brew --prefix ruby)"
+
 PATH="${PATH}:$(brew --prefix ruby)/bin"
 
 ################
@@ -100,6 +103,7 @@ PATH="${PATH}:$(brew --prefix ruby)/bin"
 ################
 
 export CARGO_ROOT="${HOME}/.cargo"
+
 PATH="${PATH}:${CARGO_ROOT}/bin"
 
 ################
