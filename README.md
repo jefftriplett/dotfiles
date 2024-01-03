@@ -47,13 +47,26 @@ run("just --justfile=./home/justfile", with_console=True)
 $ just --justfile=./home/justfile
 
 Available recipes:
-    bootstrap          # installs/updates all dependencies
-    cibuild            # invoked by continuous integration servers to run tests
+    bootstrap                     # installs/updates all dependencies
+    cibuild                       # invoked by continuous integration servers to run tests
     cleanup DAYS="0"
-    fmt                # format and overwrite justfile
+    fmt                           # format and overwrite justfile
     freeze
     homebrew-services
-    kill-tabs          # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
+    kill-tabs                     # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
+    ollama *ARGS
+    ollama-download
+    ollama-download-codellama
+    ollama-download-codeup
+    ollama-download-dolphin-mixtral
+    ollama-download-falcon
+    ollama-download-llama2
+    ollama-download-llama2-uncensored
+    ollama-download-orca2
+    ollama-download-wizard-vicuna
+    ollama-list
+    ollama-serve *ARGS
+    open-syncthing
     outdated
     pipx-upgrade
     postgresql-upgrade
@@ -61,13 +74,17 @@ Available recipes:
     pyenv-upgrade-all +ARGS="--skip-existing"
     python-update
     restart
-    setup              # sets up a project to be used for the first time
+    setup                         # sets up a project to be used for the first time
     stop
     symlink
-    test               # runs tests
-    timemachine
+    test                          # runs tests
+    timemachine-boost
+    timemachine-boost-complete
+    timemachine-delete *ARGS
+    timemachine-list
     topalias
-    update             # updates a project to run at its current version
+    update                        # updates a project to run at its current version
+    update-brewfile
     update-readme-docs
     upgrade
     virtualenv-scan
