@@ -12,6 +12,9 @@ style = "bold #ffb86c"
 [battery]
 disabled = true
 
+[bun]
+disabled = true
+
 [character]
 error_symbol = "[✗](bold #ff5555)"
 success_symbol = "[➜](bold #50fa7b)"
@@ -25,12 +28,17 @@ style = "bold #f1fa8c"
 [directory]
 style = "bold #50fa7b"
 
+# [direnv]
+# disabled = true
+
 # [docker_context]
-# disabled = false
-# only_with_files = false
+# # disabled = false
+# # only_with_files = false
+# symbol = "🐳 "
 
 [git_branch]
 style = "bold #ff79c6"
+symbol = " "
 
 [git_status]
 style = "bold #ff5555"
