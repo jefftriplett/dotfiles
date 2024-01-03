@@ -44,6 +44,7 @@ if ! [ -e "${VIRTUAL_ENV_STIGNORE}" ]; then
     echo "*.pyi" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".*-cache/" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".DS_Store" >> ${VIRTUAL_ENV_STIGNORE}
+    echo ".envrc" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".jekyll-cache/" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".mypy_cache/" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".nox/" >> ${VIRTUAL_ENV_STIGNORE}
