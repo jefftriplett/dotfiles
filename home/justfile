@@ -150,17 +150,17 @@ python_312 := `pyenv latest 3.12`
 
     asdf list
 
-@_rtx-bootstrap:
-    rtx install golang
-    rtx install node
-    rtx install ruby
-    rtx install rust
+@_mise-bootstrap:
+    mise install golang
+    mise install node
+    mise install ruby
+    mise install rust
 
-    rtx reshim
+    mise reshim
 
-    # rtx current
+    # mise current
 
-    # rtx list
+    # mise list
 
 # ----------------------------------------------------------------
 # Ollama related

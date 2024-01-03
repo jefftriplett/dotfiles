@@ -123,6 +123,6 @@ function iterm2_print_user_vars {
 #     eval ". $(brew --prefix asdf)/libexec/asdf.sh";
 # fi
 
-if command rtx > /dev/null 2>&1; then
-    eval "$(rtx activate bash)";
+if command mise > /dev/null 2>&1; then
+    eval "$(mise activate bash)";
 fi
