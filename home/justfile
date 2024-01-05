@@ -2,9 +2,6 @@ set dotenv-load := false
 set export := true
 
 export HOMEBREW_NO_ENV_HINTS := "true"
-export OLLAMA_HOST := "0.0.0.0:11434"
-export OLLAMA_ORIGINS := "http://*"
-host := `hostname -s`
 
 # HOMEBREW_NO_AUTO_UPDATE := "true"
 
@@ -22,6 +19,7 @@ python_312 := `pyenv latest 3.12`
 
 @_default:
     just --list
+    just --justfile justfile.ollama --list-heading "" --list
 
 # format and overwrite justfile
 @fmt:
@@ -175,75 +173,7 @@ python_312 := `pyenv latest 3.12`
 # ----------------------------------------------------------------
 
 @ollama *ARGS:
-    ollama {{ ARGS }}
-
-@ollama-download:
-    # ollama pull orca2:7b
-    ollama pull orca2:13b
-
-    # ollama pull codellama:7b-code
-    # ollama pull codellama:13b
-    # ollama pull codellama:7b-instruct
-    # ollama pull codellama:13b-instruct
-
-    # https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values
-    # https://github.com/jmorganca/ollama/blob/main/examples/python/client.py
-    # https://github.com/jmorganca/ollama/pull/405/files#diff-7f12e314e14b1321e41971e2e84a07a9e200b99b6ecac2a5c7a6b98d887f3305
-    just ollama-download-codellama
-    just ollama-download-llama2
-    just ollama-download-llama2-uncensored
-    # just ollama-download-codellama
-    # just ollama-download-llama2
-    # just ollama-download-llama2-uncensored
-    just ollama-download-orca2
-
-@ollama-download-codeup:
-    -ollama pull codeup:latest
-    -ollama pull codeup:13b
-
-@ollama-download-codellama:
-    -ollama pull codellama:latest
-    # -ollama pull codellama:7b-instruct
-    -ollama pull codellama:7b-python
-    # -ollama pull codellama:13b-instruct
-    -ollama pull codellama:13b-python
-    # -ollama pull codellama:34b
-
-@ollama-download-dolphin-mixtral:
-    ollama pull mixtral
-    ollama pull dolphin-mixtral
-
-@ollama-download-falcon:
-    -ollama pull falcon:latest
-    -ollama pull falcon:7b
-    -ollama pull falcon:40b
-
-@ollama-download-llama2:
-    -ollama pull llama2:latest
-    -ollama pull llama2:13b
-    # -ollama pull llama2:70b
-
-@ollama-download-llama2-uncensored:
-    -ollama pull llama2-uncensored:latest
-    -ollama pull llama2-uncensored:7b
-    # -ollama pull llama2-uncensored:7b-chat
-    # -ollama pull llama2-uncensored:70b
-
-@ollama-download-orca2:
-    -ollama pull orca2:latest
-    -ollama pull orca2:7b
-    -ollama pull orca2:13b
-
-@ollama-download-wizard-vicuna:
-    -ollama pull wizard-vicuna:latest
-    # -ollama pull wizard-vicuna-uncensored:30b
-
-@ollama-list:
-    ollama list
-
-@ollama-serve *ARGS:
-    # ollama serve
-    tandem 'ollama serve {{ ARGS }}'
+    just --justfile justfile.ollama {{ ARGS }}
 
 # ----------------------------------------------------------------
 # Postgres related
