@@ -3,7 +3,6 @@ set export := true
 
 export OLLAMA_HOST := "0.0.0.0:11434"
 export OLLAMA_ORIGINS := "http://*"
-host := `hostname -s`
 
 # ----------------------------------------------------------------
 # Just nice-to-haves

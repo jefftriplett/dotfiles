@@ -1,15 +1,3 @@
-# [[[cog
-# import subprocess
-# def dump(command: str) -> None:
-#     output = subprocess.run(command.split(), capture_output=True, text=True)
-#     print(output.stdout.strip())
-# ]]]
-# [[[end]]]
-
-
-# [[[cog
-# dump("brew bundle --taps dump --file=-")
-# ]]]
 tap "buo/cask-upgrade"
 tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
@@ -17,12 +5,6 @@ tap "homebrew/cask-versions"
 tap "homebrew/command-not-found"
 tap "homebrew/services"
 tap "homeport/tap"
-# [[[end]]]
-
-
-# [[[cog
-# dump("brew bundle --brews dump --file=-")
-# ]]]
 brew "act"
 brew "xz"
 brew "bzip2"
@@ -210,12 +192,6 @@ brew "yarn"
 brew "ykman"
 brew "youtube-dl"
 brew "homeport/tap/termshot"
-# [[[end]]]
-
-
-# [[[cog
-# dump("brew bundle --casks dump --file=-")
-# ]]]
 cask "1password-cli"
 cask "8bitdo-ultimate-software"
 cask "airserver"
@@ -236,6 +212,7 @@ cask "controlplane"
 cask "cscreen"
 cask "dash"
 cask "discord"
+cask "elgato-camera-hub"
 cask "elgato-control-center"
 cask "firefox"
 cask "font-awesome-terminal-fonts"
@@ -254,6 +231,7 @@ cask "hammerspoon"
 cask "hyper"
 cask "iterm2"
 cask "jettison"
+cask "macwhisper"
 cask "monitorcontrol"
 cask "obs"
 cask "obsidian"
@@ -280,12 +258,6 @@ cask "visual-studio-code"
 cask "vivaldi"
 cask "yubico-authenticator"
 cask "zoom"
-# [[[end]]]
-
-
-# [[[cog
-# dump("brew bundle --mas dump --file=-")
-# ]]]
 mas "Airmail", id: 918858936
 mas "Annotate", id: 918207447
 mas "Bitwarden", id: 1352778147
@@ -324,4 +296,21 @@ mas "Toggl Track", id: 1291898086
 mas "ToothFairy", id: 1191449274
 mas "Webcam Settings Control", id: 1172053162
 mas "Xcode", id: 497799835
-# [[[end]]]
+vscode "charliermarsh.ruff"
+vscode "dracula-theme.theme-dracula"
+vscode "EditorConfig.EditorConfig"
+vscode "esbenp.prettier-vscode"
+vscode "ms-azuretools.vscode-docker"
+vscode "ms-python.black-formatter"
+vscode "ms-python.pylint"
+vscode "ms-python.python"
+vscode "ms-python.vscode-pylance"
+vscode "ms-vscode-remote.remote-containers"
+vscode "ms-vscode-remote.remote-ssh"
+vscode "ms-vscode-remote.remote-ssh-edit"
+vscode "ms-vscode-remote.remote-wsl"
+vscode "ms-vscode-remote.vscode-remote-extensionpack"
+vscode "ms-vscode.remote-explorer"
+vscode "ms-vscode.remote-server"
+vscode "skellock.just"
+vscode "tamasfe.even-better-toml"
