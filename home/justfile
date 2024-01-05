@@ -20,7 +20,7 @@ python_312 := `pyenv latest 3.12`
 
 @_default:
     just --list
-    just --justfile justfile.ollama --list-heading "" --list
+    just --justfile ~/justfile.ollama --list --list-heading "" --list-prefix "    ollama "
 
 # format and overwrite justfile
 @fmt:
