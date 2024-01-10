@@ -4,6 +4,7 @@ VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
 VIRTUAL_ENV_BIN="${VIRTUAL_ENV}/bin"
 VIRTUAL_ENV_SRC="${VIRTUAL_ENV}/src"
 VIRTUAL_ENV_ENVRC="${VIRTUAL_ENV_SRC}/.envrc"
+VIRTUAL_ENV_PYRIGHTCONFIG="${VIRTUAL_ENV_SRC}/pyrightconfig.json"
 VIRTUAL_ENV_STIGNORE="${VIRTUAL_ENV_SRC}/.stignore"
 
 if [ -d "${VIRTUAL_ENV_SRC}" ]; then
@@ -51,6 +52,7 @@ if ! [ -e "${VIRTUAL_ENV_STIGNORE}" ]; then
     echo ".pytest_cache/" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".ruff_cache/" >> ${VIRTUAL_ENV_STIGNORE}
     echo "docker-compose.override.yml" >> ${VIRTUAL_ENV_STIGNORE}
+    echo "pyrightconfig.json" >> ${VIRTUAL_ENV_STIGNORE}
 fi
 
 # Create a SublimeText Project for our project
@@ -70,7 +72,6 @@ if [ -d "${PARENT_DIR}" ]; then
 else
   echo "Parent directory does not exist: ${PARENT_DIR}"
 fi
-
 
 PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
 CONTINUE=false
@@ -93,6 +94,12 @@ if ! [ -e "${PROJECT_FILE}" ]; then
   fi
 fi
 
+if ! [ -e "${VIRTUAL_ENV_PYRIGHTCONFIG}" ]; then
+  if ! [ -e jq ]; then
+    echo "Creating ${VIRTUAL_ENV_PYRIGHTCONFIG}"
+    echo "{\"venvPath\": \"/Users/jefftriplett/.virtualenvs\", \"venv\": \"${VIRTUAL_ENV_NAME}\"}" | jq > "${VIRTUAL_ENV_PYRIGHTCONFIG}"
+  fi
+fi
 
 # Set our iTerm2 tab's title to our virtualenv name
 #   `npm install -g iterm2-tab-set`
