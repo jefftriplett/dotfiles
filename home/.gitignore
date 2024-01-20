@@ -28,6 +28,7 @@
 .svn/*
 .tox
 \#*.*\#
+bin/
 coverage/
 develop-eggs
 development.ini
