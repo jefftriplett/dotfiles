@@ -47,7 +47,6 @@ home/.maid/*.log.[0-9]
 
 # my files
 apps/**/logo.png
-home/.asdf/
 home/.config/configstore/
 home/.config/enchant/
 home/.config/gcloud/
