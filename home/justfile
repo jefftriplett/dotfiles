@@ -20,7 +20,7 @@ python_312 := `pyenv latest 3.12`
 
 @_default:
     just --list
-    just --justfile ~/justfile.ollama --list --list-heading "" --list-prefix "    ollama "
+    just --justfile ~/.justfiles/ollama.just --list --list-heading "" --list-prefix "    ollama "
 
 # format and overwrite justfile
 @fmt:
@@ -166,7 +166,7 @@ python_312 := `pyenv latest 3.12`
 # ----------------------------------------------------------------
 
 @ollama *ARGS:
-    just --justfile justfile.ollama {{ ARGS }}
+    just --justfile ~/.justfiles/ollama.just {{ ARGS }}
 
 # ----------------------------------------------------------------
 # Postgres related
