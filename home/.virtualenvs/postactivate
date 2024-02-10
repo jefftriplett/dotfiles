@@ -44,6 +44,7 @@ if ! [ -e "${VIRTUAL_ENV_STIGNORE}" ]; then
     echo "*.pyc" >> ${VIRTUAL_ENV_STIGNORE}
     echo "*.pyi" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".*-cache/" >> ${VIRTUAL_ENV_STIGNORE}
+    echo ".*cache/" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".DS_Store" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".envrc" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".jekyll-cache/" >> ${VIRTUAL_ENV_STIGNORE}
@@ -51,6 +52,9 @@ if ! [ -e "${VIRTUAL_ENV_STIGNORE}" ]; then
     echo ".nox/" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".pytest_cache/" >> ${VIRTUAL_ENV_STIGNORE}
     echo ".ruff_cache/" >> ${VIRTUAL_ENV_STIGNORE}
+    echo ".sass-cache/" >> ${VIRTUAL_ENV_STIGNORE}
+    echo ".vendor/" >> ${VIRTUAL_ENV_STIGNORE}
+    echo "checkouts" >> ${VIRTUAL_ENV_STIGNORE}
     echo "docker-compose.override.yml" >> ${VIRTUAL_ENV_STIGNORE}
     echo "pyrightconfig.json" >> ${VIRTUAL_ENV_STIGNORE}
 fi
