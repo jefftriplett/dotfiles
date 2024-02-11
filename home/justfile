@@ -240,8 +240,7 @@ python_312 := `pyenv latest 3.12`
         {{ python_311 }} \
         {{ python_312 }} \
         {{ python_310 }} \
-        {{ python_39 }} \
-        {{ python_38 }}
+        {{ python_39 }}
 
 @_pyenv-update:
     # git clone https://github.com/pyenv/pyenv-update.git $(pyenv root)/plugins/pyenv-update
@@ -252,15 +251,10 @@ python_312 := `pyenv latest 3.12`
     just python-update
 
 @pyenv-upgrade-all +ARGS="--skip-existing":
-    # -pyenv install {{ ARGS }} 3.5:latest
-    # -pyenv install {{ ARGS }} 3.6:latest
-    # -pyenv install {{ ARGS }} 3.7:latest
-    -pyenv install {{ ARGS }} 3.8:latest
-    -pyenv install {{ ARGS }} 3.9:latest
-    -pyenv install {{ ARGS }} 3.10:latest
-    -pyenv install {{ ARGS }} 3.11:latest
     -pyenv install {{ ARGS }} 3.12:latest
-    # -pyenv install {{ ARGS }} 2.7:latest
+    -pyenv install {{ ARGS }} 3.11:latest
+    -pyenv install {{ ARGS }} 3.10:latest
+    -pyenv install {{ ARGS }} 3.9:latest
 
     just _pyenv-set-global
 
