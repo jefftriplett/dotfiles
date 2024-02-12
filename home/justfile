@@ -8,7 +8,6 @@ export HOMEBREW_NO_ENV_HINTS := "true"
 HOST := `hostname -s`
 
 RICH_THEME := "dracula"
-python_38 := `pyenv latest 3.8`
 python_39 := `pyenv latest 3.9`
 python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
@@ -38,31 +37,15 @@ python_312 := `pyenv latest 3.12`
     fi
 
     just _xcode-bootstrap
-    just _asdf-bootstrap
+    just _mise-bootstrap
     just _python-bootstrap
 
-# invoked by continuous integration servers to run tests
-@cibuild:
-    echo "TODO: cibuild"
+@install:
+    homesick symlink
 
-# sets up a project to be used for the first time
-@setup:
-    echo "TODO: setup"
-
-# runs tests
-@test:
-    echo "TODO: test"
-
-# updates a project to run at its current version
-@update:
-    just _homebrew-update
-
-# ----------------------------------------------------------------
-# General hooks
-# ----------------------------------------------------------------
-
-@freeze:
-    just _homebrew-freeze
+# Updates our lockfiles without installing dependencies
+@lock:
+    just _homebrew-lock
 
 @outdated:
     just _homebrew-outdated
@@ -74,13 +57,14 @@ python_312 := `pyenv latest 3.12`
 @stop:
     just _homebrew-services-stop
 
-@symlink:
-    homesick symlink
+# updates a project to run at its current version
+@update:
+    just _homebrew-update
 
 @upgrade:
     just _homebrew-update
     just _homebrew-upgrade
-    just _homebrew-cleanup
+    # just _homebrew-cleanup
 
 # ----------------------------------------------------------------
 # Homebrew and general wrappers - https://brew.sh
@@ -89,7 +73,7 @@ python_312 := `pyenv latest 3.12`
 @_homebrew-cleanup DAYS="0":
     brew cleanup --prune={{ DAYS }}
 
-@_homebrew-freeze:
+@_homebrew-lock:
     cd "$HOME/.homesick/repos/dotfiles/home" && \
         mv "Brewfile.$HOST" "Brewfile.$HOST.bak" && \
         brew bundle dump --file="Brewfile.$HOST"
@@ -101,14 +85,16 @@ python_312 := `pyenv latest 3.12`
     brew services
 
 @_homebrew-services-restart:
-    # -brew services restart yabai
-    # -brew services restart spacebar
     # -brew services restart skhd
+    # -brew services restart spacebar
+    # -brew services restart yabai
+    -brew services restart ollama
 
 @_homebrew-services-stop:
     # -brew services stop yabai
     # -brew services stop spacebar
     # -brew services stop skhd
+    -brew services stop ollama
 
 @_homebrew-update:
     brew update
@@ -120,45 +106,16 @@ python_312 := `pyenv latest 3.12`
     just _homebrew-cleanup {{ DAYS }}
 
 # ----------------------------------------------------------------
-# asdf - https://asdf-vm.com/
+# mise - https://github.com/jdx/mise
 # ----------------------------------------------------------------
-
-@_asdf-bootstrap:
-    asdf plugin update golang
-    asdf plugin update kubectl
-    asdf plugin update nodejs
-    asdf plugin update ruby
-    asdf plugin update rust
-
-    asdf install golang latest
-    asdf install kubectl latest
-    asdf install nodejs latest
-    asdf install nodejs lts
-    asdf install ruby latest
-    asdf install rust latest
-
-    asdf reshim
-
-    asdf global golang latest
-    asdf global kubectl 1.22.2
-    asdf global nodejs latest
-    asdf global ruby latest
-    asdf global rust latest
-
-    asdf current
-
-    asdf list
 
 @_mise-bootstrap:
     mise install golang
     mise install node
     mise install ruby
     mise install rust
-
     mise reshim
-
     # mise current
-
     # mise list
 
 # ----------------------------------------------------------------
@@ -180,7 +137,24 @@ python_312 := `pyenv latest 3.12`
 
 # ----------------------------------------------------------------
 # Python
+#   pipx - https://pypa.github.io/pipx/
+#   pyenv - https://github.com/pyenv/pyenv
 # ----------------------------------------------------------------
+
+@pip-install *ARGS:
+    PIP_REQUIRE_VIRTUALENV=false python -m pip install \
+            --disable-pip-version-check \
+            --no-compile \
+            --upgrade \
+        {{ ARGS }}
+
+@pip-uninstall *ARGS:
+    PIP_REQUIRE_VIRTUALENV=false python -m pip uninstall \
+            --disable-pip-version-check \
+        {{ ARGS }}
+
+@pipx-upgrade:
+    pipx upgrade-all --force
 
 @_python-bootstrap:
     PIP_REQUIRE_VIRTUALENV=false python -m pip install \
@@ -192,23 +166,18 @@ python_312 := `pyenv latest 3.12`
         virtualenv \
         virtualenvwrapper \
         wheel \
-        rich-cli
 
     # cogapp
+    # rich-cli
 
 @python-update:
     just _python-bootstrap
-
     just _pyenv-update
-
     just _pyenv-set-global
 
     # pipx install python-language-server[all]
     # pipx inject python-language-server pyls-black mypy-ls pyls-isort
 
-# ----------------------------------------------------------------
-# Python / pip
-# ----------------------------------------------------------------
 # @pip-update:
 #     for version in `pyenv versions --bare`; do \
 #         echo "Upgrading Python ${version}"; \
@@ -224,16 +193,6 @@ python_312 := `pyenv latest 3.12`
 #     # done
 #     # pyenv shell {{ PYTHON_ALL }}
 # pipx: https://pypa.github.io/pipx/
-# ----------------------------------------------------------------
-# Python / pipx - https://pypa.github.io/pipx/
-# ----------------------------------------------------------------
-
-@pipx-upgrade:
-    pipx upgrade-all --force
-
-# ----------------------------------------------------------------
-# Python / pyenv - https://github.com/pyenv/pyenv
-# ----------------------------------------------------------------
 
 @_pyenv-set-global:
     pyenv global \
@@ -243,7 +202,6 @@ python_312 := `pyenv latest 3.12`
         {{ python_39 }}
 
 @_pyenv-update:
-    # git clone https://github.com/pyenv/pyenv-update.git $(pyenv root)/plugins/pyenv-update
     pyenv update
 
 @pyenv-upgrade +ARGS="--skip-existing":
@@ -262,15 +220,15 @@ python_312 := `pyenv latest 3.12`
 # Python / virtualenv - https://virtualenv.pypa.io/en/latest/
 # ----------------------------------------------------------------
 
-@virtualenv-scan:
+virtualenv-scan:
     #!/usr/bin/env python
     import subprocess
     from pathlib import Path
 
     folders = [folder for folder in Path(Path.home(), ".virtualenvs").glob("*/bin/python")]
-    print(len(folders))
+    # print(len(folders))
     for command in folders:
-        print(command)
+        # print(command)
         try:
             # grab python version
             output = subprocess.run(f"{command} --version".split(), capture_output=True, text=True)
@@ -314,19 +272,22 @@ python_312 := `pyenv latest 3.12`
 # ----------------------------------------------------------------
 
 @open-syncthing:
-    open http://127.0.0.1:8384
+    open http://go/syncthing
 
 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
 @kill-tabs:
     npx kill-tabs
 
+@plist:
+    cp ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/Cellar/ollama/0.1.23/homebrew.mxcl.ollama.plist
+
 @topalias:
     topalias
 
-@update-brewfile:
+@_update-brewfile:
     cd "$HOME/.homesick/repos/dotfiles/home" && pipx run --no-cache --quiet --spec cogapp cog -Pr ./Brewfile.cog
 
-@update-readme-docs:
+@_update-readme-docs:
     cd "$HOME/.homesick/repos/dotfiles" && pipx run --no-cache --quiet --spec cogapp cog -Pr ./README.md
 
 # ----------------------------------------------------------------
@@ -353,7 +314,7 @@ python_312 := `pyenv latest 3.12`
 # VS Code
 # ----------------------------------------------------------------
 
-@_vs_code-freeze:
+@_vs_code-lock:
     code --list-extensions > vs-code-extensions.txt
 
 # ----------------------------------------------------------------
