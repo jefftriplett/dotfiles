@@ -7,6 +7,10 @@ VIRTUAL_ENV_ENVRC="${VIRTUAL_ENV_SRC}/.envrc"
 VIRTUAL_ENV_PYRIGHTCONFIG="${VIRTUAL_ENV_SRC}/pyrightconfig.json"
 VIRTUAL_ENV_STIGNORE="${VIRTUAL_ENV_SRC}/.stignore"
 
+# ------------------------------------------------------------
+# Add /src/ to our .virtualenv's path
+# ------------------------------------------------------------
+
 if [ -d "${VIRTUAL_ENV_SRC}" ]; then
   # If our {{virtualenv}}/src folder exists, CD into that folder
   cd "${VIRTUAL_ENV_SRC}" || exit
@@ -18,6 +22,10 @@ else
   # Add {{virtualenv}}/src to our virtualenv
   add2virtualenv .
 fi
+
+# ------------------------------------------------------------
+# Syncthing ".envrc" file...
+# ------------------------------------------------------------
 
 if ! [ -e "${VIRTUAL_ENV_ENVRC}" ]; then
   # Create direnv file for our project
@@ -37,7 +45,9 @@ if ! [ -e "${VIRTUAL_ENV_ENVRC}" ]; then
   fi
 fi
 
-# Syncthing .stignore file...
+# ------------------------------------------------------------
+# Syncthing ".stignore" file...
+# ------------------------------------------------------------
 
 if ! [ -e "${VIRTUAL_ENV_STIGNORE}" ]; then
     touch ${VIRTUAL_ENV_STIGNORE}
@@ -102,6 +112,10 @@ if ! [ -e "${PROJECT_FILE}" ]; then
   fi
 fi
 
+# ------------------------------------------------------------
+# Sublime Text LSP PyRight ".pyrightconfig.json" file...
+# ------------------------------------------------------------
+
 if ! [ -e "${VIRTUAL_ENV_PYRIGHTCONFIG}" ]; then
   if ! [ -e jq ]; then
     echo "Creating ${VIRTUAL_ENV_PYRIGHTCONFIG}"
@@ -109,11 +123,17 @@ if ! [ -e "${VIRTUAL_ENV_PYRIGHTCONFIG}" ]; then
   fi
 fi
 
+# ------------------------------------------------------------
 # Set our iTerm2 tab's title to our virtualenv name
+# ------------------------------------------------------------
+
 #   `npm install -g iterm2-tab-set`
 if ! [ -e tabset ]; then
-  npx iterm2-tab-set --title "${VIRTUAL_ENV_NAME}"
+  # bunx iterm2-tab-set --title "${VIRTUAL_ENV_NAME}"
+  tabset --title "${VIRTUAL_ENV_NAME}"
 fi
+
+# ------------------------------------------------------------
 
 # Print our virtualenv's virtualenv name to the console
 #   `go install github.com/arsham/figurine@latest`
