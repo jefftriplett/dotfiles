@@ -106,6 +106,14 @@ export CARGO_ROOT="${HOME}/.cargo"
 
 PATH="${PATH}:${CARGO_ROOT}/bin"
 
+############
+# OrbStack #
+############
+
+if [[ -e ${HOME}/.orbstack/shell/init.bash ]] ; then
+    source ${HOME}/.orbstack/shell/init.bash 2>/dev/null || :
+fi
+
 ################
 # clean / done #
 ################
