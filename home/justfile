@@ -73,7 +73,9 @@ python_312 := `pyenv latest 3.12`
 @_homebrew-cleanup DAYS="0":
     brew cleanup --prune={{ DAYS }}
 
+# @_homebrew-freeze:
 @_homebrew-lock:
+    # touch "$HOME/.homesick/repos/dotfiles/home/Brewfile.$HOST"
     cd "$HOME/.homesick/repos/dotfiles/home" && \
         mv "Brewfile.$HOST" "Brewfile.$HOST.bak" && \
         brew bundle dump --file="Brewfile.$HOST"
