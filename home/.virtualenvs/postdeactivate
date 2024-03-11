@@ -7,7 +7,8 @@ unset DJANGO_SETTINGS_MODULE
 export USER_BADGE="${USER_BADGE_DEFAULT}"
 
 if ! [ -e tabset ]; then
-  npx iterm2-tab-set --title "❓"
+  # npx iterm2-tab-set --title "❓"
+  tabset --title "❓"
 fi
 
 just --justfile=${HOME}/justfile _postdeactivate

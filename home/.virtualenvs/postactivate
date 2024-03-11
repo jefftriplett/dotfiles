@@ -77,6 +77,10 @@ else
   echo "Parent directory does not exist: ${PARENT_DIR}"
 fi
 
+# ------------------------------------------------------------
+# Sublime Text Project ".sublime-project" file...
+# ------------------------------------------------------------
+
 PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
 CONTINUE=false
 
