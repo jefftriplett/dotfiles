@@ -163,11 +163,15 @@ python_312 := `pyenv latest 3.12`
             --disable-pip-version-check \
             --no-compile \
             --upgrade \
-        pip \
+        pip uv
+
+    PIP_REQUIRE_VIRTUALENV=false python -m uv pip install \
+            --system \
+            --upgrade \
         pipx \
         virtualenv \
         virtualenvwrapper \
-        wheel \
+        wheel
 
     # cogapp
     # rich-cli
@@ -361,6 +365,7 @@ _postmkvirtualenv:
     rich --print "[green]postmkvirtualenv[/green]"
     python -m pip install --upgrade pip
     python -m pip install --upgrade pip-tools
+    python -m pip install --upgrade uv
 
 _postrmproject:
     #!/usr/bin/env sh
