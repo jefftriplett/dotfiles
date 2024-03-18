@@ -273,10 +273,6 @@ virtualenv-scan:
 @kill-tabs:
     bunx kill-tabs
 
-@plist:
-    # diff ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/opt/ollama/homebrew.mxcl.ollama.plist
-    cp ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/opt/ollama/homebrew.mxcl.ollama.plist
-
 @topalias:
     topalias
 

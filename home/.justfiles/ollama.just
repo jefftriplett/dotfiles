@@ -5,6 +5,12 @@
 export OLLAMA_HOST := "0.0.0.0:11434"
 export OLLAMA_ORIGINS := "http://*"
 
+@ollama-copy-plist:
+    cp ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/opt/ollama/homebrew.mxcl.ollama.plist
+
+@ollama-diff-plist:
+    diff ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/opt/ollama/homebrew.mxcl.ollama.plist
+
 @ollama-download:
     # https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values
     # https://github.com/jmorganca/ollama/blob/main/examples/python/client.py
