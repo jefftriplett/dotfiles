@@ -8,7 +8,6 @@ There are my personal dotfiles. They are managed using:
 - [Homebrew][homebrew] for macOS package management.
 - [Homesick][homesick] for managing dotfiles.
 - [Just](https://github.com/casey/just) 🤖 Just a command runner.
-- [Modd][modd] A flexible developer tool that runs processes and responds to filesystem changes.
 - [Starship][starship] The minimal, blazing-fast, and infinitely customizable prompt for any shell.
 
 ## GUI
@@ -19,9 +18,9 @@ There are my personal dotfiles. They are managed using:
 ## Python
 
 - [pip][pip]: The PyPA recommended tool for installing and managing Python packages.
-- [pipenv][pipenv]: Pipenv is a project that aims to bring the best of all packaging worlds to the Python world.
 - [pipx][pipx]: execute binaries from Python packages in isolated environments.
 - [pyenv][pyenv]: Simple Python version management.
+- [uv]: An extremely fast Python package installer and resolver, written in Rust.
 
 ## Installation
 
@@ -38,6 +37,7 @@ $ make install
 ```
 
 # Justfile Usage
+
 <!-- [[[cog
 from scripts.run_command import run
 run("just --justfile=./home/justfile", with_console=True)
@@ -47,50 +47,40 @@ run("just --justfile=./home/justfile", with_console=True)
 $ just --justfile=./home/justfile
 
 Available recipes:
-    bootstrap                     # installs/updates all dependencies
-    cibuild                       # invoked by continuous integration servers to run tests
+    bootstrap                  # installs/updates all dependencies
     cleanup DAYS="0"
-    fmt                           # format and overwrite justfile
-    freeze
+    fmt                        # format and overwrite justfile
     homebrew-services
-    kill-tabs                     # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
+    install
+    kill-tabs                  # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
+    lock                       # Updates our lockfiles without installing dependencies
     ollama *ARGS
-    ollama-download
-    ollama-download-codellama
-    ollama-download-codeup
-    ollama-download-dolphin-mixtral
-    ollama-download-falcon
-    ollama-download-llama2
-    ollama-download-llama2-uncensored
-    ollama-download-orca2
-    ollama-download-wizard-vicuna
-    ollama-list
-    ollama-serve *ARGS
     open-syncthing
     outdated
+    pip-install *ARGS
+    pip-uninstall *ARGS
     pipx-upgrade
+    plist
     postgresql-upgrade
     pyenv-upgrade +ARGS="--skip-existing"
     pyenv-upgrade-all +ARGS="--skip-existing"
     python-update
     restart
-    setup                         # sets up a project to be used for the first time
     stop
-    symlink
-    test                          # runs tests
     timemachine-boost
     timemachine-boost-complete
     timemachine-delete *ARGS
     timemachine-list
     topalias
-    update                        # updates a project to run at its current version
-    update-brewfile
-    update-readme-docs
+    update                     # updates a project to run at its current version
     upgrade
     virtualenv-scan
     virtualenv-upgrade
     virtualenv-workon
     xcode-upgrade
+    ollama download
+    ollama list
+    ollama serve *ARGS
 ```
 
 <!-- [[[end]]] -->
@@ -144,10 +134,11 @@ Available recipes:
 [pipx]: https://pipxproject.github.io/pipx/
 [pyenv]: https://github.com/yyuu/pyenv
 [starship]: https://starship.rs/
+[uv]: https://github.com/astral-sh/uv
 
 ## Contact / Social Media
 
-Here are a few ways to keep up with me online. If you have a question about this project, please consider opening a GitHub Issue. 
+Here are a few ways to keep up with me online. If you have a question about this project, please consider opening a GitHub Issue.
 
 [![](https://jefftriplett.com/assets/images/social/github.png)](https://github.com/jefftriplett)
 [![](https://jefftriplett.com/assets/images/social/globe.png)](https://jefftriplett.com/)
