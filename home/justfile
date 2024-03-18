@@ -19,7 +19,10 @@ python_312 := `pyenv latest 3.12`
 
 @_default:
     just --list
-    just --justfile ~/.justfiles/ollama.just --list --list-heading "" --list-prefix "    ollama "
+    just --justfile ~/.justfiles/ollama.just \
+        --list \
+        --list-heading "" \
+        --list-prefix "    ollama "
 
 # format and overwrite justfile
 @fmt:
@@ -39,6 +42,9 @@ python_312 := `pyenv latest 3.12`
     just _xcode-bootstrap
     just _mise-bootstrap
     just _python-bootstrap
+
+@cleanup DAYS="0":
+    just _homebrew-cleanup {{ DAYS }}
 
 @install:
     homesick symlink
@@ -103,9 +109,6 @@ python_312 := `pyenv latest 3.12`
 
 @_homebrew-upgrade:
     brew upgrade || true
-
-@cleanup DAYS="0":
-    just _homebrew-cleanup {{ DAYS }}
 
 # ----------------------------------------------------------------
 # mise - https://github.com/jdx/mise
@@ -282,10 +285,11 @@ virtualenv-scan:
 
 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
 @kill-tabs:
-    npx kill-tabs
+    bunx kill-tabs
 
 @plist:
-    cp ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/Cellar/ollama/0.1.23/homebrew.mxcl.ollama.plist
+    # diff ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/opt/ollama/homebrew.mxcl.ollama.plist
+    cp ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/opt/ollama/homebrew.mxcl.ollama.plist
 
 @topalias:
     topalias
