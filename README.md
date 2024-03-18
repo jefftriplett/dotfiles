@@ -47,13 +47,18 @@ run("just --justfile=./home/justfile", with_console=True)
 $ just --justfile=./home/justfile
 
 Available recipes:
-    bootstrap                  # installs/updates all dependencies
+    bootstrap                      # installs/updates all dependencies
     cleanup DAYS="0"
-    fmt                        # format and overwrite justfile
+    fmt                            # format and overwrite justfile
     homebrew-services
     install
-    kill-tabs                  # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
-    lock                       # Updates our lockfiles without installing dependencies
+    kill-tabs                      # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
+    lock                           # Updates our lockfiles without installing dependencies
+    macos-timemachine-boost
+    macos-timemachine-boost-complete
+    macos-timemachine-delete *ARGS
+    macos-timemachine-list
+    macos-xcode-upgrade
     ollama-copy-plist
     ollama-diff-plist
     ollama-download
@@ -70,16 +75,11 @@ Available recipes:
     python-update
     restart
     stop
-    timemachine-boost
-    timemachine-boost-complete
-    timemachine-delete *ARGS
-    timemachine-list
-    update                     # updates a project to run at its current version
+    update                         # updates a project to run at its current version
     upgrade
     virtualenv-scan
     virtualenv-upgrade
     virtualenv-workon
-    xcode-upgrade
 ```
 
 <!-- [[[end]]] -->
