@@ -54,6 +54,8 @@ Available recipes:
     install
     kill-tabs                  # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
     lock                       # Updates our lockfiles without installing dependencies
+    ollama-copy-plist
+    ollama-diff-plist
     ollama-download
     ollama-list
     ollama-serve *ARGS
@@ -62,7 +64,6 @@ Available recipes:
     pip-install *ARGS
     pip-uninstall *ARGS
     pipx-upgrade
-    plist
     postgresql-upgrade
     pyenv-upgrade +ARGS="--skip-existing"
     pyenv-upgrade-all +ARGS="--skip-existing"
