@@ -74,7 +74,6 @@ Available recipes:
     timemachine-boost-complete
     timemachine-delete *ARGS
     timemachine-list
-    topalias
     update                     # updates a project to run at its current version
     upgrade
     virtualenv-scan
