@@ -1,3 +1,7 @@
+import '.justfiles/ollama.just'
+import '.justfiles/timemachine.just'
+import '.justfiles/virtualenvwrapper.just'
+
 set dotenv-load := false
 set export := true
 
@@ -14,23 +18,15 @@ python_311 := `pyenv latest 3.11`
 python_312 := `pyenv latest 3.12`
 
 # ----------------------------------------------------------------
-# Just nice-to-haves
+# In the spirit of "Scripts to rule them all"
 # ----------------------------------------------------------------
 
 @_default:
     just --list
-    just --justfile ~/.justfiles/ollama.just \
-        --list \
-        --list-heading "" \
-        --list-prefix "    ollama "
 
 # format and overwrite justfile
 @fmt:
     just --fmt --unstable
-
-# ----------------------------------------------------------------
-# In the spirit of "Scripts to rule them all"
-# ----------------------------------------------------------------
 
 # installs/updates all dependencies
 @bootstrap:
@@ -124,13 +120,6 @@ python_312 := `pyenv latest 3.12`
     # mise list
 
 # ----------------------------------------------------------------
-# Ollama related
-# ----------------------------------------------------------------
-
-@ollama *ARGS:
-    just --justfile ~/.justfiles/ollama.just {{ ARGS }}
-
-# ----------------------------------------------------------------
 # Postgres related
 # ----------------------------------------------------------------
 
@@ -175,9 +164,6 @@ python_312 := `pyenv latest 3.12`
         virtualenv \
         virtualenvwrapper \
         wheel
-
-    # cogapp
-    # rich-cli
 
 @python-update:
     just _python-bootstrap
@@ -301,26 +287,6 @@ virtualenv-scan:
     cd "$HOME/.homesick/repos/dotfiles" && pipx run --no-cache --quiet --spec cogapp cog -Pr ./README.md
 
 # ----------------------------------------------------------------
-# Time Machine
-# ----------------------------------------------------------------
-
-@timemachine-boost:
-    # bump IO priority to finish more quickly
-    # https://apple.stackexchange.com/questions/382772/time-machine-in-the-cleaning-up-state-forever
-
-    sudo sysctl debug.lowpri_throttle_enabled=0
-
-@timemachine-boost-complete:
-    # once done
-    sudo sysctl debug.lowpri_throttle_enabled=1
-
-@timemachine-delete *ARGS:
-    sudo tmutil delete {{ ARGS }}
-
-@timemachine-list:
-    sudo tmutil listbackups
-
-# ----------------------------------------------------------------
 # VS Code
 # ----------------------------------------------------------------
 
@@ -337,69 +303,3 @@ virtualenv-scan:
 @xcode-upgrade:
     sudo rm -rf /Library/Developer/CommandLineTools
     just _xcode-bootstrap
-
-# ----------------------------------------------------------------
-# virtualenvwrapper
-# ----------------------------------------------------------------
-
-_get_env_details:
-    #!/usr/bin/env sh
-    rich --print "[green]get_env_details[/green]"
-
-_initialize:
-    #!/usr/bin/env sh
-    rich --print "[green]initialize[/green]"
-
-_postactivate:
-    #!/usr/bin/env sh
-    VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
-    rich --print "[green]postactivate[/green]"
-
-_postdeactivate:
-    #!/usr/bin/env sh
-    # VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
-    rich --print "[green]postdeactivate[/green]"
-
-_postmkproject:
-    #!/usr/bin/env sh
-    rich --print "[green]postmkproject[/green]"
-
-_postmkvirtualenv:
-    #!/usr/bin/env sh
-    rich --print "[green]postmkvirtualenv[/green]"
-    python -m pip install --upgrade pip
-    python -m pip install --upgrade pip-tools
-    python -m pip install --upgrade uv
-
-_postrmproject:
-    #!/usr/bin/env sh
-    rich --print "[green]postrmproject[/green]"
-
-_postrmvirtualenv:
-    #!/usr/bin/env sh
-    rich --print "[green]postrmvirtualenv[/green]"
-
-_preactivate:
-    #!/usr/bin/env sh
-    # VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
-    rich --print "[green]preactivate[/green]"
-
-_predeactivate:
-    #!/usr/bin/env sh
-    rich --print "[green]predeactivate[/green]"
-
-_premkproject:
-    #!/usr/bin/env sh
-    rich --print "[green]premkproject[/green]"
-
-_premkvirtualenv:
-    #!/usr/bin/env sh
-    rich --print "[green]premkvirtualenv[/green]"
-
-_prermproject:
-    #!/usr/bin/env sh
-    rich --print "[green]prermproject[/green]"
-
-_prermvirtualenv:
-    #!/usr/bin/env sh
-    rich --print "[green]prermvirtualenv[/green]"
