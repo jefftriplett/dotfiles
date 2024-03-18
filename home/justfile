@@ -1,5 +1,6 @@
+import '.justfiles/macos.just'
 import '.justfiles/ollama.just'
-import '.justfiles/timemachine.just'
+import '.justfiles/virtualenv.just'
 import '.justfiles/virtualenvwrapper.just'
 
 set dotenv-load := false
@@ -8,12 +9,13 @@ set export := true
 # export HOMEBREW_NO_AUTO_UPDATE := "true"
 
 export HOMEBREW_NO_ENV_HINTS := "true"
+export PIP_REQUIRE_VIRTUALENV := "false"
 HOST := `hostname -s`
-RICH_THEME := "dracula"
-python_39 := `pyenv latest 3.9`
 python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
 python_312 := `pyenv latest 3.12`
+python_39 := `pyenv latest 3.9`
+RICH_THEME := "dracula"
 
 # ----------------------------------------------------------------
 # In the spirit of "Scripts to rule them all"
@@ -134,15 +136,14 @@ python_312 := `pyenv latest 3.12`
 # ----------------------------------------------------------------
 
 @pip-install *ARGS:
-    PIP_REQUIRE_VIRTUALENV=false python -m pip install \
-            --disable-pip-version-check \
-            --no-compile \
-            --upgrade \
+    python -m uv pip install \
+        --system \
+        --upgrade \
         {{ ARGS }}
 
 @pip-uninstall *ARGS:
-    PIP_REQUIRE_VIRTUALENV=false python -m pip uninstall \
-            --disable-pip-version-check \
+    python -m uv pip uninstall \
+        --system \
         {{ ARGS }}
 
 @pipx-upgrade:
@@ -155,7 +156,7 @@ python_312 := `pyenv latest 3.12`
             --upgrade \
         pip uv
 
-    PIP_REQUIRE_VIRTUALENV=false python -m uv pip install \
+    python -m uv pip install \
             --system \
             --upgrade \
         pipx \
@@ -208,57 +209,6 @@ python_312 := `pyenv latest 3.12`
     -pyenv install {{ ARGS }} 3.9:latest
 
     just _pyenv-set-global
-
-# ----------------------------------------------------------------
-# Python / virtualenv - https://virtualenv.pypa.io/en/latest/
-# ----------------------------------------------------------------
-
-virtualenv-scan:
-    #!/usr/bin/env python
-    import subprocess
-    from pathlib import Path
-
-    folders = [folder for folder in Path(Path.home(), ".virtualenvs").glob("*/bin/python")]
-    # print(len(folders))
-    for command in folders:
-        # print(command)
-        try:
-            # grab python version
-            output = subprocess.run(f"{command} --version".split(), capture_output=True, text=True)
-            print(output.stdout.strip() or output.stderr.strip())
-
-            # grab pip version
-            # output = subprocess.run(f"{command} --version".replace("python", "pip").split(), capture_output=True, text=True)
-            # print(output.stdout.strip() or output.stderr.strip())
-
-        except FileNotFoundError as e:
-            pass
-
-@virtualenv-upgrade:
-    for filename in $(ls -d ~/.virtualenvs/*/); do \
-        echo "$filename"; \
-        $filename/bin/python --version; \
-        $filename/bin/python -m pip --version; \
-        $filename/bin/python -m pip install --upgrade pip; \
-        echo; \
-    done
-
-    # TODO: finish researching this pattern...
-    # https://stackoverflow.com/questions/44692668/python-how-can-i-update-python-version-in-pyenv-virtual-environment
-
-    # pip freeze > requirements.lock
-    # pyenv virtualenv-delete a-virtualenv-name
-    # pyenv virtualenv 3.9.0 a-virtualenv-name
-    # pip install -r requirements.lock
-    # rm requirements.lock
-
-@virtualenv-workon:
-    for filename in $(ls -d ~/.virtualenvs/*/); do \
-        echo "$filename"; \
-        $filename/bin/python --version; \
-        $filename/bin/python -m pip --version; \
-        echo; \
-    done
 
 # ----------------------------------------------------------------
 # TODO: ...
