@@ -54,7 +54,9 @@ Available recipes:
     install
     kill-tabs                  # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
     lock                       # Updates our lockfiles without installing dependencies
-    ollama *ARGS
+    ollama-download
+    ollama-list
+    ollama-serve *ARGS
     open-syncthing
     outdated
     pip-install *ARGS
@@ -78,9 +80,6 @@ Available recipes:
     virtualenv-upgrade
     virtualenv-workon
     xcode-upgrade
-    ollama download
-    ollama list
-    ollama serve *ARGS
 ```
 
 <!-- [[[end]]] -->
