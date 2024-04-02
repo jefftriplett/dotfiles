@@ -42,19 +42,6 @@ if command -v starship > /dev/null; then
     eval "$(starship init bash)"
 fi
 
-#################
-# Ruby settings #
-#################
-
-if command -v rbenv > /dev/null; then
-    eval "$(rbenv init -)";
-fi
-
-if [[ -s "${HOME}/.rvm/scripts/rvm" ]]; then
-    # shellcheck source=/dev/null
-    source "${HOME}/.rvm/scripts/rvm"
-fi
-
 ###########################
 # Python / pyenv settings #
 ###########################
@@ -82,23 +69,6 @@ HB_CNF_HANDLER="$(brew --prefix)/Homebrew/Library/Taps/homebrew/homebrew-command
 if [ -f "$HB_CNF_HANDLER" ]; then
     source "$HB_CNF_HANDLER";
 fi
-
-##############################
-# mcfly bash history manager #
-##############################
-
-# if [[ -f "$(brew --prefix)/opt/mcfly/mcfly.bash" ]]; then
-#     # shellcheck source=/dev/null
-#     source "$(brew --prefix)/opt/mcfly/mcfly.bash"
-# fi
-
-####################
-# thefuck settings #
-####################
-
-# if command -v thefuck > /dev/null; then
-#     eval "$(thefuck --alias)";
-# fi
 
 ################
 # add ssh keys #

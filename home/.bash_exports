@@ -52,16 +52,6 @@ export GIT_PS1_SHOWDIRTYSTATE=true
 export GIT_PS1_SHOWUNTRACKEDFILES=true
 
 ###################
-# golang settings #
-###################
-
-export GOPATH="${HOME}/golang"
-export GOROOT=/usr/local/opt/go/libexec
-
-PATH="${PATH}:$GOPATH/bin"
-PATH="${PATH}:$GOROOT/bin"
-
-###################
 # python settings #
 ###################
 
@@ -82,26 +72,10 @@ PATH="${PATH}:${HOME}/.local/bin"
 # python / pyenv settings #
 ###########################
 
-export PYENV_ROOT="${HOME}/.pyenv"
-export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
+# export PYENV_ROOT="${HOME}/.pyenv"
+# export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
 
-PATH="${PATH}:${PYENV_ROOT}/bin"
-
-#########################
-# ruby / rbenv settings #
-#########################
-
-export RBENV_ROOT="$(brew --prefix ruby)"
-
-PATH="${PATH}:$(brew --prefix ruby)/bin"
-
-################
-# rust / cargo #
-################
-
-export CARGO_ROOT="${HOME}/.cargo"
-
-PATH="${PATH}:${CARGO_ROOT}/bin"
+# PATH="${PATH}:${PYENV_ROOT}/bin"
 
 #######
 # bun #
