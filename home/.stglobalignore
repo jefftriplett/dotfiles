@@ -1,0 +1,10 @@
+*.override.yml
+*.pyc
+*.pyi
+.*cache/
+.DS_Store
+.envrc
+.nox/
+.vendor/
+checkouts
+pyrightconfig.json
