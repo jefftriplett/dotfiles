@@ -6,27 +6,19 @@
 
 set completion-ignore-case On
 
-# auto-load bash_completion.d
-if [ -d /usr/local/etc/bash_completion.d ]; then
-    for filename in "/usr/local/etc/bash_completion.d/"*; do
-        if [ -f "${filename}" ]; then
-            # shellcheck source=/dev/null
-            source "${filename}"
-            # echo "${filename}"
-        fi
+if type brew &>/dev/null
+then
+  HOMEBREW_PREFIX="$(brew --prefix)"
+  if [[ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]
+  then
+    source "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+  else
+    for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*
+    do
+      [[ -r "${COMPLETION}" ]] && source "${COMPLETION}"
     done
+  fi
 fi
-
-# elif [ -d /opt/homebrew/etc/bash_completion.d ]; then
-#     for filename in "/opt/homebrew/etc/bash_completion.d/"*; do
-#         if [ -f "${filename}" ]; then
-#             # shellcheck source=/dev/null
-#             source "${filename}"
-#         fi
-#     done
-# fi
-
-# [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
 ################
 # bash history #
