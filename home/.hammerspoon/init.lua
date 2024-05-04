@@ -28,32 +28,34 @@ hs.logger.historySize(200)
 ---------------------
 
 -- Monitor names
-local display_default = '1680x1050'
-local display_home = '2560x1440'
-local display_home_4k = '2560x1440@1x'
-local display_home_4k_dual = '1920x1080@2x' -- '3008x1692@2x'
-local display_home_4k_low = '2048x1152@2x'
-local display_imac = '1920x1200'
-local display_retina = '1440x900@2x'
-local display_retina_2020 = '1792x1120@2x'
-local display_sidecar = '1366x1024@2x'
-local display_work = '2560x1600'
-local display_work_vertical = '1200x1920'
-local display_work_vertical_2 = '1600x2560'
+local display_1200x1920 = '1200x1920'
+local display_1366x1024 = '1366x1024@2x'
+local display_1440x900 = '1440x900@2x'
+local display_1600x2560 = '1600x2560'
+local display_1680x1050 = '1680x1050'
+local display_1792x1120 = '1792x1120@2x'
+local display_1920x1080 = '1920x1080@2x'
+local display_1920x1200 = '1920x1200'
+local display_2048x1152 = '2048x1152@2x'
+local display_2048x1280 = '2048x1280'
+local display_2560x1440 = '2560x1440'
+local display_2560x1440x1 = '2560x1440@1x'
+local display_2560x1600 = '2560x1600'
 
 -- Monitor grids
-local display_default_grid = '2x4'
-local display_home_4k_dual_grid = '6x4'
-local display_home_4k_grid = '6x4'
-local display_home_4k_low_grid = '6x4'
-local display_home_grid = '6x4'
-local display_imac_grid = '6x2'
-local display_retina_2020_grid = '6x4'
-local display_retina_grid = '3x2'
-local display_sidecar_grid = '6x4'
-local display_work_grid = '6x4'
-local display_work_vertical_grid = '2x6'
-local display_work_vertical_2_grid = '1x3'
+local display_1200x1920_grid = '2x6'
+local display_1366x1024_grid = '6x4'
+local display_1440x900_grid = '3x2'
+local display_1600x2560_grid = '1x3'
+local display_1680x1050_grid = '2x4'
+local display_1792x1120_grid = '6x4'
+local display_1920x1080_grid = '6x4'
+local display_1920x1200_grid = '6x2'
+local display_2048x1152_grid = '6x4'
+local display_2048x1280_grid = '6x4'
+local display_2560x1440_grid = '6x4'
+local display_2560x1440x1_grid = '6x4'
+local display_2560x1600_grid = '6x4'
 
 -- Watchers and other useful objects
 local app_watcher = nil
@@ -78,70 +80,75 @@ function setup_grid()
     print('setup_grid()')
 
     -- MacBook Pro (default) --
-    if hs.screen.find(display_default) then
-        print('found', display_default)
-        hs.grid.setGrid(display_default_grid, display_default)
+    if hs.screen.find(display_1680x1050) then
+        print('found', display_1680x1050)
+        hs.grid.setGrid(display_1680x1050_grid, display_1680x1050)
     end
 
     -- Home Display --
-    if hs.screen.find(display_home) then
-        print('found', display_home)
-        hs.grid.setGrid(display_home_grid, display_home)
+    if hs.screen.find(display_2560x1440) then
+        print('found', display_2560x1440)
+        hs.grid.setGrid(display_2560x1440_grid, display_2560x1440)
     end
 
     -- Home Display 4K --
-    if hs.screen.find(display_home_4k) then
-        print('found', display_home_4k)
-        hs.grid.setGrid(display_home_4k_grid, display_home_4k)
+    if hs.screen.find(display_2560x1440x1) then
+        print('found', display_2560x1440x1)
+        hs.grid.setGrid(display_2560x1440x1_grid, display_2560x1440x1)
     end
 
     -- Home Display 4K Dual --
-    if hs.screen.find(display_home_4k_dual) then
-        print('found', display_home_4k_dual)
-        hs.grid.setGrid(display_home_4k_dual_grid, display_home_4k_dual)
+    if hs.screen.find(display_1920x1080) then
+        print('found', display_1920x1080)
+        hs.grid.setGrid(display_1920x1080_grid, display_1920x1080)
     end
 
     -- Home Display 4K Low(er) --
-    if hs.screen.find(display_home_4k_low) then
-        print('found', display_home_4k_low)
-        hs.grid.setGrid(display_home_4k_low_grid, display_home_4k_low)
+    if hs.screen.find(display_2048x1152) then
+        print('found', display_2048x1152)
+        hs.grid.setGrid(display_2048x1152_grid, display_2048x1152)
     end
 
     -- iMac --
-    if hs.screen.find(display_imac) then
-        print('found', display_imac)
-        hs.grid.setGrid(display_imac_grid, display_imac)
+    if hs.screen.find(display_1920x1200) then
+        print('found', display_1920x1200)
+        hs.grid.setGrid(display_1920x1200_grid, display_1920x1200)
     end
 
     -- Work Display(s) --
-    if hs.screen.find(display_retina) then
-        print('found', display_retina)
-        hs.grid.setGrid(display_retina_grid, display_retina)
+    if hs.screen.find(display_1440x900) then
+        print('found', display_1440x900)
+        hs.grid.setGrid(display_1440x900_grid, display_1440x900)
     end
 
-    if hs.screen.find(display_retina_2020) then
-        print('found', display_retina_2020)
-        hs.grid.setGrid(display_retina_2020_grid, display_retina_2020)
+    if hs.screen.find(display_1792x1120) then
+        print('found', display_1792x1120)
+        hs.grid.setGrid(display_1792x1120_grid, display_1792x1120)
     end
 
-    if hs.screen.find(display_sidecar) then
-        print('found', display_sidecar)
-        hs.grid.setGrid(display_sidecar_grid, display_sidecar)
+    if hs.screen.find(display_1366x1024) then
+        print('found', display_1366x1024)
+        hs.grid.setGrid(display_1366x1024_grid, display_1366x1024)
     end
 
-    if hs.screen.find(display_work) then
-        print('found', display_work)
-        hs.grid.setGrid(display_work_grid, display_work)
+    if hs.screen.find(display_2048x1280) then
+        print('found', display_2048x1280)
+        hs.grid.setGrid(display_2048x1280_grid, display_2048x1280)
     end
 
-    if hs.screen.find(display_work_vertical) then
-        print('found', display_work_vertical)
-        hs.grid.setGrid(display_work_vertical_grid, display_work_vertical)
+    if hs.screen.find(display_2560x1600) then
+        print('found', display_2560x1600)
+        hs.grid.setGrid(display_2560x1600_grid, display_2560x1600)
     end
 
-    if hs.screen.find(display_work_vertical_2) then
-        print('found', display_work_vertical_2)
-        hs.grid.setGrid(display_work_vertical_2_grid, display_work_vertical_2)
+    if hs.screen.find(display_1200x1920) then
+        print('found', display_1200x1920)
+        hs.grid.setGrid(display_1200x1920_grid, display_1200x1920)
+    end
+
+    if hs.screen.find(display_1600x2560) then
+        print('found', display_1600x2560)
+        hs.grid.setGrid(display_1600x2560_grid, display_1600x2560)
     end
 end
 
@@ -197,11 +204,11 @@ function screens_changed_callback()
     setup_grid()
 
     -- arrange apps for work --
-    local vertical = hs.screen.find(display_work_vertical)
-    local main = hs.screen.find(display_retina_2020)
+    local vertical = hs.screen.find(display_1200x1920)
+    local main = hs.screen.find(display_1792x1120)
 
     if not main then
-        main = hs.screen.find(display_retina)
+        main = hs.screen.find(display_1440x900)
     end
 
     print('main:', main)
