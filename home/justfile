@@ -68,6 +68,12 @@ RICH_THEME := "dracula"
     just _homebrew-upgrade
     # just _homebrew-cleanup
 
+@upgrade-all:
+    just pipx-upgrade-all
+    just pyenv-upgrade-all
+    mise install
+    mise reshim
+
 # ----------------------------------------------------------------
 # Homebrew and general wrappers - https://brew.sh
 # ----------------------------------------------------------------
@@ -146,7 +152,7 @@ RICH_THEME := "dracula"
         --system \
         {{ ARGS }}
 
-@pipx-upgrade:
+@pipx-upgrade-all:
     pipx upgrade-all --force
 
 @_python-bootstrap:
