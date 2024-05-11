@@ -6,5 +6,5 @@
 export OLLAMA_HOST=0.0.0.0:11434
 export OLLAMA_ORIGINS=*
 
-[[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
-eval "$(atuin init bash)"
+# [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
+# eval "$(atuin init bash)"
