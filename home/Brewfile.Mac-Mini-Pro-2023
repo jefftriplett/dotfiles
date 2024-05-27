@@ -6,7 +6,6 @@ tap "federico-terzi/espanso"
 tap "goodwithtech/r"
 tap "homebrew/bundle"
 tap "homebrew/cask-drivers"
-tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/command-not-found"
 tap "homebrew/services"
@@ -27,6 +26,7 @@ brew "coreutils"
 brew "libtool"
 brew "libyaml"
 brew "asdf"
+brew "atuin"
 brew "awscli"
 brew "bash"
 brew "bash-completion"
@@ -93,7 +93,6 @@ brew "git-open"
 brew "git-standup"
 brew "gitmoji"
 brew "glow"
-brew "go"
 brew "graphviz"
 brew "guetzli"
 brew "gum"
@@ -159,7 +158,6 @@ brew "redis"
 brew "rename"
 brew "ripgrep"
 brew "rmate"
-brew "rust"
 brew "scorecard"
 brew "scrcpy"
 brew "screenfetch"
@@ -321,6 +319,7 @@ mas "Meeter", id: 1510445899
 mas "MenubarX", id: 1575588022
 mas "Mic Drop", id: 1489816366
 mas "Microsoft Remote Desktop", id: 1295203466
+mas "Mona", id: 1659154653
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Pandan", id: 1569600264
@@ -340,6 +339,7 @@ mas "Toggl Track", id: 1291898086
 mas "ToothFairy", id: 1191449274
 mas "Ulysses", id: 1225570693
 mas "Webcam Settings Control", id: 1172053162
+mas "Xcode", id: 497799835
 vscode "dracula-theme.theme-dracula"
 vscode "editorconfig.editorconfig"
 vscode "github.copilot"
