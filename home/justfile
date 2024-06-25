@@ -94,11 +94,19 @@ RICH_THEME := "dracula"
 @homebrew-services:
     brew services
 
-@_homebrew-services-restart:
-    # -brew services restart skhd
-    # -brew services restart spacebar
-    # -brew services restart yabai
-    -brew services restart ollama
+_homebrew-services-restart:
+    #!/bin/bash
+
+    # Get the list of started services
+    started_services=$(brew services list | awk '$2 == "started" {print $1}')
+
+    # Loop through each service and restart it
+    for service in $started_services; do
+        # echo "Restarting $service..."
+        brew services restart $service
+    done
+
+    # echo "All started services have been restarted."
 
 @_homebrew-services-stop:
     # -brew services stop yabai
