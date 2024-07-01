@@ -269,13 +269,11 @@ cask "yubico-yubikey-personalization-gui"
 cask "zed"
 mas "1Keyboard", id: 766939888
 mas "Annotate", id: 918207447
-mas "Bear", id: 1091189122
 mas "Bitwarden", id: 1352778147
 mas "Clean", id: 418412301
 mas "Craft", id: 1487937127
 mas "Directive", id: 1503550067
 mas "EasyRes", id: 688211836
-mas "Evernote", id: 406056744
 mas "Fantastical", id: 975937182
 mas "Front and Center", id: 1493996622
 mas "GarageBand", id: 682658836
@@ -296,18 +294,16 @@ mas "Pixelmator", id: 407963104
 mas "Pixelmator Pro", id: 1289583905
 mas "Play", id: 1596506190
 mas "Primitive", id: 1175103038
-mas "ReadKit", id: 1615798039
 mas "ReadKit", id: 588726889
+mas "ReadKit", id: 1615798039
 mas "Recordia", id: 1529006487
 mas "Signals", id: 1453293391
 mas "Skitch", id: 425955336
 mas "SnippetsLab", id: 1006087419
 mas "Tailscale", id: 1475387142
-mas "Textual IRC Client", id: 1262957439
 mas "The Unarchiver", id: 425424353
 mas "Toggl Track", id: 1291898086
 mas "ToothFairy", id: 1191449274
-mas "Ulysses", id: 1225570693
 mas "Webcam Settings Control", id: 1172053162
 mas "Xcode", id: 497799835
 whalebrew "whalebrew/whalesay"
