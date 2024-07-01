@@ -43,3 +43,6 @@ export OLLAMA_ORIGINS := "http://*"
 
 @ollama-serve *ARGS:
     tandem 'ollama serve {{ ARGS }}'
+
+@ollama-setenv:
+    launchctl setenv OLLAMA_HOST "0.0.0.0"
