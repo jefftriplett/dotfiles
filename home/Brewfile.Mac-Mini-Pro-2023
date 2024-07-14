@@ -13,6 +13,7 @@ tap "homeport/tap"
 tap "hynek/tap"
 tap "jzaleski/jzaleski"
 tap "koekeishiya/formulae"
+tap "oktadeveloper/tap"
 tap "oven-sh/bun"
 tap "robotsandpencils/made"
 tap "rosszurowski/tap"
@@ -39,7 +40,7 @@ brew "blueutil"
 brew "node"
 brew "bower"
 brew "brew-gem"
-brew "caddy"
+brew "caddy", link: false
 brew "curl"
 brew "cargo-c"
 brew "cfn-lint"
@@ -55,7 +56,8 @@ brew "composer"
 brew "dark-mode"
 brew "devd"
 brew "direnv"
-brew "docker-compose"
+brew "docker", link: false
+brew "docker-compose", link: false
 brew "docker-slim"
 brew "dockutil"
 brew "doctl"
@@ -69,7 +71,7 @@ brew "sdl2"
 brew "xvid"
 brew "ffmpeg"
 brew "qt"
-brew "fceux", link: false
+brew "fceux"
 brew "fd"
 brew "ffmpeg@4"
 brew "figlet"
@@ -94,6 +96,7 @@ brew "git-open"
 brew "git-standup"
 brew "gitmoji"
 brew "glow"
+brew "go"
 brew "graphviz"
 brew "guetzli"
 brew "gum"
@@ -107,10 +110,11 @@ brew "iproute2mac"
 brew "jack"
 brew "jq"
 brew "just"
-brew "kubernetes-cli"
+brew "kubernetes-cli", link: false
 brew "lazygit"
 brew "libev"
 brew "libxmlsec1"
+brew "llm"
 brew "loc"
 brew "lolcat"
 brew "lua"
@@ -326,8 +330,8 @@ mas "Pandan", id: 1569600264
 mas "Paprika Recipe Manager", id: 451907568
 mas "Pixelmator", id: 407963104
 mas "Pixelmator Pro", id: 1289583905
-mas "ReadKit", id: 1615798039
 mas "ReadKit", id: 588726889
+mas "ReadKit", id: 1615798039
 mas "Recordia", id: 1529006487
 mas "Signals", id: 1453293391
 mas "Skitch", id: 425955336
