@@ -227,11 +227,24 @@ _homebrew-services-restart:
     just _pyenv-set-global
 
 # ----------------------------------------------------------------
-# TODO: ...
+# Useful tailscale/golink shortcuts
 # ----------------------------------------------------------------
+
+@open-docs:
+    open http://go/docs
+
+@open-go:
+    open http://go
+
+@open-ha:
+    open http://go/homeassistant
 
 @open-syncthing:
     open http://go/syncthing
+
+# ----------------------------------------------------------------
+# TODO: ...
+# ----------------------------------------------------------------
 
 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
 @kill-tabs:
