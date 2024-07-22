@@ -1,10 +1,11 @@
+set dotenv-load := false
+set export := true
+set unstable := true
+
 import '.justfiles/macos.just'
 import '.justfiles/ollama.just'
 import '.justfiles/virtualenv.just'
 import '.justfiles/virtualenvwrapper.just'
-
-set dotenv-load := false
-set export := true
 
 # export HOMEBREW_NO_AUTO_UPDATE := "true"
 
@@ -17,16 +18,14 @@ python_312 := `pyenv latest 3.12`
 python_39 := `pyenv latest 3.9`
 RICH_THEME := "dracula"
 
+alias lock := freeze
+
 # ----------------------------------------------------------------
 # In the spirit of "Scripts to rule them all"
 # ----------------------------------------------------------------
 
 @_default:
     just --list
-
-# format and overwrite justfile
-@fmt:
-    just --fmt --unstable
 
 # installs/updates all dependencies
 @bootstrap:
@@ -42,12 +41,16 @@ RICH_THEME := "dracula"
 @cleanup DAYS="0":
     just _homebrew-cleanup {{ DAYS }}
 
-@install:
-    homesick symlink
+# format and overwrite justfile
+@fmt:
+    just --fmt --unstable
 
 # Updates our lockfiles without installing dependencies
-@lock:
-    just _homebrew-lock
+@freeze:
+    just _homebrew-freeze
+
+@install:
+    homesick symlink
 
 @outdated:
     just _homebrew-outdated
@@ -81,8 +84,7 @@ RICH_THEME := "dracula"
 @_homebrew-cleanup DAYS="0":
     brew cleanup --prune={{ DAYS }}
 
-# @_homebrew-freeze:
-@_homebrew-lock:
+@_homebrew-freeze:
     # touch "$HOME/.homesick/repos/dotfiles/home/Brewfile.$HOST"
     cd "$HOME/.homesick/repos/dotfiles/home" && \
         mv "Brewfile.$HOST" "Brewfile.$HOST.bak" && \
