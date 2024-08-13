@@ -1,6 +1,6 @@
 set dotenv-load := false
 set export := true
-# set unstable := true
+set unstable := true
 
 export JUST_UNSTABLE := "true"
 
