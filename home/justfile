@@ -253,7 +253,7 @@ _homebrew-services-restart:
     bunx kill-tabs
 
 @_update-brewfile:
-    cd "$HOME/.homesick/repos/dotfiles/home" && pipx run --no-cache --quiet --spec cogapp cog -Pr ./Brewfile.cog
+    cd "$HOME/.homesick/repos/dotfiles/home" && uv run --with cogapp cog -Pr ./Brewfile.cog
 
 @_update-readme-docs:
-    cd "$HOME/.homesick/repos/dotfiles" && pipx run --no-cache --quiet --spec cogapp cog -Pr ./README.md
+    cd "$HOME/.homesick/repos/dotfiles" && uv run --with cogapp cog -Pr ./README.md

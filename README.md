@@ -47,13 +47,14 @@ run("just --justfile=./home/justfile", with_console=True)
 $ just --justfile=./home/justfile
 
 Available recipes:
-    bootstrap                      # installs/updates all dependencies
+    bootstrap                                 # installs/updates all dependencies
     cleanup DAYS="0"
-    fmt                            # format and overwrite justfile
+    fmt                                       # format and overwrite justfile
+    freeze                                    # Updates our lockfiles without installing dependencies
+    lock                                      # alias for `freeze`
     homebrew-services
     install
-    kill-tabs                      # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
-    lock                           # Updates our lockfiles without installing dependencies
+    kill-tabs                                 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
     macos-timemachine-boost
     macos-timemachine-boost-complete
     macos-timemachine-delete *ARGS
@@ -62,21 +63,27 @@ Available recipes:
     ollama-copy-plist
     ollama-diff-plist
     ollama-download
+    ollama-getenv
     ollama-list
     ollama-serve *ARGS
+    ollama-setenv
+    open-docs
+    open-go
+    open-ha
     open-syncthing
     outdated
     pip-install *ARGS
     pip-uninstall *ARGS
-    pipx-upgrade
+    pipx-upgrade-all
     postgresql-upgrade
     pyenv-upgrade +ARGS="--skip-existing"
     pyenv-upgrade-all +ARGS="--skip-existing"
     python-update
     restart
     stop
-    update                         # updates a project to run at its current version
+    update                                    # updates a project to run at its current version
     upgrade
+    upgrade-all
     virtualenv-scan
     virtualenv-upgrade
     virtualenv-workon
