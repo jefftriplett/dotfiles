@@ -51,6 +51,9 @@ alias lock := freeze
 @freeze:
     just _homebrew-freeze
 
+@git-commit-msg:
+    git diff --cached | llm -t git-commit-msg
+
 @install:
     homesick symlink
 
