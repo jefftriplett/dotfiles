@@ -3,6 +3,7 @@
 # ----------------------------------------------------------------
 
 export OLLAMA_HOST := "0.0.0.0:11434"
+export OLLAMA_KEEP_ALIVE := "30m"
 export OLLAMA_ORIGINS := "http://*"
 
 @ollama-copy-plist:
@@ -43,6 +44,7 @@ export OLLAMA_ORIGINS := "http://*"
 
 @ollama-getenv:
     launchctl getenv OLLAMA_HOST
+    launchctl getenv OLLAMA_KEEP_ALIVE
     launchctl getenv OLLAMA_ORIGINS
 
 @ollama-serve *ARGS:
@@ -50,4 +52,5 @@ export OLLAMA_ORIGINS := "http://*"
 
 @ollama-setenv:
     launchctl setenv OLLAMA_HOST {{ OLLAMA_HOST }}
+    launchctl setenv OLLAMA_KEEP_ALIVE {{ OLLAMA_KEEP_ALIVE }}
     launchctl setenv OLLAMA_ORIGINS {{ OLLAMA_ORIGINS }}
