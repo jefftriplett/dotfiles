@@ -61,3 +61,8 @@ home/bin/.docker-slim-state/
 home/bin/docker-slim
 home/bin/docker-slim-sensor
 home/bin/gam
+
+# zed
+.tmp*
+home/.config/zed/embeddings/
+home/.config/zed/prompts/
