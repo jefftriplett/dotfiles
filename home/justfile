@@ -5,11 +5,11 @@ set export := true
 
 export JUST_UNSTABLE := "true"
 
-import '.justfiles/llm.just'
-import '.justfiles/macos.just'
-import '.justfiles/ollama.just'
-import '.justfiles/virtualenv.just'
-import '.justfiles/virtualenvwrapper.just'
+import '.justfiles/llm.justfile'
+import '.justfiles/macos.justfile'
+import '.justfiles/ollama.justfile'
+import '.justfiles/virtualenv.justfile'
+import '.justfiles/virtualenvwrapper.justfile'
 
 # export HOMEBREW_NO_AUTO_UPDATE := "true"
 
