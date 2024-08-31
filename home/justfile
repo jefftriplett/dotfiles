@@ -1,9 +1,11 @@
 set dotenv-load := false
 set export := true
+
 # set unstable := true
 
 export JUST_UNSTABLE := "true"
 
+import '.justfiles/llm.just'
 import '.justfiles/macos.just'
 import '.justfiles/ollama.just'
 import '.justfiles/virtualenv.just'
