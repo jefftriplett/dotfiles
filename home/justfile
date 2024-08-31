@@ -71,7 +71,9 @@ alias lock := freeze
 
 # updates a project to run at its current version
 @update:
-    just _homebrew-update
+    just upgrade
+    just restart
+    just cleanup
 
 @upgrade:
     just _homebrew-update
