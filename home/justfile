@@ -171,8 +171,14 @@ _homebrew-services-restart:
         --system \
         {{ ARGS }}
 
-@pipx-upgrade-all:
-    pipx upgrade-all --force
+@uv-install:
+    uv tool install --python {{ python_312 }} cogapp
+    uv tool install --python {{ python_312 }} grip
+    uv tool install --python {{ python_312 }} justpath
+    uv tool install --python {{ python_312 }} pyright
+    uv tool install --python {{ python_312 }} rich-cli
+    uv tool install --python {{ python_312 }} ruff-lsp
+    uv tool install --python {{ python_312 }} youtube-dl
 
 @_python-bootstrap:
     PIP_REQUIRE_VIRTUALENV=false python -m pip install \
@@ -184,7 +190,6 @@ _homebrew-services-restart:
     python -m uv pip install \
             --system \
             --upgrade \
-        pipx \
         virtualenv \
         virtualenvwrapper \
         wheel
@@ -196,22 +201,6 @@ _homebrew-services-restart:
 
     # pipx install python-language-server[all]
     # pipx inject python-language-server pyls-black mypy-ls pyls-isort
-
-# @pip-update:
-#     for version in `pyenv versions --bare`; do \
-#         echo "Upgrading Python ${version}"; \
-#     done
-#
-#     eval "$(pyenv init --path)" && eval "$(pyenv init -)" && pyenv shell {{ PYTHON_ALL }}
-#
-#     # #!/usr/bin/env sh
-#     # set -euxo pipefail
-#     # for version in `pyenv versions --bare` ; do \
-#     #     echo "Upgrading Python ${version}"; \
-#     #     # pyenv shell ${version}; \
-#     # done
-#     # pyenv shell {{ PYTHON_ALL }}
-# pipx: https://pypa.github.io/pipx/
 
 @_pyenv-set-global:
     pyenv global \
