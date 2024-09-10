@@ -206,6 +206,7 @@ cask "cleanmymac"
 cask "clipy"
 cask "codeql"
 cask "cscreen"
+cask "cursor"
 cask "dash"
 cask "discord"
 cask "electron"
@@ -286,7 +287,6 @@ mas "Microsoft Remote Desktop", id: 1295203466
 mas "Mona", id: 1659154653
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Pandan", id: 1569600264
 mas "Pixelmator", id: 407963104
 mas "Pixelmator Pro", id: 1289583905
 mas "Play", id: 1596506190
@@ -309,6 +309,7 @@ vscode "editorconfig.editorconfig"
 vscode "esbenp.prettier-vscode"
 vscode "ms-azuretools.vscode-docker"
 vscode "ms-python.black-formatter"
+vscode "ms-python.debugpy"
 vscode "ms-python.pylint"
 vscode "ms-python.python"
 vscode "ms-python.vscode-pylance"
