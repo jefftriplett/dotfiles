@@ -29,12 +29,6 @@ There are my personal dotfiles. They are managed using:
 $ just bootstrap
 ```
 
-2. Let ansible do its thing
-
-```shell
-$ just install
-```
-
 # Justfile Usage
 
 <!-- [[[cog
