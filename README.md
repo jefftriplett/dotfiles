@@ -19,7 +19,7 @@ There are my personal dotfiles. They are managed using:
 
 - [pip][pip]: The PyPA recommended tool for installing and managing Python packages.
 - [pyenv][pyenv]: Simple Python version management.
-- [uv]: An extremely fast Python package installer and resolver, written in Rust.
+- [uv][uv]: An extremely fast Python package installer and resolver, written in Rust.
 
 ## Installation
 
