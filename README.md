@@ -132,7 +132,6 @@ Available recipes:
 [homesick]: https://github.com/technicalpickles/homesick
 [modd]: https://github.com/cortesi/modd
 [pip]: https://pip.pypa.io/en/latest/
-[pipenv]: http://docs.pipenv.org/en/latest/
 [pyenv]: https://github.com/yyuu/pyenv
 [starship]: https://starship.rs/
 [uv]: https://github.com/astral-sh/uv
