@@ -81,7 +81,6 @@ alias lock := freeze
     # just _homebrew-cleanup
 
 @upgrade-all:
-    just pipx-upgrade-all
     just pyenv-upgrade-all
     mise install
     mise reshim
@@ -156,7 +155,6 @@ _homebrew-services-restart:
 
 # ----------------------------------------------------------------
 # Python
-#   pipx - https://pypa.github.io/pipx/
 #   pyenv - https://github.com/pyenv/pyenv
 # ----------------------------------------------------------------
 
@@ -171,14 +169,14 @@ _homebrew-services-restart:
         --system \
         {{ ARGS }}
 
-@uv-install:
-    uv tool install --python {{ python_312 }} cogapp
-    uv tool install --python {{ python_312 }} grip
-    uv tool install --python {{ python_312 }} justpath
-    uv tool install --python {{ python_312 }} pyright
-    uv tool install --python {{ python_312 }} rich-cli
-    uv tool install --python {{ python_312 }} ruff-lsp
-    uv tool install --python {{ python_312 }} youtube-dl
+@uv-install *ARGS:
+    uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
+    uv tool install --python {{ python_312 }} grip {{ ARGS }}
+    uv tool install --python {{ python_312 }} justpath {{ ARGS }}
+    uv tool install --python {{ python_312 }} pyright {{ ARGS }}
+    uv tool install --python {{ python_312 }} rich-cli {{ ARGS }}
+    uv tool install --python {{ python_312 }} ruff-lsp {{ ARGS }}
+    uv tool install --python {{ python_312 }} youtube-dl {{ ARGS }}
 
 @_python-bootstrap:
     PIP_REQUIRE_VIRTUALENV=false python -m pip install \
@@ -198,9 +196,6 @@ _homebrew-services-restart:
     just _python-bootstrap
     just _pyenv-update
     just _pyenv-set-global
-
-    # pipx install python-language-server[all]
-    # pipx inject python-language-server pyls-black mypy-ls pyls-isort
 
 @_pyenv-set-global:
     pyenv global \

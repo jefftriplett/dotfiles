@@ -18,22 +18,21 @@ There are my personal dotfiles. They are managed using:
 ## Python
 
 - [pip][pip]: The PyPA recommended tool for installing and managing Python packages.
-- [pipx][pipx]: execute binaries from Python packages in isolated environments.
 - [pyenv][pyenv]: Simple Python version management.
 - [uv]: An extremely fast Python package installer and resolver, written in Rust.
 
 ## Installation
 
-1. Bootstrap our environment (install ansible via pipx)
+1. Bootstrap our environment (install uv)
 
 ```shell
-$ make bootstrap
+$ just bootstrap
 ```
 
 2. Let ansible do its thing
 
 ```shell
-$ make install
+$ just install
 ```
 
 # Justfile Usage
@@ -52,9 +51,12 @@ Available recipes:
     fmt                                       # format and overwrite justfile
     freeze                                    # Updates our lockfiles without installing dependencies
     lock                                      # alias for `freeze`
+    git-commit-msg
     homebrew-services
     install
     kill-tabs                                 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
+    llm-install
+    llm-upgrade
     macos-timemachine-boost
     macos-timemachine-boost-complete
     macos-timemachine-delete *ARGS
@@ -74,7 +76,6 @@ Available recipes:
     outdated
     pip-install *ARGS
     pip-uninstall *ARGS
-    pipx-upgrade-all
     postgresql-upgrade
     pyenv-upgrade +ARGS="--skip-existing"
     pyenv-upgrade-all +ARGS="--skip-existing"
@@ -84,6 +85,7 @@ Available recipes:
     update                                    # updates a project to run at its current version
     upgrade
     upgrade-all
+    uv-install *ARGS
     virtualenv-scan
     virtualenv-upgrade
     virtualenv-workon
@@ -137,7 +139,6 @@ Available recipes:
 [modd]: https://github.com/cortesi/modd
 [pip]: https://pip.pypa.io/en/latest/
 [pipenv]: http://docs.pipenv.org/en/latest/
-[pipx]: https://pipxproject.github.io/pipx/
 [pyenv]: https://github.com/yyuu/pyenv
 [starship]: https://starship.rs/
 [uv]: https://github.com/astral-sh/uv

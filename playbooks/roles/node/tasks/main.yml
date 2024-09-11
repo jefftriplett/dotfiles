@@ -1,9 +1,0 @@
----
-
-- name: Update node.js Packages
-  tags: node
-  npm:
-    name: "{{ item.name }}"
-    state: present
-    global: yes
-  with_items: "{{ node_system_packages }}"

@@ -1,8 +1,0 @@
----
-
-- name: Update Ruby Gems
-  tags: ruby
-  gem:
-    name: "{{ item.name }}"
-    state: present
-  with_items: "{{ ruby_system_packages }}"
