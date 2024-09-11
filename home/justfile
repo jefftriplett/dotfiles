@@ -5,7 +5,8 @@ set export := true
 
 export JUST_UNSTABLE := "true"
 
-import '.justfiles/llm.justfile'
+mod llm '.justfiles/llm.justfile'
+
 import '.justfiles/macos.justfile'
 import '.justfiles/ollama.justfile'
 import '.justfiles/virtualenv.justfile'
