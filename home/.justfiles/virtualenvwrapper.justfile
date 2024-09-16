@@ -53,24 +53,24 @@ postrmvirtualenv:
 preactivate:
     #!/usr/bin/env sh
     # VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
-    uvx --quiet rich --print "[green]preactivate[/green]"
+    uvx --quiet rich --print "[yellow]preactivate[/yellow]"
 
 predeactivate:
     #!/usr/bin/env sh
-    uvx --quiet rich --print "[green]predeactivate[/green]"
+    uvx --quiet rich --print "[yellow]predeactivate[/yellow]"
 
 premkproject:
     #!/usr/bin/env sh
-    uvx --quiet rich --print "[green]premkproject[/green]"
+    uvx --quiet rich --print "[yellow]premkproject[/yellow]"
 
 premkvirtualenv:
     #!/usr/bin/env sh
-    uvx --quiet rich --print "[green]premkvirtualenv[/green]"
+    uvx --quiet rich --print "[yellow]premkvirtualenv[/yellow]"
 
 prermproject:
     #!/usr/bin/env sh
-    uvx --quiet rich --print "[green]prermproject[/green]"
+    uvx --quiet rich --print "[yellow]prermproject[/yellow]"
 
 prermvirtualenv:
     #!/usr/bin/env sh
-    uvx --quiet rich --print "[green]prermvirtualenv[/green]"
+    uvx --quiet rich --print "[yellow]prermvirtualenv[/yellow]"
