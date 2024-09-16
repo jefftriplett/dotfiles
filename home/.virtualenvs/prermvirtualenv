@@ -30,3 +30,5 @@ if $CONTINUE; then
     rm "${WORKSPACE_FILE}"
   fi
 fi
+
+just --justfile=${HOME}/justfile virtualenvwrapper::prermvirtualenv

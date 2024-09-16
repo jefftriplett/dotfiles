@@ -1,2 +1,4 @@
 #!/bin/bash
 # This hook is run after a project is deleted.
+
+just --justfile=${HOME}/justfile virtualenvwrapper::postrmproject

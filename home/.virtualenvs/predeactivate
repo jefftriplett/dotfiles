@@ -1,2 +1,4 @@
 #!/bin/bash
 # This hook is run before every virtualenv is deactivated.
+
+just --justfile=${HOME}/justfile virtualenvwrapper::predeactivate

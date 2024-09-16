@@ -1,2 +1,4 @@
 #!/bin/bash
 # This hook is run after a virtualenv is deleted.
+
+just --justfile=${HOME}/justfile virtualenvwrapper::postrmvirtualenv
