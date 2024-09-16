@@ -40,9 +40,7 @@ postmkproject:
 postmkvirtualenv:
     #!/usr/bin/env sh
     uvx --quiet rich --print "[green]postmkvirtualenv[/green]"
-    python -m pip install --upgrade pip
-    python -m pip install --upgrade pip-tools
-    python -m pip install --upgrade uv
+    python -m pip install --upgrade pip uv
 
 postrmproject:
     #!/usr/bin/env sh
