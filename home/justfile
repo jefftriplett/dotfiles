@@ -154,8 +154,7 @@ _homebrew-services-restart:
     brew postgresql-upgrade-database
 
 # ----------------------------------------------------------------
-# Python
-#   pyenv - https://github.com/pyenv/pyenv
+# Python recipes
 # ----------------------------------------------------------------
 
 @pip-install *ARGS:
@@ -168,26 +167,6 @@ _homebrew-services-restart:
     python -m uv pip uninstall \
         --system \
         {{ ARGS }}
-
-@uv-install *ARGS:
-    -uv python install {{ ARGS }} 3.13
-    -uv python install {{ ARGS }} 3.12
-    -uv python install {{ ARGS }} 3.11
-    -uv python install {{ ARGS }} 3.10
-    -uv python install {{ ARGS }} 3.9
-    -uv python install {{ ARGS }} 3.8
-
-@uv-reinstall *ARGS:
-    just uv-install --reinstall
-
-@uv-tool-install *ARGS:
-    uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
-    uv tool install --python {{ python_312 }} grip {{ ARGS }}
-    uv tool install --python {{ python_312 }} justpath {{ ARGS }}
-    uv tool install --python {{ python_312 }} pyright {{ ARGS }}
-    uv tool install --python {{ python_312 }} rich-cli {{ ARGS }}
-    uv tool install --python {{ python_312 }} ruff-lsp {{ ARGS }}
-    uv tool install --python {{ python_312 }} youtube-dl {{ ARGS }}
 
 @_python-bootstrap:
     PIP_REQUIRE_VIRTUALENV=false python -m pip install \
@@ -207,6 +186,10 @@ _homebrew-services-restart:
     just _python-bootstrap
     just _pyenv-update
     just _pyenv-set-global
+
+# ----------------------------------------------------------------
+# Python / pyenv recipes - https://github.com/pyenv/pyenv
+# ----------------------------------------------------------------
 
 @_pyenv-set-global:
     pyenv global \
@@ -229,6 +212,30 @@ _homebrew-services-restart:
     -pyenv install {{ ARGS }} 3.9:latest
 
     just _pyenv-set-global
+
+# ----------------------------------------------------------------
+# Python / UV recipes - https://docs.astral.sh/uv/
+# ----------------------------------------------------------------
+
+@uv-install *ARGS:
+    -uv python install {{ ARGS }} 3.13
+    -uv python install {{ ARGS }} 3.12
+    -uv python install {{ ARGS }} 3.11
+    -uv python install {{ ARGS }} 3.10
+    -uv python install {{ ARGS }} 3.9
+    -uv python install {{ ARGS }} 3.8
+
+@uv-reinstall *ARGS:
+    just uv-install --reinstall
+
+@uv-tool-install *ARGS:
+    uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
+    uv tool install --python {{ python_312 }} grip {{ ARGS }}
+    uv tool install --python {{ python_312 }} justpath {{ ARGS }}
+    uv tool install --python {{ python_312 }} pyright {{ ARGS }}
+    uv tool install --python {{ python_312 }} rich-cli {{ ARGS }}
+    uv tool install --python {{ python_312 }} ruff-lsp {{ ARGS }}
+    uv tool install --python {{ python_312 }} youtube-dl {{ ARGS }}
 
 # ----------------------------------------------------------------
 # Useful tailscale/golink shortcuts
