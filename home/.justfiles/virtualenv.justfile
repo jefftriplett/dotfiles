@@ -1,8 +1,16 @@
 # ----------------------------------------------------------------
-# virtualenv - https://virtualenv.pypa.io/en/latest/
+# virtualenv recipes - https://virtualenv.pypa.io/en/latest/
 # ----------------------------------------------------------------
 
-virtualenv-scan:
+justfile := justfile_directory() + "/.justfiles/virtualenv.justfile"
+
+@_default:
+    just --list
+
+@_fmt:
+    just --fmt --justfile {{ justfile }}
+
+scan:
     #!/usr/bin/env python
     import subprocess
     from pathlib import Path
@@ -23,7 +31,7 @@ virtualenv-scan:
         except FileNotFoundError as e:
             pass
 
-@virtualenv-upgrade:
+@upgrade:
     for filename in $(ls -d ~/.virtualenvs/*/); do \
         echo "$filename"; \
         $filename/bin/python --version; \
@@ -36,12 +44,12 @@ virtualenv-scan:
     # https://stackoverflow.com/questions/44692668/python-how-can-i-update-python-version-in-pyenv-virtual-environment
 
     # pip freeze > requirements.lock
-    # pyenv virtualenv-delete a-virtualenv-name
-    # pyenv virtualenv 3.9.0 a-virtualenv-name
+    # pyenv delete a-name
+    # pyenv virtualenv 3.9.0 a-name
     # pip install -r requirements.lock
     # rm requirements.lock
 
-@virtualenv-workon:
+@workon:
     for filename in $(ls -d ~/.virtualenvs/*/); do \
         echo "$filename"; \
         $filename/bin/python --version; \

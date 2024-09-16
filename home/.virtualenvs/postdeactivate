@@ -11,4 +11,4 @@ if ! [ -e tabset ]; then
   tabset --title "❓"
 fi
 
-just --justfile=${HOME}/justfile _postdeactivate
+just --justfile=${HOME}/justfile virtualenvwrapper::postdeactivate

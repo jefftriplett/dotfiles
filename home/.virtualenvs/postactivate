@@ -138,4 +138,4 @@ fi
 #   figurine "${VIRTUAL_ENV_NAME}"
 # fi
 
-just --justfile=${HOME}/justfile _postactivate
+just --justfile=${HOME}/justfile virtualenvwrapper::postactivate
