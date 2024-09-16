@@ -39,4 +39,4 @@ justfile := justfile_directory() + "/.justfiles/macos.justfile"
 
 @xcode-upgrade:
     sudo rm -rf /Library/Developer/CommandLineTools
-    just xcode-bootstrap
+    just --justfile {{ justfile }} xcode-bootstrap
