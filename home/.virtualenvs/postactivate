@@ -32,14 +32,11 @@ if ! [ -e "${VIRTUAL_ENV_ENVRC}" ]; then
   touch .envrc
 
   # Let's set some default ENV values
-  # echo "export COMPOSE_DOCKER_CLI_BUILD=1" >> .envrc
-  # echo "export DOCKER_BUILDKIT=1" >> .envrc
-  # echo "export DOCKER_CONTEXT=desktop-linux" >> .envrc
   echo "export DOCKER_CONTEXT=orbstack" >> .envrc
   echo "export PIP_DISABLE_PIP_VERSION_CHECK=1" >> .envrc
   echo "export PYTHONDONTWRITEBYTECODE=1" >> .envrc
   echo "export PYTHONUNBUFFERED=1" >> .envrc
-  echo "export UV_PROJECT_ENVIRONMENT=\$VIRTUAL_ENV" >> .envrc
+  #echo "export UV_PROJECT_ENVIRONMENT=\$VIRTUAL_ENV" >> .envrc
 
   # Run direnv to allow list our new ENV values
   if ! [ -e direnv ]; then
@@ -89,23 +86,27 @@ fi
 # ------------------------------------------------------------
 
 PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
-CONTINUE=false
+# CONTINUE=false
 
 if ! [ -e "${PROJECT_FILE}" ]; then
-  echo "Would you like to create a new SublimeText project for this virtualenv?"
-  CONFIRM=$(gum choose "yes" "no" --selected="yes")
+  # echo "Would you like to create a new SublimeText project for this virtualenv?"
+  # CONFIRM=$(gum choose "yes" "no" --selected="yes")
 
-  echo
+  # echo
 
-  if [[ $CONFIRM =~ "yes" ]]; then
-    CONTINUE=true
-  fi
+  # if [[ $CONFIRM =~ "yes" ]]; then
+  #   CONTINUE=true
+  # fi
 
-  if $CONTINUE; then
-    if ! [ -e jq ]; then
-      echo "Creating ${PROJECT_FILE}"
-      echo "{\"folders\": [{\"path\": \"${VIRTUAL_ENV_SRC}\"}]}" | jq > "${PROJECT_FILE}"
-    fi
+  # if $CONTINUE; then
+  #   if ! [ -e jq ]; then
+  #     echo "Creating ${PROJECT_FILE}"
+  #     echo "{\"folders\": [{\"path\": \"${VIRTUAL_ENV_SRC}\"}]}" | jq > "${PROJECT_FILE}"
+  #   fi
+  # fi
+  if ! [ -e jq ]; then
+    echo "Creating ${PROJECT_FILE}"
+    echo "{\"folders\": [{\"path\": \"${VIRTUAL_ENV_SRC}\"}]}" | jq > "${PROJECT_FILE}"
   fi
 fi
 

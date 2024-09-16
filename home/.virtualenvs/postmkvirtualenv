@@ -2,6 +2,3 @@
 # This hook is run after a new virtualenv is activated.
 
 just --justfile=${HOME}/justfile virtualenvwrapper::postmkvirtualenv
-
-# python -m pip install --upgrade pip
-# python -m pip install --upgrade pip-tools
