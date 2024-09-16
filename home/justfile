@@ -171,6 +171,17 @@ _homebrew-services-restart:
         {{ ARGS }}
 
 @uv-install *ARGS:
+    -uv python install {{ ARGS }} 3.13
+    -uv python install {{ ARGS }} 3.12
+    -uv python install {{ ARGS }} 3.11
+    -uv python install {{ ARGS }} 3.10
+    -uv python install {{ ARGS }} 3.9
+    -uv python install {{ ARGS }} 3.8
+
+@uv-reinstall *ARGS:
+    just uv-install --reinstall
+
+@uv-tool-install *ARGS:
     uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
     uv tool install --python {{ python_312 }} grip {{ ARGS }}
     uv tool install --python {{ python_312 }} justpath {{ ARGS }}
