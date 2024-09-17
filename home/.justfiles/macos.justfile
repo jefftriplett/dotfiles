@@ -4,10 +4,12 @@
 
 justfile := justfile_directory() + "/.justfiles/macos.justfile"
 
-@_default:
-    just --list
+[private]
+@default:
+    just --list --justfile {{ justfile }}
 
-@_fmt:
+[private]
+@fmt:
     just --fmt --justfile {{ justfile }}
 
 # ----------------------------------------------------------------

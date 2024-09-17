@@ -28,7 +28,8 @@ alias lock := freeze
 # In the spirit of "Scripts to rule them all"
 # ----------------------------------------------------------------
 
-@_default:
+[private]
+@default:
     just --list
 
 # installs/updates all dependencies
@@ -48,6 +49,11 @@ alias lock := freeze
 # format and overwrite justfile
 @fmt:
     just --fmt --unstable
+    just llm fmt
+    just macos fmt
+    just ollama fmt
+    just virtualenv fmt
+    just virtualenvwrapper fmt
 
 # Updates our lockfiles without installing dependencies
 @freeze:

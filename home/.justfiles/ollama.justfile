@@ -3,15 +3,16 @@
 # ----------------------------------------------------------------
 
 justfile := justfile_directory() + "/.justfiles/ollama.justfile"
-
 export OLLAMA_HOST := "0.0.0.0:11434"
 export OLLAMA_KEEP_ALIVE := "30m"
 export OLLAMA_ORIGINS := "http://*"
 
-@_default:
-    just --list
+[private]
+@default:
+    just --list --justfile {{ justfile }}
 
-@_fmt:
+[private]
+@fmt:
     just --fmt --justfile {{ justfile }}
 
 @copy-plist:
