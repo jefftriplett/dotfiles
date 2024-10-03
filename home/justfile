@@ -241,7 +241,7 @@ _homebrew-services-restart:
     uv tool install --python {{ python_312 }} pyright {{ ARGS }}
     uv tool install --python {{ python_312 }} rich-cli {{ ARGS }}
     uv tool install --python {{ python_312 }} ruff-lsp {{ ARGS }}
-    uv tool install --python {{ python_312 }} youtube-dl {{ ARGS }}
+    uv tool install --python {{ python_312 }} yt-dlp[default] {{ ARGS }}
 
 # ----------------------------------------------------------------
 # Useful tailscale/golink shortcuts
