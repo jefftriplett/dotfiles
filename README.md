@@ -49,20 +49,6 @@ Available recipes:
     homebrew-services
     install
     kill-tabs                                 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
-    llm-install
-    llm-upgrade
-    macos-timemachine-boost
-    macos-timemachine-boost-complete
-    macos-timemachine-delete *ARGS
-    macos-timemachine-list
-    macos-xcode-upgrade
-    ollama-copy-plist
-    ollama-diff-plist
-    ollama-download
-    ollama-getenv
-    ollama-list
-    ollama-serve *ARGS
-    ollama-setenv
     open-docs
     open-go
     open-ha
@@ -79,10 +65,14 @@ Available recipes:
     update                                    # updates a project to run at its current version
     upgrade
     upgrade-all
-    uv-install *ARGS
-    virtualenv-scan
-    virtualenv-upgrade
-    virtualenv-workon
+    uv-python-install *ARGS
+    uv-python-reinstall *ARGS
+    uv-tool-install *ARGS
+    llm ...
+    macos ...
+    ollama ...
+    virtualenv ...
+    virtualenvwrapper ...
 ```
 
 <!-- [[[end]]] -->

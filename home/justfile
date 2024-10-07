@@ -223,7 +223,7 @@ _homebrew-services-restart:
 # Python / UV recipes - https://docs.astral.sh/uv/
 # ----------------------------------------------------------------
 
-@uv-install *ARGS:
+@uv-python-install *ARGS:
     -uv python install {{ ARGS }} 3.13
     -uv python install {{ ARGS }} 3.12
     -uv python install {{ ARGS }} 3.11
@@ -231,8 +231,8 @@ _homebrew-services-restart:
     -uv python install {{ ARGS }} 3.9
     -uv python install {{ ARGS }} 3.8
 
-@uv-reinstall *ARGS:
-    just uv-install --reinstall
+@uv-python-reinstall *ARGS:
+    just uv-python-install --reinstall
 
 @uv-tool-install *ARGS:
     uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
