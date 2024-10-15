@@ -2,15 +2,18 @@
 # llm recipes - https://virtualenv.pypa.io/en/latest/
 # ----------------------------------------------------------------
 
+set dotenv-load := false
+set export := true
+
 justfile := justfile_directory() + "/.justfiles/llm.justfile"
 
 [private]
 @default:
-    just --list --justfile {{ justfile }}
+    just --justfile {{ justfile }} --list
 
 [private]
 @fmt:
-    just --fmt --justfile {{ justfile }}
+    just --justfile {{ justfile }} --fmt
 
 @install:
     llm install llm-claude

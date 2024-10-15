@@ -2,15 +2,18 @@
 # virtualenvwrapper recipes
 # ----------------------------------------------------------------
 
+set dotenv-load := false
+set export := true
+
 justfile := justfile_directory() + "/.justfiles/virtualenvwrapper.justfile"
 
 [private]
 @default:
-    just --list --justfile {{ justfile }}
+    just --justfile {{ justfile }} --list
 
 [private]
 @fmt:
-    just --fmt --justfile {{ justfile }}
+    just --justfile {{ justfile }} --fmt
 
 # ----------------------------------------------------------------
 # virtualenvwrapper hooks

@@ -2,15 +2,18 @@
 # macOS recipes
 # ----------------------------------------------------------------
 
+set dotenv-load := false
+set export := true
+
 justfile := justfile_directory() + "/.justfiles/macos.justfile"
 
 [private]
 @default:
-    just --list --justfile {{ justfile }}
+    just --justfile {{ justfile }} --list
 
 [private]
 @fmt:
-    just --fmt --justfile {{ justfile }}
+    just --justfile {{ justfile }} --fmt
 
 # ----------------------------------------------------------------
 # Time Machine recipes

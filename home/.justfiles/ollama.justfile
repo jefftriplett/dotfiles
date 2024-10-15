@@ -2,18 +2,21 @@
 # Ollama recipes
 # ----------------------------------------------------------------
 
-justfile := justfile_directory() + "/.justfiles/ollama.justfile"
+set dotenv-load := false
+set export := true
+
 export OLLAMA_HOST := "0.0.0.0:11434"
 export OLLAMA_KEEP_ALIVE := "30m"
 export OLLAMA_ORIGINS := "http://*"
+justfile := justfile_directory() + "/.justfiles/ollama.justfile"
 
 [private]
 @default:
-    just --list --justfile {{ justfile }}
+    just --justfile {{ justfile }} --list
 
 [private]
 @fmt:
-    just --fmt --justfile {{ justfile }}
+    just --justfile {{ justfile }} --fmt
 
 @copy-plist:
     cp ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/opt/ollama/homebrew.mxcl.ollama.plist
