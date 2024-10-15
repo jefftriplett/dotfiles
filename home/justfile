@@ -234,13 +234,14 @@ _homebrew-services-restart:
     just uv-python-install --reinstall
 
 @uv-tool-install *ARGS:
-    uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
-    uv tool install --python {{ python_312 }} grip {{ ARGS }}
-    uv tool install --python {{ python_312 }} justpath {{ ARGS }}
-    uv tool install --python {{ python_312 }} pyright {{ ARGS }}
-    uv tool install --python {{ python_312 }} rich-cli {{ ARGS }}
-    uv tool install --python {{ python_312 }} ruff-lsp {{ ARGS }}
-    uv tool install --python {{ python_312 }} yt-dlp[default] {{ ARGS }}
+    -uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
+    -uv tool install --python {{ python_312 }} files-to-claude-xml {{ ARGS }}
+    -uv tool install --python {{ python_312 }} grip {{ ARGS }}
+    -uv tool install --python {{ python_312 }} justpath {{ ARGS }}
+    -uv tool install --python {{ python_312 }} pyright {{ ARGS }}
+    -uv tool install --python {{ python_312 }} rich-cli {{ ARGS }}
+    -uv tool install --python {{ python_312 }} ruff-lsp {{ ARGS }}
+    -uv tool install --python {{ python_312 }} yt-dlp[default] {{ ARGS }}
 
 # ----------------------------------------------------------------
 # Useful tailscale/golink shortcuts
