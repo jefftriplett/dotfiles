@@ -18,4 +18,5 @@ checkouts
 compose.override.yml
 dist
 docker-compose.override.yml
+node_modules
 pyrightconfig.json
