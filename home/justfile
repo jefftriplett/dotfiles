@@ -102,7 +102,7 @@ alias lock := freeze
     # touch "$HOME/.homesick/repos/dotfiles/home/Brewfile.$HOST"
     cd "$HOME/.homesick/repos/dotfiles/home" && \
         mv "Brewfile.$HOST" "Brewfile.$HOST.bak" && \
-        brew bundle dump --file="Brewfile.$HOST"
+        brew bundle dump --file="Brewfile.$HOST" --no-vscode
 
 @_homebrew-outdated:
     brew outdated
