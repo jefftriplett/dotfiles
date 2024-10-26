@@ -1,4 +1,3 @@
-home/.stignore*.override.yml
 *.pyc
 *.pyi
 .*-cache/
@@ -12,7 +11,9 @@ home/.stignore*.override.yml
 .ruff_cache/
 .sass-cache/
 .vendor/
+.venv/
 checkouts
 compose.override.yml
 docker-compose.override.yml
+home/.stignore*.override.yml
 pyrightconfig.json
