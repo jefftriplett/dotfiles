@@ -25,7 +25,7 @@ export ARCHFLAGS="-Werror=unused-command-line-argument"
 export DOCKER_SCAN_SUGGEST=false
 export HISTCONTROL="ignoreboth:erasedups"
 export HISTFILESIZE=50000000
-export HISTIGNORE=" *:ls:cd:cd ~:date:exit:export:history:pwd:* --help"
+export HISTIGNORE=" *:ls:cd:cd ~:date:exit:export:history:pwd"
 export HISTSIZE=$HISTFILESIZE
 export HISTTIMEFORMAT="%F %T "
 export HOMEBREW_CLEANUP_MAX_AGE_DAYS=7
