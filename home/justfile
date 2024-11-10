@@ -19,6 +19,7 @@ HOST := `hostname -s`
 python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
 python_312 := `pyenv latest 3.12`
+python_313 := `pyenv latest 3.13`
 python_39 := `pyenv latest 3.9`
 RICH_THEME := "dracula"
 
@@ -212,6 +213,7 @@ _homebrew-services-restart:
     just python-update
 
 @pyenv-upgrade-all +ARGS="--skip-existing":
+    -pyenv install {{ ARGS }} 3.13:latest
     -pyenv install {{ ARGS }} 3.12:latest
     -pyenv install {{ ARGS }} 3.11:latest
     -pyenv install {{ ARGS }} 3.10:latest
@@ -224,6 +226,7 @@ _homebrew-services-restart:
 # ----------------------------------------------------------------
 
 @uv-python-install *ARGS:
+    -uv python install {{ ARGS }} 3.13
     -uv python install {{ ARGS }} 3.12
     -uv python install {{ ARGS }} 3.11
     -uv python install {{ ARGS }} 3.10
