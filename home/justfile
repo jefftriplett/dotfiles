@@ -267,6 +267,9 @@ _homebrew-services-restart:
 # TODO: ...
 # ----------------------------------------------------------------
 
+@open-claude-desktop-config:
+    subl ~/Library/Application\ Support/Claude/claude_desktop_config.json
+
 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
 @kill-tabs:
     bunx kill-tabs
