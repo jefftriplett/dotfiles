@@ -29,6 +29,9 @@
 	<string>/opt/homebrew/var</string>
     <key>EnvironmentVariables</key>
     <dict>
+		<key>OLLAMA_FLASH_ATTENTION</key><string>true</string>
+		<key>OLLAMA_KEEP_ALIVE</key><string>30m</string>
+		<key>OLLAMA_KV_CACHE_TYPE</key><string>f16</string>
         <key>OLLAMA_HOST</key><string>0.0.0.0:11434</string>
         <key>OLLAMA_ORIGINS</key><string>http://*</string>
     </dict>

@@ -5,8 +5,10 @@
 set dotenv-load := false
 set export := true
 
+export OLLAMA_FLASH_ATTENTION := "true"
 export OLLAMA_HOST := "0.0.0.0:11434"
 export OLLAMA_KEEP_ALIVE := "30m"
+export OLLAMA_KV_CACHE_TYPE := "f16"
 export OLLAMA_ORIGINS := "http://*"
 justfile := justfile_directory() + "/.justfiles/ollama.justfile"
 
@@ -55,14 +57,18 @@ justfile := justfile_directory() + "/.justfiles/ollama.justfile"
     ollama list
 
 @getenv:
+    launchctl getenv OLLAMA_FLASH_ATTENTION
     launchctl getenv OLLAMA_HOST
     launchctl getenv OLLAMA_KEEP_ALIVE
+    launchctl getenv OLLAMA_KV_CACHE_TYPE
     launchctl getenv OLLAMA_ORIGINS
 
 @serve *ARGS:
     tandem 'ollama serve {{ ARGS }}'
 
 @setenv:
+    launchctl setenv OLLAMA_FLASH_ATTENTION {{ OLLAMA_FLASH_ATTENTION }}
     launchctl setenv OLLAMA_HOST {{ OLLAMA_HOST }}
     launchctl setenv OLLAMA_KEEP_ALIVE {{ OLLAMA_KEEP_ALIVE }}
+    launchctl setenv OLLAMA_KV_CACHE_TYPE {{ OLLAMA_KV_CACHE_TYPE }}
     launchctl setenv OLLAMA_ORIGINS {{ OLLAMA_ORIGINS }}
