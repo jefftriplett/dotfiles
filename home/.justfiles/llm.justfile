@@ -15,10 +15,12 @@ justfile := justfile_directory() + "/.justfiles/llm.justfile"
 @fmt:
     just --justfile {{ justfile }} --fmt
 
-@install:
-    llm install llm-claude
-    llm install llm-ollama
+@install *ARGS:
+    llm install {{ARGS}} llm-claude
+    # llm install {{ARGS}} llm-ollama
+
+@path:
+    subl "`llm templates path`"
 
 @upgrade:
-    llm install llm-claude
-    llm install llm-ollama
+    just --justfile {{ justfile }} install --upgrade
