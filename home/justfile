@@ -9,6 +9,7 @@ export PIP_REQUIRE_VIRTUALENV := "false"
 
 # export HOMEBREW_NO_AUTO_UPDATE := "true"
 
+mod homebrew '.justfiles/homebrew.justfile'
 mod llm '.justfiles/llm.justfile'
 mod macos '.justfiles/macos.justfile'
 mod ollama '.justfiles/ollama.justfile'
@@ -45,11 +46,12 @@ alias lock := freeze
     just _python-bootstrap
 
 @cleanup DAYS="0":
-    just _homebrew-cleanup {{ DAYS }}
+    just homebrew::cleanup {{ DAYS }}
 
 # format and overwrite justfile
 @fmt:
     just --fmt --unstable
+    just homebrew fmt
     just llm fmt
     just macos fmt
     just ollama fmt
@@ -58,7 +60,7 @@ alias lock := freeze
 
 # Updates our lockfiles without installing dependencies
 @freeze:
-    just _homebrew-freeze
+    just homebrew::freeze
 
 @git-commit-msg:
     git diff --cached | llm -t git-commit-msg --option num_predict 20
@@ -67,14 +69,14 @@ alias lock := freeze
     homesick symlink
 
 @outdated:
-    just _homebrew-outdated
+    just homebrew::outdated
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
 @restart:
-    just _homebrew-services-restart
+    just homebrew::services-restart
 
 @stop:
-    just _homebrew-services-stop
+    just homebrew::services-stop
 
 # updates a project to run at its current version
 @update:
@@ -83,59 +85,15 @@ alias lock := freeze
     just cleanup
 
 @upgrade:
-    just _homebrew-update
-    just _homebrew-upgrade
-    # just _homebrew-cleanup
+    just homebrew::update
+    just homebrew::upgrade
+    # just homebrew::cleanup
 
 @upgrade-all:
     just pyenv-upgrade-all
     mise install
     mise reshim
 
-# ----------------------------------------------------------------
-# Homebrew and general wrappers - https://brew.sh
-# ----------------------------------------------------------------
-
-@_homebrew-cleanup DAYS="0":
-    brew cleanup --prune={{ DAYS }}
-
-@_homebrew-freeze:
-    # touch "$HOME/.homesick/repos/dotfiles/home/Brewfile.$HOST"
-    cd "$HOME/.homesick/repos/dotfiles/home" && \
-        mv "Brewfile.$HOST" "Brewfile.$HOST.bak" && \
-        brew bundle dump --file="Brewfile.$HOST" --no-vscode
-
-@_homebrew-outdated:
-    brew outdated
-
-@homebrew-services:
-    brew services
-
-_homebrew-services-restart:
-    #!/bin/bash
-
-    # Get the list of started services
-    started_services=$(brew services list | awk '$2 == "started" {print $1}')
-
-    # Loop through each service and restart it
-    for service in $started_services; do
-        # echo "Restarting $service..."
-        brew services restart $service
-    done
-
-    # echo "All started services have been restarted."
-
-@_homebrew-services-stop:
-    # -brew services stop yabai
-    # -brew services stop spacebar
-    # -brew services stop skhd
-    -brew services stop ollama
-
-@_homebrew-update:
-    brew update
-
-@_homebrew-upgrade:
-    brew upgrade || true
 
 # ----------------------------------------------------------------
 # mise - https://github.com/jdx/mise
@@ -231,12 +189,12 @@ _homebrew-services-restart:
     -uv python install {{ ARGS }} 3.11
     -uv python install {{ ARGS }} 3.10
     -uv python install {{ ARGS }} 3.9
-    -uv python install {{ ARGS }} 3.8
 
 @uv-python-reinstall *ARGS:
     just uv-python-install --reinstall
 
 @uv-tool-install *ARGS:
+    -uv tool install --python {{ python_312 }} aider-install {{ ARGS }}
     -uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
     -uv tool install --python {{ python_312 }} files-to-claude-xml {{ ARGS }}
     -uv tool install --python {{ python_312 }} grip {{ ARGS }}

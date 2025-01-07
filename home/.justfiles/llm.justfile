@@ -16,8 +16,8 @@ justfile := justfile_directory() + "/.justfiles/llm.justfile"
     just --justfile {{ justfile }} --fmt
 
 @install *ARGS:
-    llm install {{ARGS}} llm-claude
-    # llm install {{ARGS}} llm-ollama
+    llm install {{ ARGS }} llm-claude
+    # llm install {{ ARGS }} llm-ollama
 
 @path:
     subl "`llm templates path`"
