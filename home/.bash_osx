@@ -81,6 +81,7 @@ function iterm2_print_user_vars {
 #     complete -W "$(itermocil --list)" itermocil
 # fi
 
+# turned off to avoid ".python-version" conflicts with UV
 if command -v mise > /dev/null 2>&1; then
     eval "$(mise activate bash)";
 fi
