@@ -17,13 +17,13 @@
     status = auto
     ui = true
 
-# override in .gitconfig.override
+# override in ~/.config/git/override
 [commit]
     gpgsign = true
 
 [core]
-    attributesFile = ~/.gitattributes
-    excludesfile = ~/.gitignore
+    attributesFile = ~/.config/git/attributes
+    excludesfile = ~/.config/git/ignore
     editor = nano
     #editor = subl
     rebase = true
@@ -47,7 +47,7 @@
     process = git-lfs filter-process
     required = true
 
-# override in .gitconfig.override
+# override in ~/.config/git/override
 [gpg]
 	program = /opt/homebrew/bin/gpg
 
@@ -79,4 +79,4 @@
     fsckObjects = true
 
 [include]
-    path = .gitconfig-override
+    path = ~/.config/git/override
