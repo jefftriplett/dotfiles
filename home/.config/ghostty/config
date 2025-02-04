@@ -1,0 +1,7 @@
+# Dracula theme
+theme = dracula
+
+keybind = cmd+left=previous_tab
+keybind = cmd+right=next_tab
+keybind = cmd+shift+left=move_tab:-1
+keybind = cmd+shift+right=move_tab:1
