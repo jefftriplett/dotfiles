@@ -1,7 +1,17 @@
-# Dracula theme
-theme = dracula
-
+# background-opacity=0.95
+clipboard-paste-protection = false
+confirm-close-surface = false
+copy-on-select = clipboard
+# cursor-style = block
+cursor-style-blink = false
+font-family = Hack Nerd Font Mono
+font-feature=-liga
+font-size = 18
+# font-thicken = true
 keybind = cmd+left=previous_tab
 keybind = cmd+right=next_tab
 keybind = cmd+shift+left=move_tab:-1
 keybind = cmd+shift+right=move_tab:1
+shell-integration-features = no-cursor
+theme = dracula
+unfocused-split-opacity = 1.0
