@@ -49,6 +49,7 @@ Available recipes:
     homebrew-services
     install
     kill-tabs                                 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
+    open-claude-desktop-config
     open-docs
     open-go
     open-ha
