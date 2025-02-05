@@ -27,5 +27,5 @@ alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
 
 # llm aliases
-alias git-branch-name="git diff --cached | llm -m gpt-4-turbo --option max_tokens 16 -t git-branch-name"
-alias git-commit-msg="git diff --cached | llm -m gpt-4-turbo --option max_tokens 16 -t git-commit-msg"
+alias llm-git-branch-name="git diff --cached | llm -m gpt-4-turbo --option max_tokens 16 -t git-branch-name"
+alias llm-git-commit-msg="git diff --cached | llm -m gpt-4-turbo --option max_tokens 16 -t git-commit-msg"
