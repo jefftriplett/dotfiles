@@ -265,6 +265,7 @@ cask "obsidian"
 cask "ollamac"
 cask "openemu"
 cask "orbstack"
+cask "pearcleaner"
 cask "polypane"
 cask "postman"
 cask "pycharm"
@@ -298,7 +299,6 @@ mas "1Keyboard", id: 766939888
 mas "Affiliate", id: 789724698
 mas "Airmail", id: 918858936
 mas "Annotate", id: 918207447
-mas "Bear", id: 1091189122
 mas "Bitwarden", id: 1352778147
 mas "Clean", id: 418412301
 mas "Craft", id: 1487937127
