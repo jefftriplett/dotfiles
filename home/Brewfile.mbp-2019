@@ -260,6 +260,7 @@ cask "obsidian"
 cask "ollamac"
 cask "openemu"
 cask "orbstack"
+cask "pearcleaner"
 cask "polypane"
 cask "postman"
 cask "pycharm"
@@ -286,7 +287,6 @@ cask "yubico-authenticator"
 cask "yubico-yubikey-manager"
 cask "yubico-yubikey-personalization-gui"
 cask "zed"
-mas "1Keyboard", id: 766939888
 mas "Annotate", id: 918207447
 mas "Bitwarden", id: 1352778147
 mas "Clean", id: 418412301
@@ -299,7 +299,6 @@ mas "GarageBand", id: 682658836
 mas "Hand Mirror", id: 1502839586
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
-mas "Kiwi for Gmail", id: 986304488
 mas "Meeter", id: 1510445899
 mas "MenubarX", id: 1575588022
 mas "Mic Drop", id: 1489816366
@@ -311,9 +310,8 @@ mas "Paprika Recipe Manager", id: 451907568
 mas "Pixelmator", id: 407963104
 mas "Pixelmator Pro", id: 1289583905
 mas "Play", id: 1596506190
-mas "Primitive", id: 1175103038
-mas "ReadKit", id: 588726889
 mas "ReadKit", id: 1615798039
+mas "ReadKit", id: 588726889
 mas "Recordia", id: 1529006487
 mas "Signals", id: 1453293391
 mas "Skitch", id: 425955336
@@ -322,7 +320,7 @@ mas "Tailscale", id: 1475387142
 mas "The Unarchiver", id: 425424353
 mas "Toggl Track", id: 1291898086
 mas "ToothFairy", id: 1191449274
+mas "Video Converter", id: 1518836004
 mas "Webcam Settings Control", id: 1172053162
-mas "Windows App", id: 1295203466
 mas "Xcode", id: 497799835
 whalebrew "whalebrew/whalesay"
