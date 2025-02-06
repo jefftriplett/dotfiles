@@ -23,6 +23,7 @@ brew "atuin"
 brew "autoconf"
 brew "automake"
 brew "bash"
+brew "libgit2"
 brew "bat"
 brew "glib"
 brew "openjdk"
@@ -103,7 +104,6 @@ brew "just"
 brew "kubernetes-cli", link: false
 brew "lazygit"
 brew "libev"
-brew "libgit2"
 brew "libxml2"
 brew "libxmlsec1"
 brew "llm"
@@ -168,7 +168,7 @@ brew "speexdsp"
 brew "sqlite-utils"
 brew "starship"
 brew "swig"
-brew "syncthing", restart_service: true
+brew "syncthing", restart_service: :changed
 brew "terminal-notifier"
 brew "terraform"
 brew "thefuck"
@@ -210,6 +210,7 @@ cask "appcleaner"
 cask "applepi-baker"
 cask "aws-vault"
 cask "balenaetcher"
+cask "bambu-studio"
 cask "basictex"
 cask "bluestacks"
 cask "bunch"
@@ -302,7 +303,6 @@ mas "Kiwi for Gmail", id: 986304488
 mas "Meeter", id: 1510445899
 mas "MenubarX", id: 1575588022
 mas "Mic Drop", id: 1489816366
-mas "Microsoft Remote Desktop", id: 1295203466
 mas "Mona", id: 1659154653
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
@@ -323,5 +323,6 @@ mas "The Unarchiver", id: 425424353
 mas "Toggl Track", id: 1291898086
 mas "ToothFairy", id: 1191449274
 mas "Webcam Settings Control", id: 1172053162
+mas "Windows App", id: 1295203466
 mas "Xcode", id: 497799835
 whalebrew "whalebrew/whalesay"
