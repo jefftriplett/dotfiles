@@ -25,7 +25,3 @@ alias outdated="brew update; brew outdated; brew cask outdated; mas outdated"
 alias pip-outdated="PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated"
 alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
-
-# llm aliases
-alias llm-git-branch-name="git diff --cached | llm -m gpt-4-turbo --option max_tokens 16 -t git-branch-name"
-alias llm-git-commit-msg="git diff --cached | llm -m gpt-4-turbo --option max_tokens 16 -t git-commit-msg"
