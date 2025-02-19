@@ -2,15 +2,17 @@
   "mcpServers": {
     "mcp-installer": {
       "command": "bunx",
-      "args": [
-        "@anaisbetts/mcp-installer"
-      ]
+      "args": ["@anaisbetts/mcp-installer"]
+    },
+    "memory": {
+      "command": "bunx",
+      "args": ["-y", "@modelcontextprotocol/server-memory"]
     },
     "server-filesystem": {
       "command": "bunx",
       "args": [
-        "@modelcontextprotocol/server-filesystem",
-        "/Users/jefftriplett/.virtualenvs/awesome-django/src/awesome-django-git"
+        "@modelcontextprotocol/server-filesystem"
+        "/Users/jefftriplett/.virtualenvs/django-jobs/src/djobs-git"
       ]
     }
   }
