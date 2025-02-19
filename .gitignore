@@ -48,17 +48,18 @@ roles/*
 override
 
 # my files
-apps/**/logo.png
+home/.config/MusicBrainz/
+home/.config/autostart/
 home/.config/configstore/
 home/.config/enchant/
 home/.config/gcloud/
 home/.config/gh/
 home/.config/iterm2/
-home/.config/MusicBrainz/
 home/.config/rclone/
 home/.config/thefuck/
 home/.gitlab.yml
 home/.mrconfig
+home/.togglrc
 home/bin/.docker-slim-state/
 home/bin/docker-slim
 home/bin/docker-slim-sensor
