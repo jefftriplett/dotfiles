@@ -13,9 +13,22 @@ not_found_auto_install = false
 # mise.path = "./node_modules/.bin" # add a directory to PATH
 
 [tools]
-bun = '1.1.42'
-go = '1.22.2'
-node = ['20.10.0', '20.11.0']
-ruby = '3.3.0'
-rust = '1.77.1'
+bun = ['latest']
+deno = ["latest"]
+go = ['latest']
+node = ['20.10.0', '20.11.0', 'latest']
+ruby = ['latest']
+rust = ['latest']
+usage = ["latest"]
 
+[tasks.bootstrap]
+description = "Bootstrap our CLI"
+run = "mise upgrade"
+
+[tasks."llm:git-branch-name"]
+description = "Generate GitHub branch name repository from git diff using LLM generation"
+run = "git diff --cached | llm -m gpt-4-turbo --option max_tokens 16 -t git-branch-name"
+
+[tasks."llm:git-commit-msg"]
+description = "Generate GitHub comment message from git diff using LLM generation"
+run = "git diff --cached | llm -m gpt-4-turbo --option max_tokens 16 -t git-commit-msg"
