@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "mcp-installer": {
+      "command": "bunx",
+      "args": [
+        "@anaisbetts/mcp-installer"
+      ]
+    },
+    "server-filesystem": {
+      "command": "bunx",
+      "args": [
+        "@modelcontextprotocol/server-filesystem",
+        "/Users/jefftriplett/.virtualenvs/awesome-django/src/awesome-django-git"
+      ]
+    }
+  }
+}
