@@ -71,6 +71,7 @@ home/.config/zed/embeddings/
 home/.config/zed/prompts/
 
 # Ignore everything in Claude except for *.json files
+claude_desktop_config.json
 home/Library/Application Support/Claude/*
 !home/Library/Application Support/Claude/
 !home/Library/Application Support/Claude/claude_desktop_config.json
