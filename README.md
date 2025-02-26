@@ -1,33 +1,49 @@
 # My Dotfiles
 
-There are my personal dotfiles. They are managed using:
+These are my personal dotfiles for macOS development environments. They provide a consistent setup across machines with automated configuration.
 
-## CLI
+## Key Tools
 
-- [direnv][direnv]: Securely loads or unloads environment variables depending on the current directory.
-- [Homebrew][homebrew] for macOS package management.
-- [Homesick][homesick] for managing dotfiles.
-- [Just](https://github.com/casey/just) 🤖 Just a command runner.
-- [Starship][starship] The minimal, blazing-fast, and infinitely customizable prompt for any shell.
+### CLI
 
-## GUI
+- [direnv][direnv]: Securely loads or unloads environment variables depending on the current directory
+- [Homebrew][homebrew]: Package management for macOS
+- [Homesick][homesick]: Manages dotfiles with Git and symlinks
+- [Just](https://github.com/casey/just): 🤖 Command runner for project-specific tasks
+- [Starship][starship]: Minimal, blazing-fast, and customizable prompt for any shell
 
-- [Alfred][alfred]: Productivity tool and [Alfred Powerpack][alfred-powerpack].
-- [Hammerspoon][hammerspoon]: An macOS automation tool (tiling windows manager)
+### GUI
 
-## Python
+- [Alfred][alfred]: Productivity tool with [Alfred Powerpack][alfred-powerpack]
+- [Hammerspoon][hammerspoon]: macOS automation tool (tiling windows manager)
 
-- [pip][pip]: The PyPA recommended tool for installing and managing Python packages.
-- [pyenv][pyenv]: Simple Python version management.
-- [uv][uv]: An extremely fast Python package installer and resolver, written in Rust.
+### Python Environment
+
+- [pip][pip]: PyPA recommended tool for installing Python packages
+- [pyenv][pyenv]: Simple Python version management
+- [uv][uv]: Fast Python package installer and resolver, written in Rust
 
 ## Installation
 
-1. Bootstrap our environment (install uv)
+1. Install Homesick:
+   ```shell
+   $ gem install homesick
+   ```
 
-```shell
-$ just bootstrap
-```
+2. Clone this repository:
+   ```shell
+   $ homesick clone jefftriplett/dotfiles
+   ```
+
+3. Create the symlinks:
+   ```shell
+   $ homesick symlink dotfiles
+   ```
+
+4. Bootstrap the environment:
+   ```shell
+   $ just bootstrap
+   ```
 
 # Justfile Usage
 
@@ -41,34 +57,33 @@ $ just --justfile=./home/justfile
 
 Available recipes:
     bootstrap                                 # installs/updates all dependencies
-    cleanup DAYS="0"
+    cleanup DAYS="0"                          # clean up old homebrew packages and casks
     fmt                                       # format and overwrite justfile
-    freeze                                    # Updates our lockfiles without installing dependencies
-    lock                                      # alias for `freeze`
-    git-commit-msg
-    homebrew-services
-    install
+    freeze                                    # Updates our lockfiles without installing dependencies [alias: lock]
+    git-commit-msg                            # generate a commit message using llm template
+    install                                   # create symlinks for dotfiles using homesick
     kill-tabs                                 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
-    open-claude-desktop-config
-    open-docs
-    open-go
-    open-ha
-    open-syncthing
-    outdated
-    pip-install *ARGS
-    pip-uninstall *ARGS
-    postgresql-upgrade
-    pyenv-upgrade +ARGS="--skip-existing"
-    pyenv-upgrade-all +ARGS="--skip-existing"
-    python-update
-    restart
-    stop
+    open-claude-desktop-config                # open Claude desktop configuration file in Sublime Text
+    open-docs                                 # open documentation in browser using tailscale/golinks
+    open-go                                   # open tailscale/golinks homepage
+    open-ha                                   # open Home Assistant interface in browser
+    open-syncthing                            # open Syncthing interface in browser
+    outdated                                  # list outdated packages from homebrew and pip
+    pip-install *ARGS                         # install python packages using uv pip installer
+    pip-uninstall *ARGS                       # uninstall python packages using uv pip installer
+    postgresql-upgrade                        # upgrade postgresql to latest version and migrate databases
+    pyenv-upgrade +ARGS="--skip-existing"     # upgrade python and update pyenv configuration
+    pyenv-upgrade-all +ARGS="--skip-existing" # install or upgrade all python versions managed by pyenv
+    python-update                             # update python environment and pyenv settings
+    restart                                   # restart homebrew services
+    stop                                      # stop all homebrew services
     update                                    # updates a project to run at its current version
-    upgrade
-    upgrade-all
-    uv-python-install *ARGS
-    uv-python-reinstall *ARGS
-    uv-tool-install *ARGS
+    upgrade                                   # update and upgrade homebrew packages
+    upgrade-all                               # upgrade all tools (pyenv and mise packages)
+    uv-python-install *ARGS                   # install python versions using uv installer
+    uv-python-reinstall *ARGS                 # reinstall python versions using uv installer
+    uv-tool-install *ARGS                     # install common python CLI tools using uv installer
+    homebrew ...
     llm ...
     macos ...
     ollama ...

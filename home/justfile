@@ -45,6 +45,7 @@ alias lock := freeze
     just _mise-bootstrap
     just _python-bootstrap
 
+# clean up old homebrew packages and casks
 @cleanup DAYS="0":
     just homebrew::cleanup {{ DAYS }}
 
@@ -62,19 +63,24 @@ alias lock := freeze
 @freeze:
     just homebrew::freeze
 
+# generate a commit message using llm template
 @git-commit-msg:
     git diff --cached | llm -t git-commit-msg --option num_predict 20
 
+# create symlinks for dotfiles using homesick
 @install:
     homesick symlink
 
+# list outdated packages from homebrew and pip
 @outdated:
     just homebrew::outdated
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
+# restart homebrew services
 @restart:
     just homebrew::services-restart
 
+# stop all homebrew services
 @stop:
     just homebrew::services-stop
 
@@ -84,11 +90,13 @@ alias lock := freeze
     just restart
     just cleanup
 
+# update and upgrade homebrew packages
 @upgrade:
     just homebrew::update
     just homebrew::upgrade
     # just homebrew::cleanup
 
+# upgrade all tools (pyenv and mise packages)
 @upgrade-all:
     just pyenv-upgrade-all
     mise install
@@ -99,6 +107,7 @@ alias lock := freeze
 # mise - https://github.com/jdx/mise
 # ----------------------------------------------------------------
 
+# bootstrap mise by installing configured language versions
 @_mise-bootstrap:
     mise install golang
     mise install node
@@ -112,6 +121,7 @@ alias lock := freeze
 # Postgres related
 # ----------------------------------------------------------------
 
+# upgrade postgresql to latest version and migrate databases
 @postgresql-upgrade:
     brew unpin postgresql
     brew upgrade postgresql
@@ -122,17 +132,20 @@ alias lock := freeze
 # Python recipes
 # ----------------------------------------------------------------
 
+# install python packages using uv pip installer
 @pip-install *ARGS:
     python -m uv pip install \
         --system \
         --upgrade \
         {{ ARGS }}
 
+# uninstall python packages using uv pip installer
 @pip-uninstall *ARGS:
     python -m uv pip uninstall \
         --system \
         {{ ARGS }}
 
+# bootstrap python environment with essential packages
 @_python-bootstrap:
     PIP_REQUIRE_VIRTUALENV=false python -m pip install \
             --disable-pip-version-check \
@@ -147,6 +160,7 @@ alias lock := freeze
         virtualenvwrapper \
         wheel
 
+# update python environment and pyenv settings
 @python-update:
     just _python-bootstrap
     just _pyenv-update
@@ -156,6 +170,7 @@ alias lock := freeze
 # Python / pyenv recipes - https://github.com/pyenv/pyenv
 # ----------------------------------------------------------------
 
+# set global python versions in pyenv
 @_pyenv-set-global:
     pyenv global \
         {{ python_312 }} \
@@ -163,13 +178,16 @@ alias lock := freeze
         {{ python_310 }} \
         {{ python_39 }}
 
+# update pyenv itself to latest version
 @_pyenv-update:
     pyenv update
 
+# upgrade python and update pyenv configuration
 @pyenv-upgrade +ARGS="--skip-existing":
     just pyenv-upgrade-all {{ ARGS }}
     just python-update
 
+# install or upgrade all python versions managed by pyenv
 @pyenv-upgrade-all +ARGS="--skip-existing":
     -pyenv install {{ ARGS }} 3.13:latest
     -pyenv install {{ ARGS }} 3.12:latest
@@ -183,6 +201,7 @@ alias lock := freeze
 # Python / UV recipes - https://docs.astral.sh/uv/
 # ----------------------------------------------------------------
 
+# install python versions using uv installer
 @uv-python-install *ARGS:
     -uv python install {{ ARGS }} 3.13
     -uv python install {{ ARGS }} 3.12
@@ -190,9 +209,11 @@ alias lock := freeze
     -uv python install {{ ARGS }} 3.10
     -uv python install {{ ARGS }} 3.9
 
+# reinstall python versions using uv installer
 @uv-python-reinstall *ARGS:
     just uv-python-install --reinstall
 
+# install common python CLI tools using uv installer
 @uv-tool-install *ARGS:
     -uv tool install --python {{ python_312 }} aider-install {{ ARGS }}
     -uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
@@ -210,15 +231,19 @@ alias lock := freeze
 # Useful tailscale/golink shortcuts
 # ----------------------------------------------------------------
 
+# open documentation in browser using tailscale/golinks
 @open-docs:
     open http://go/docs
 
+# open tailscale/golinks homepage
 @open-go:
     open http://go
 
+# open Home Assistant interface in browser
 @open-ha:
     open http://go/homeassistant
 
+# open Syncthing interface in browser
 @open-syncthing:
     open http://go/syncthing
 
@@ -226,6 +251,7 @@ alias lock := freeze
 # TODO: ...
 # ----------------------------------------------------------------
 
+# open Claude desktop configuration file in Sublime Text
 @open-claude-desktop-config:
     subl ~/Library/Application\ Support/Claude/claude_desktop_config.json
 
@@ -233,8 +259,10 @@ alias lock := freeze
 @kill-tabs:
     bunx kill-tabs
 
+# update Brewfile from cog template
 @_update-brewfile:
     cd "$HOME/.homesick/repos/dotfiles/home" && uv run --with cogapp cog -Pr ./Brewfile.cog
 
+# update README.md docs using cog
 @_update-readme-docs:
     cd "$HOME/.homesick/repos/dotfiles" && uv run --with cogapp cog -Pr ./README.md
