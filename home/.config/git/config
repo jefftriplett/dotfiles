@@ -10,6 +10,7 @@
 
 [branch]
     autosetuprebase = always
+	sort = -committerdate
 
 [color]
     diff = auto
