@@ -27,8 +27,8 @@ run = "mise upgrade"
 
 [tasks."llm:git-branch-name"]
 description = "Generate GitHub branch name repository from git diff using LLM generation"
-run = "git diff --cached | llm --model gpt-4-turbo --option max_tokens 16 --template git-branch-name"
+run = "git diff --cached | llm --model o3-mini --template git-branch-name"
 
 [tasks."llm:git-commit-msg"]
 description = "Generate GitHub comment message from git diff using LLM generation"
-run = "git diff --cached | llm --model gpt-4-turbo --option max_tokens 16 --template git-commit-msg"
+run = "git diff --cached | llm --model o3-mini --template git-commit-msg"
