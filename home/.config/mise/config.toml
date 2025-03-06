@@ -32,3 +32,7 @@ run = "git diff --cached | llm --model o3-mini --template git-branch-name"
 [tasks."llm:git-commit-msg"]
 description = "Generate GitHub comment message from git diff using LLM generation"
 run = "git diff --cached | llm --model o3-mini --template git-commit-msg"
+
+[tasks."llm:git-commit-msg-auto"]
+description = "Automatically commit changes with a generated commit message from git diff using LLM generation"
+run = "git commit -m \"$(git diff --cached | llm --model o3-mini --template git-commit-msg)\""
