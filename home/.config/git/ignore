@@ -42,7 +42,6 @@ minica.pem
 package-lock.json
 parts
 production.ini
-reports/
 src/*-git/*
 src/*-hg/*
 src/*-svn/*
