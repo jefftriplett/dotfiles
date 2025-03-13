@@ -66,7 +66,6 @@ brew "fceux"
 brew "fd"
 brew "ffmpeg@4"
 brew "figlet"
-brew "fish"
 brew "flyctl"
 brew "fzf"
 brew "libksba"
@@ -262,6 +261,7 @@ cask "orion"
 cask "pearcleaner"
 cask "polypane"
 cask "postman"
+cask "pycharm"
 cask "qflipper"
 cask "secretive"
 cask "skype"
@@ -297,6 +297,7 @@ mas "Front and Center", id: 1493996622
 mas "GarageBand", id: 682658836
 mas "Hand Mirror", id: 1502839586
 mas "iMovie", id: 408981434
+mas "Infuse", id: 1136220934
 mas "Keynote", id: 409183694
 mas "Kiwi for Gmail", id: 986304488
 mas "Meeter", id: 1510445899
