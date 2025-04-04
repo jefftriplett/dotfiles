@@ -9,6 +9,7 @@ export PIP_REQUIRE_VIRTUALENV := "false"
 
 # export HOMEBREW_NO_AUTO_UPDATE := "true"
 
+mod claude '.justfiles/claude.justfile'
 mod homebrew '.justfiles/homebrew.justfile'
 mod llm '.justfiles/llm.justfile'
 mod macos '.justfiles/macos.justfile'
@@ -52,6 +53,7 @@ alias lock := freeze
 # format and overwrite justfile
 @fmt:
     just --fmt --unstable
+    just claude fmt
     just homebrew fmt
     just llm fmt
     just macos fmt
@@ -92,6 +94,7 @@ alias lock := freeze
 
 # update and upgrade homebrew packages
 @upgrade:
+    just claude::upgrade
     just homebrew::update
     just homebrew::upgrade
     # just homebrew::cleanup
@@ -249,14 +252,6 @@ alias lock := freeze
 # ----------------------------------------------------------------
 # TODO: ...
 # ----------------------------------------------------------------
-
-# open Claude desktop configuration file in Sublime Text
-@open-claude-desktop-config:
-    subl ~/Library/Application\ Support/Claude/claude_desktop_config.json
-
-# update Claude Code CLI to the latest version
-@update-claude-code:
-    npm install -g @anthropic-ai/claude-code
 
 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
 @kill-tabs:
