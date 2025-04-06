@@ -56,37 +56,38 @@ run("just --justfile=./home/justfile", with_console=True)
 $ just --justfile=./home/justfile
 
 Available recipes:
-    bootstrap                                 # installs/updates all dependencies
-    cleanup DAYS="0"                          # clean up old homebrew packages and casks
-    fmt                                       # format and overwrite justfile
-    freeze                                    # Updates our lockfiles without installing dependencies [alias: lock]
-    git-commit-msg                            # generate a commit message using llm template
-    install                                   # create symlinks for dotfiles using homesick
-    kill-tabs                                 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
-    open-docs                                 # open documentation in browser using tailscale/golinks
-    open-go                                   # open tailscale/golinks homepage
-    open-ha                                   # open Home Assistant interface in browser
-    open-syncthing                            # open Syncthing interface in browser
-    outdated                                  # list outdated packages from homebrew and pip
-    pip-install *ARGS                         # install python packages using uv pip installer
-    pip-uninstall *ARGS                       # uninstall python packages using uv pip installer
-    postgresql-upgrade                        # upgrade postgresql to latest version and migrate databases
-    pyenv-upgrade +ARGS="--skip-existing"     # upgrade python and update pyenv configuration
-    pyenv-upgrade-all +ARGS="--skip-existing" # install or upgrade all python versions managed by pyenv
-    python-update                             # update python environment and pyenv settings
-    restart                                   # restart homebrew services
-    stop                                      # stop all homebrew services
-    update                                    # updates a project to run at its current version
-    upgrade                                   # update and upgrade homebrew packages
-    upgrade-all                               # upgrade all tools (pyenv and mise packages)
-    uv-python-install *ARGS                   # install python versions using uv installer
-    uv-python-reinstall *ARGS                 # reinstall python versions using uv installer
-    uv-tool-install *ARGS                     # install common python CLI tools using uv installer
+    bootstrap                 # installs/updates all dependencies
+    cleanup DAYS="0"          # clean up old homebrew packages and casks
+    fmt                       # format and overwrite justfile
+    freeze                    # Updates our lockfiles without installing dependencies [alias: lock]
+    git-commit-msg            # generate a commit message using llm template
+    install                   # create symlinks for dotfiles using homesick
+    kill-tabs                 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
+    open-docs                 # open documentation in browser using tailscale/golinks
+    open-go                   # open tailscale/golinks homepage
+    open-ha                   # open Home Assistant interface in browser
+    open-syncthing            # open Syncthing interface in browser
+    outdated                  # list outdated packages from homebrew and pip
+    pip-install *ARGS         # install python packages using uv pip installer
+    pip-uninstall *ARGS       # uninstall python packages using uv pip installer
+    postgresql-upgrade        # upgrade postgresql to latest version and migrate databases
+    python-update             # update python environment and pyenv settings
+    restart                   # restart homebrew services
+    stop                      # stop all homebrew services
+    update                    # updates a project to run at its current version
+    update-brewfile           # update Brewfile from cog template
+    update-readme-docs        # update README.md docs using cog
+    upgrade                   # update and upgrade homebrew packages
+    upgrade-all               # upgrade all tools (pyenv and mise packages)
+    uv-python-install *ARGS   # install python versions using uv installer
+    uv-python-reinstall *ARGS # reinstall python versions using uv installer
+    uv-tool-install *ARGS     # install common python CLI tools using uv installer
     claude ...
     homebrew ...
     llm ...
     macos ...
     ollama ...
+    pyenv ...
     virtualenv ...
     virtualenvwrapper ...
 ```
