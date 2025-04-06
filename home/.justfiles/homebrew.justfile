@@ -15,12 +15,6 @@ justfile := justfile_directory() + "/.justfiles/homebrew.justfile"
 @fmt:
     just --justfile {{ justfile }} --fmt
 
-# @install *ARGS:
-#     llm install {{ARGS}} llm-claude
-#     # llm install {{ARGS}} llm-ollama
-# @upgrade:
-#     just --justfile {{ justfile }} install --upgrade
-
 @cleanup DAYS="0":
     brew cleanup --prune={{ DAYS }}
 

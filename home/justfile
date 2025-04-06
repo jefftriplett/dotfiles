@@ -39,9 +39,9 @@ alias lock := freeze
         brew bundle install; \
     fi
 
-    just _macos-xcode-bootstrap
-    just _mise-bootstrap
-    just _python-bootstrap
+    just macos::xcode-bootstrap
+    just mise-bootstrap
+    just python::bootstrap
 
 # clean up old homebrew packages and casks
 @cleanup DAYS="0":
@@ -106,7 +106,8 @@ alias lock := freeze
 # ----------------------------------------------------------------
 
 # bootstrap mise by installing configured language versions
-@_mise-bootstrap:
+[private]
+@mise-bootstrap:
     mise install golang
     mise install node
     mise install ruby
