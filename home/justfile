@@ -230,9 +230,9 @@ alias lock := freeze
     bunx kill-tabs
 
 # update Brewfile from cog template
-@_update-brewfile:
+@update-brewfile:
     cd "$HOME/.homesick/repos/dotfiles/home" && uv run --with cogapp cog -Pr ./Brewfile.cog
 
 # update README.md docs using cog
-@_update-readme-docs:
+@update-readme-docs:
     cd "$HOME/.homesick/repos/dotfiles" && uv run --with cogapp cog -Pr ./README.md
