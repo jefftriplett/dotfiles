@@ -80,36 +80,36 @@ Available recipes:
         upgrade # update Claude Code CLI to the latest version
 
     homebrew:
-        cleanup DAYS="0"
-        freeze
-        outdated
-        services
-        services-restart
-        services-stop
-        update
-        upgrade
+        cleanup DAYS="0" # clean up old Homebrew packages and cache
+        freeze           # freeze current Homebrew packages to Brewfile
+        outdated         # list outdated Homebrew packages
+        services         # list all Homebrew services
+        services-restart # restart all running Homebrew services
+        services-stop    # stop specific Homebrew services (with non-fatal errors)
+        update           # update Homebrew package database
+        upgrade          # upgrade all outdated Homebrew packages
 
     llm:
-        install *ARGS
-        path
-        upgrade
+        install *ARGS # install LLM plugins with optional arguments
+        path          # open LLM templates directory in Sublime Text
+        upgrade       # upgrade all installed LLM plugins
 
     macos:
-        timemachine-boost
-        timemachine-boost-complete
-        timemachine-delete *ARGS
-        timemachine-list
-        xcode-bootstrap
-        xcode-upgrade
+        timemachine-boost          # boost Time Machine backup speed by increasing IO priority
+        timemachine-boost-complete # restore normal IO priority after Time Machine backup completes
+        timemachine-delete *ARGS   # delete specific Time Machine backups
+        timemachine-list           # list all Time Machine backups
+        xcode-bootstrap            # install Xcode command line tools
+        xcode-upgrade              # upgrade Xcode command line tools by removing and reinstalling
 
     ollama:
-        copy-plist
-        diff-plist
-        download
-        getenv
-        list
-        serve *ARGS
-        setenv
+        copy-plist  # copy custom ollama plist file to homebrew directory
+        diff-plist  # compare local ollama plist with installed version
+        download    # download various ollama models (- prefix makes failures non-fatal)
+        getenv      # display ollama environment variables from launchctl
+        list        # list all downloaded ollama models
+        serve *ARGS # serve ollama in a tandem process with optional arguments
+        setenv      # set ollama environment variables in launchctl
 
     pyenv:
         upgrade +ARGS="--skip-existing"     # upgrade python and update pyenv configuration
@@ -117,7 +117,7 @@ Available recipes:
 
     python:
         bootstrap                 # bootstrap python environment with essential packages
-        outdated
+        outdated                  # list outdated Python packages
         pip-install *ARGS         # install python packages using uv pip installer
         pip-uninstall *ARGS       # uninstall python packages using uv pip installer
         update                    # update python environment and pyenv settings
@@ -126,25 +126,25 @@ Available recipes:
         uv-tool-install *ARGS     # install common python CLI tools using uv installer
 
     virtualenv:
-        scan
-        upgrade
-        workon
+        scan    # scan virtualenvs and display their python versions
+        upgrade # upgrade pip in all virtualenvs
+        workon  # list all virtualenvs with their python and pip versions
 
     virtualenvwrapper:
-        get_env_details
-        initialize
-        postactivate
-        postdeactivate
-        postmkproject
-        postmkvirtualenv
-        postrmproject
-        postrmvirtualenv
-        preactivate
-        predeactivate
-        premkproject
-        premkvirtualenv
-        prermproject
-        prermvirtualenv
+        get_env_details  # virtualenvwrapper hook for getting environment details
+        initialize       # virtualenvwrapper hook for environment initialization
+        postactivate     # virtualenvwrapper hook that runs after environment activation
+        postdeactivate   # virtualenvwrapper hook that runs after environment deactivation
+        postmkproject    # virtualenvwrapper hook that runs after creating a project
+        postmkvirtualenv # virtualenvwrapper hook that runs after creating a virtualenv
+        postrmproject    # virtualenvwrapper hook that runs after removing a project
+        postrmvirtualenv # virtualenvwrapper hook that runs after removing a virtualenv
+        preactivate      # virtualenvwrapper hook that runs before environment activation
+        predeactivate    # virtualenvwrapper hook that runs before environment deactivation
+        premkproject     # virtualenvwrapper hook that runs before creating a project
+        premkvirtualenv  # virtualenvwrapper hook that runs before creating a virtualenv
+        prermproject     # virtualenvwrapper hook that runs before removing a project
+        prermvirtualenv  # virtualenvwrapper hook that runs before removing a virtualenv
 ```
 
 <!-- [[[end]]] -->
