@@ -5,7 +5,7 @@
 set dotenv-load := false
 set export := true
 
-justfile := justfile_directory() + "/.justfiles/claude.justfile"
+justfile := justfile_directory() + "/.justfiles/python.justfile"
 
 python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
@@ -36,6 +36,7 @@ python_39 := `pyenv latest 3.9`
         virtualenvwrapper \
         wheel
 
+# list outdated Python packages
 @outdated:
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 

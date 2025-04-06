@@ -15,6 +15,7 @@ justfile := justfile_directory() + "/.justfiles/virtualenv.justfile"
 @fmt:
     just --justfile {{ justfile }} --fmt
 
+# scan virtualenvs and display their python versions
 scan:
     #!/usr/bin/env python
     import subprocess
@@ -36,6 +37,7 @@ scan:
         except FileNotFoundError as e:
             pass
 
+# upgrade pip in all virtualenvs
 @upgrade:
     for filename in $(ls -d ~/.virtualenvs/*/); do \
         echo "$filename"; \
@@ -54,6 +56,7 @@ scan:
     # pip install -r requirements.lock
     # rm requirements.lock
 
+# list all virtualenvs with their python and pip versions
 @workon:
     for filename in $(ls -d ~/.virtualenvs/*/); do \
         echo "$filename"; \

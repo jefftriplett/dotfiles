@@ -20,12 +20,15 @@ justfile := justfile_directory() + "/.justfiles/ollama.justfile"
 @fmt:
     just --justfile {{ justfile }} --fmt
 
+# copy custom ollama plist file to homebrew directory
 @copy-plist:
     cp ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/opt/ollama/homebrew.mxcl.ollama.plist
 
+# compare local ollama plist with installed version
 @diff-plist:
     diff ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/opt/ollama/homebrew.mxcl.ollama.plist
 
+# download various ollama models (- prefix makes failures non-fatal)
 @download:
     # https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values
     # https://github.com/jmorganca/ollama/blob/main/examples/python/client.py
@@ -53,9 +56,11 @@ justfile := justfile_directory() + "/.justfiles/ollama.justfile"
     -ollama pull orca2:latest
     -ollama pull wizard-vicuna:latest
 
+# list all downloaded ollama models
 @list:
     ollama list
 
+# display ollama environment variables from launchctl
 @getenv:
     launchctl getenv OLLAMA_FLASH_ATTENTION
     launchctl getenv OLLAMA_HOST
@@ -63,9 +68,11 @@ justfile := justfile_directory() + "/.justfiles/ollama.justfile"
     launchctl getenv OLLAMA_KV_CACHE_TYPE
     launchctl getenv OLLAMA_ORIGINS
 
+# serve ollama in a tandem process with optional arguments
 @serve *ARGS:
     tandem 'ollama serve {{ ARGS }}'
 
+# set ollama environment variables in launchctl
 @setenv:
     launchctl setenv OLLAMA_FLASH_ATTENTION {{ OLLAMA_FLASH_ATTENTION }}
     launchctl setenv OLLAMA_HOST {{ OLLAMA_HOST }}
