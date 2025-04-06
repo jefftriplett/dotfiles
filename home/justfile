@@ -14,6 +14,7 @@ mod homebrew '.justfiles/homebrew.justfile'
 mod llm '.justfiles/llm.justfile'
 mod macos '.justfiles/macos.justfile'
 mod ollama '.justfiles/ollama.justfile'
+mod pyenv '.justfiles/pyenv.justfile'
 mod virtualenv '.justfiles/virtualenv.justfile'
 mod virtualenvwrapper '.justfiles/virtualenvwrapper.justfile'
 
@@ -58,6 +59,7 @@ alias lock := freeze
     just llm fmt
     just macos fmt
     just ollama fmt
+    just pyenv fmt
     just virtualenv fmt
     just virtualenvwrapper fmt
 
@@ -98,11 +100,11 @@ alias lock := freeze
     just homebrew::update
     just homebrew::upgrade
     # just homebrew::cleanup
-    python-update
+    just python-update
 
 # upgrade all tools (pyenv and mise packages)
 @upgrade-all:
-    just pyenv-upgrade-all
+    just pyenv::upgrade-all
     mise install
     mise reshim
 
@@ -166,39 +168,8 @@ alias lock := freeze
 # update python environment and pyenv settings
 @python-update:
     just _python-bootstrap
-    just _pyenv-update
-    just _pyenv-set-global
-
-# ----------------------------------------------------------------
-# Python / pyenv recipes - https://github.com/pyenv/pyenv
-# ----------------------------------------------------------------
-
-# set global python versions in pyenv
-@_pyenv-set-global:
-    pyenv global \
-        {{ python_312 }} \
-        {{ python_311 }} \
-        {{ python_310 }} \
-        {{ python_39 }}
-
-# update pyenv itself to latest version
-@_pyenv-update:
-    pyenv update
-
-# upgrade python and update pyenv configuration
-@pyenv-upgrade +ARGS="--skip-existing":
-    just pyenv-upgrade-all {{ ARGS }}
-    just python-update
-
-# install or upgrade all python versions managed by pyenv
-@pyenv-upgrade-all +ARGS="--skip-existing":
-    -pyenv install {{ ARGS }} 3.13:latest
-    -pyenv install {{ ARGS }} 3.12:latest
-    -pyenv install {{ ARGS }} 3.11:latest
-    -pyenv install {{ ARGS }} 3.10:latest
-    -pyenv install {{ ARGS }} 3.9:latest
-
-    just _pyenv-set-global
+    just pyenv::update
+    just pyenv::set-global
 
 # ----------------------------------------------------------------
 # Python / UV recipes - https://docs.astral.sh/uv/
