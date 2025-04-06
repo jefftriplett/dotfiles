@@ -63,7 +63,6 @@ Available recipes:
     git-commit-msg                            # generate a commit message using llm template
     install                                   # create symlinks for dotfiles using homesick
     kill-tabs                                 # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
-    open-claude-desktop-config                # open Claude desktop configuration file in Sublime Text
     open-docs                                 # open documentation in browser using tailscale/golinks
     open-go                                   # open tailscale/golinks homepage
     open-ha                                   # open Home Assistant interface in browser
@@ -83,6 +82,7 @@ Available recipes:
     uv-python-install *ARGS                   # install python versions using uv installer
     uv-python-reinstall *ARGS                 # reinstall python versions using uv installer
     uv-tool-install *ARGS                     # install common python CLI tools using uv installer
+    claude ...
     homebrew ...
     llm ...
     macos ...
