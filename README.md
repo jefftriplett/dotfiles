@@ -49,41 +49,102 @@ These are my personal dotfiles for macOS development environments. They provide 
 
 <!-- [[[cog
 from scripts.run_command import run
-run("just --justfile=./home/justfile", with_console=True)
+run("just --justfile=./home/justfile --list --list-submodules", with_console=True)
 ]]] -->
 
 ```shell
-$ just --justfile=./home/justfile
+$ just --justfile=./home/justfile --list --list-submodules
 
 Available recipes:
-    bootstrap             # installs/updates all dependencies
-    cleanup DAYS="0"      # clean up old homebrew packages and casks
-    fmt                   # format and overwrite justfile
-    freeze                # Updates our lockfiles without installing dependencies [alias: lock]
-    install               # create symlinks for dotfiles using homesick
-    kill-tabs             # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
-    open-docs             # open documentation in browser using tailscale/golinks
-    open-go               # open tailscale/golinks homepage
-    open-ha               # open Home Assistant interface in browser
-    open-syncthing        # open Syncthing interface in browser
-    outdated              # list outdated packages from homebrew and pip
-    postgresql-upgrade    # upgrade postgresql to latest version and migrate databases
-    restart               # restart homebrew services
-    stop                  # stop all homebrew services
-    update                # updates a project to run at its current version
-    update-brewfile       # update Brewfile from cog template
-    update-readme-docs    # update README.md docs using cog
-    upgrade               # update and upgrade homebrew packages
-    upgrade-all           # upgrade all tools (pyenv and mise packages)
-    claude ...
-    homebrew ...
-    llm ...
-    macos ...
-    ollama ...
-    pyenv ...
-    python ...
-    virtualenv ...
-    virtualenvwrapper ...
+    bootstrap          # installs/updates all dependencies
+    cleanup DAYS="0"   # clean up old homebrew packages and casks
+    fmt                # format and overwrite justfile
+    freeze             # Updates our lockfiles without installing dependencies [alias: lock]
+    install            # create symlinks for dotfiles using homesick
+    kill-tabs          # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
+    open-docs          # open documentation in browser using tailscale/golinks
+    open-go            # open tailscale/golinks homepage
+    open-ha            # open Home Assistant interface in browser
+    open-syncthing     # open Syncthing interface in browser
+    outdated           # list outdated packages from homebrew and pip
+    postgresql-upgrade # upgrade postgresql to latest version and migrate databases
+    restart            # restart homebrew services
+    stop               # stop all homebrew services
+    update             # updates a project to run at its current version
+    update-brewfile    # update Brewfile from cog template
+    update-readme-docs # update README.md docs using cog
+    upgrade            # update and upgrade homebrew packages
+    upgrade-all        # upgrade all tools (pyenv and mise packages)
+    claude:
+        config  # open Claude Desktop configuration file in Sublime Text
+        upgrade # update Claude Code CLI to the latest version
+
+    homebrew:
+        cleanup DAYS="0"
+        freeze
+        outdated
+        services
+        services-restart
+        services-stop
+        update
+        upgrade
+
+    llm:
+        install *ARGS
+        path
+        upgrade
+
+    macos:
+        timemachine-boost
+        timemachine-boost-complete
+        timemachine-delete *ARGS
+        timemachine-list
+        xcode-bootstrap
+        xcode-upgrade
+
+    ollama:
+        copy-plist
+        diff-plist
+        download
+        getenv
+        list
+        serve *ARGS
+        setenv
+
+    pyenv:
+        upgrade +ARGS="--skip-existing"     # upgrade python and update pyenv configuration
+        upgrade-all +ARGS="--skip-existing" # install or upgrade all python versions managed by pyenv
+
+    python:
+        bootstrap                 # bootstrap python environment with essential packages
+        outdated
+        pip-install *ARGS         # install python packages using uv pip installer
+        pip-uninstall *ARGS       # uninstall python packages using uv pip installer
+        update                    # update python environment and pyenv settings
+        uv-python-install *ARGS   # install python versions using uv installer
+        uv-python-reinstall *ARGS # reinstall python versions using uv installer
+        uv-tool-install *ARGS     # install common python CLI tools using uv installer
+
+    virtualenv:
+        scan
+        upgrade
+        workon
+
+    virtualenvwrapper:
+        get_env_details
+        initialize
+        postactivate
+        postdeactivate
+        postmkproject
+        postmkvirtualenv
+        postrmproject
+        postrmvirtualenv
+        preactivate
+        predeactivate
+        premkproject
+        premkvirtualenv
+        prermproject
+        prermvirtualenv
 ```
 
 <!-- [[[end]]] -->
