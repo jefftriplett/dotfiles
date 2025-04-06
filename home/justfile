@@ -15,15 +15,11 @@ mod llm '.justfiles/llm.justfile'
 mod macos '.justfiles/macos.justfile'
 mod ollama '.justfiles/ollama.justfile'
 mod pyenv '.justfiles/pyenv.justfile'
+mod python '.justfiles/python.justfile'
 mod virtualenv '.justfiles/virtualenv.justfile'
 mod virtualenvwrapper '.justfiles/virtualenvwrapper.justfile'
 
 HOST := `hostname -s`
-python_310 := `pyenv latest 3.10`
-python_311 := `pyenv latest 3.11`
-python_312 := `pyenv latest 3.12`
-python_313 := `pyenv latest 3.13`
-python_39 := `pyenv latest 3.9`
 RICH_THEME := "dracula"
 
 alias lock := freeze
@@ -60,16 +56,13 @@ alias lock := freeze
     just macos fmt
     just ollama fmt
     just pyenv fmt
+    just python fmt
     just virtualenv fmt
     just virtualenvwrapper fmt
 
 # Updates our lockfiles without installing dependencies
 @freeze:
     just homebrew::freeze
-
-# generate a commit message using llm template
-@git-commit-msg:
-    git diff --cached | llm -t git-commit-msg --option num_predict 20
 
 # create symlinks for dotfiles using homesick
 @install:
@@ -100,7 +93,7 @@ alias lock := freeze
     just homebrew::update
     just homebrew::upgrade
     # just homebrew::cleanup
-    just python-update
+    just python::update
 
 # upgrade all tools (pyenv and mise packages)
 @upgrade-all:
@@ -132,74 +125,6 @@ alias lock := freeze
     brew upgrade postgresql
     brew pin postgresql
     brew postgresql-upgrade-database
-
-# ----------------------------------------------------------------
-# Python recipes
-# ----------------------------------------------------------------
-
-# install python packages using uv pip installer
-@pip-install *ARGS:
-    python -m uv pip install \
-        --system \
-        --upgrade \
-        {{ ARGS }}
-
-# uninstall python packages using uv pip installer
-@pip-uninstall *ARGS:
-    python -m uv pip uninstall \
-        --system \
-        {{ ARGS }}
-
-# bootstrap python environment with essential packages
-@_python-bootstrap:
-    PIP_REQUIRE_VIRTUALENV=false python -m pip install \
-            --disable-pip-version-check \
-            --no-compile \
-            --upgrade \
-        pip uv
-
-    python -m uv pip install \
-            --system \
-            --upgrade \
-        virtualenv \
-        virtualenvwrapper \
-        wheel
-
-# update python environment and pyenv settings
-@python-update:
-    just _python-bootstrap
-    just pyenv::update
-    just pyenv::set-global
-
-# ----------------------------------------------------------------
-# Python / UV recipes - https://docs.astral.sh/uv/
-# ----------------------------------------------------------------
-
-# install python versions using uv installer
-@uv-python-install *ARGS:
-    -uv python install {{ ARGS }} 3.13
-    -uv python install {{ ARGS }} 3.12
-    -uv python install {{ ARGS }} 3.11
-    -uv python install {{ ARGS }} 3.10
-    -uv python install {{ ARGS }} 3.9
-
-# reinstall python versions using uv installer
-@uv-python-reinstall *ARGS:
-    just uv-python-install --reinstall
-
-# install common python CLI tools using uv installer
-@uv-tool-install *ARGS:
-    -uv tool install --python {{ python_312 }} aider-install {{ ARGS }}
-    -uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
-    -uv tool install --python {{ python_312 }} files-to-claude-xml {{ ARGS }}
-    -uv tool install --python {{ python_312 }} grip {{ ARGS }}
-    -uv tool install --python {{ python_312 }} justpath {{ ARGS }}
-    -uv tool install --python {{ python_312 }} llm {{ ARGS }}
-    -uv tool install --python {{ python_312 }} pyright {{ ARGS }}
-    -uv tool install --python {{ python_312 }} rich-cli {{ ARGS }}
-    -uv tool install --python {{ python_312 }} ruff-lsp {{ ARGS }}
-    -uv tool install --python {{ python_312 }} ttok {{ ARGS }}
-    -uv tool install --python {{ python_312 }} yt-dlp[default] {{ ARGS }}
 
 # ----------------------------------------------------------------
 # Useful tailscale/golink shortcuts

@@ -37,7 +37,7 @@ python_39 := `pyenv latest 3.9`
 # upgrade python and update pyenv configuration
 @upgrade +ARGS="--skip-existing":
     just pyenv::upgrade-all {{ ARGS }}
-    just python-update
+    just python::update
 
 # install or upgrade all python versions managed by pyenv
 @upgrade-all +ARGS="--skip-existing":
