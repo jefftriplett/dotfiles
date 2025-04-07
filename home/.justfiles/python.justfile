@@ -55,7 +55,7 @@ python_39 := `pyenv latest 3.9`
 
 # update python environment and pyenv settings
 @update:
-    just bootstrap
+    just --justfile {{ justfile }} bootstrap
     just pyenv::update
     just pyenv::set-global
 
