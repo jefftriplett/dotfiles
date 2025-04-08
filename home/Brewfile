@@ -3,7 +3,6 @@ tap "buo/cask-upgrade"
 tap "charmbracelet/tap"
 tap "cmacrae/formulae"
 tap "federico-terzi/espanso"
-tap "homebrew/bundle"
 tap "homebrew/cask-fonts"
 tap "homebrew/cask-versions"
 tap "homebrew/command-not-found"
@@ -285,23 +284,18 @@ cask "xbar"
 cask "yubico-authenticator"
 cask "yubico-yubikey-manager"
 cask "yubico-yubikey-personalization-gui"
-mas "1Keyboard", id: 766939888
-mas "Airmail", id: 918858936
 mas "Annotate", id: 918207447
-mas "Bear", id: 1091189122
 mas "Bitwarden", id: 1352778147
 mas "Clean", id: 418412301
 mas "Craft", id: 1487937127
 mas "Directive", id: 1503550067
 mas "EasyRes", id: 688211836
-mas "Evernote", id: 406056744
 mas "Fantastical", id: 975937182
 mas "Front and Center", id: 1493996622
 mas "GarageBand", id: 682658836
 mas "Hand Mirror", id: 1502839586
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
-mas "Kiwi for Gmail", id: 986304488
 mas "Meeter", id: 1510445899
 mas "MenubarX", id: 1575588022
 mas "Mic Drop", id: 1489816366
