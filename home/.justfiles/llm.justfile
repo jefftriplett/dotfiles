@@ -23,6 +23,7 @@ justfile := justfile_directory() + "/.justfiles/llm.justfile"
     llm install {{ ARGS }} llm-fragments-github
     llm install {{ ARGS }} llm-gemini
     llm install {{ ARGS }} llm-hacker-news
+    llm install {{ ARGS }} llm-openai-plugin
 
 # open LLM templates directory in Sublime Text
 @path:
