@@ -20,6 +20,7 @@ justfile := justfile_directory() + "/.justfiles/llm.justfile"
     # llm install {{ ARGS }} llm-ollama
     llm install {{ ARGS }} llm-anthropic
     llm install {{ ARGS }} llm-claude
+    llm install {{ ARGS }} llm-docs
     llm install {{ ARGS }} llm-fragments-github
     llm install {{ ARGS }} llm-gemini
     llm install {{ ARGS }} llm-hacker-news
