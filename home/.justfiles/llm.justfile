@@ -23,6 +23,7 @@ justfile := justfile_directory() + "/.justfiles/llm.justfile"
     llm install {{ ARGS }} llm-fragments-github
     llm install {{ ARGS }} llm-gemini
     llm install {{ ARGS }} llm-hacker-news
+    llm install {{ ARGS }} llm-jina-reader
     llm install {{ ARGS }} llm-ollama
     llm install {{ ARGS }} llm-openai-plugin
 
@@ -33,3 +34,5 @@ justfile := justfile_directory() + "/.justfiles/llm.justfile"
 # upgrade all installed LLM plugins
 @upgrade:
     just --justfile {{ justfile }} install --upgrade
+    # npm install -g @anthropic-ai/claude-code
+    # npm install -g @openai/codex
