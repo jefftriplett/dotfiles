@@ -6,7 +6,6 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/python.justfile"
-
 python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
 python_312 := `pyenv latest 3.12`
