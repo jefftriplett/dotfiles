@@ -17,3 +17,8 @@ elif [[ "${unamestr}" == 'Linux' ]]; then
     # shellcheck source=/dev/null
     source "${HOME}/.bash_linux"
 fi
+
+# OrbStack: Load command-line tools and integration if installed
+if [[ -f ~/.orbstack/shell/init.bash ]]; then
+    source ~/.orbstack/shell/init.bash
+fi
