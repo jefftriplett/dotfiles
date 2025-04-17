@@ -56,29 +56,9 @@ run("just --justfile=./home/justfile --list --list-submodules", with_console=Tru
 $ just --justfile=./home/justfile --list --list-submodules
 
 Available recipes:
-    bootstrap          # installs/updates all dependencies
-    cleanup DAYS="0"   # clean up old homebrew packages and casks
-    fmt                # format and overwrite justfile
-    freeze             # Updates our lockfiles without installing dependencies [alias: lock]
-    install            # create symlinks for dotfiles using homesick
-    kill-tabs          # Kill all Chrome tabs to improve performance, decrease battery usage, and save memory.
-    open-docs          # open documentation in browser using tailscale/golinks
-    open-go            # open tailscale/golinks homepage
-    open-ha            # open Home Assistant interface in browser
-    open-syncthing     # open Syncthing interface in browser
-    outdated           # list outdated packages from homebrew and pip
-    postgresql-upgrade # upgrade postgresql to latest version and migrate databases
-    restart            # restart homebrew services
-    stop               # stop all homebrew services
-    update             # updates a project to run at its current version
-    update-brewfile    # update Brewfile from cog template
-    update-readme-docs # update README.md docs using cog
-    upgrade            # update and upgrade homebrew packages
-    upgrade-all        # upgrade all tools (pyenv and mise packages)
     claude:
         config  # open Claude Desktop configuration file in Sublime Text
         upgrade # update Claude Code CLI to the latest version
-
     homebrew:
         cleanup DAYS="0" # clean up old Homebrew packages and cache
         freeze           # freeze current Homebrew packages to Brewfile
@@ -88,12 +68,10 @@ Available recipes:
         services-stop    # stop specific Homebrew services (with non-fatal errors)
         update           # update Homebrew package database
         upgrade          # upgrade all outdated Homebrew packages
-
     llm:
         install *ARGS # install LLM plugins with optional arguments
         path          # open LLM templates directory in Sublime Text
         upgrade       # upgrade all installed LLM plugins
-
     macos:
         timemachine-boost          # boost Time Machine backup speed by increasing IO priority
         timemachine-boost-complete # restore normal IO priority after Time Machine backup completes
@@ -101,7 +79,6 @@ Available recipes:
         timemachine-list           # list all Time Machine backups
         xcode-bootstrap            # install Xcode command line tools
         xcode-upgrade              # upgrade Xcode command line tools by removing and reinstalling
-
     ollama:
         copy-plist  # copy custom ollama plist file to homebrew directory
         diff-plist  # compare local ollama plist with installed version
@@ -110,11 +87,9 @@ Available recipes:
         list        # list all downloaded ollama models
         serve *ARGS # serve ollama in a tandem process with optional arguments
         setenv      # set ollama environment variables in launchctl
-
     pyenv:
         upgrade +ARGS="--skip-existing"     # upgrade python and update pyenv configuration
         upgrade-all +ARGS="--skip-existing" # install or upgrade all python versions managed by pyenv
-
     python:
         bootstrap                 # bootstrap python environment with essential packages
         outdated                  # list outdated Python packages
@@ -124,12 +99,10 @@ Available recipes:
         uv-python-install *ARGS   # install python versions using uv installer
         uv-python-reinstall *ARGS # reinstall python versions using uv installer
         uv-tool-install *ARGS     # install common python CLI tools using uv installer
-
     virtualenv:
         scan    # scan virtualenvs and display their python versions
         upgrade # upgrade pip in all virtualenvs
         workon  # list all virtualenvs with their python and pip versions
-
     virtualenvwrapper:
         get_env_details  # virtualenvwrapper hook for getting environment details
         initialize       # virtualenvwrapper hook for environment initialization
@@ -145,6 +118,36 @@ Available recipes:
         premkvirtualenv  # virtualenvwrapper hook that runs before creating a virtualenv
         prermproject     # virtualenvwrapper hook that runs before removing a project
         prermvirtualenv  # virtualenvwrapper hook that runs before removing a virtualenv
+
+    [database]
+    postgresql-upgrade # Upgrade PostgreSQL to latest version and migrate databases
+
+    [golinks]
+    open-docs          # Open documentation in browser using Tailscale/golinks
+    open-go            # Open Tailscale/golinks homepage
+    open-ha            # Open Home Assistant interface in browser
+    open-syncthing     # Open Syncthing interface in browser
+
+    [maintenance]
+    cleanup DAYS="0"   # Clean up old Homebrew packages and casks
+    outdated           # List outdated packages from Homebrew and pip
+    update             # Update project to run at its current version
+    upgrade            # Update and upgrade Homebrew packages
+    upgrade-all        # Upgrade all tools (pyenv and mise packages)
+
+    [services]
+    restart            # Restart Homebrew services
+    stop               # Stop all Homebrew services
+
+    [setup]
+    bootstrap          # Install and update all dependencies
+    freeze             # Update lockfiles without installing dependencies [alias: lock]
+    install            # Create symlinks for dotfiles using homesick
+
+    [utils]
+    fmt                # Format and overwrite justfile
+    update-brewfile    # Update Brewfile from cog template
+    update-readme-docs # Update README.md docs using cog
 ```
 
 <!-- [[[end]]] -->
