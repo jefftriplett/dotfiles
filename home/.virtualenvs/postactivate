@@ -126,10 +126,10 @@ fi
 # ------------------------------------------------------------
 
 #   `npm install -g iterm2-tab-set`
-if ! [ -e tabset ]; then
-  # bunx iterm2-tab-set --title "${VIRTUAL_ENV_NAME}"
-  tabset --title "${VIRTUAL_ENV_NAME}"
-fi
+# if ! [ -e tabset ]; then
+#   bunx iterm2-tab-set --title "${VIRTUAL_ENV_NAME}"
+#   # tabset --title "${VIRTUAL_ENV_NAME}"
+# fi
 
 # ------------------------------------------------------------
 
