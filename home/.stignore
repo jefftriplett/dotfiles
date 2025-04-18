@@ -10,10 +10,10 @@
 .pytest_cache/
 .ruff_cache/
 .sass-cache/
+.stignore
 .vendor/
 .venv/
 checkouts
 compose.override.yml
 docker-compose.override.yml
-home/.stignore*.override.yml
 pyrightconfig.json
