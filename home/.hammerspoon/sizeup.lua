@@ -7,7 +7,6 @@
 require 'keys'
 
 local sizeup = { }
--- local hyper = {"ctrl", "alt", "cmd"}
 
 --------------
 -- Bindings --
@@ -60,11 +59,7 @@ hs.hotkey.bind({ "ctrl", "alt" }, "Right", function()
 end)
 
 --- Spaces Actions ---
-
 -- Apple no longer provides any reliable API access to spaces.
--- As such, this feature no longer works in SizeUp on Yosemite and
--- Hammerspoon currently has no solution that isn't a complete hack.
--- If you have any ideas, please visit the ticket
 
 --- Snapback Action ---
 hs.hotkey.bind(hyper, "Z", function()
@@ -72,7 +67,6 @@ hs.hotkey.bind(hyper, "Z", function()
 end)
 
 --- Other Actions ---
-
 -- Make Window Full Screen
 hs.hotkey.bind(hyper, "M", function()
   sizeup.maximize()
@@ -82,7 +76,6 @@ end)
 hs.hotkey.bind(hyper, "C", function()
   sizeup.move_to_center_relative({w=0.60, h=0.60})
 end)
-
 
 -------------------
 -- Configuration --
@@ -109,7 +102,6 @@ sizeup.quarter_screen_partitions = {
   x = 0.5, -- %
   y = 0.5
 }
-
 
 ----------------
 -- Public API --
@@ -239,13 +231,8 @@ function sizeup.snapback()
 end
 
 function sizeup.maximize()
-  -- sizeup.set_frame("Full Screen", sizeup.screen())
   local win = sizeup.win()
   win:maximize()
-
-  -- print('window:maximize:', hs.layout.maximized)
-  -- win:move(hs.layout.maximized)
-  -- return win:maximize()
 end
 
 --- move_to_center_relative(size)
@@ -255,37 +242,12 @@ end
 --- Example: win:move_to_center_relative(w=0.5, h=0.5) -- window is now centered and is half the width and half the height of screen
 function sizeup.move_to_center_relative(unit)
   local screen = sizeup.screen()
-
-  -- local win = sizeup.win()
-  -- local winFrame = sizeup.frame()
-
-  print('unit.h', unit.h)
-  print('unit.w', unit.w)
-  print('unit.x', unit.x)
-  print('unit.y', unit.y)
-
-  print('screen.h', screen.h)
-  print('screen.w', screen.w)
-  print('screen.x', screen.x)
-  print('screen.y', screen.y)
-
   sizeup.set_frame("Center", {
     x = screen.x + (screen.w * ((1 - unit.w) / 2)),
     y = screen.y + (screen.h * ((1 - unit.h) / 2)),
     w = screen.w * unit.w,
     h = screen.h * unit.h
   })
-    -- local win = hs.window.focusedWindow()
-    -- if win then
-    --     local screen = win:screen()
-    --     local screenFrame = screen:frame()
-    --     local winFrame = win:frame()
-
-    --     winFrame.x = (screenFrame.w - winFrame.w) / 2 + screenFrame.x
-    --     winFrame.y = (screenFrame.h - winFrame.h) / 2 + screenFrame.y
-
-    --     win:setFrame(winFrame)
-    -- end
 end
 
 --- move_to_center_absolute(size)
@@ -302,13 +264,11 @@ function sizeup.move_to_center_absolute(unit)
   })
 end
 
-
 ------------------
 -- Internal API --
 ------------------
 
 -- SizeUp uses no animations
--- hs.window.animation_duration = 0.0
 hs.window.animationDuration = 0.0
 
 -- Initialize Snapback state
@@ -321,30 +281,15 @@ end
 
 -- display title, save state and move win to unit
 function sizeup.set_frame(title, unit)
-  -- hs.alert.show(title)
   local win = sizeup.win()
   sizeup.snapback_window_state[win:id()] = win:frame()
   return win:setFrame(unit)
-  -- return win:setFrameWithWorkarounds(unit)
 end
 
 -- screen is the available rect inside the screen edge margins
 function sizeup.screen()
   local screen = sizeup.win():screen():frame()
   local sem = sizeup.screen_edge_margins
-
-  print('screen.x', screen.x)
-  print('screen.y', screen.y)
-  print('screen.w', screen.w)
-  print('screen.h', screen.h)
-  print('---')
-
-  print('sem.bottom', sem.bottom)
-  print('sem.left', sem.left)
-  print('sem.right', sem.right)
-  print('sem.top', sem.top)
-  print('---')
-
   return {
     x = screen.x + sem.left,
     y = screen.y + sem.top,
@@ -353,8 +298,7 @@ function sizeup.screen()
   }
 end
 
--- gutter is the adjustment required to accomidate partition
--- margins between windows
+-- gutter is the adjustment required to accommodate partition margins between windows
 function sizeup.gutter()
   local pm = sizeup.partition_margins
   return {
