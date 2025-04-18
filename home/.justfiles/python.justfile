@@ -39,19 +39,6 @@ python_39 := `pyenv latest 3.9`
 @outdated:
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
-# install python packages using uv pip installer
-@pip-install *ARGS:
-    python -m uv pip install \
-        --system \
-        --upgrade \
-        {{ ARGS }}
-
-# uninstall python packages using uv pip installer
-@pip-uninstall *ARGS:
-    python -m uv pip uninstall \
-        --system \
-        {{ ARGS }}
-
 # update python environment and pyenv settings
 @update:
     just --justfile {{ justfile }} bootstrap
@@ -62,7 +49,23 @@ python_39 := `pyenv latest 3.9`
 # UV recipes - https://docs.astral.sh/uv/
 # ----------------------------------------------------------------
 
+# install python packages using uv pip installer
+[group("uv")]
+@uv-pip-install *ARGS:
+    python -m uv pip install \
+        --system \
+        --upgrade \
+        {{ ARGS }}
+
+# uninstall python packages using uv pip installer
+[group("uv")]
+@uv-pip-uninstall *ARGS:
+    python -m uv pip uninstall \
+        --system \
+        {{ ARGS }}
+
 # install python versions using uv installer
+[group("uv")]
 @uv-python-install *ARGS:
     -uv python install {{ ARGS }} 3.13
     -uv python install {{ ARGS }} 3.12
@@ -71,10 +74,12 @@ python_39 := `pyenv latest 3.9`
     -uv python install {{ ARGS }} 3.9
 
 # reinstall python versions using uv installer
+[group("uv")]
 @uv-python-reinstall *ARGS:
     just uv-python-install --reinstall
 
 # install common python CLI tools using uv installer
+[group("uv")]
 @uv-tool-install *ARGS:
     -uv tool install --python {{ python_312 }} aider-install {{ ARGS }}
     -uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
