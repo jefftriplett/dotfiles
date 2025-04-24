@@ -32,7 +32,7 @@ python_39 := `pyenv latest 3.9`
 # update pyenv itself to latest version
 [private]
 @update:
-    pyenv update
+    # just pyenv::upgrade
 
 # upgrade python and update pyenv configuration
 @upgrade +ARGS="--skip-existing":
