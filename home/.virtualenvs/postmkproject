@@ -1,4 +1,108 @@
 #!/bin/bash
 # This hook is run after a new project is activated.
 
-just --justfile=${HOME}/justfile virtualenvwrapper::mkproject
+VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
+
+PROJECT_SRC="${PROJECT_HOME}/${VIRTUAL_ENV_NAME}"
+PROJECT_ENVRC="${PROJECT_SRC}/.envrc"
+PROJECT_PYRIGHTCONFIG="${PROJECT_SRC}/pyrightconfig.json"
+PROJECT_STIGNORE="${PROJECT_SRC}/.stignore"
+
+echo "WORKON_HOME==${WORKON_HOME}"
+echo "PROJECT_SRC==${PROJECT_SRC}"
+echo "PROJECT_ENVRC==${PROJECT_ENVRC}"
+echo "PROJECT_PYRIGHTCONFIG==${PROJECT_PYRIGHTCONFIG}"
+echo "PROJECT_STIGNORE==${PROJECT_STIGNORE}"
+
+if [ -d "$PROJECT_SRC" ]; then
+    mkdir -p $PROJECT_SRC
+fi
+
+# ------------------------------------------------------------
+# Syncthing ".envrc" file...
+# ------------------------------------------------------------
+
+if [[ -d "$PROJECT_SRC" && ! -e "$PROJECT_ENVRC" ]]; then
+
+  # Create and populate the envrc file
+  cat > "$PROJECT_ENVRC" <<'EOF'
+export DOCKER_CONTEXT=orbstack
+export PIP_DISABLE_PIP_VERSION_CHECK=1
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONUNBUFFERED=1
+# export UV_PROJECT_ENVIRONMENT=$VIRTUAL_ENV
+EOF
+
+  # Load the new variables if direnv is available
+  command -v direnv >/dev/null 2>&1 && direnv allow
+fi
+
+# ------------------------------------------------------------
+# Syncthing ".stignore" file...
+# ------------------------------------------------------------
+
+if [[ -d "$PROJECT_SRC" && ! -e "$PROJECT_STIGNORE" ]]; then
+  cat > "$PROJECT_STIGNORE" <<'EOF'
+-r ~/.stignore
+*.override.yml
+*.pyc
+*.pyi
+.*-cache/
+.*cache/
+.DS_Store
+.envrc
+.jekyll-cache/
+.mypy_cache/
+.nox/
+.pytest_cache/
+.ruff_cache/
+.sass-cache/
+.stignore
+.vendor/
+.venv/
+checkouts
+compose.override.yml
+docker-compose.override.yml
+pyrightconfig.json
+EOF
+fi
+
+# ------------------------------------------------------------
+# Sublime Text Project create folder
+# ------------------------------------------------------------
+
+PARENT_DIR="${HOME}/Library/Application Support/Sublime Text/Packages/User"
+SUBLIME_TEXT_PROJECT_PATH="${PARENT_DIR}/Projects"
+
+if [ -d "${PARENT_DIR}" ]; then
+  if [ ! -d "${SUBLIME_TEXT_PROJECT_PATH}" ]; then
+    mkdir "${SUBLIME_TEXT_PROJECT_PATH}"
+  fi
+else
+  echo "Parent directory does not exist: ${PARENT_DIR}"
+fi
+
+# ------------------------------------------------------------
+# Sublime Text Project ".sublime-project" file...
+# ------------------------------------------------------------
+
+PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
+
+if ! [ -e "${PROJECT_FILE}" ]; then
+  if ! [ -e jq ]; then
+    echo "Creating ${PROJECT_FILE}"
+    echo "{\"folders\": [{\"path\": \"${PROJECT_SRC}\"}]}" | jq > "${PROJECT_FILE}"
+  fi
+fi
+
+# ------------------------------------------------------------
+# Sublime Text LSP PyRight ".pyrightconfig.json" file...
+# ------------------------------------------------------------
+if [[ -d "$PROJECT_SRC" && ! -e "$PROJECT_PYRIGHTCONFIG" ]]; then
+  if ! [ -e jq ]; then
+    echo "Creating ${PROJECT_PYRIGHTCONFIG}"
+    echo "{\"venvPath\": \"/Users/jefftriplett/.virtualenvs\", \"venv\": \"${VIRTUAL_ENV_NAME}\"}" | jq > "${PROJECT_PYRIGHTCONFIG}"
+  fi
+fi
+
+just --justfile=${HOME}/justfile virtualenvwrapper::postmkproject
