@@ -2,6 +2,7 @@
 disable_tools = ['python']
 experimental = true
 not_found_auto_install = false
+idiomatic_version_file_enable_tools = ["[]"]
 
 # # set arbitrary env vars to be used whenever in this project or subprojects
 # [env]
