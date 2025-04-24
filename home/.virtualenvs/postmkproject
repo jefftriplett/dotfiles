@@ -14,18 +14,17 @@ echo "PROJECT_ENVRC==${PROJECT_ENVRC}"
 echo "PROJECT_PYRIGHTCONFIG==${PROJECT_PYRIGHTCONFIG}"
 echo "PROJECT_STIGNORE==${PROJECT_STIGNORE}"
 
-if [ -d "$PROJECT_SRC" ]; then
-    mkdir -p $PROJECT_SRC
+if [ -d "${PROJECT_SRC}" ]; then
+    mkdir -p "${PROJECT_SRC}"
 fi
 
 # ------------------------------------------------------------
 # Syncthing ".envrc" file...
 # ------------------------------------------------------------
 
-if [[ -d "$PROJECT_SRC" && ! -e "$PROJECT_ENVRC" ]]; then
-
+if [[ -d "${PROJECT_SRC}" && ! -e "${PROJECT_ENVRC}" ]]; then
   # Create and populate the envrc file
-  cat > "$PROJECT_ENVRC" <<'EOF'
+  cat > "${PROJECT_ENVRC}" <<'EOF'
 export DOCKER_CONTEXT=orbstack
 export PIP_DISABLE_PIP_VERSION_CHECK=1
 export PYTHONDONTWRITEBYTECODE=1
@@ -41,31 +40,31 @@ fi
 # Syncthing ".stignore" file...
 # ------------------------------------------------------------
 
-if [[ -d "$PROJECT_SRC" && ! -e "$PROJECT_STIGNORE" ]]; then
-  cat > "$PROJECT_STIGNORE" <<'EOF'
--r ~/.stignore
-*.override.yml
-*.pyc
-*.pyi
-.*-cache/
-.*cache/
-.DS_Store
-.envrc
-.jekyll-cache/
-.mypy_cache/
-.nox/
-.pytest_cache/
-.ruff_cache/
-.sass-cache/
-.stignore
-.vendor/
-.venv/
-checkouts
-compose.override.yml
-docker-compose.override.yml
-pyrightconfig.json
-EOF
-fi
+# if [[ -d "$PROJECT_SRC" && ! -e "$PROJECT_STIGNORE" ]]; then
+#   cat > "$PROJECT_STIGNORE" <<'EOF'
+# -r ~/.stignore
+# *.override.yml
+# *.pyc
+# *.pyi
+# .*-cache/
+# .*cache/
+# .DS_Store
+# .envrc
+# .jekyll-cache/
+# .mypy_cache/
+# .nox/
+# .pytest_cache/
+# .ruff_cache/
+# .sass-cache/
+# .stignore
+# .vendor/
+# .venv/
+# checkouts
+# compose.override.yml
+# docker-compose.override.yml
+# pyrightconfig.json
+# EOF
+# fi
 
 # ------------------------------------------------------------
 # Sublime Text Project create folder
