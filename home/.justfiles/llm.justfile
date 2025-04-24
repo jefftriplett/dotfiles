@@ -15,8 +15,14 @@ justfile := justfile_directory() + "/.justfiles/llm.justfile"
 @fmt:
     just --justfile {{ justfile }} --fmt
 
+# upgrade all installed LLM plugins with --force-reinstall
+@force-reinstall:
+    just --justfile {{ justfile }} install --force-reinstall
+
 # install LLM plugins with optional arguments
 @install *ARGS:
+    # llm install --force-reinstall llm-gpt4all
+    llm install {{ ARGS }} llm-uv-tool
     llm install {{ ARGS }} llm-anthropic
     llm install {{ ARGS }} llm-claude
     llm install {{ ARGS }} llm-docs
