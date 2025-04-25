@@ -9,49 +9,46 @@ VIRTUAL_ENV_PYRIGHTCONFIG="${VIRTUAL_ENV_SRC}/pyrightconfig.json"
 VIRTUAL_ENV_STIGNORE="${VIRTUAL_ENV_SRC}/.stignore"
 
 PROJECT_SRC="${PROJECT_HOME}/${VIRTUAL_ENV_NAME}"
-PROJECT_ENVRC="${PROJECT_SRC}/.envrc"
-PROJECT_PYRIGHTCONFIG="${PROJECT_SRC}/pyrightconfig.json"
-PROJECT_STIGNORE="${PROJECT_SRC}/.stignore"
-
-echo "PROJECT_SRC==${PROJECT_SRC}"
-echo "PROJECT_ENVRC==${PROJECT_ENVRC}"
-echo "PROJECT_PYRIGHTCONFIG==${PROJECT_PYRIGHTCONFIG}"
-echo "PROJECT_STIGNORE==${PROJECT_STIGNORE}"
 
 # ------------------------------------------------------------
 # Handle project directories - Support for PROJECT_HOME
 # ------------------------------------------------------------
 
-# Fall back to the original behavior
-if [ -d "${VIRTUAL_ENV_SRC}" ]; then
-  # If our {{virtualenv}}/src folder exists, CD into that folder
-  cd "${VIRTUAL_ENV_SRC}" || exit
+if [ -d "${PROJECT_SRC}" ]; then
+  cd "${PROJECT_SRC}" || exit
 else
-  # If our {{virtualenv}}/src folder does not exist, let's create it
-  mkdir -p "${VIRTUAL_ENV_SRC}"
-  cd "${VIRTUAL_ENV_SRC}" || exit
+  # Fall back to the original behavior
+  if [ -d "${VIRTUAL_ENV_SRC}" ]; then
+    # If our {{virtualenv}}/src folder exists, CD into that folder
+    cd "${VIRTUAL_ENV_SRC}" || exit
+  else
+    # If our {{virtualenv}}/src folder does not exist, let's create it
+    mkdir -p "${VIRTUAL_ENV_SRC}"
+    cd "${VIRTUAL_ENV_SRC}" || exit
 
-  # Add {{virtualenv}}/src to our virtualenv
-  add2virtualenv .
+    # Add {{virtualenv}}/src to our virtualenv
+    add2virtualenv .
+  fi
 fi
-
 
 # ------------------------------------------------------------
 # Syncthing ".envrc" file...
 # ------------------------------------------------------------
 
-if ! [ -e "${VIRTUAL_ENV_ENVRC}" ]; then
+if [ -e "${VIRTUAL_ENV_SRC}" ] && [ ! -f "${VIRTUAL_ENV_ENVRC}" ]; then
   # Create direnv file for our project
   touch .envrc
 
   # Let's set some default ENV values
-  echo "export DOCKER_CONTEXT=orbstack" >> .envrc
-  echo "export PIP_DISABLE_PIP_VERSION_CHECK=1" >> .envrc
-  echo "export PYTHONDONTWRITEBYTECODE=1" >> .envrc
-  echo "export PYTHONUNBUFFERED=1" >> .envrc
+  cat > "${VIRTUAL_ENV_ENVRC}" <<'EOF'
+export DOCKER_CONTEXT=orbstack
+export PIP_DISABLE_PIP_VERSION_CHECK=1
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONUNBUFFERED=1
+EOF
 
   # Run direnv to allow list our new ENV values
-  if ! [ -e direnv ]; then
+  if command -v direnv >/dev/null 2>&1; then
     direnv allow
   fi
 fi
@@ -60,8 +57,8 @@ fi
 # Syncthing ".stignore" file...
 # ------------------------------------------------------------
 
-if [ ! -e "$VIRTUAL_ENV_STIGNORE" ]; then
-  cat > "$VIRTUAL_ENV_STIGNORE" <<'EOF'
+if [ -e "${VIRTUAL_ENV_SRC}" ] && [ ! -e "${VIRTUAL_ENV_STIGNORE}" ]; then
+  cat > "${VIRTUAL_ENV_STIGNORE}" <<'EOF'
 *.override.yml
 *.pyc
 *.pyi
@@ -85,4 +82,4 @@ pyrightconfig.json
 EOF
 fi
 
-just --justfile=${HOME}/justfile virtualenvwrapper::postactivate
+# just --justfile=${HOME}/justfile virtualenvwrapper::postactivate

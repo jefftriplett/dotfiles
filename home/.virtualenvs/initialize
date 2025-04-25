@@ -1,7 +1,6 @@
 #!/bin/bash
 # This hook is run during the startup phase when loading virtualenvwrapper.sh.
 VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
-echo $VIRTUAL_ENV_NAME
 
 # Set PROJECT_HOME if not already set
 if [ -z "${PROJECT_HOME}" ]; then
