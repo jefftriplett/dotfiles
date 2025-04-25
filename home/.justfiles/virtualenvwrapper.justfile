@@ -38,7 +38,7 @@ initialize:
         mkdir -p "${PROJECT_HOME}"
     fi
 
-    uvx --quiet rich --print "[blue]PROJECT_HOME[/blue]: ${PROJECT_HOME}"
+#     uvx --quiet rich --print "[blue]PROJECT_HOME[/blue]: ${PROJECT_HOME}"
 
 # virtualenvwrapper hook that runs after environment activation
 postactivate:
