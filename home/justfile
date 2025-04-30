@@ -55,6 +55,7 @@ alias lock := freeze
 @fmt:
     just --fmt --unstable
     just claude fmt
+    just codex fmt
     just homebrew fmt
     just llm fmt
     just macos fmt
