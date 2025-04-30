@@ -104,6 +104,7 @@ alias lock := freeze
     just homebrew::upgrade
     just homebrew::cleanup
     just python::update
+    just llm::upgrade
 
 # Upgrade all tools (pyenv and mise packages)
 [group("maintenance")]
