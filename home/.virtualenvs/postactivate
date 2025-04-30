@@ -3,12 +3,13 @@
 
 VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
 VIRTUAL_ENV_BIN="${VIRTUAL_ENV}/bin"
-VIRTUAL_ENV_SRC="${VIRTUAL_ENV}/src"
 VIRTUAL_ENV_ENVRC="${VIRTUAL_ENV_SRC}/.envrc"
-VIRTUAL_ENV_PYRIGHTCONFIG="${VIRTUAL_ENV_SRC}/pyrightconfig.json"
+VIRTUAL_ENV_SRC="${VIRTUAL_ENV}/src"
 VIRTUAL_ENV_STIGNORE="${VIRTUAL_ENV_SRC}/.stignore"
 
 PROJECT_SRC="${PROJECT_HOME}/${VIRTUAL_ENV_NAME}"
+PROJECT_ENVRC="${PROJECT_SRC}/.envrc"
+PROJECT_PYRIGHTCONFIG="${PROJECT_SRC}/pyrightconfig.json"
 
 # ------------------------------------------------------------
 # Handle project directories - Support for PROJECT_HOME
@@ -35,12 +36,12 @@ fi
 # Syncthing ".envrc" file...
 # ------------------------------------------------------------
 
-if [ -e "${VIRTUAL_ENV_SRC}" ] && [ ! -f "${VIRTUAL_ENV_ENVRC}" ]; then
+if [ -e "${PROJECT_SRC}" ] && [ ! -f "${PROJECT_ENVRC}" ]; then
   # Create direnv file for our project
   touch .envrc
 
   # Let's set some default ENV values
-  cat > "${VIRTUAL_ENV_ENVRC}" <<'EOF'
+  cat > "${PROJECT_ENVRC}" <<'EOF'
 export DOCKER_CONTEXT=orbstack
 export PIP_DISABLE_PIP_VERSION_CHECK=1
 export PYTHONDONTWRITEBYTECODE=1
@@ -80,6 +81,44 @@ compose.override.yml
 docker-compose.override.yml
 pyrightconfig.json
 EOF
+fi
+
+# ------------------------------------------------------------
+# Sublime Text Project create folder
+# ------------------------------------------------------------
+
+PARENT_DIR="${HOME}/Library/Application Support/Sublime Text/Packages/User"
+SUBLIME_TEXT_PROJECT_PATH="${PARENT_DIR}/Projects"
+
+if [ -d "${PARENT_DIR}" ]; then
+  if [ ! -d "${SUBLIME_TEXT_PROJECT_PATH}" ]; then
+    mkdir "${SUBLIME_TEXT_PROJECT_PATH}"
+  fi
+else
+  echo "Parent directory does not exist: ${PARENT_DIR}"
+fi
+
+# ------------------------------------------------------------
+# Sublime Text Project ".sublime-project" file...
+# ------------------------------------------------------------
+
+PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
+
+if ! [ -f "${PROJECT_FILE}" ]; then
+  if ! [ -e jq ]; then
+    echo "Creating ${PROJECT_FILE}"
+    echo "{\"folders\": [{\"path\": \"${PROJECT_SRC}\"}]}" | jq > "${PROJECT_FILE}"
+  fi
+fi
+
+# ------------------------------------------------------------
+# Sublime Text LSP PyRight ".pyrightconfig.json" file...
+# ------------------------------------------------------------
+if [[ -e "$PROJECT_SRC" && ! -f "$PROJECT_PYRIGHTCONFIG" ]]; then
+  if ! [ -e jq ]; then
+    echo "Creating ${PROJECT_PYRIGHTCONFIG}"
+    echo "{\"venvPath\": \"/Users/jefftriplett/.virtualenvs\", \"venv\": \"${VIRTUAL_ENV_NAME}\"}" | jq > "${PROJECT_PYRIGHTCONFIG}"
+  fi
 fi
 
 # just --justfile=${HOME}/justfile virtualenvwrapper::postactivate
