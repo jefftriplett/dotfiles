@@ -10,6 +10,7 @@ export PIP_REQUIRE_VIRTUALENV := "false"
 # export HOMEBREW_NO_AUTO_UPDATE := "true"
 
 mod claude '.justfiles/claude.justfile'
+mod codex '.justfiles/codex.justfile'
 mod homebrew '.justfiles/homebrew.justfile'
 mod llm '.justfiles/llm.justfile'
 mod macos '.justfiles/macos.justfile'
