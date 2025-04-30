@@ -83,6 +83,7 @@ python_39 := `pyenv latest 3.9`
 @uv-tool-install *ARGS:
     -uv tool install --python {{ python_312 }} aider-install {{ ARGS }}
     -uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
+    -uv tool install --python {{ python_312 }} em-keyboard {{ ARGS }}
     -uv tool install --python {{ python_312 }} files-to-claude-xml {{ ARGS }}
     -uv tool install --python {{ python_312 }} grip {{ ARGS }}
     -uv tool install --python {{ python_312 }} justpath {{ ARGS }}
