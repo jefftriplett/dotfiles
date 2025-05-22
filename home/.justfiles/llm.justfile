@@ -6,6 +6,7 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/llm.justfile"
+PACKAGES := ("llm-uv-tool " + "llm-anthropic " + "llm-claude " + "llm-docs " + "llm-fragments-github " + "llm-gemini " + "llm-hacker-news " + "llm-jina-reader " + "llm-ollama " + "llm-openai-plugin ")
 
 [private]
 @default:
@@ -22,16 +23,7 @@ justfile := justfile_directory() + "/.justfiles/llm.justfile"
 # install LLM plugins with optional arguments
 @install *ARGS:
     # llm install --force-reinstall llm-gpt4all
-    llm install {{ ARGS }} llm-uv-tool
-    llm install {{ ARGS }} llm-anthropic
-    llm install {{ ARGS }} llm-claude
-    llm install {{ ARGS }} llm-docs
-    llm install {{ ARGS }} llm-fragments-github
-    llm install {{ ARGS }} llm-gemini
-    llm install {{ ARGS }} llm-hacker-news
-    llm install {{ ARGS }} llm-jina-reader
-    llm install {{ ARGS }} llm-ollama
-    llm install {{ ARGS }} llm-openai-plugin
+    llm install {{ ARGS }} {{ PACKAGES }}
 
 # open LLM templates directory in Sublime Text
 @path:
