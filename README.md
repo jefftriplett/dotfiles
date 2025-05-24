@@ -59,6 +59,9 @@ Available recipes:
     claude:
         config  # open Claude Desktop configuration file in Sublime Text
         upgrade # update Claude Code CLI to the latest version
+    codex:
+        config  # open Codex configuration file in Sublime Text
+        upgrade # update Codex CLI to the latest version
     homebrew:
         cleanup DAYS="0" # clean up old Homebrew packages and cache
         freeze           # freeze current Homebrew packages to Brewfile
@@ -69,14 +72,18 @@ Available recipes:
         update           # update Homebrew package database
         upgrade          # upgrade all outdated Homebrew packages
     llm:
-        install *ARGS # install LLM plugins with optional arguments
-        path          # open LLM templates directory in Sublime Text
-        upgrade       # upgrade all installed LLM plugins
+        force-reinstall # upgrade all installed LLM plugins with --force-reinstall
+        install *ARGS   # install LLM plugins with optional arguments
+        path            # open LLM templates directory in Sublime Text
+        upgrade         # upgrade all installed LLM plugins
     macos:
+        [time machine]
         timemachine-boost          # boost Time Machine backup speed by increasing IO priority
         timemachine-boost-complete # restore normal IO priority after Time Machine backup completes
         timemachine-delete *ARGS   # delete specific Time Machine backups
         timemachine-list           # list all Time Machine backups
+
+        [xcode]
         xcode-bootstrap            # install Xcode command line tools
         xcode-upgrade              # upgrade Xcode command line tools by removing and reinstalling
     ollama:
@@ -93,9 +100,11 @@ Available recipes:
     python:
         bootstrap                 # bootstrap python environment with essential packages
         outdated                  # list outdated Python packages
-        pip-install *ARGS         # install python packages using uv pip installer
-        pip-uninstall *ARGS       # uninstall python packages using uv pip installer
         update                    # update python environment and pyenv settings
+
+        [uv]
+        uv-pip-install *ARGS      # install python packages using uv pip installer
+        uv-pip-uninstall *ARGS    # uninstall python packages using uv pip installer
         uv-python-install *ARGS   # install python versions using uv installer
         uv-python-reinstall *ARGS # reinstall python versions using uv installer
         uv-tool-install *ARGS     # install common python CLI tools using uv installer
