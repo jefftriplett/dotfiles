@@ -6,7 +6,6 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/llm.justfile"
-PACKAGES := ("llm-uv-tool " + "llm-anthropic " + "llm-claude " + "llm-docs " + "llm-fragments-github " + "llm-gemini " + "llm-hacker-news " + "llm-jina-reader " + "llm-ollama " + "llm-openai-plugin ")
 
 [private]
 @default:
@@ -23,7 +22,18 @@ PACKAGES := ("llm-uv-tool " + "llm-anthropic " + "llm-claude " + "llm-docs " + "
 # install LLM plugins with optional arguments
 @install *ARGS:
     # llm install --force-reinstall llm-gpt4all
-    llm install {{ ARGS }} {{ PACKAGES }}
+    llm install {{ ARGS }} \
+        llm-anthropic \
+        llm-claude \
+        llm-docs \
+        llm-fragments-github \
+        llm-gemini \
+        llm-hacker-news \
+        llm-jina-reader \
+        llm-ollama \
+        llm-openai-plugin \
+        llm-pdf-to-images \
+        llm-uv-tool
 
 # open LLM templates directory in Sublime Text
 @path:
@@ -32,5 +42,3 @@ PACKAGES := ("llm-uv-tool " + "llm-anthropic " + "llm-claude " + "llm-docs " + "
 # upgrade all installed LLM plugins
 @upgrade:
     just --justfile {{ justfile }} install --upgrade
-    # npm install -g @anthropic-ai/claude-code
-    # npm install -g @openai/codex
