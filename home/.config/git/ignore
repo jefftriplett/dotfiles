@@ -48,3 +48,5 @@ src/*-svn/*
 src/*.egg-info
 staging.ini
 tmtags
+
+**/.claude/settings.local.json
