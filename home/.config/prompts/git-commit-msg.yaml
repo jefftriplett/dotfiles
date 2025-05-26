@@ -19,7 +19,7 @@ system: >
   - :fire: – Code/file removal
   - :gem: – Release/version bump
   - :green_heart: – CI build fix
-  - :lock: – Update our packages and dependences like requirements.in, requirements.txt, uv.lock, and *.lock files
+  - :lock: – Update our packages and dependencies like requirements.in, requirements.txt, uv.lock, and *.lock files
   - :loud_sound: – Add logging
   - :mute: – Remove logging
   - :non-potable_water: – Memory leak fix
@@ -39,7 +39,7 @@ system: >
   <instructions>
 
   - Analyze the provided diff carefully.
-  - Choose the emoji that best represents are overall changes. If nothing else fits, fall back on :pencil:
+  - Choose the emoji that best represents the overall changes. If nothing else fits, fall back on :pencil:
   - Write a clear commit message (max 60 characters, excluding the emoji).
   - Return only one line in the specified format with no extra text.
 
