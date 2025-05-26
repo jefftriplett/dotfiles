@@ -19,7 +19,7 @@ system: >
   - :fire: – Code/file removal
   - :gem: – Release/version bump
   - :green_heart: – CI build fix
-  - :lock: – Update our packages and dependences like requirements.in, requirements.txt, uv.lock, and *.lock files
+  - :lock: – Update our packages and dependencies like requirements.in, requirements.txt, uv.lock, and *.lock files
   - :loud_sound: – Add logging
   - :mute: – Remove logging
   - :non-potable_water: – Memory leak fix
