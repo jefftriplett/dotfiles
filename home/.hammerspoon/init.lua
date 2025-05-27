@@ -37,6 +37,7 @@ function setup_grid()
     log.i('Setting up window grid')
     
     for displayName, gridConfig in pairs(config.displays.grids) do
+        log.d(displayName, gridConfig)
         local screen = hs.screen.find(displayName)
         if screen then
             log.d('Found display:', displayName, 'with grid:', gridConfig)
@@ -184,13 +185,13 @@ hs.hotkey.bind(hyper, '0', function()
     log.i('  wifi_watcher:', wifi_watcher)
 end)
 
-hs.hotkey.bind(hyper, 'Q', function()
-    toggle_application('iTerm')
-end)
+-- hs.hotkey.bind(hyper, 'Q', function()
+--     toggle_application('iTerm')
+-- end)
 
-hs.hotkey.bind(hyper, 'W', function()
-    toggle_application('Sublime Text')
-end)
+-- hs.hotkey.bind(hyper, 'W', function()
+--     toggle_application('Sublime Text')
+-- end)
 
 hs.hotkey.bind(hyper, '.', function()
     hs.hints.windowHints(hs.window.focusedWindow():application():allWindows())
