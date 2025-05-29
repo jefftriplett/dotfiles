@@ -86,6 +86,9 @@ Available recipes:
         [xcode]
         xcode-bootstrap            # install Xcode command line tools
         xcode-upgrade              # upgrade Xcode command line tools by removing and reinstalling
+    mise:
+        bootstrap # Bootstrap mise by installing configured language versions
+        upgrade   # update mise to the latest version
     ollama:
         copy-plist  # copy custom ollama plist file to homebrew directory
         diff-plist  # compare local ollama plist with installed version
