@@ -26,6 +26,10 @@ usage = ["latest"]
 description = "Bootstrap our CLI"
 run = "mise upgrade"
 
+[tasks.claude-yolo]
+description = "Run Claude dangerously"
+run = "claude --dangerously-skip-permissions"
+
 [tasks."llm:git-branch-name"]
 description = "Generate GitHub branch name repository from git diff using LLM generation"
 run = "git diff --cached | llm prompt --model openai/o4-mini --template ~/.config/prompts/git-branch-name.yaml"

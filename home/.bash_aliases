@@ -13,13 +13,16 @@ alias okimdone="bunx okimdone"
 alias readme-md-generator="bunx readme-md-generator"
 alias vmd="bunx vmd"
 
+# setup AI/LLM/Mise aliases
+alias claude-yolo="mise run claude-yolo"
+alias git-commit-msg-auto="mise run llm:git-commit-msg-auto"
+alias git-commit-msg="mise run llm:git-commit-msg"
+
 # everything else
 alias cat="bat -p"
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
 alias gam="~/bin/gam/gam"
 alias gist="gist -p"
-alias git-commit-msg-auto="mise run llm:git-commit-msg-auto"
-alias git-commit-msg="mise run llm:git-commit-msg"
 alias got="git"
 alias nw="~/node_modules/nwjs/nwjs.app/Contents/MacOS/nwjs"
 alias outdated="brew update; brew outdated; brew cask outdated; mas outdated"
