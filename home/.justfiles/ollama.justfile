@@ -5,12 +5,12 @@
 set dotenv-load := false
 set export := true
 
+justfile := justfile_directory() + "/.justfiles/ollama.justfile"
 export OLLAMA_FLASH_ATTENTION := "true"
 export OLLAMA_HOST := "0.0.0.0:11434"
 export OLLAMA_KEEP_ALIVE := "30m"
 export OLLAMA_KV_CACHE_TYPE := "f16"
 export OLLAMA_ORIGINS := "http://*"
-justfile := justfile_directory() + "/.justfiles/ollama.justfile"
 
 [private]
 @default:
