@@ -32,12 +32,12 @@ run = "claude --dangerously-skip-permissions"
 
 [tasks."llm:git-branch-name"]
 description = "Generate GitHub branch name repository from git diff using LLM generation"
-run = "git diff --cached | llm prompt --model openai/o4-mini --template ~/.config/prompts/git-branch-name.yaml"
+run = "/opt/homebrew/bin/git diff --cached | llm prompt --model openai/o4-mini --template ~/.config/prompts/git-branch-name.yaml"
 
 [tasks."llm:git-commit-msg"]
 description = "Generate GitHub comment message from git diff using LLM generation"
-run = "git diff --cached | llm prompt --model openai/o4-mini --template ~/.config/prompts/git-commit-msg.yaml"
+run = "/opt/homebrew/bin/git diff --cached | llm prompt --model openai/o4-mini --template ~/.config/prompts/git-commit-msg.yaml"
 
 [tasks."llm:git-commit-msg-auto"]
 description = "Automatically commit changes with a generated commit message from git diff using LLM generation"
-run = "git commit -m \"$(git diff --cached | llm prompt --model openai/o4-mini --template ~/.config/prompts/git-commit-msg.yaml)\""
+run = "/opt/homebrew/bin/git commit -m \"$(git diff --cached | llm prompt --model openai/o4-mini --template ~/.config/prompts/git-commit-msg.yaml)\""
