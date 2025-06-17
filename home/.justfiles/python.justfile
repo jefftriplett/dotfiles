@@ -76,7 +76,7 @@ python_39 := `pyenv latest 3.9`
 # reinstall python versions using uv installer
 [group("uv")]
 @uv-python-reinstall *ARGS:
-    just uv-python-install --reinstall
+    just --justfile {{ justfile }} uv-python-install --reinstall
 
 # install common python CLI tools using uv installer
 [group("uv")]
