@@ -53,6 +53,12 @@ export GIT_PS1_SHOWDIRTYSTATE=true
 export GIT_PS1_SHOWUNTRACKEDFILES=true
 
 ###################
+# claude settings #
+###################
+
+export ENABLE_BACKGROUND_TASKS=1
+
+###################
 # python settings #
 ###################
 
