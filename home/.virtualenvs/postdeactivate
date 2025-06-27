@@ -4,7 +4,7 @@ unset DATABASE_URL
 unset DJANGO_SETTINGS_MODULE
 
 # Set user.badge back to our default when exiting the virtualenv
-export USER_BADGE="${USER_BADGE_DEFAULT}"
+# export USER_BADGE="${USER_BADGE_DEFAULT}"
 
 # if ! [ -e tabset ]; then
 #   # npx iterm2-tab-set --title "❓"
@@ -12,4 +12,4 @@ export USER_BADGE="${USER_BADGE_DEFAULT}"
 #   # tabset --title "❓"
 # fi
 
-just --justfile=${HOME}/justfile virtualenvwrapper::postdeactivate
+# just --justfile=${HOME}/justfile virtualenvwrapper::postdeactivate

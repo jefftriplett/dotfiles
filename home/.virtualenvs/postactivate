@@ -15,6 +15,12 @@ PROJECT_PYRIGHTCONFIG="${PROJECT_SRC}/pyrightconfig.json"
 # Handle project directories - Support for PROJECT_HOME
 # ------------------------------------------------------------
 
+# Warn if both PROJECT_SRC and VIRTUAL_ENV_SRC exist
+if [ -d "${PROJECT_SRC}" ] && [ -d "${VIRTUAL_ENV_SRC}" ]; then
+  echo "WARNING: Both PROJECT_SRC (${PROJECT_SRC}) and VIRTUAL_ENV_SRC (${VIRTUAL_ENV_SRC}) exist."
+  echo "This may cause confusion about which directory is the primary source location."
+fi
+
 if [ -d "${PROJECT_SRC}" ]; then
   cd "${PROJECT_SRC}" || exit
 else
