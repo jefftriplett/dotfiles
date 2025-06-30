@@ -58,3 +58,9 @@ disabled = true
 [username]
 format = "[$user]($style) on "
 style_user = "bold #8be9fd"
+
+[custom.just]
+description = "Checks for justfile"
+command = "echo 🧃"
+when = 'test -f justfile || test -f Justfile || test -d .justfiles'
+style = "bold green"
