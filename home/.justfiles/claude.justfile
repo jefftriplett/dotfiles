@@ -7,10 +7,12 @@ set export := true
 
 justfile := justfile_directory() + "/.justfiles/claude.justfile"
 
+# list all available recipes
 [private]
 @default:
     just --justfile {{ justfile }} --list
 
+# format this justfile
 [private]
 @fmt:
     just --justfile {{ justfile }} --fmt
@@ -21,8 +23,14 @@ justfile := justfile_directory() + "/.justfiles/claude.justfile"
 
 # update Claude Code CLI to the latest version
 @upgrade:
+    claude update
     npm install -g @anthropic-ai/claude-code
+    just --justfile {{ justfile }} version
 
 # see Claude Code API/CLI usage
 @usage:
     bunx ccusage
+
+# display Claude Code CLI version
+@version:
+    claude --version
