@@ -64,3 +64,9 @@ description = "Checks for justfile"
 command = "echo 🧃"
 when = 'test -f justfile || test -f Justfile || test -d .justfiles'
 style = "bold green"
+
+[custom.claude]
+description = "Checks for CLAUDE.md file"
+command = "echo 🤖"
+when = 'test -f CLAUDE.md'
+style = "bold blue"
