@@ -7,10 +7,12 @@ set export := true
 
 justfile := justfile_directory() + "/.justfiles/mise.justfile"
 
+# list all available recipes
 [private]
 @default:
     just --justfile {{ justfile }} --list
 
+# format this justfile
 [private]
 @fmt:
     just --justfile {{ justfile }} --fmt
@@ -25,7 +27,7 @@ justfile := justfile_directory() + "/.justfiles/mise.justfile"
     # mise current
     # mise list
 
-# update mise to the latest version
+# update mise and install latest language versions
 @upgrade:
     mise install
     mise reshim

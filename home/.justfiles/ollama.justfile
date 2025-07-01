@@ -12,10 +12,12 @@ export OLLAMA_KEEP_ALIVE := "30m"
 export OLLAMA_KV_CACHE_TYPE := "f16"
 export OLLAMA_ORIGINS := "http://*"
 
+# list all available recipes
 [private]
 @default:
     just --justfile {{ justfile }} --list
 
+# format this justfile
 [private]
 @fmt:
     just --justfile {{ justfile }} --fmt

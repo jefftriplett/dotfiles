@@ -7,10 +7,12 @@ set export := true
 
 justfile := justfile_directory() + "/.justfiles/llm.justfile"
 
+# list all available recipes
 [private]
 @default:
     just --justfile {{ justfile }} --list
 
+# format this justfile
 [private]
 @fmt:
     just --justfile {{ justfile }} --fmt

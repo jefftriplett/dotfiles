@@ -12,10 +12,12 @@ python_312 := `pyenv latest 3.12`
 python_313 := `pyenv latest 3.13`
 python_39 := `pyenv latest 3.9`
 
+# list all available recipes
 [private]
 @default:
     just --justfile {{ justfile }} --list
 
+# format this justfile
 [private]
 @fmt:
     just --justfile {{ justfile }} --fmt
