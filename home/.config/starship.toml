@@ -68,5 +68,5 @@ style = "bold green"
 [custom.claude]
 description = "Checks for CLAUDE.md file"
 command = "echo 🤖"
-when = 'test -f CLAUDE.md'
+when = 'test -f CLAUDE.md || test -d .claude'
 style = "bold blue"
