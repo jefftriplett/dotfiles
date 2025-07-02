@@ -42,7 +42,7 @@ fi
 # Syncthing ".envrc" file...
 # ------------------------------------------------------------
 
-if [ -e "${PROJECT_SRC}" ] && [ ! -f "${PROJECT_ENVRC}" ]; then
+if [ -d "${PROJECT_SRC}" ] && [ ! -f "${PROJECT_ENVRC}" ]; then
   # Create direnv file for our project
   touch .envrc
 
@@ -64,7 +64,7 @@ fi
 # Syncthing ".stignore" file...
 # ------------------------------------------------------------
 
-if [ -e "${VIRTUAL_ENV_SRC}" ] && [ ! -e "${VIRTUAL_ENV_STIGNORE}" ]; then
+if [ -d "${VIRTUAL_ENV_SRC}" ] && [ ! -f "${VIRTUAL_ENV_STIGNORE}" ]; then
   cat > "${VIRTUAL_ENV_STIGNORE}" <<'EOF'
 *.override.yml
 *.pyc
@@ -111,7 +111,7 @@ fi
 PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
 
 if ! [ -f "${PROJECT_FILE}" ]; then
-  if ! [ -e jq ]; then
+  if command -v jq >/dev/null 2>&1; then
     echo "Creating ${PROJECT_FILE}"
     echo "{\"folders\": [{\"path\": \"${PROJECT_SRC}\"}]}" | jq > "${PROJECT_FILE}"
   fi
@@ -120,10 +120,10 @@ fi
 # ------------------------------------------------------------
 # Sublime Text LSP PyRight ".pyrightconfig.json" file...
 # ------------------------------------------------------------
-if [[ -e "$PROJECT_SRC" && ! -f "$PROJECT_PYRIGHTCONFIG" ]]; then
-  if ! [ -e jq ]; then
+if [[ -d "$PROJECT_SRC" && ! -f "$PROJECT_PYRIGHTCONFIG" ]]; then
+  if command -v jq >/dev/null 2>&1; then
     echo "Creating ${PROJECT_PYRIGHTCONFIG}"
-    echo "{\"venvPath\": \"/Users/jefftriplett/.virtualenvs\", \"venv\": \"${VIRTUAL_ENV_NAME}\"}" | jq > "${PROJECT_PYRIGHTCONFIG}"
+    echo "{\"venvPath\": \"${WORKON_HOME}\", \"venv\": \"${VIRTUAL_ENV_NAME}\"}" | jq > "${PROJECT_PYRIGHTCONFIG}"
   fi
 fi
 
