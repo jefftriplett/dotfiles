@@ -197,7 +197,7 @@ cask "alfred"
 cask "android-platform-tools"
 cask "appcleaner"
 cask "applepi-baker"
-cask "aws-vault"
+cask "aws-vault-binary"
 cask "balenaetcher"
 cask "bunch"
 cask "caldigit-docking-utility"
@@ -222,7 +222,7 @@ cask "font-hack-nerd-font"
 cask "font-ia-writer-mono"
 cask "font-ia-writer-quattro"
 cask "gitify"
-cask "gitup"
+cask "gitup-app"
 cask "google-chrome"
 cask "google-cloud-sdk"
 cask "hammerspoon"
@@ -270,5 +270,6 @@ mas "GarageBand", id: 682658836
 mas "GLKVM", id: 6740846845
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
+mas "Meeter", id: 1510445899
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
