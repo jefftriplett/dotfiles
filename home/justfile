@@ -1,5 +1,7 @@
 set dotenv-load := false
 set export := true
+set quiet := true
+# set unstable := true
 
 # set unstable := true
 
