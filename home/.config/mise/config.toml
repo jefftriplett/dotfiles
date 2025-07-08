@@ -30,6 +30,10 @@ run = "mise upgrade"
 description = "Run Claude dangerously"
 run = "claude --dangerously-skip-permissions"
 
+[tasks.claude-yolo-vt]
+description = "Run Claude dangerously with VibeTunnel"
+run = "vt claude --dangerously-skip-permissions"
+
 [tasks."llm:git-branch-name"]
 description = "Generate GitHub branch name repository from git diff using LLM generation"
 run = "/opt/homebrew/bin/git diff --cached | llm prompt --model openai/o4-mini --template ~/.config/prompts/git-branch-name.yaml"
