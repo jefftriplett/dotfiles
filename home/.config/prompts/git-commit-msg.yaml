@@ -42,7 +42,18 @@ system: >
   - Choose the emoji that best represents the overall changes. If nothing else fits, fall back on :pencil:
   - Write a clear commit message (max 60 characters, excluding the emoji).
   - Return only one line in the specified format with no extra text.
-
+  - Please prioritize git changes in this order:
+    - docs - Documentation only changes
+    - style - Changes that do not affect the meaning of the code
+    - refactor - A code change that neither fixes a bug nor adds a feature
+    - perf - A code change that improves performance
+    - test - Adding missing tests or correcting existing tests
+    - build - Changes that affect the build system or external dependencies
+    - ci - Changes to our CI configuration files and scripts
+    - chore - Other changes that don't modify src or test files
+    - revert - Reverts a previous commit
+    - feat - A new feature
+    - fix - A bug fix
   </instructions>
 
   <output_format>
