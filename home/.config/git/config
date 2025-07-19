@@ -20,7 +20,7 @@
 
 # override in ~/.config/git/override
 [commit]
-    gpgsign = true
+	gpgsign = true
 
 [core]
     attributesFile = ~/.config/git/attributes
@@ -51,6 +51,7 @@
 # override in ~/.config/git/override
 [gpg]
 	program = /opt/homebrew/bin/gpg
+	format = ssh
 
 [init]
     defaultBranch = main
