@@ -29,7 +29,7 @@ justfile := justfile_directory() + "/.justfiles/claude.justfile"
 
 # see Claude Code API/CLI usage
 @usage:
-    bunx ccusage
+    bunx ccusage@latest
 
 # display Claude Code CLI version
 @version:
