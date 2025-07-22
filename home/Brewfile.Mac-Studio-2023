@@ -3,6 +3,7 @@ tap "buo/cask-upgrade"
 tap "charmbracelet/tap"
 tap "cmacrae/formulae"
 tap "federico-terzi/espanso"
+tap "finnvoor/tools"
 tap "hellothisisflo/the-tap"
 tap "homebrew/bundle"
 tap "homebrew/command-not-found"
@@ -76,6 +77,7 @@ brew "gnupg"
 brew "pkgconf"
 brew "libxml2"
 brew "libtool"
+brew "poppler"
 brew "gdal"
 brew "gh"
 brew "libidn"
@@ -186,6 +188,7 @@ brew "terraform"
 brew "thefuck"
 brew "tldr"
 brew "tmux"
+brew "tokei"
 brew "tor"
 brew "tree"
 brew "ttyd", args: ["HEAD"]
@@ -219,7 +222,7 @@ cask "android-platform-tools"
 cask "appcleaner"
 cask "applepi-baker"
 cask "applite"
-cask "aws-vault"
+cask "aws-vault-binary"
 cask "balenaetcher"
 cask "bartender"
 cask "basictex"
@@ -235,7 +238,7 @@ cask "dash"
 cask "deskpad"
 cask "discord"
 cask "displaycal"
-cask "docker"
+cask "docker-desktop"
 cask "dolphin"
 cask "electron"
 cask "elgato-camera-hub"
@@ -264,6 +267,7 @@ cask "jordanbaird-ice"
 cask "kaleidoscope"
 cask "lm-studio"
 cask "logitech-g-hub"
+cask "loom"
 cask "macwhisper"
 cask "mimestream"
 cask "monitorcontrol"
@@ -292,6 +296,7 @@ cask "thetimemachinemechanic"
 cask "timemachineeditor"
 cask "tower"
 cask "upscayl"
+cask "vibetunnel"
 cask "virtualbuddy"
 cask "visual-studio-code"
 cask "vivaldi"
@@ -309,6 +314,7 @@ mas "Evernote", id: 406056744
 mas "Fantastical", id: 975937182
 mas "Front and Center", id: 1493996622
 mas "GarageBand", id: 682658836
+mas "GLKVM", id: 6740846845
 mas "Hand Mirror", id: 1502839586
 mas "iMovie", id: 408981434
 mas "Infuse", id: 1136220934
@@ -332,7 +338,6 @@ mas "SnippetsLab", id: 1006087419
 mas "Tailscale", id: 1475387142
 mas "Textual 7", id: 1262957439
 mas "The Unarchiver", id: 425424353
-mas "Toggl Track", id: 1291898086
 mas "ToothFairy", id: 1191449274
 mas "Webcam Settings Control", id: 1172053162
 mas "Xcode", id: 497799835
