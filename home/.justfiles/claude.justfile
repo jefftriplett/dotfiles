@@ -24,7 +24,6 @@ justfile := justfile_directory() + "/.justfiles/claude.justfile"
 # update Claude Code CLI to the latest version
 @upgrade:
     claude update
-    npm install -g @anthropic-ai/claude-code
     just --justfile {{ justfile }} version
 
 # see Claude Code API/CLI usage
