@@ -23,7 +23,8 @@ justfile := justfile_directory() + "/.justfiles/claude.justfile"
 
 # update Claude Code CLI to the latest version
 @upgrade:
-    claude update
+    # claude update
+    claude install
     just --justfile {{ justfile }} version
 
 # see Claude Code API/CLI usage
