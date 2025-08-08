@@ -19,6 +19,7 @@ alias claude-yolo="mise run claude-yolo"
 alias git-commit-msg-auto="mise run llm:git-commit-msg-auto"
 alias git-commit-msg="mise run llm:git-commit-msg"
 alias vt-claude-yolo="mise run vt-claude-yolo"
+alias vt-claude-yolo-continue="mise run vt-claude-yolo-continue"
 
 # everything else
 alias cat="bat -p"
