@@ -20,6 +20,7 @@ Temporary Items
 .apdisk
 
 # Mine
+node_modules/
 *.cache
 *.crt
 *.last-run
@@ -48,7 +49,9 @@ roles/*
 override
 
 # my files
+home/.claude/statsig/
 home/.config/MusicBrainz/
+home/.config/syncthing/
 home/.config/autostart/
 home/.config/configstore/
 home/.config/enchant/
