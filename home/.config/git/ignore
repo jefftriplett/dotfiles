@@ -50,3 +50,5 @@ staging.ini
 tmtags
 
 **/.claude/settings.local.json
+
+**/CLAUDE.local.md
