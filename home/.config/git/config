@@ -80,11 +80,14 @@
 [transfer]
     fsckObjects = true
 
-[include]
-    path = ~/.config/git/override
 [fsck]
 	zeroPaddedFilemode = ignore
+
 [fetch "fsck"]
 	zeroPaddedFilemode = ignore
+
 [receive "fsck"]
 	zeroPaddedFilemode = ignore
+
+[include]
+    path = ~/.config/git/override
