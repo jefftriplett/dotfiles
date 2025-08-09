@@ -2,3 +2,13 @@
 # This hook is run after a new virtualenv is created and before it is activated.
 # argument: name of new environment
 
+# Set PROJECT_HOME if not already set
+if [ -z "${PROJECT_HOME}" ]; then
+  export PROJECT_HOME="${HOME}/Projects"
+fi
+
+# Ensure PROJECT_HOME directory exists
+if [ ! -d "${PROJECT_HOME}" ]; then
+  mkdir -p "${PROJECT_HOME}"
+fi
+

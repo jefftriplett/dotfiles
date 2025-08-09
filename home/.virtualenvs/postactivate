@@ -5,7 +5,6 @@ VIRTUAL_ENV_NAME=$(basename "${VIRTUAL_ENV}")
 VIRTUAL_ENV_BIN="${VIRTUAL_ENV}/bin"
 VIRTUAL_ENV_ENVRC="${VIRTUAL_ENV_SRC}/.envrc"
 VIRTUAL_ENV_SRC="${VIRTUAL_ENV}/src"
-VIRTUAL_ENV_STIGNORE="${VIRTUAL_ENV_SRC}/.stignore"
 
 PROJECT_SRC="${PROJECT_HOME}/${VIRTUAL_ENV_NAME}"
 PROJECT_ENVRC="${PROJECT_SRC}/.envrc"
@@ -23,20 +22,11 @@ fi
 
 if [ -d "${PROJECT_SRC}" ]; then
   cd "${PROJECT_SRC}" || exit
-else
-  # Fall back to the original behavior
-  if [ -d "${VIRTUAL_ENV_SRC}" ]; then
-    # If our {{virtualenv}}/src folder exists, CD into that folder
-    cd "${VIRTUAL_ENV_SRC}" || exit
-  else
-    # If our {{virtualenv}}/src folder does not exist, let's create it
-    mkdir -p "${VIRTUAL_ENV_SRC}"
-    cd "${VIRTUAL_ENV_SRC}" || exit
-
-    # Add {{virtualenv}}/src to our virtualenv
-    add2virtualenv .
-  fi
+elif [ -d "${VIRTUAL_ENV_SRC}" ]; then
+  # If our {{virtualenv}}/src folder exists (legacy), CD into that folder
+  cd "${VIRTUAL_ENV_SRC}" || exit
 fi
+# Note: We no longer create src folders - use mkproject or create PROJECT_HOME directories
 
 # ------------------------------------------------------------
 # Syncthing ".envrc" file...
@@ -58,35 +48,6 @@ EOF
   if command -v direnv >/dev/null 2>&1; then
     direnv allow
   fi
-fi
-
-# ------------------------------------------------------------
-# Syncthing ".stignore" file...
-# ------------------------------------------------------------
-
-if [ -d "${VIRTUAL_ENV_SRC}" ] && [ ! -f "${VIRTUAL_ENV_STIGNORE}" ]; then
-  cat > "${VIRTUAL_ENV_STIGNORE}" <<'EOF'
-*.override.yml
-*.pyc
-*.pyi
-.*-cache/
-.*cache/
-.DS_Store
-.envrc
-.jekyll-cache/
-.mypy_cache/
-.nox/
-.pytest_cache/
-.ruff_cache/
-.sass-cache/
-.stignore
-.vendor/
-.venv/
-checkouts
-compose.override.yml
-docker-compose.override.yml
-pyrightconfig.json
-EOF
 fi
 
 # ------------------------------------------------------------
