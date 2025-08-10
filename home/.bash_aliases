@@ -14,12 +14,12 @@ alias readme-md-generator="bunx readme-md-generator"
 alias vmd="bunx vmd"
 
 # setup AI/LLM/Mise aliases
-alias claude-yolo-vt="mise run claude-yolo-vt"
-alias claude-yolo="mise run claude-yolo"
+alias claude-continue="mise run claude-continue"
+alias claude="mise run claude"
 alias git-commit-msg-auto="mise run llm:git-commit-msg-auto"
 alias git-commit-msg="mise run llm:git-commit-msg"
-alias vt-claude-yolo="mise run vt-claude-yolo"
-alias vt-claude-yolo-continue="mise run vt-claude-yolo-continue"
+alias vt-claude-continue="mise run vt-claude-continue"
+alias vt-claude="mise run vt-claude"
 
 # everything else
 alias cat="bat -p"
