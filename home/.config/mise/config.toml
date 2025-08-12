@@ -23,33 +23,33 @@ rust = ['latest']
 usage = ["latest"]
 
 [tasks.bootstrap]
-description = "Bootstrap mise CLI by updating to latest version"
+description = "Bootstrap our CLI"
 run = "mise upgrade"
 
 [tasks.claude]
-description = "Run Claude CLI with skip permissions flag"
+description = "Run Claude dangerously"
 run = "command claude --dangerously-skip-permissions"
 
 [tasks.claude-continue]
-description = "Continue previous Claude session with skip permissions flag"
+description = "Run Claude dangerously"
 run = "command claude --continue --dangerously-skip-permissions"
 
 [tasks.vt-claude]
-description = "Run Claude CLI through VibeTunnel with skip permissions flag"
+description = "Run Claude dangerously with VibeTunnel"
 run = "vt claude --dangerously-skip-permissions"
 
 [tasks.vt-claude-continue]
-description = "Continue previous Claude session through VibeTunnel with skip permissions flag"
+description = "Run Claude dangerously with VibeTunnel and continue"
 run = "vt claude --continue --dangerously-skip-permissions"
 
 [tasks."llm:git-branch-name"]
-description = "Generate branch name from staged changes using LLM"
-run = "command git diff --cached | llm prompt --model openai/gpt-4.1-mini --template ~/.config/prompts/git-branch-name.yaml"
+description = "Generate GitHub branch name repository from git diff using LLM generation"
+run = "command git diff --cached | command llm prompt --model openai/gpt-4.1-mini --template ~/.config/prompts/git-branch-name.yaml"
 
 [tasks."llm:git-commit-msg"]
-description = "Generate commit message from staged changes using LLM"
-run = "command git diff --cached | llm prompt --model openai/gpt-4.1-mini --template ~/.config/prompts/git-commit-msg.yaml"
+description = "Generate GitHub comment message from git diff using LLM generation"
+run = "command git diff --cached | command llm prompt --model openai/gpt-4.1-mini --template ~/.config/prompts/git-commit-msg.yaml"
 
 [tasks."llm:git-commit-msg-auto"]
-description = "Auto-commit staged changes with LLM-generated message"
-run = "command git commit -m \"$(git diff --cached | llm prompt --model openai/gpt-4.1-mini --template ~/.config/prompts/git-commit-msg.yaml)\""
+description = "Automatically commit changes with a generated commit message from git diff using LLM generation"
+run = "command git commit -m \"$(command git diff --cached | command llm prompt --model openai/gpt-4.1-mini --template ~/.config/prompts/git-commit-msg.yaml)\""
