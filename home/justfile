@@ -112,6 +112,7 @@ alias lock := freeze
     just python::uv-tool-install
     just llm::upgrade
     just claude::upgrade
+    just codex::upgrade
 
 # Upgrade all tools (pyenv and mise packages)
 [group("maintenance")]
