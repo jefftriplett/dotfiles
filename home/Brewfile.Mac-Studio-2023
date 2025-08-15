@@ -215,6 +215,7 @@ brew "rosszurowski/tap/tandem"
 brew "stripe/stripe-cli/stripe"
 cask "1password-cli"
 cask "8bitdo-ultimate-software"
+cask "airbuddy"
 cask "airflow"
 cask "airserver"
 cask "alfred"
@@ -224,8 +225,8 @@ cask "applepi-baker"
 cask "applite"
 cask "aws-vault-binary"
 cask "balenaetcher"
+cask "bartender"
 cask "basictex"
-cask "bluestacks"
 cask "bunch"
 cask "chromedriver"
 cask "cleanmymac"
@@ -257,6 +258,7 @@ cask "font-ia-writer-mono"
 cask "font-ia-writer-quattro"
 cask "font-monaspace"
 cask "ghostty"
+cask "github"
 cask "google-chrome"
 cask "hammerspoon"
 cask "hyper"
@@ -303,13 +305,11 @@ cask "vlc"
 cask "yubico-authenticator"
 cask "zed"
 cask "zoom"
-mas "Airmail", id: 918858936
 mas "Annotate", id: 918207447
 mas "Bitwarden", id: 1352778147
 mas "Craft", id: 1487937127
 mas "Directive", id: 1503550067
 mas "EasyRes", id: 688211836
-mas "Fantastical", id: 975937182
 mas "Front and Center", id: 1493996622
 mas "GarageBand", id: 682658836
 mas "GLKVM", id: 6740846845
@@ -321,6 +321,7 @@ mas "Meeter", id: 1510445899
 mas "MenubarX", id: 1575588022
 mas "Mic Drop", id: 1489816366
 mas "Microsoft Remote Desktop", id: 1295203466
+mas "Mona", id: 1659154653
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Pixelmator", id: 407963104
@@ -333,6 +334,7 @@ mas "Skitch", id: 425955336
 mas "Sleeve", id: 1606145041
 mas "SnippetsLab", id: 1006087419
 mas "Tailscale", id: 1475387142
+mas "Textual 7", id: 1262957439
 mas "The Unarchiver", id: 425424353
 mas "ToothFairy", id: 1191449274
 mas "Webcam Settings Control", id: 1172053162
