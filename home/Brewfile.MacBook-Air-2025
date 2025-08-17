@@ -192,6 +192,7 @@ brew "rosszurowski/tap/tandem"
 brew "steipete/tap/poltergeist"
 cask "1password-cli"
 cask "8bitdo-ultimate-software"
+cask "airbuddy"
 cask "airflow"
 cask "airserver"
 cask "alfred"
@@ -224,6 +225,7 @@ cask "font-hack-nerd-font"
 cask "font-ia-writer-mono"
 cask "font-ia-writer-quattro"
 cask "gcloud-cli"
+cask "ghostty"
 cask "gitify"
 cask "gitup-app"
 cask "google-chrome"
@@ -275,3 +277,4 @@ mas "Keynote", id: 409183694
 mas "Meeter", id: 1510445899
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
+mas "Parachute", id: 6748614170
