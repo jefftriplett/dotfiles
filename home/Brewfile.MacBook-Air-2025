@@ -162,7 +162,6 @@ brew "thefuck"
 brew "tmux"
 brew "tor"
 brew "tree"
-brew "ttyd", args: ["HEAD"]
 brew "ttygif"
 brew "unison"
 brew "up"
