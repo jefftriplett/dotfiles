@@ -12,6 +12,7 @@ keybind = cmd+left=previous_tab
 keybind = cmd+right=next_tab
 keybind = cmd+shift+left=move_tab:-1
 keybind = cmd+shift+right=move_tab:1
+mouse-scroll-multiplier = 5
 shell-integration-features = no-cursor
 theme = dracula
 unfocused-split-opacity = 1.0
