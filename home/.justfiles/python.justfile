@@ -42,8 +42,9 @@ python_39 := `pyenv latest 3.9`
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
 # update python environment and pyenv settings
-@update:
+@upgrade:
     just --justfile {{ justfile }} bootstrap
+    just --justfile {{ justfile }} uv-pip-upgrade
     just pyenv::update
     just pyenv::set-global
 
@@ -58,6 +59,11 @@ python_39 := `pyenv latest 3.9`
         --system \
         --upgrade \
         {{ ARGS }}
+
+# update python versions using uv installer
+[group("uv")]
+@uv-pip-upgrade *ARGS:
+    uv python --preview-features python-upgrade upgrade
 
 # uninstall python packages using uv pip installer
 [group("uv")]

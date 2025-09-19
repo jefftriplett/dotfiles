@@ -1,8 +1,8 @@
 set dotenv-load := false
 set export := true
 set quiet := true
-# set unstable := true
 
+# set unstable := true
 # set unstable := true
 
 export HOMEBREW_NO_ENV_HINTS := "true"
@@ -107,7 +107,7 @@ alias lock := freeze
 @upgrade:
     just homebrew::upgrade
     just homebrew::cleanup
-    just mise::update
+    just mise::upgrade
     just python::upgrade
     just python::uv-tool-install
     just llm::upgrade
