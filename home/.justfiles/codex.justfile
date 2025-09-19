@@ -21,9 +21,16 @@ justfile := justfile_directory() + "/.justfiles/codex.justfile"
 @config:
     codex --config
 
+@outdated:
+    npm outdated @openai/codex
+
 # update Codex CLI to the latest version
 @upgrade:
     npm install -g @openai/codex
+
+# see Codex CLI usage
+@usage:
+    bunx @ccusage/codex@latest
 
 # display Codex CLI version
 @version:
