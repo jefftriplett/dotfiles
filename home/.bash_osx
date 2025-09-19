@@ -79,3 +79,7 @@ function iterm2_print_user_vars {
 if command -v mise > /dev/null 2>&1; then
     eval "$(mise activate bash)";
 fi
+
+if command -v zoxide > /dev/null 2>&1; then
+    eval "$(zoxide init bash)";
+fi
