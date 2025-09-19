@@ -107,8 +107,8 @@ alias lock := freeze
 @upgrade:
     just homebrew::upgrade
     just homebrew::cleanup
-    # just mise::update
-    just python::update
+    just mise::update
+    just python::upgrade
     just python::uv-tool-install
     just llm::upgrade
     just claude::upgrade
