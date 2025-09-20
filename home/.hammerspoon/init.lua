@@ -193,6 +193,46 @@ end)
 --     toggle_application('Sublime Text')
 -- end)
 
+hs.hotkey.bind(hyper, 'I', function()
+    toggle_application('iTerm2')
+end)
+
+hs.hotkey.bind(hyper, 'D', function()
+    toggle_application('Discord')
+end)
+
+hs.hotkey.bind(hyper, 'S', function()
+    toggle_application('Slack')
+end)
+
+hs.hotkey.bind(hyper, 'T', function()
+    toggle_application('Telegram')
+end)
+
+hs.hotkey.bind(hyper, 'E', function()
+    toggle_application('Sublime Text')
+end)
+
+hs.hotkey.bind(hyper, 'W', function()
+    toggle_application('Tower')
+end)
+
+hs.hotkey.bind(hyper, 'Z', function()
+    toggle_application('Zed')
+end)
+
+hs.hotkey.bind(hyper, 'M', function()
+    toggle_application('Messages')
+end)
+
+hs.hotkey.bind(hyper, 'V', function()
+    toggle_application('Vivaldi')
+end)
+
+hs.hotkey.bind(hyper, 'O', function()
+    toggle_application('Obsidian')
+end)
+
 hs.hotkey.bind(hyper, '.', function()
     hs.hints.windowHints(hs.window.focusedWindow():application():allWindows())
 end)
