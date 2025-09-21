@@ -1,7 +1,4 @@
-.claude
-.codex
 .config
-.justfiles
 .pyenv
 .sshrc.d
 .virtualenvs
