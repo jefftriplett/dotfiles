@@ -221,7 +221,7 @@ hs.hotkey.bind(hyper, 'Z', function()
     toggle_application('Zed')
 end)
 
-hs.hotkey.bind(hyper, 'M', function()
+hs.hotkey.bind(hyper, 'A', function()
     toggle_application('Messages')
 end)
 
