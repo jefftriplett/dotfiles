@@ -217,7 +217,7 @@ hs.hotkey.bind(hyper, 'W', function()
     toggle_application('Tower')
 end)
 
-hs.hotkey.bind(hyper, 'Z', function()
+hs.hotkey.bind(hyper, 'X', function()
     toggle_application('Zed')
 end)
 
