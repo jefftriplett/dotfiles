@@ -21,6 +21,13 @@ justfile := justfile_directory() + "/.justfiles/copilot.justfile"
 @config:
     copilot --config
 
+@outdated:
+    npm outdated @github/copilot
+
+# update Copilot CLI to the latest version
+@upgrade:
+    npm install -g @github/copilot
+
 # display Copilot CLI version
 @version:
     copilot --version
