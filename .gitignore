@@ -25,6 +25,7 @@ node_modules/
 *.crt
 *.last-run
 *.lock
+*.lockb
 *.log
 *.merged-ca-bundle
 *.orig
