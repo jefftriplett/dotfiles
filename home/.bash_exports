@@ -98,7 +98,7 @@ PATH="${PATH}:${BUN_INSTALL}/bin"
 ############
 
 if [[ -e ${HOME}/.orbstack/shell/init.bash ]] ; then
-    source ${HOME}/.orbstack/shell/init.bash 2>/dev/null || :
+    source "${HOME}"/.orbstack/shell/init.bash 2>/dev/null || :
 fi
 
 ################

@@ -169,6 +169,7 @@ Available recipes:
 
     [utils]
     fmt                # Format and overwrite justfile
+    lint               # Run shellcheck on bash configuration files
     update-brewfile    # Update Brewfile from cog template
     update-readme-docs # Update README.md docs using cog
 ```

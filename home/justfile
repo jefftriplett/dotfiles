@@ -81,6 +81,12 @@ alias lock := freeze
 @install:
     homesick symlink
 
+# Run shellcheck on bash configuration files
+[group("utils")]
+@lint:
+    #!/usr/bin/env sh
+    shellcheck ~/.homesick/repos/dotfiles/home/.bash_* --exclude=SC1090,SC1091
+
 # List outdated packages from Homebrew and pip
 [group("maintenance")]
 @outdated:
