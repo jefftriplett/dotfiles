@@ -59,9 +59,19 @@ Available recipes:
     claude:
         config  # open Claude Desktop configuration file in Sublime Text
         upgrade # update Claude Code CLI to the latest version
+        usage   # see Claude Code API/CLI usage
+        version # display Claude Code CLI version
     codex:
-        config  # open Codex configuration file in Sublime Text
-        upgrade # update Codex CLI to the latest version
+        config   # open Codex configuration file in Sublime Text
+        outdated
+        upgrade  # update Codex CLI to the latest version
+        usage    # see Codex CLI usage
+        version  # display Codex CLI version
+    copilot:
+        config   # open Copilot configuration file in Sublime Text
+        outdated
+        upgrade  # update Copilot CLI to the latest version
+        version  # display Copilot CLI version
     homebrew:
         cleanup DAYS="0" # clean up old Homebrew packages and cache
         freeze           # freeze current Homebrew packages to Brewfile
@@ -88,7 +98,7 @@ Available recipes:
         xcode-upgrade              # upgrade Xcode command line tools by removing and reinstalling
     mise:
         bootstrap # Bootstrap mise by installing configured language versions
-        upgrade   # update mise to the latest version
+        upgrade   # update mise and install latest language versions
     ollama:
         copy-plist  # copy custom ollama plist file to homebrew directory
         diff-plist  # compare local ollama plist with installed version
@@ -103,11 +113,12 @@ Available recipes:
     python:
         bootstrap                 # bootstrap python environment with essential packages
         outdated                  # list outdated Python packages
-        update                    # update python environment and pyenv settings
+        upgrade                   # update python environment
 
         [uv]
         uv-pip-install *ARGS      # install python packages using uv pip installer
         uv-pip-uninstall *ARGS    # uninstall python packages using uv pip installer
+        uv-pip-upgrade *ARGS      # update python versions using uv installer
         uv-python-install *ARGS   # install python versions using uv installer
         uv-python-reinstall *ARGS # reinstall python versions using uv installer
         uv-tool-install *ARGS     # install common python CLI tools using uv installer
