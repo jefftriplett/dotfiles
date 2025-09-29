@@ -17,7 +17,7 @@ justfile := justfile_directory() + "/.justfiles/mise.justfile"
 @fmt:
     just --justfile {{ justfile }} --fmt
 
-# Bootstrap mise by installing configured language versions
+# bootstrap mise by installing configured language versions
 @bootstrap:
     mise install golang
     mise install node
@@ -27,7 +27,7 @@ justfile := justfile_directory() + "/.justfiles/mise.justfile"
     # mise current
     # mise list
 
-# update mise and install latest language versions
+# install latest language versions and refresh shims
 @upgrade:
     mise install
     mise reshim

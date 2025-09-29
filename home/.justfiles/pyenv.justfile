@@ -30,7 +30,7 @@ python_313 := `pyenv latest 3.13`
         {{ python_311 }} \
         {{ python_310 }}
 
-# upgrade python and update pyenv configuration
+# upgrade all python versions managed by pyenv
 @upgrade +ARGS="--skip-existing":
     just pyenv::upgrade-all {{ ARGS }}
 

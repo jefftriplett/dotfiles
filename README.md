@@ -63,13 +63,13 @@ Available recipes:
         version # display Claude Code CLI version
     codex:
         config   # open Codex configuration file in Sublime Text
-        outdated
+        outdated # check for outdated Codex npm package
         upgrade  # update Codex CLI to the latest version
         usage    # see Codex CLI usage
         version  # display Codex CLI version
     copilot:
         config   # open Copilot configuration file in Sublime Text
-        outdated
+        outdated # check for outdated Copilot npm package
         upgrade  # update Copilot CLI to the latest version
         version  # display Copilot CLI version
     homebrew:
@@ -97,8 +97,8 @@ Available recipes:
         xcode-bootstrap            # install Xcode command line tools
         xcode-upgrade              # upgrade Xcode command line tools by removing and reinstalling
     mise:
-        bootstrap # Bootstrap mise by installing configured language versions
-        upgrade   # update mise and install latest language versions
+        bootstrap # bootstrap mise by installing configured language versions
+        upgrade   # install latest language versions and refresh shims
     ollama:
         copy-plist  # copy custom ollama plist file to homebrew directory
         diff-plist  # compare local ollama plist with installed version
@@ -108,7 +108,7 @@ Available recipes:
         serve *ARGS # serve ollama in a tandem process with optional arguments
         setenv      # set ollama environment variables in launchctl
     pyenv:
-        upgrade +ARGS="--skip-existing"     # upgrade python and update pyenv configuration
+        upgrade +ARGS="--skip-existing"     # upgrade all python versions managed by pyenv
         upgrade-all +ARGS="--skip-existing" # install or upgrade all python versions managed by pyenv
     python:
         bootstrap                 # bootstrap python environment with essential packages

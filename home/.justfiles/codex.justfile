@@ -21,6 +21,7 @@ justfile := justfile_directory() + "/.justfiles/codex.justfile"
 @config:
     codex --config
 
+# check for outdated Codex npm package
 @outdated:
     npm outdated @openai/codex
 
