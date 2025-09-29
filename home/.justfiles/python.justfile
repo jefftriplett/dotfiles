@@ -6,11 +6,6 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/python.justfile"
-python_310 := `pyenv latest 3.10`
-python_311 := `pyenv latest 3.11`
-python_312 := `pyenv latest 3.12`
-python_313 := `pyenv latest 3.13`
-python_39 := `pyenv latest 3.9`
 
 # list all available recipes
 [private]
@@ -41,11 +36,10 @@ python_39 := `pyenv latest 3.9`
 @outdated:
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
-# update python environment and pyenv settings
+# update python environment
 @upgrade:
     just --justfile {{ justfile }} bootstrap
     just --justfile {{ justfile }} uv-pip-upgrade
-    just pyenv::update
     just pyenv::set-global
 
 # ----------------------------------------------------------------
@@ -75,11 +69,11 @@ python_39 := `pyenv latest 3.9`
 # install python versions using uv installer
 [group("uv")]
 @uv-python-install *ARGS:
+    -uv python install {{ ARGS }} 3.14
     -uv python install {{ ARGS }} 3.13
     -uv python install {{ ARGS }} 3.12
     -uv python install {{ ARGS }} 3.11
     -uv python install {{ ARGS }} 3.10
-    -uv python install {{ ARGS }} 3.9
 
 # reinstall python versions using uv installer
 [group("uv")]
@@ -89,15 +83,15 @@ python_39 := `pyenv latest 3.9`
 # install common python CLI tools using uv installer
 [group("uv")]
 @uv-tool-install *ARGS:
-    -uv tool install --python {{ python_312 }} aider-install {{ ARGS }}
-    -uv tool install --python {{ python_312 }} cogapp {{ ARGS }}
-    -uv tool install --python {{ python_312 }} em-keyboard {{ ARGS }}
-    -uv tool install --python {{ python_312 }} files-to-claude-xml {{ ARGS }}
-    -uv tool install --python {{ python_312 }} grip {{ ARGS }}
-    -uv tool install --python {{ python_312 }} justpath {{ ARGS }}
-    -uv tool install --python {{ python_312 }} llm {{ ARGS }}
-    -uv tool install --python {{ python_312 }} pyright {{ ARGS }}
-    -uv tool install --python {{ python_312 }} rich-cli {{ ARGS }}
-    -uv tool install --python {{ python_312 }} ruff-lsp {{ ARGS }}
-    -uv tool install --python {{ python_312 }} ttok {{ ARGS }}
-    -uv tool install --python {{ python_312 }} yt-dlp[default] {{ ARGS }}
+    -uv tool install --python 3.12 aider-install {{ ARGS }}
+    -uv tool install --python 3.12 cogapp {{ ARGS }}
+    -uv tool install --python 3.12 em-keyboard {{ ARGS }}
+    -uv tool install --python 3.12 files-to-claude-xml {{ ARGS }}
+    -uv tool install --python 3.12 grip {{ ARGS }}
+    -uv tool install --python 3.12 justpath {{ ARGS }}
+    -uv tool install --python 3.12 llm {{ ARGS }}
+    -uv tool install --python 3.12 pyright {{ ARGS }}
+    -uv tool install --python 3.12 rich-cli {{ ARGS }}
+    -uv tool install --python 3.12 ruff-lsp {{ ARGS }}
+    -uv tool install --python 3.12 ttok {{ ARGS }}
+    -uv tool install --python 3.12 yt-dlp[default] {{ ARGS }}
