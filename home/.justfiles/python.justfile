@@ -40,7 +40,6 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
 @upgrade:
     just --justfile {{ justfile }} bootstrap
     just --justfile {{ justfile }} uv-pip-upgrade
-    just pyenv::set-global
 
 # ----------------------------------------------------------------
 # UV recipes - https://docs.astral.sh/uv/

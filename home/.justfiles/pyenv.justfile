@@ -26,13 +26,9 @@ python_313 := `pyenv latest 3.13`
 @set-global:
     pyenv global \
         {{ python_312 }} \
+        {{ python_313 }} \
         {{ python_311 }} \
         {{ python_310 }}
-
-# update pyenv itself to latest version
-[private]
-@update:
-    # just pyenv::upgrade
 
 # upgrade python and update pyenv configuration
 @upgrade +ARGS="--skip-existing":
