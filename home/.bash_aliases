@@ -33,8 +33,6 @@ alias gt="gittower"
 alias nw="~/node_modules/nwjs/nwjs.app/Contents/MacOS/nwjs"
 alias outdated="brew update; brew outdated; brew cask outdated; mas outdated"
 alias pip-outdated="PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated"
-pycharm() {
-    open -na "PyCharm.app" --args "$@"
-}
+alias pycharm='open -na "PyCharm.app" --args'
 alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
