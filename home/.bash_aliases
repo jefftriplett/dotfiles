@@ -16,12 +16,12 @@ alias vmd="bunx vmd"
 # setup AI/LLM/Mise aliases
 alias claude-continue="mise run claude-continue"
 alias claude="mise run claude"
-alias copilot="copilot --allow-all-tools"
 alias copilot-continue="copilot --allow-all-tools --resume"
+alias copilot="copilot --allow-all-tools"
 alias git-commit-msg-auto="mise run llm:git-commit-msg-auto"
 alias git-commit-msg="mise run llm:git-commit-msg"
-alias vt-claude-continue="mise run vt-claude-continue"
-alias vt-claude="mise run vt-claude"
+alias vt-claude-continue="mise run claude-continue"
+alias vt-claude="mise run claude"
 
 # everything else
 alias cat="bat -p"

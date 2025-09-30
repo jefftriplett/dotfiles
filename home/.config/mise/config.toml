@@ -28,11 +28,13 @@ run = "mise upgrade"
 
 [tasks.claude]
 description = "Run Claude dangerously"
-run = "command claude --dangerously-skip-permissions"
+# run = "command claude --dangerously-skip-permissions"
+run = "vt command claude --dangerously-skip-permissions"
 
 [tasks.claude-continue]
 description = "Run Claude dangerously"
-run = "command claude --continue --dangerously-skip-permissions"
+# run = "command claude --continue --dangerously-skip-permissions"
+run = "vt command claude --dangerously-skip-permissions --continue"
 
 [tasks.vt-claude]
 description = "Run Claude dangerously with VibeTunnel"
@@ -40,7 +42,7 @@ run = "vt claude --dangerously-skip-permissions"
 
 [tasks.vt-claude-continue]
 description = "Run Claude dangerously with VibeTunnel and continue"
-run = "vt claude --continue --dangerously-skip-permissions"
+run = "vt claude --dangerously-skip-permissions --continue"
 
 [tasks."llm:git-branch-name"]
 description = "Generate GitHub branch name repository from git diff using LLM generation"
