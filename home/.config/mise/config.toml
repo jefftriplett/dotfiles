@@ -34,7 +34,7 @@ run = "vt command claude --dangerously-skip-permissions --continue || vt command
 [tasks.claude-continue]
 description = "Run Claude dangerously"
 # run = "command claude --continue --dangerously-skip-permissions"
-run = "vt command claude --dangerously-skip-permissions --continue"
+run = "vt command claude --dangerously-skip-permissions --continue || vt command claude --dangerously-skip-permissions"
 
 [tasks.vt-claude]
 description = "Run Claude dangerously with VibeTunnel"
