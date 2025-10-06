@@ -4,8 +4,6 @@
 *.pyi
 .*cache
 .DS_Store
-.env
-.envrc
 .jekyll-cache
 .mypy_cache
 .nox

@@ -3,7 +3,6 @@
 .*-cache/
 .*cache/
 .DS_Store
-.envrc
 .jekyll-cache/
 .mypy_cache/
 .nox/
