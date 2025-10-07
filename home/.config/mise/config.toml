@@ -29,7 +29,7 @@ run = "mise upgrade"
 [tasks.claude]
 description = "Run Claude dangerously"
 # run = "command claude --dangerously-skip-permissions"
-run = "vt command claude --dangerously-skip-permissions"
+run = "vt command claude --dangerously-skip-permissions --continue || vt command claude --dangerously-skip-permissions"
 
 [tasks.claude-continue]
 description = "Run Claude dangerously"
