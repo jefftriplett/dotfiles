@@ -10,7 +10,7 @@ python_310 := `pyenv latest 3.10`
 python_311 := `pyenv latest 3.11`
 python_312 := `pyenv latest 3.12`
 python_313 := `pyenv latest 3.13`
-python_314 := `pyenv latest 3.14`
+# python_314 := `pyenv latest 3.14`
 
 # list all available recipes
 [private]
@@ -27,7 +27,6 @@ python_314 := `pyenv latest 3.14`
 @set-global:
     pyenv global \
         {{ python_312 }} \
-        {{ python_314 }} \
         {{ python_313 }} \
         {{ python_311 }} \
         {{ python_310 }}
@@ -38,7 +37,6 @@ python_314 := `pyenv latest 3.14`
 
 # install or upgrade all python versions managed by pyenv
 @upgrade-all +ARGS="--skip-existing":
-    -pyenv install {{ ARGS }} 3.14:latest
     -pyenv install {{ ARGS }} 3.13:latest
     -pyenv install {{ ARGS }} 3.12:latest
     -pyenv install {{ ARGS }} 3.11:latest
