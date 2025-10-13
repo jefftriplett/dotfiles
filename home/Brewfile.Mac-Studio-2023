@@ -181,7 +181,7 @@ brew "tmux"
 brew "tokei"
 brew "tor"
 brew "tree"
-brew "ttyd", args: ["HEAD"]
+brew "ttyd"
 brew "ttygif"
 brew "unison"
 brew "up"
@@ -217,9 +217,9 @@ cask "balenaetcher"
 cask "bartender"
 cask "basictex"
 cask "bunch"
-cask "cleanmymac"
 cask "clipy"
 cask "codeql"
+cask "container"
 cask "cursor"
 cask "dash"
 cask "deskpad"
@@ -294,10 +294,8 @@ mas "Bitwarden", id: 1352778147
 mas "Craft", id: 1487937127
 mas "Directive", id: 1503550067
 mas "EasyRes", id: 688211836
-mas "Front and Center", id: 1493996622
 mas "GarageBand", id: 682658836
 mas "GLKVM", id: 6740846845
-mas "Hand Mirror", id: 1502839586
 mas "iMovie", id: 408981434
 mas "Infuse", id: 1136220934
 mas "Keynote", id: 409183694
@@ -313,13 +311,7 @@ mas "Pixelmator Pro", id: 1289583905
 mas "Play", id: 1596506190
 mas "Primitive", id: 1175103038
 mas "Recordia", id: 1529006487
-mas "Signals", id: 1453293391
-mas "Skitch", id: 425955336
-mas "Sleeve", id: 1606145041
-mas "SnippetsLab", id: 1006087419
 mas "Tailscale", id: 1475387142
-mas "Textual 7", id: 1262957439
 mas "The Unarchiver", id: 425424353
 mas "ToothFairy", id: 1191449274
-mas "Webcam Settings Control", id: 1172053162
 mas "Xcode", id: 497799835
