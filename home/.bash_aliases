@@ -14,15 +14,11 @@ alias readme-md-generator="bunx readme-md-generator"
 alias vmd="bunx vmd"
 
 # setup AI/LLM/Mise aliases
-alias claude-continue="mise run claude-continue"
 alias claude="mise run claude"
-alias codex-continue="mise run codex-continue"
 alias codex="mise run codex"
-alias copilot-continue="mise run copilot-continue"
 alias copilot="mise run copilot"
 alias git-commit-msg-auto="mise run llm:git-commit-msg-auto"
 alias git-commit-msg="mise run llm:git-commit-msg"
-alias vt-claude-continue="mise run claude-continue"
 alias vt-claude="mise run claude"
 
 # everything else

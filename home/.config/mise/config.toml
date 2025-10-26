@@ -28,37 +28,19 @@ run = "mise upgrade"
 
 [tasks.claude]
 description = "Run Claude dangerously"
-# run = "command claude --dangerously-skip-permissions"
-run = "vt command claude --dangerously-skip-permissions --continue || vt command claude --dangerously-skip-permissions"
-
-[tasks.claude-continue]
-description = "Run Claude dangerously"
-# run = "command claude --continue --dangerously-skip-permissions"
 run = "vt command claude --dangerously-skip-permissions --continue || vt command claude --dangerously-skip-permissions"
 
 [tasks.vt-claude]
 description = "Run Claude dangerously with VibeTunnel"
-run = "vt claude --dangerously-skip-permissions"
-
-[tasks.vt-claude-continue]
-description = "Run Claude dangerously with VibeTunnel and continue"
-run = "vt claude --dangerously-skip-permissions --continue"
+run = "vt claude --dangerously-skip-permissions --continue || vt claude --dangerously-skip-permissions"
 
 [tasks.codex]
 description = "Run Codex with resume fallback"
 run = "command codex --resume || command codex"
 
-[tasks.codex-continue]
-description = "Run Codex with continue fallback"
-run = "command codex --continue || command codex"
-
 [tasks.copilot]
 description = "Run Copilot with allow-all-tools and resume fallback"
 run = "command copilot --allow-all-tools --resume || command copilot --allow-all-tools"
-
-[tasks.copilot-continue]
-description = "Run Copilot with allow-all-tools and continue fallback"
-run = "command copilot --allow-all-tools --continue || command copilot --allow-all-tools"
 
 [tasks."llm:git-branch-name"]
 description = "Generate GitHub branch name repository from git diff using LLM generation"
