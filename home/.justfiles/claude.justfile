@@ -21,10 +21,14 @@ justfile := justfile_directory() + "/.justfiles/claude.justfile"
 @config:
     subl ~/Library/Application\ Support/Claude/claude_desktop_config.json
 
+# install Claude Code CLI
+@install:
+    curl -fsSL https://claude.ai/install.sh | bash
+    just --justfile {{ justfile }} version
+
 # update Claude Code CLI to the latest version
 @upgrade:
-    # claude update
-    claude install
+    command claude update
     just --justfile {{ justfile }} version
 
 # see Claude Code API/CLI usage
@@ -33,4 +37,4 @@ justfile := justfile_directory() + "/.justfiles/claude.justfile"
 
 # display Claude Code CLI version
 @version:
-    claude --version
+    command claude --version
