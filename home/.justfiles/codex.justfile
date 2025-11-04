@@ -19,7 +19,7 @@ justfile := justfile_directory() + "/.justfiles/codex.justfile"
 
 # open Codex configuration file in Sublime Text
 @config:
-    codex --config
+    command codex --config
 
 # check for outdated Codex npm package
 @outdated:
@@ -27,7 +27,9 @@ justfile := justfile_directory() + "/.justfiles/codex.justfile"
 
 # update Codex CLI to the latest version
 @upgrade:
+    just --justfile {{ justfile }} version
     npm install -g @openai/codex
+    just --justfile {{ justfile }} version
 
 # see Codex CLI usage
 @usage:
@@ -35,4 +37,4 @@ justfile := justfile_directory() + "/.justfiles/codex.justfile"
 
 # display Codex CLI version
 @version:
-    codex --version
+    command codex --version
