@@ -17,9 +17,30 @@ Generate concise git commit messages with emoji prefixes that categorize the typ
 
 When asked to generate a commit message:
 
-1. **Examine the changes** using `git diff --cached` (staged) or `git diff` (unstaged) to understand what changed
+1. **Validate the diff first** using the helper script to check size and filter binary files:
+   ```bash
+   ~/.claude/skills/git-commit-generator/scripts/check-diff.sh --staged
+   ```
 
-2. **Select the appropriate emoji** from this lookup table based on the primary change type:
+   This script will:
+   - Skip binary files (images, fonts, archives, etc.)
+   - Warn about files exceeding 200 lines of diff
+   - Fail if total diff exceeds 500 lines
+   - Output only text file diffs suitable for analysis
+
+   Options:
+   - `--staged` - Check staged changes (default)
+   - `--unstaged` - Check unstaged changes
+   - `--max-lines=N` - Set max total lines (default: 500)
+   - `--max-file-lines=N` - Set max per-file lines (default: 200)
+   - `--summary` - Show only the summary without diff output
+   - `--quiet` - Output only the filtered diff
+
+   If the diff is too large, suggest the user commit in smaller chunks.
+
+2. **Examine the changes** using the filtered output or `git diff --cached` (staged) to understand what changed
+
+3. **Select the appropriate emoji** from this lookup table based on the primary change type:
 
 | Emoji | Shortcode | Use For |
 |-------|-----------|---------|
@@ -50,18 +71,18 @@ When asked to generate a commit message:
 | :wrench: | `:wrench:` | Config update |
 | :zap: | `:zap:` | Breaking change |
 
-3. **Write the commit message** following this format:
+4. **Write the commit message** following this format:
    ```
    :emoji_shortcode: Commit message here
    ```
 
-4. **Follow these guidelines:**
+5. **Follow these guidelines:**
    - Maximum 60 characters for the message (excluding emoji)
    - Use imperative mood ("Add feature" not "Added feature")
    - Be specific and descriptive
    - Return only one line with no extra text
 
-5. **Prioritize change types** in this order when multiple apply:
+6. **Prioritize change types** in this order when multiple apply:
    - docs - Documentation only changes
    - style - Changes that do not affect the meaning of the code
    - refactor - A code change that neither fixes a bug nor adds a feature
