@@ -12,6 +12,7 @@ export PIP_REQUIRE_VIRTUALENV := "false"
 mod claude '.justfiles/claude.justfile'
 mod codex '.justfiles/codex.justfile'
 mod copilot '.justfiles/copilot.justfile'
+mod glm '.justfiles/glm.justfile'
 mod homebrew '.justfiles/homebrew.justfile'
 mod llm '.justfiles/llm.justfile'
 mod macos '.justfiles/macos.justfile'
@@ -60,6 +61,7 @@ alias lock := freeze
     just claude fmt
     just codex fmt
     just copilot fmt
+    just glm fmt
     just homebrew fmt
     just llm fmt
     just macos fmt
@@ -117,6 +119,7 @@ alias lock := freeze
     just claude::upgrade
     just codex::upgrade
     just copilot::upgrade
+    just glm::upgrade
 
 # Upgrade all tools (pyenv and mise packages)
 [group("maintenance")]
