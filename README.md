@@ -57,41 +57,79 @@ $ just --justfile=./home/justfile --list --list-submodules
 
 Available recipes:
     claude:
+        [config]
         config  # open Claude Desktop configuration file in Sublime Text
-        install # install Claude Code CLI
+
+        [maintenance]
         upgrade # update Claude Code CLI to the latest version
+
+        [setup]
+        install # install Claude Code CLI
+
+        [tools]
         usage   # see Claude Code API/CLI usage
+
+        [utils]
         version # display Claude Code CLI version
     codex:
+        [config]
         config   # open Codex configuration file in Sublime Text
+
+        [maintenance]
         outdated # check for outdated Codex npm package
         upgrade  # update Codex CLI to the latest version
+
+        [tools]
         usage    # see Codex CLI usage
+
+        [utils]
         version  # display Codex CLI version
     copilot:
+        [config]
         config   # open Copilot configuration file in Sublime Text
+
+        [maintenance]
         outdated # check for outdated Copilot npm package
         upgrade  # update Copilot CLI to the latest version
+
+        [utils]
         version  # display Copilot CLI version
     glm:
-        install # install Claude GLM CLI
+        [maintenance]
         upgrade # update Claude GLM CLI to the latest version
+
+        [setup]
+        install # install Claude GLM CLI
+
+        [tools]
         usage   # show available Claude GLM aliases
+
+        [utils]
         version # display Claude GLM CLI version
     homebrew:
+        [maintenance]
         cleanup DAYS="0" # clean up old Homebrew packages and cache
-        freeze           # freeze current Homebrew packages to Brewfile
         outdated         # list outdated Homebrew packages
+        update           # update Homebrew package database
+        upgrade          # upgrade all outdated Homebrew packages
+
+        [services]
         services         # list all Homebrew services
         services-restart # restart all running Homebrew services
         services-stop    # stop specific Homebrew services (with non-fatal errors)
-        update           # update Homebrew package database
-        upgrade          # upgrade all outdated Homebrew packages
+
+        [utils]
+        freeze           # freeze current Homebrew packages to Brewfile
     llm:
-        force-reinstall # upgrade all installed LLM plugins with --force-reinstall
-        install *ARGS   # install LLM plugins with optional arguments
+        [config]
         path            # open LLM templates directory in Sublime Text
+
+        [maintenance]
+        force-reinstall # upgrade all installed LLM plugins with --force-reinstall
         upgrade         # upgrade all installed LLM plugins
+
+        [setup]
+        install *ARGS   # install LLM plugins with optional arguments
     macos:
         [time machine]
         timemachine-boost          # boost Time Machine backup speed by increasing IO priority
@@ -103,38 +141,53 @@ Available recipes:
         xcode-bootstrap            # install Xcode command line tools
         xcode-upgrade              # upgrade Xcode command line tools by removing and reinstalling
     mise:
-        bootstrap # bootstrap mise by installing configured language versions
+        [maintenance]
         upgrade   # install latest language versions and refresh shims
+
+        [setup]
+        bootstrap # bootstrap mise by installing configured language versions
     ollama:
+        [config]
         copy-plist  # copy custom ollama plist file to homebrew directory
         diff-plist  # compare local ollama plist with installed version
+        setenv      # set ollama environment variables in launchctl
+
+        [services]
+        serve *ARGS # serve ollama in a tandem process with optional arguments
+
+        [setup]
         download    # download various ollama models (- prefix makes failures non-fatal)
+
+        [utils]
         getenv      # display ollama environment variables from launchctl
         list        # list all downloaded ollama models
-        serve *ARGS # serve ollama in a tandem process with optional arguments
-        setenv      # set ollama environment variables in launchctl
     pyenv:
+        [maintenance]
         upgrade +ARGS="--skip-existing"     # upgrade all python versions managed by pyenv
         upgrade-all +ARGS="--skip-existing" # install or upgrade all python versions managed by pyenv
     python:
-        bootstrap                 # bootstrap python environment with essential packages
+        [maintenance]
         outdated                  # list outdated Python packages
         upgrade                   # update python environment
-
-        [uv]
-        uv-pip-install *ARGS      # install python packages using uv pip installer
-        uv-pip-uninstall *ARGS    # uninstall python packages using uv pip installer
         uv-pip-upgrade *ARGS      # update python versions using uv installer
+
+        [setup]
+        bootstrap                 # bootstrap python environment with essential packages
         uv-python-install *ARGS   # install python versions using uv installer
         uv-python-reinstall *ARGS # reinstall python versions using uv installer
+
+        [tools]
+        uv-pip-install *ARGS      # install python packages using uv pip installer
+        uv-pip-uninstall *ARGS    # uninstall python packages using uv pip installer
         uv-tool-install *ARGS     # install common python CLI tools using uv installer
     virtualenv:
-        scan    # scan virtualenvs and display their python versions
+        [maintenance]
         upgrade # upgrade pip in all virtualenvs
+
+        [utils]
+        scan    # scan virtualenvs and display their python versions
         workon  # list all virtualenvs with their python and pip versions
     virtualenvwrapper:
-        get_env_details  # virtualenvwrapper hook for getting environment details
-        initialize       # virtualenvwrapper hook for environment initialization
         postactivate     # virtualenvwrapper hook that runs after environment activation
         postdeactivate   # virtualenvwrapper hook that runs after environment deactivation
         postmkproject    # virtualenvwrapper hook that runs after creating a project
@@ -147,6 +200,10 @@ Available recipes:
         premkvirtualenv  # virtualenvwrapper hook that runs before creating a virtualenv
         prermproject     # virtualenvwrapper hook that runs before removing a project
         prermvirtualenv  # virtualenvwrapper hook that runs before removing a virtualenv
+
+        [hooks]
+        get_env_details  # virtualenvwrapper hook for getting environment details
+        initialize       # virtualenvwrapper hook for environment initialization
 
     [database]
     postgresql-upgrade # Upgrade PostgreSQL to latest version and migrate databases
@@ -164,7 +221,6 @@ Available recipes:
 
     [setup]
     bootstrap          # Install and update all dependencies
-    freeze             # Update lockfiles without installing dependencies [alias: lock]
     install            # Create symlinks for dotfiles using homesick
 
     [shortcuts]
@@ -175,6 +231,7 @@ Available recipes:
 
     [utils]
     fmt                # Format and overwrite justfile
+    freeze             # Update lockfiles without installing dependencies [alias: lock]
     lint               # Run shellcheck on bash configuration files
     test               # Run validation checks
     update-brewfile    # Update Brewfile from cog template

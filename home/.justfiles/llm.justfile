@@ -18,10 +18,12 @@ justfile := justfile_directory() + "/.justfiles/llm.justfile"
     just --justfile {{ justfile }} --fmt
 
 # upgrade all installed LLM plugins with --force-reinstall
+[group("maintenance")]
 @force-reinstall:
     just --justfile {{ justfile }} install --force-reinstall
 
 # install LLM plugins with optional arguments
+[group("setup")]
 @install *ARGS:
     # llm install --force-reinstall llm-gpt4all
     llm install {{ ARGS }} \
@@ -38,9 +40,11 @@ justfile := justfile_directory() + "/.justfiles/llm.justfile"
         llm-uv-tool
 
 # open LLM templates directory in Sublime Text
+[group("config")]
 @path:
     subl "`llm templates path`"
 
 # upgrade all installed LLM plugins
+[group("maintenance")]
 @upgrade:
     just --justfile {{ justfile }} install --upgrade

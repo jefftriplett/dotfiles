@@ -18,6 +18,7 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
     just --justfile {{ justfile }} --fmt
 
 # bootstrap python environment with essential packages
+[group("setup")]
 @bootstrap:
     PIP_REQUIRE_VIRTUALENV=false python -m pip install \
             --disable-pip-version-check \
@@ -33,10 +34,12 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
         wheel
 
 # list outdated Python packages
+[group("maintenance")]
 @outdated:
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
 # update python environment
+[group("maintenance")]
 @upgrade:
     just --justfile {{ justfile }} bootstrap
     just --justfile {{ justfile }} uv-pip-upgrade
@@ -46,7 +49,7 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
 # ----------------------------------------------------------------
 
 # install python packages using uv pip installer
-[group("uv")]
+[group("tools")]
 @uv-pip-install *ARGS:
     python -m uv pip install \
         --system \
@@ -54,33 +57,32 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
         {{ ARGS }}
 
 # update python versions using uv installer
-[group("uv")]
+[group("maintenance")]
 @uv-pip-upgrade *ARGS:
     uv python --preview-features python-upgrade upgrade
 
 # uninstall python packages using uv pip installer
-[group("uv")]
+[group("tools")]
 @uv-pip-uninstall *ARGS:
     python -m uv pip uninstall \
         --system \
         {{ ARGS }}
 
 # install python versions using uv installer
-[group("uv")]
+[group("setup")]
 @uv-python-install *ARGS:
-    -uv python install {{ ARGS }} 3.14
     -uv python install {{ ARGS }} 3.13
     -uv python install {{ ARGS }} 3.12
     -uv python install {{ ARGS }} 3.11
     -uv python install {{ ARGS }} 3.10
 
 # reinstall python versions using uv installer
-[group("uv")]
+[group("setup")]
 @uv-python-reinstall *ARGS:
     just --justfile {{ justfile }} uv-python-install --reinstall
 
 # install common python CLI tools using uv installer
-[group("uv")]
+[group("tools")]
 @uv-tool-install *ARGS:
     -uv tool install --python 3.12 aider-install {{ ARGS }}
     -uv tool install --python 3.12 cogapp {{ ARGS }}

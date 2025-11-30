@@ -73,7 +73,7 @@ alias lock := freeze
     just virtualenvwrapper fmt
 
 # Update lockfiles without installing dependencies
-[group("setup")]
+[group("utils")]
 @freeze:
     just homebrew::freeze
 
