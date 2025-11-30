@@ -9,7 +9,6 @@ export PIP_REQUIRE_VIRTUALENV := "false"
 
 # export HOMEBREW_NO_AUTO_UPDATE := "true"
 
-
 mod claude '.justfiles/claude.justfile'
 mod codex '.justfiles/codex.justfile'
 mod copilot '.justfiles/copilot.justfile'
@@ -85,7 +84,7 @@ alias lock := freeze
 [group("utils")]
 @lint:
     #!/usr/bin/env sh
-    find "{{DOTFILES_DIR}}/home" -maxdepth 1 -name '.bash_*' ! -name '*.orig' -exec shellcheck --exclude=SC1090,SC1091 {} \;
+    find "{{ DOTFILES_DIR }}/home" -maxdepth 1 -name '.bash_*' ! -name '*.orig' -exec shellcheck --exclude=SC1090,SC1091 {} \;
 
 # Run validation checks
 [group("utils")]
@@ -182,9 +181,9 @@ alias lock := freeze
 # Update Brewfile from cog template
 [group("utils")]
 @update-brewfile:
-    cd "{{DOTFILES_DIR}}/home" && uv run --with cogapp cog -Pr ./Brewfile.cog
+    cd "{{ DOTFILES_DIR }}/home" && uv run --with cogapp cog -Pr ./Brewfile.cog
 
 # Update README.md docs using cog
 [group("utils")]
 @update-readme-docs:
-    cd "{{DOTFILES_DIR}}" && uv run --with cogapp cog -Pr ./README.md
+    cd "{{ DOTFILES_DIR }}" && uv run --with cogapp cog -Pr ./README.md
