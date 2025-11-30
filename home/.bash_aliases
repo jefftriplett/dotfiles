@@ -21,6 +21,12 @@ alias git-commit-msg-auto="mise run llm:git-commit-msg-auto"
 alias git-commit-msg="mise run llm:git-commit-msg"
 alias vt-claude="mise run claude"
 
+# Claude Code Model Switcher Aliases
+alias cc='claude'
+alias ccg='claude-glm'
+alias ccg45='claude-glm-4.5'
+alias ccf='claude-glm-fast'
+
 # everything else
 alias cat="bat -p"
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
