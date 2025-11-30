@@ -58,6 +58,7 @@ $ just --justfile=./home/justfile --list --list-submodules
 Available recipes:
     claude:
         config  # open Claude Desktop configuration file in Sublime Text
+        install # install Claude Code CLI
         upgrade # update Claude Code CLI to the latest version
         usage   # see Claude Code API/CLI usage
         version # display Claude Code CLI version
@@ -145,12 +146,6 @@ Available recipes:
     [database]
     postgresql-upgrade # Upgrade PostgreSQL to latest version and migrate databases
 
-    [golinks]
-    open-docs          # Open documentation in browser using Tailscale/golinks
-    open-go            # Open Tailscale/golinks homepage
-    open-ha            # Open Home Assistant interface in browser
-    open-syncthing     # Open Syncthing interface in browser
-
     [maintenance]
     cleanup DAYS="0"   # Clean up old Homebrew packages and casks
     outdated           # List outdated packages from Homebrew and pip
@@ -167,9 +162,16 @@ Available recipes:
     freeze             # Update lockfiles without installing dependencies [alias: lock]
     install            # Create symlinks for dotfiles using homesick
 
+    [shortcuts]
+    open-docs          # Open documentation in browser using Tailscale/golinks
+    open-go            # Open Tailscale/golinks homepage
+    open-ha            # Open Home Assistant interface in browser
+    open-syncthing     # Open Syncthing interface in browser
+
     [utils]
     fmt                # Format and overwrite justfile
     lint               # Run shellcheck on bash configuration files
+    test               # Run validation checks
     update-brewfile    # Update Brewfile from cog template
     update-readme-docs # Update README.md docs using cog
 ```
