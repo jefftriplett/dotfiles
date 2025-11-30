@@ -16,3 +16,4 @@ mouse-scroll-multiplier = 5
 shell-integration-features = no-cursor
 theme = dracula
 unfocused-split-opacity = 1.0
+keybind = shift+enter=text:\x1b\r
