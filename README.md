@@ -73,6 +73,11 @@ Available recipes:
         outdated # check for outdated Copilot npm package
         upgrade  # update Copilot CLI to the latest version
         version  # display Copilot CLI version
+    glm:
+        install # install Claude GLM CLI
+        upgrade # update Claude GLM CLI to the latest version
+        usage   # show available Claude GLM aliases
+        version # display Claude GLM CLI version
     homebrew:
         cleanup DAYS="0" # clean up old Homebrew packages and cache
         freeze           # freeze current Homebrew packages to Brewfile
