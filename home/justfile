@@ -1,9 +1,7 @@
 set dotenv-load := false
 set export := true
 set quiet := true
-
-# set unstable := true
-# set unstable := true
+set unstable := true
 
 export HOMEBREW_NO_ENV_HINTS := "true"
 export JUST_UNSTABLE := "true"
@@ -85,7 +83,12 @@ alias lock := freeze
 [group("utils")]
 @lint:
     #!/usr/bin/env sh
-    shellcheck ~/.homesick/repos/dotfiles/home/.bash_* --exclude=SC1090,SC1091
+    find ~/.homesick/repos/dotfiles/home -maxdepth 1 -name '.bash_*' ! -name '*.orig' -exec shellcheck --exclude=SC1090,SC1091 {} \;
+
+# Run validation checks
+[group("utils")]
+@test:
+    just lint
 
 # List outdated packages from Homebrew and pip
 [group("maintenance")]
