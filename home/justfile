@@ -9,6 +9,7 @@ export PIP_REQUIRE_VIRTUALENV := "false"
 
 # export HOMEBREW_NO_AUTO_UPDATE := "true"
 
+
 mod claude '.justfiles/claude.justfile'
 mod codex '.justfiles/codex.justfile'
 mod copilot '.justfiles/copilot.justfile'
@@ -24,6 +25,7 @@ mod virtualenvwrapper '.justfiles/virtualenvwrapper.justfile'
 
 HOST := `hostname -s`
 RICH_THEME := "dracula"
+DOTFILES_DIR := env_var_or_default("HOMESICK_REPO", "$HOME/.homesick/repos/dotfiles")
 
 alias lock := freeze
 
@@ -83,7 +85,7 @@ alias lock := freeze
 [group("utils")]
 @lint:
     #!/usr/bin/env sh
-    find ~/.homesick/repos/dotfiles/home -maxdepth 1 -name '.bash_*' ! -name '*.orig' -exec shellcheck --exclude=SC1090,SC1091 {} \;
+    find "{{DOTFILES_DIR}}/home" -maxdepth 1 -name '.bash_*' ! -name '*.orig' -exec shellcheck --exclude=SC1090,SC1091 {} \;
 
 # Run validation checks
 [group("utils")]
@@ -95,16 +97,6 @@ alias lock := freeze
 @outdated:
     just homebrew::outdated
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
-
-# Restart Homebrew services
-[group("services")]
-@restart:
-    just homebrew::services-restart
-
-# Stop all Homebrew services
-[group("services")]
-@stop:
-    just homebrew::services-stop
 
 # Update project to run at its current version
 [group("maintenance")]
@@ -134,7 +126,7 @@ alias lock := freeze
     just mise::install
 
 # ----------------------------------------------------------------
-# Postgres related
+# Database operations
 # ----------------------------------------------------------------
 
 # Upgrade PostgreSQL to latest version and migrate databases
@@ -146,26 +138,40 @@ alias lock := freeze
     brew postgresql-upgrade-database
 
 # ----------------------------------------------------------------
-# Useful tailscale/golink shortcuts
+# Service management
+# ----------------------------------------------------------------
+
+# Restart Homebrew services
+[group("services")]
+@restart:
+    just homebrew::services-restart
+
+# Stop all Homebrew services
+[group("services")]
+@stop:
+    just homebrew::services-stop
+
+# ----------------------------------------------------------------
+# Quick access shortcuts
 # ----------------------------------------------------------------
 
 # Open documentation in browser using Tailscale/golinks
-[group("golinks")]
+[group("shortcuts")]
 @open-docs:
     open http://go/docs
 
 # Open Tailscale/golinks homepage
-[group("golinks")]
+[group("shortcuts")]
 @open-go:
     open http://go
 
 # Open Home Assistant interface in browser
-[group("golinks")]
+[group("shortcuts")]
 @open-ha:
     open http://go/homeassistant
 
 # Open Syncthing interface in browser
-[group("golinks")]
+[group("shortcuts")]
 @open-syncthing:
     open http://go/syncthing
 
@@ -176,9 +182,9 @@ alias lock := freeze
 # Update Brewfile from cog template
 [group("utils")]
 @update-brewfile:
-    cd "$HOME/.homesick/repos/dotfiles/home" && uv run --with cogapp cog -Pr ./Brewfile.cog
+    cd "{{DOTFILES_DIR}}/home" && uv run --with cogapp cog -Pr ./Brewfile.cog
 
 # Update README.md docs using cog
 [group("utils")]
 @update-readme-docs:
-    cd "$HOME/.homesick/repos/dotfiles" && uv run --with cogapp cog -Pr ./README.md
+    cd "{{DOTFILES_DIR}}" && uv run --with cogapp cog -Pr ./README.md
