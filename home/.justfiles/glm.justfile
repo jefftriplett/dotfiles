@@ -20,13 +20,14 @@ justfile := justfile_directory() + "/.justfiles/glm.justfile"
 # install Claude GLM CLI
 [group("setup")]
 @install:
-    bunx claude-glm-installer
+    bun install -g claude-glm-installer
     just --justfile {{ justfile }} version
 
 # update Claude GLM CLI to the latest version
 [group("maintenance")]
 @upgrade:
-    bunx claude-glm-installer
+    just --justfile {{ justfile }} version
+    bun install -g claude-glm-installer
     just --justfile {{ justfile }} version
 
 # show available Claude GLM aliases
