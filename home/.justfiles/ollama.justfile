@@ -23,17 +23,14 @@ export OLLAMA_ORIGINS := "http://*"
     just --justfile {{ justfile }} --fmt
 
 # copy custom ollama plist file to homebrew directory
-[group("config")]
 @copy-plist:
     cp ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/opt/ollama/homebrew.mxcl.ollama.plist
 
 # compare local ollama plist with installed version
-[group("config")]
 @diff-plist:
     diff ~/.plists/homebrew.mxcl.ollama.plist /opt/homebrew/opt/ollama/homebrew.mxcl.ollama.plist
 
 # download various ollama models (- prefix makes failures non-fatal)
-[group("setup")]
 @download:
     # https://github.com/jmorganca/ollama/blob/main/docs/modelfile.md#valid-parameters-and-values
     # https://github.com/jmorganca/ollama/blob/main/examples/python/client.py
@@ -62,12 +59,10 @@ export OLLAMA_ORIGINS := "http://*"
     -ollama pull wizard-vicuna:latest
 
 # list all downloaded ollama models
-[group("utils")]
 @list:
     ollama list
 
 # display ollama environment variables from launchctl
-[group("utils")]
 @getenv:
     launchctl getenv OLLAMA_FLASH_ATTENTION
     launchctl getenv OLLAMA_HOST
@@ -76,12 +71,10 @@ export OLLAMA_ORIGINS := "http://*"
     launchctl getenv OLLAMA_ORIGINS
 
 # serve ollama in a tandem process with optional arguments
-[group("services")]
 @serve *ARGS:
     tandem 'ollama serve {{ ARGS }}'
 
 # set ollama environment variables in launchctl
-[group("config")]
 @setenv:
     launchctl setenv OLLAMA_FLASH_ATTENTION {{ OLLAMA_FLASH_ATTENTION }}
     launchctl setenv OLLAMA_HOST {{ OLLAMA_HOST }}

@@ -18,23 +18,19 @@ justfile := justfile_directory() + "/.justfiles/copilot.justfile"
     just --justfile {{ justfile }} --fmt
 
 # open Copilot configuration file in Sublime Text
-[group("config")]
 @config:
     command copilot --config
 
 # check for outdated Copilot npm package
-[group("maintenance")]
 @outdated:
     npm outdated @github/copilot
 
 # update Copilot CLI to the latest version
-[group("maintenance")]
 @upgrade:
     just --justfile {{ justfile }} version
     npm install -g @github/copilot
     just --justfile {{ justfile }} version
 
 # display Copilot CLI version
-[group("utils")]
 @version:
     command copilot --version

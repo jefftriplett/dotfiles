@@ -18,7 +18,6 @@ justfile := justfile_directory() + "/.justfiles/virtualenv.justfile"
     just --justfile {{ justfile }} --fmt
 
 # scan virtualenvs and display their python versions
-[group("utils")]
 @scan:
     #!/usr/bin/env python
     import subprocess
@@ -41,7 +40,6 @@ justfile := justfile_directory() + "/.justfiles/virtualenv.justfile"
             pass
 
 # upgrade pip in all virtualenvs
-[group("maintenance")]
 @upgrade:
     for filename in $(ls -d ~/.virtualenvs/*/); do \
         echo "$filename"; \
@@ -61,7 +59,6 @@ justfile := justfile_directory() + "/.justfiles/virtualenv.justfile"
     # rm requirements.lock
 
 # list all virtualenvs with their python and pip versions
-[group("utils")]
 @workon:
     for filename in $(ls -d ~/.virtualenvs/*/); do \
         echo "$filename"; \

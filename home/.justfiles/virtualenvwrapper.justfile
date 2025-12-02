@@ -22,13 +22,11 @@ justfile := justfile_directory() + "/.justfiles/virtualenvwrapper.justfile"
 # ----------------------------------------------------------------
 
 # virtualenvwrapper hook for getting environment details
-[group("hooks")]
 get_env_details:
     #!/usr/bin/env sh
     uvx --quiet rich --print "[green]virtualenvwrapper::get_env_details[/green]"
 
 # virtualenvwrapper hook for environment initialization
-[group("hooks")]
 initialize:
     #!/usr/bin/env sh
     # uvx --quiet rich --print "[green]initialize[/green]"

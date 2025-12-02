@@ -22,7 +22,6 @@ justfile := justfile_directory() + "/.justfiles/macos.justfile"
 # ----------------------------------------------------------------
 
 # boost Time Machine backup speed by increasing IO priority
-[group("time machine")]
 @timemachine-boost:
     # bump IO priority to finish more quickly
     # https://apple.stackexchange.com/questions/382772/time-machine-in-the-cleaning-up-state-forever
@@ -30,18 +29,15 @@ justfile := justfile_directory() + "/.justfiles/macos.justfile"
     sudo sysctl debug.lowpri_throttle_enabled=0
 
 # restore normal IO priority after Time Machine backup completes
-[group("time machine")]
 @timemachine-boost-complete:
     # once done
     sudo sysctl debug.lowpri_throttle_enabled=1
 
 # delete specific Time Machine backups
-[group("time machine")]
 @timemachine-delete *ARGS:
     sudo tmutil delete {{ ARGS }}
 
 # list all Time Machine backups
-[group("time machine")]
 @timemachine-list:
     sudo tmutil listbackups
 
@@ -50,12 +46,10 @@ justfile := justfile_directory() + "/.justfiles/macos.justfile"
 # ----------------------------------------------------------------
 
 # install Xcode command line tools
-[group("xcode")]
 @xcode-bootstrap:
     sudo xcode-select --install
 
 # upgrade Xcode command line tools by removing and reinstalling
-[group("xcode")]
 @xcode-upgrade:
     sudo rm -rf /Library/Developer/CommandLineTools
     just --justfile {{ justfile }} xcode-bootstrap

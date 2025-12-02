@@ -31,12 +31,10 @@ python_314 := `pyenv latest 3.14`
         {{ python_311 }}
 
 # upgrade all python versions managed by pyenv
-[group("maintenance")]
 @upgrade +ARGS="--skip-existing":
     just pyenv::upgrade-all {{ ARGS }}
 
 # install or upgrade all python versions managed by pyenv
-[group("maintenance")]
 @upgrade-all +ARGS="--skip-existing":
     -pyenv install {{ ARGS }} 3.14:latest
     -pyenv install {{ ARGS }} 3.13:latest
