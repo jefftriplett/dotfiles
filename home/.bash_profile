@@ -24,5 +24,5 @@ if [[ -f ~/.orbstack/shell/init.bash ]]; then
 fi
 
 if command -v try &> /dev/null; then
-    eval "$(try init ~/src/tries)"
+    eval "$(try init ~//Projects/tries)"
 fi
