@@ -22,3 +22,7 @@ fi
 if [[ -f ~/.orbstack/shell/init.bash ]]; then
     source ~/.orbstack/shell/init.bash
 fi
+
+if command -v try &> /dev/null; then
+    eval "$(try init ~/src/tries)"
+fi
