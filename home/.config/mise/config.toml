@@ -30,6 +30,10 @@ run = "mise upgrade"
 description = "Run Claude dangerously"
 run = "vt command claude --dangerously-skip-permissions --continue || vt command claude --dangerously-skip-permissions"
 
+[tasks.claude-resume]
+description = "Run Claude dangerously with resume fallback"
+run = "vt command claude --dangerously-skip-permissions --resume || vt command claude --dangerously-skip-permissions"
+
 [tasks.vt-claude]
 description = "Run Claude dangerously with VibeTunnel"
 run = "vt claude --dangerously-skip-permissions --continue || vt claude --dangerously-skip-permissions"
