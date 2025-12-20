@@ -113,8 +113,8 @@ alias lock := freeze
     just homebrew::cleanup
     just mise::upgrade
     just python::upgrade
-    just python::uv-tool-install
     just pyenv::upgrade
+    just python::uv-tool-install
     just llm::upgrade
     just claude::upgrade
     just codex::upgrade
