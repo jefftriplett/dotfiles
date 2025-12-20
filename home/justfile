@@ -114,7 +114,7 @@ alias lock := freeze
     just mise::upgrade
     just python::upgrade
     just pyenv::upgrade
-    just python::uv-tool-install
+    just python::uv-tool-upgrade
     just llm::upgrade
     just claude::upgrade
     just codex::upgrade

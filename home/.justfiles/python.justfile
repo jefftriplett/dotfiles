@@ -73,9 +73,14 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
 @uv-python-reinstall *ARGS:
     just --justfile {{ justfile }} uv-python-install --reinstall
 
+# upgrade common python CLI tools using uv installer
+@uv-tool-upgrade:
+    just --justfile {{ justfile }} uv-tool-install --upgrade
+
 # install common python CLI tools using uv installer
 @uv-tool-install *ARGS:
     -uv tool install --python 3.12 aider-install {{ ARGS }}
+    -uv tool install --python 3.14 batrachian-toad {{ ARGS }}
     -uv tool install --python 3.12 cogapp {{ ARGS }}
     -uv tool install --python 3.12 em-keyboard {{ ARGS }}
     -uv tool install --python 3.12 files-to-claude-xml {{ ARGS }}
