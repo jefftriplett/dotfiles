@@ -32,10 +32,14 @@ justfile := justfile_directory() + "/.justfiles/glm.justfile"
 
 # show available Claude GLM aliases
 @usage:
-    echo "ccg              # Claude Code with GLM-4.6 (latest)"
+    echo "cc               # Claude Code (default)"
+    echo "ccx              # Claude Code with cc-x10ded"
+    echo "ccg              # Claude Code with GLM-4.7"
+    echo "ccg47            # Claude Code with GLM-4.7"
+    echo "ccg46            # Claude Code with GLM-4.6"
     echo "ccg45            # Claude Code with GLM-4.5"
     echo "ccf              # Claude Code with GLM-4.5-Air (faster)"
-    echo "cc               # Regular Claude Code"
+    echo "ccm              # Claude Code with MiniMax-M2.1"
 
 # display Claude GLM CLI version
 @version:
