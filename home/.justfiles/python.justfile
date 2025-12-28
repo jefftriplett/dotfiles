@@ -81,6 +81,7 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
 @uv-tool-install *ARGS:
     -uv tool install --python 3.12 aider-install {{ ARGS }}
     -uv tool install --python 3.14 batrachian-toad {{ ARGS }}
+    -uv tool install --python 3.12 claude-code-transcripts {{ ARGS }}
     -uv tool install --python 3.12 cogapp {{ ARGS }}
     -uv tool install --python 3.12 em-keyboard {{ ARGS }}
     -uv tool install --python 3.12 files-to-claude-xml {{ ARGS }}
