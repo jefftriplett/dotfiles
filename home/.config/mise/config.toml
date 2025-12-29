@@ -15,12 +15,12 @@ idiomatic_version_file_enable_tools = ["[]"]
 
 [tools]
 bun = ['latest']
-deno = ["latest"]
+deno = ['latest']
 go = ['latest']
 node = ['22.16.0', '20.11.0', '20.10.0', 'latest']
 ruby = ['latest']
 rust = ['latest']
-usage = ["latest"]
+usage = ['latest']
 
 [tasks.bootstrap]
 description = "Bootstrap our CLI"
