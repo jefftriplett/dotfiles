@@ -73,10 +73,6 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
 @uv-python-reinstall *ARGS:
     just --justfile {{ justfile }} uv-python-install --reinstall
 
-# upgrade common python CLI tools using uv installer
-@uv-tool-upgrade:
-    just --justfile {{ justfile }} uv-tool-install --upgrade
-
 # install common python CLI tools using uv installer
 @uv-tool-install *ARGS:
     -uv tool install --python 3.12 aider-install {{ ARGS }}
@@ -93,3 +89,7 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
     -uv tool install --python 3.12 ruff-lsp {{ ARGS }}
     -uv tool install --python 3.12 ttok {{ ARGS }}
     -uv tool install --python 3.12 yt-dlp[default] {{ ARGS }}
+
+# upgrade common python CLI tools using uv installer
+@uv-tool-upgrade:
+    just --justfile {{ justfile }} uv-tool-install --upgrade
