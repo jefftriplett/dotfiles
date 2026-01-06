@@ -42,10 +42,25 @@ These are my personal dotfiles for macOS development environments. They provide 
 
 4. Bootstrap the environment:
    ```shell
-   $ just bootstrap
+   $ just --justfile=./home/justfile bootstrap
    ```
 
-# Justfile Usage
+## Project Workflow (Just)
+
+Most tasks in this repo run via `just` recipes defined in `home/justfile` and
+its submodules in `home/.justfiles`. Use `just --justfile=./home/justfile` when
+running commands from the repo root.
+
+Common commands:
+
+```shell
+$ just --justfile=./home/justfile install
+$ just --justfile=./home/justfile bootstrap
+$ just --justfile=./home/justfile update
+$ just --justfile=./home/justfile update-readme-docs
+```
+
+## Justfile Usage
 
 <!-- [[[cog
 from scripts.run_command import run
@@ -202,6 +217,13 @@ Available recipes:
 ## Terminal theme
 
 - [Dracula][dracula] Dark theme for iTerm and 294+ apps.
+
+## Repository Layout
+
+- `home/`: dotfiles (Brewfile, shell config, app config)
+- `home/.justfiles/`: just submodules for task groups
+- `configs/`: editor/application configs (Sublime Text)
+- `scripts/`: README generation helpers
 
 ## Inspiration / Thank you!
 

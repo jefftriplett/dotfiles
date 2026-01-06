@@ -134,6 +134,8 @@ brew "nodenv"
 brew "nushell"
 brew "nvm"
 brew "ollama", restart_service: :changed
+brew "ripgrep"
+brew "opencode"
 brew "oxipng"
 brew "pandoc"
 brew "pandoc-crossref"
@@ -158,7 +160,6 @@ brew "rbenv"
 brew "rclone"
 brew "redis"
 brew "rename"
-brew "ripgrep"
 brew "rmate"
 brew "rust"
 brew "s3cmd"
@@ -265,11 +266,13 @@ cask "lm-studio"
 cask "logitech-g-hub"
 cask "loom"
 cask "macwhisper"
+cask "meld-studio"
 cask "mimestream"
 cask "monitorcontrol"
 cask "netspot"
 cask "obs"
 cask "obsidian"
+cask "opencode-desktop"
 cask "orbstack"
 cask "orion"
 cask "pearcleaner"
@@ -304,7 +307,6 @@ mas "Craft", id: 1487937127
 mas "Directive", id: 1503550067
 mas "EasyRes", id: 688211836
 mas "GarageBand", id: 682658836
-mas "GLKVM", id: 6740846845
 mas "iMovie", id: 408981434
 mas "Infuse", id: 1136220934
 mas "Keynote", id: 409183694
@@ -325,6 +327,3 @@ mas "ToothFairy", id: 1191449274
 mas "Xcode", id: 497799835
 go "cmd/go"
 go "cmd/gofmt"
-cargo "mdbook"
-cargo "modenv"
-cargo "rustywind"
