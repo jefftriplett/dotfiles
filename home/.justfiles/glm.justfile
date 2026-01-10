@@ -1,5 +1,5 @@
 # ----------------------
-# GLM (Claude GLM) recipes
+# CCX (Claude Code with alternative models) recipes
 # ----------------------
 
 set dotenv-load := false
@@ -17,32 +17,30 @@ justfile := justfile_directory() + "/.justfiles/glm.justfile"
 @fmt:
     just --justfile {{ justfile }} --fmt
 
-# install Claude GLM CLI
+# install ccx CLI
 @install:
-    # bun install -g claude-glm-installer
-    # bun install -g claude-glm-alt-installer
     bun install -g cc-x10ded@latest
     just --justfile {{ justfile }} version
 
-# update Claude GLM CLI to the latest version
+# update ccx CLI to the latest version
 @upgrade:
     just --justfile {{ justfile }} version
-    # bun install -g claude-glm-installer
-    # bun install -g claude-glm-alt-installer
     bun install -g cc-x10ded@latest
     just --justfile {{ justfile }} version
 
-# show available Claude GLM aliases
+# show available ccx model usage
 @usage:
-    echo "cc               # Claude Code (default)"
-    echo "ccx              # Claude Code with cc-x10ded"
-    echo "ccg              # Claude Code with GLM-4.7"
-    echo "ccg47            # Claude Code with GLM-4.7"
-    echo "ccg46            # Claude Code with GLM-4.6"
-    echo "ccg45            # Claude Code with GLM-4.5"
-    echo "ccf              # Claude Code with GLM-4.5-Air (faster)"
-    echo "ccm              # Claude Code with MiniMax-M2.1"
+    echo "ccx                           # Interactive model selection"
+    echo "ccx --model=glm-4.7           # GLM-4.7 (default)"
+    echo "ccx --model=glm-4.6           # GLM-4.6"
+    echo "ccx --model=glm-4.5           # GLM-4.5"
+    echo "ccx --model=glm-4.5-air       # GLM-4.5-Air (faster)"
+    echo "ccx --model=MiniMax-M2.1      # MiniMax-M2.1"
+    echo "ccx --model=gpt-4o            # OpenAI GPT-4o"
+    echo "ccx --model=gemini-2.0-flash  # Google Gemini 2.0"
+    echo "ccx --list                    # Show all available models"
+    echo "ccx setup                     # Configure API keys"
 
-# display Claude GLM CLI version
+# display ccx CLI version
 @version:
-    command claude-glm --version
+    ccx --version
