@@ -10,6 +10,7 @@ export PIP_REQUIRE_VIRTUALENV := "false"
 # export HOMEBREW_NO_AUTO_UPDATE := "true"
 
 mod claude '.justfiles/claude.justfile'
+mod clawdbot '.justfiles/clawdbot.justfile'
 mod codex '.justfiles/codex.justfile'
 mod copilot '.justfiles/copilot.justfile'
 mod glm '.justfiles/glm.justfile'
@@ -59,6 +60,7 @@ alias lock := freeze
 @fmt:
     just --fmt --unstable
     just claude fmt
+    just clawdbot fmt
     just codex fmt
     just copilot fmt
     just glm fmt
@@ -117,6 +119,7 @@ alias lock := freeze
     just python::uv-tool-upgrade
     just llm::upgrade
     just claude::upgrade
+    just clawdbot::upgrade
     just codex::upgrade
     just copilot::upgrade
     just glm::upgrade
