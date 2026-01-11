@@ -9,7 +9,7 @@ export PIP_REQUIRE_VIRTUALENV := "false"
 
 # export HOMEBREW_NO_AUTO_UPDATE := "true"
 
-mod ai '.justfiles/ai.justfile'
+mod llm '.justfiles/llm.justfile'
 mod homebrew '.justfiles/homebrew.justfile'
 mod macos '.justfiles/macos.justfile'
 mod mise '.justfiles/mise.justfile'
@@ -53,7 +53,7 @@ alias lock := freeze
 [group("utils")]
 @fmt:
     just --fmt --unstable
-    just ai fmt
+    just llm fmt
     just homebrew fmt
     just macos fmt
     just mise fmt
@@ -105,7 +105,7 @@ alias lock := freeze
     just python::upgrade
     just pyenv::upgrade
     just python::uv-tool-upgrade
-    just ai::upgrade
+    just llm::upgrade
 
 # Upgrade all tools (pyenv and mise packages)
 [group("maintenance")]

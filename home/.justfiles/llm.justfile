@@ -1,46 +1,44 @@
-# ----------------------------------------------------------------
-# llm recipes - https://llm.datasette.io/
-# ----------------------------------------------------------------
+# ----------------------
+# AI/LLM tools recipes
+# ----------------------
 
 set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/llm.justfile"
 
+mod claude 'claude.justfile'
+mod clawdbot 'clawdbot.justfile'
+mod codex 'codex.justfile'
+mod copilot 'copilot.justfile'
+mod glm 'glm.justfile'
+mod llm-cli 'llm-cli.justfile'
+mod ollama 'ollama.justfile'
+mod pi-coding-agent 'pi-coding-agent.justfile'
+
 # list all available recipes
 [private]
 @default:
-    just --justfile {{ justfile }} --list
+    just --justfile {{ justfile }} --list --list-submodules
 
-# format this justfile
-[private]
+# format all AI/LLM justfiles
 @fmt:
     just --justfile {{ justfile }} --fmt
+    just llm claude fmt
+    just llm clawdbot fmt
+    just llm codex fmt
+    just llm copilot fmt
+    just llm glm fmt
+    just llm llm-cli fmt
+    just llm ollama fmt
+    just llm pi-coding-agent fmt
 
-# upgrade all installed LLM plugins with --force-reinstall
-@force-reinstall:
-    just --justfile {{ justfile }} install --force-reinstall
-
-# install LLM plugins with optional arguments
-@install *ARGS:
-    # llm install --force-reinstall llm-gpt4all
-    llm install {{ ARGS }} \
-        llm-anthropic \
-        llm-claude \
-        llm-docs \
-        llm-fragments-github \
-        llm-gemini \
-        llm-hacker-news \
-        llm-jina-reader \
-        llm-ollama \
-        llm-openai-plugin \
-        llm-pdf-to-images \
-        llm-uv-tool
-
-# open LLM templates directory in Sublime Text
-@path:
-    subl "`llm templates path`"
-
-# upgrade all installed LLM plugins
+# upgrade all AI/LLM tools
 @upgrade:
-    just --justfile {{ justfile }} install --upgrade
+    just llm claude upgrade
+    just llm clawdbot upgrade
+    just llm codex upgrade
+    just llm copilot upgrade
+    just llm glm upgrade
+    just llm llm-cli upgrade
+    just llm pi-coding-agent upgrade
