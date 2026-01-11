@@ -37,7 +37,7 @@ justfile := justfile_directory() + "/.justfiles/clawdbot.justfile"
 # upgrade clawdbot to the latest version
 @upgrade:
     bun install -g clawdbot@latest
-    # just --justfile {{ justfile }} restart
+    -just --justfile {{ justfile }} restart
 
 # display clawdbot version
 @version:
