@@ -164,7 +164,7 @@ alias lock := freeze
     open http://go/syncthing
 
 # ----------------------------------------------------------------
-# TODO: ...
+# Utilities
 # ----------------------------------------------------------------
 
 # Update Brewfile from cog template
