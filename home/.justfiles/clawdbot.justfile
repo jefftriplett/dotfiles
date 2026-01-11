@@ -28,6 +28,7 @@ justfile := justfile_directory() + "/.justfiles/clawdbot.justfile"
 # install clawdbot CLI
 @install:
     bun install -g clawdbot@latest
+    bun install -g clawdhub
     just --justfile {{ justfile }} doctor
     just --justfile {{ justfile }} restart
     just --justfile {{ justfile }} health
@@ -39,6 +40,7 @@ justfile := justfile_directory() + "/.justfiles/clawdbot.justfile"
 # upgrade clawdbot to the latest version
 @upgrade:
     bun install -g clawdbot@latest
+    bun install -g clawdhub
     just --justfile {{ justfile }} doctor
     just --justfile {{ justfile }} restart
     just --justfile {{ justfile }} health
