@@ -37,11 +37,11 @@ mod pi-coding-agent 'pi-coding-agent.justfile'
 
 # upgrade all AI/LLM tools
 @upgrade:
-    just llm claude upgrade
-    just llm clawdbot upgrade
-    just llm clawdhub upgrade
-    just llm codex upgrade
-    just llm copilot upgrade
-    just llm glm upgrade
-    just llm llm-cli upgrade
-    just llm pi-coding-agent upgrade
+    -just llm claude upgrade
+    -just llm clawdbot upgrade
+    -just llm clawdhub upgrade
+    -just llm codex upgrade
+    -just llm copilot upgrade
+    -just llm glm upgrade
+    -just llm llm-cli upgrade
+    -just llm pi-coding-agent upgrade
