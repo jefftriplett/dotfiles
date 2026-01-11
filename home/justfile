@@ -35,6 +35,12 @@ alias lock := freeze
 # install and update all dependencies
 [group("setup")]
 @bootstrap:
+    echo "==> Installing homesick..."
+    gem install homesick
+
+    echo "==> Creating symlinks..."
+    homesick symlink
+
     if [ -f "Brewfile" ] && [ "$(uname -s)" = "Darwin" ]; then \
         echo "==> Installing Homebrew dependencies..."; \
         brew bundle install; \
@@ -99,6 +105,12 @@ alias lock := freeze
 # update and upgrade Homebrew packages
 [group("maintenance")]
 @upgrade:
+    echo "==> Updating dotfiles..."
+    git -C "{{ DOTFILES_DIR }}" pull
+
+    echo "==> Creating symlinks..."
+    homesick symlink
+
     just homebrew::upgrade
     just homebrew::cleanup
     just mise::upgrade
