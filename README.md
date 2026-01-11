@@ -98,6 +98,11 @@ Available recipes:
             upgrade # upgrade clawdbot to the latest version
             version # display clawdbot version
 
+        clawdhub:
+            install # install clawdhub CLI
+            upgrade # upgrade clawdhub to the latest version
+            version # display clawdhub version
+
         codex:
             config   # open Codex configuration file in Sublime Text
             outdated # check for outdated Codex npm package
@@ -133,9 +138,12 @@ Available recipes:
             setenv      # set ollama environment variables in launchctl
 
         pi-coding-agent:
-            install # install pi-coding-agent CLI
-            upgrade # upgrade pi-coding-agent to the latest version
-            version # display pi-coding-agent version
+            help              # display pi CLI help
+            install           # install pi-coding-agent CLI
+            list-models *ARGS # list available models
+            resume            # resume a previous pi session
+            upgrade           # upgrade pi-coding-agent to the latest version
+            version           # display pi-coding-agent version
     macos:
         timemachine-boost          # boost Time Machine backup speed by increasing IO priority
         timemachine-boost-complete # restore normal IO priority after Time Machine backup completes
@@ -181,36 +189,36 @@ Available recipes:
         prermvirtualenv  # virtualenvwrapper hook that runs before removing a virtualenv
 
     [database]
-    postgresql-upgrade # Upgrade PostgreSQL to latest version and migrate databases
+    postgresql-upgrade # upgrade PostgreSQL to latest version and migrate databases
 
     [maintenance]
-    cleanup DAYS="0"   # Clean up old Homebrew packages and casks
-    outdated           # List outdated packages from Homebrew and pip
-    update             # Update project to run at its current version
-    upgrade            # Update and upgrade Homebrew packages
-    upgrade-all        # Upgrade all tools (pyenv and mise packages)
+    cleanup DAYS="0"   # clean up old Homebrew packages and casks
+    outdated           # list outdated packages from Homebrew and pip
+    update             # update project to run at its current version
+    upgrade            # update and upgrade Homebrew packages
+    upgrade-all        # upgrade all tools (pyenv and mise packages)
 
     [services]
-    restart            # Restart Homebrew services
-    stop               # Stop all Homebrew services
+    restart            # restart Homebrew services
+    stop               # stop all Homebrew services
 
     [setup]
-    bootstrap          # Install and update all dependencies
-    install            # Create symlinks for dotfiles using homesick
+    bootstrap          # install and update all dependencies
+    install            # create symlinks for dotfiles using homesick
 
     [shortcuts]
-    open-docs          # Open documentation in browser using Tailscale/golinks
-    open-go            # Open Tailscale/golinks homepage
-    open-ha            # Open Home Assistant interface in browser
-    open-syncthing     # Open Syncthing interface in browser
+    open-docs          # open documentation in browser using Tailscale/golinks
+    open-go            # open Tailscale/golinks homepage
+    open-ha            # open Home Assistant interface in browser
+    open-syncthing     # open Syncthing interface in browser
 
     [utils]
-    fmt                # Format and overwrite justfile
-    freeze             # Update lockfiles without installing dependencies [alias: lock]
-    lint               # Run shellcheck on bash configuration files
-    test               # Run validation checks
-    update-brewfile    # Update Brewfile from cog template
-    update-readme-docs # Update README.md docs using cog
+    fmt                # format and overwrite justfile
+    freeze             # update lockfiles without installing dependencies [alias: lock]
+    lint               # run shellcheck on bash configuration files
+    test               # run validation checks
+    update-brewfile    # update Brewfile from cog template
+    update-readme-docs # update README.md docs using cog
 ```
 
 <!-- [[[end]]] -->
