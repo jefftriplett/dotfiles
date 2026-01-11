@@ -71,28 +71,6 @@ run("just --justfile=./home/justfile --list --list-submodules", with_console=Tru
 $ just --justfile=./home/justfile --list --list-submodules
 
 Available recipes:
-    claude:
-        config  # open Claude Desktop configuration file in Sublime Text
-        install # install Claude Code CLI
-        upgrade # update Claude Code CLI to the latest version
-        usage   # see Claude Code API/CLI usage
-        version # display Claude Code CLI version
-    codex:
-        config   # open Codex configuration file in Sublime Text
-        outdated # check for outdated Codex npm package
-        upgrade  # update Codex CLI to the latest version
-        usage    # see Codex CLI usage
-        version  # display Codex CLI version
-    copilot:
-        config   # open Copilot configuration file in Sublime Text
-        outdated # check for outdated Copilot npm package
-        upgrade  # update Copilot CLI to the latest version
-        version  # display Copilot CLI version
-    glm:
-        install # install Claude GLM CLI
-        upgrade # update Claude GLM CLI to the latest version
-        usage   # show available Claude GLM aliases
-        version # display Claude GLM CLI version
     homebrew:
         cleanup DAYS="0" # clean up old Homebrew packages and cache
         freeze           # freeze current Homebrew packages to Brewfile
@@ -103,10 +81,61 @@ Available recipes:
         update           # update Homebrew package database
         upgrade          # upgrade all outdated Homebrew packages
     llm:
-        force-reinstall # upgrade all installed LLM plugins with --force-reinstall
-        install *ARGS   # install LLM plugins with optional arguments
-        path            # open LLM templates directory in Sublime Text
-        upgrade         # upgrade all installed LLM plugins
+        fmt     # format all AI/LLM justfiles
+        upgrade # upgrade all AI/LLM tools
+        claude:
+            config  # open Claude Desktop configuration file in Sublime Text
+            install # install Claude Code CLI
+            upgrade # update Claude Code CLI to the latest version
+            usage   # see Claude Code API/CLI usage
+            version # display Claude Code CLI version
+
+        clawdbot:
+            doctor  # run clawdbot doctor to check configuration
+            health  # check clawdbot health status
+            install # install clawdbot CLI
+            restart # restart clawdbot daemon
+            upgrade # upgrade clawdbot to the latest version
+            version # display clawdbot version
+
+        codex:
+            config   # open Codex configuration file in Sublime Text
+            outdated # check for outdated Codex npm package
+            upgrade  # update Codex CLI to the latest version
+            usage    # see Codex CLI usage
+            version  # display Codex CLI version
+
+        copilot:
+            config   # open Copilot configuration file in Sublime Text
+            outdated # check for outdated Copilot npm package
+            upgrade  # update Copilot CLI to the latest version
+            version  # display Copilot CLI version
+
+        glm:
+            install # install ccx CLI
+            upgrade # update ccx CLI to the latest version
+            usage   # show available ccx model usage
+            version # display ccx CLI version
+
+        llm-cli:
+            force-reinstall # upgrade all installed LLM plugins with --force-reinstall
+            install *ARGS   # install LLM plugins with optional arguments
+            path            # open LLM templates directory in Sublime Text
+            upgrade         # upgrade all installed LLM plugins
+
+        ollama:
+            copy-plist  # copy custom ollama plist file to homebrew directory
+            diff-plist  # compare local ollama plist with installed version
+            download    # download various ollama models (- prefix makes failures non-fatal)
+            getenv      # display ollama environment variables from launchctl
+            list        # list all downloaded ollama models
+            serve *ARGS # serve ollama in a tandem process with optional arguments
+            setenv      # set ollama environment variables in launchctl
+
+        pi-coding-agent:
+            install # install pi-coding-agent CLI
+            upgrade # upgrade pi-coding-agent to the latest version
+            version # display pi-coding-agent version
     macos:
         timemachine-boost          # boost Time Machine backup speed by increasing IO priority
         timemachine-boost-complete # restore normal IO priority after Time Machine backup completes
@@ -117,14 +146,6 @@ Available recipes:
     mise:
         bootstrap # bootstrap mise by installing configured language versions
         upgrade   # install latest language versions and refresh shims
-    ollama:
-        copy-plist  # copy custom ollama plist file to homebrew directory
-        diff-plist  # compare local ollama plist with installed version
-        download    # download various ollama models (- prefix makes failures non-fatal)
-        getenv      # display ollama environment variables from launchctl
-        list        # list all downloaded ollama models
-        serve *ARGS # serve ollama in a tandem process with optional arguments
-        setenv      # set ollama environment variables in launchctl
     pyenv:
         upgrade +ARGS="--skip-existing"     # upgrade all python versions managed by pyenv
         upgrade-all +ARGS="--skip-existing" # install or upgrade all python versions managed by pyenv
@@ -138,6 +159,7 @@ Available recipes:
         uv-python-install *ARGS   # install python versions using uv installer
         uv-python-reinstall *ARGS # reinstall python versions using uv installer
         uv-tool-install *ARGS     # install common python CLI tools using uv installer
+        uv-tool-upgrade           # upgrade common python CLI tools using uv installer
     virtualenv:
         scan    # scan virtualenvs and display their python versions
         upgrade # upgrade pip in all virtualenvs
