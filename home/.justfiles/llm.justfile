@@ -9,6 +9,7 @@ justfile := justfile_directory() + "/.justfiles/llm.justfile"
 
 mod claude 'claude.justfile'
 mod clawdbot 'clawdbot.justfile'
+mod clawdhub 'clawdhub.justfile'
 mod codex 'codex.justfile'
 mod copilot 'copilot.justfile'
 mod glm 'glm.justfile'
@@ -26,6 +27,7 @@ mod pi-coding-agent 'pi-coding-agent.justfile'
     just --justfile {{ justfile }} --fmt
     just llm claude fmt
     just llm clawdbot fmt
+    just llm clawdhub fmt
     just llm codex fmt
     just llm copilot fmt
     just llm glm fmt
@@ -37,6 +39,7 @@ mod pi-coding-agent 'pi-coding-agent.justfile'
 @upgrade:
     just llm claude upgrade
     just llm clawdbot upgrade
+    just llm clawdhub upgrade
     just llm codex upgrade
     just llm copilot upgrade
     just llm glm upgrade

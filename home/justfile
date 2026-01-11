@@ -32,7 +32,7 @@ alias lock := freeze
 @default:
     just --list --list-submodules
 
-# Install and update all dependencies
+# install and update all dependencies
 [group("setup")]
 @bootstrap:
     if [ -f "Brewfile" ] && [ "$(uname -s)" = "Darwin" ]; then \
@@ -44,12 +44,12 @@ alias lock := freeze
     just mise::bootstrap
     just python::bootstrap
 
-# Clean up old Homebrew packages and casks
+# clean up old Homebrew packages and casks
 [group("maintenance")]
 @cleanup DAYS="0":
     just homebrew::cleanup {{ DAYS }}
 
-# Format and overwrite justfile
+# format and overwrite justfile
 [group("utils")]
 @fmt:
     just --fmt --unstable
@@ -62,41 +62,41 @@ alias lock := freeze
     just virtualenv fmt
     just virtualenvwrapper fmt
 
-# Update lockfiles without installing dependencies
+# update lockfiles without installing dependencies
 [group("utils")]
 @freeze:
     just homebrew::freeze
 
-# Create symlinks for dotfiles using homesick
+# create symlinks for dotfiles using homesick
 [group("setup")]
 @install:
     homesick symlink
 
-# Run shellcheck on bash configuration files
+# run shellcheck on bash configuration files
 [group("utils")]
 @lint:
     #!/usr/bin/env sh
     find "{{ DOTFILES_DIR }}/home" -maxdepth 1 -name '.bash_*' ! -name '*.orig' -exec shellcheck --exclude=SC1090,SC1091 {} \;
 
-# Run validation checks
+# run validation checks
 [group("utils")]
 @test:
     just lint
 
-# List outdated packages from Homebrew and pip
+# list outdated packages from Homebrew and pip
 [group("maintenance")]
 @outdated:
     just homebrew::outdated
     PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
-# Update project to run at its current version
+# update project to run at its current version
 [group("maintenance")]
 @update:
     just upgrade
     just restart
     just cleanup
 
-# Update and upgrade Homebrew packages
+# update and upgrade Homebrew packages
 [group("maintenance")]
 @upgrade:
     just homebrew::upgrade
@@ -107,7 +107,7 @@ alias lock := freeze
     just python::uv-tool-upgrade
     just llm::upgrade
 
-# Upgrade all tools (pyenv and mise packages)
+# upgrade all tools (pyenv and mise packages)
 [group("maintenance")]
 @upgrade-all:
     just pyenv::upgrade-all
@@ -117,7 +117,7 @@ alias lock := freeze
 # Database operations
 # ----------------------------------------------------------------
 
-# Upgrade PostgreSQL to latest version and migrate databases
+# upgrade PostgreSQL to latest version and migrate databases
 [group("database")]
 @postgresql-upgrade:
     brew unpin postgresql
@@ -129,12 +129,12 @@ alias lock := freeze
 # Service management
 # ----------------------------------------------------------------
 
-# Restart Homebrew services
+# restart Homebrew services
 [group("services")]
 @restart:
     just homebrew::services-restart
 
-# Stop all Homebrew services
+# stop all Homebrew services
 [group("services")]
 @stop:
     just homebrew::services-stop
@@ -143,22 +143,22 @@ alias lock := freeze
 # Quick access shortcuts
 # ----------------------------------------------------------------
 
-# Open documentation in browser using Tailscale/golinks
+# open documentation in browser using Tailscale/golinks
 [group("shortcuts")]
 @open-docs:
     open http://go/docs
 
-# Open Tailscale/golinks homepage
+# open Tailscale/golinks homepage
 [group("shortcuts")]
 @open-go:
     open http://go
 
-# Open Home Assistant interface in browser
+# open Home Assistant interface in browser
 [group("shortcuts")]
 @open-ha:
     open http://go/homeassistant
 
-# Open Syncthing interface in browser
+# open Syncthing interface in browser
 [group("shortcuts")]
 @open-syncthing:
     open http://go/syncthing
@@ -167,12 +167,12 @@ alias lock := freeze
 # Utilities
 # ----------------------------------------------------------------
 
-# Update Brewfile from cog template
+# update Brewfile from cog template
 [group("utils")]
 @update-brewfile:
     cd "{{ DOTFILES_DIR }}/home" && uv run --with cogapp cog -Pr ./Brewfile.cog
 
-# Update README.md docs using cog
+# update README.md docs using cog
 [group("utils")]
 @update-readme-docs:
     cd "{{ DOTFILES_DIR }}" && uv run --with cogapp cog -Pr ./README.md
