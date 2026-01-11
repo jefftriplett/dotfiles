@@ -45,6 +45,12 @@ if [[ -e ${HOME}/bin ]] ; then
   PATH="${HOME}/bin:${PATH}"
 fi
 
+##################
+# editor settings #
+##################
+
+export EDITOR="/usr/local/bin/zed --wait"
+
 ################
 # git settings #
 ################
