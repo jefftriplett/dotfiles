@@ -19,6 +19,7 @@ mod llm '.justfiles/llm.justfile'
 mod macos '.justfiles/macos.justfile'
 mod mise '.justfiles/mise.justfile'
 mod ollama '.justfiles/ollama.justfile'
+mod pi-coding-agent '.justfiles/pi-coding-agent.justfile'
 mod pyenv '.justfiles/pyenv.justfile'
 mod python '.justfiles/python.justfile'
 mod virtualenv '.justfiles/virtualenv.justfile'
@@ -69,6 +70,7 @@ alias lock := freeze
     just macos fmt
     just mise fmt
     just ollama fmt
+    just pi-coding-agent fmt
     just pyenv fmt
     just python fmt
     just virtualenv fmt
@@ -123,6 +125,7 @@ alias lock := freeze
     just codex::upgrade
     just copilot::upgrade
     just glm::upgrade
+    just pi-coding-agent::upgrade
 
 # Upgrade all tools (pyenv and mise packages)
 [group("maintenance")]
