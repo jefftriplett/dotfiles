@@ -28,7 +28,7 @@ justfile := justfile_directory() + "/.justfiles/clawdbot.justfile"
 # install clawdbot CLI
 @install:
     bun install -g clawdbot@latest
-    just --justfile {{ justfile }} restart
+    # just --justfile {{ justfile }} restart
 
 # restart clawdbot daemon
 @restart:
