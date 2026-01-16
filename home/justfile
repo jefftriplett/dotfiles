@@ -106,7 +106,7 @@ alias lock := freeze
 [group("maintenance")]
 @upgrade:
     echo "==> Updating dotfiles..."
-    git -C "{{ DOTFILES_DIR }}" pull
+    -git -C "{{ DOTFILES_DIR }}" pull
 
     echo "==> Creating symlinks..."
     homesick symlink
