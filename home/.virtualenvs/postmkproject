@@ -16,30 +16,12 @@ if [ -d "${PROJECT_SRC}" ]; then
 fi
 
 # ------------------------------------------------------------
-# Sublime Text Project create folder
-# ------------------------------------------------------------
-
-PARENT_DIR="${HOME}/Library/Application Support/Sublime Text/Packages/User"
-SUBLIME_TEXT_PROJECT_PATH="${PARENT_DIR}/Projects"
-
-if [ -d "${PARENT_DIR}" ]; then
-  if [ ! -d "${SUBLIME_TEXT_PROJECT_PATH}" ]; then
-    mkdir "${SUBLIME_TEXT_PROJECT_PATH}"
-  fi
-else
-  echo "Parent directory does not exist: ${PARENT_DIR}"
-fi
-
-# ------------------------------------------------------------
 # Sublime Text Project ".sublime-project" file...
 # ------------------------------------------------------------
 
-PROJECT_FILE="${SUBLIME_TEXT_PROJECT_PATH}/${VIRTUAL_ENV_NAME}.sublime-project"
-
-if ! [ -e "${PROJECT_FILE}" ]; then
-  if command -v jq >/dev/null 2>&1; then
-    echo "Creating ${PROJECT_FILE}"
-    echo "{\"folders\": [{\"path\": \"${PROJECT_SRC}\"}]}" | jq > "${PROJECT_FILE}"
+if command -v subl-projects >/dev/null 2>&1; then
+  if [ -d "${PROJECT_SRC}" ]; then
+    subl-projects add "${VIRTUAL_ENV_NAME}" "${PROJECT_SRC}"
   fi
 fi
 

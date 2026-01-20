@@ -13,21 +13,9 @@ if [[ $response =~ ^([yY][eE][sS]|[yY])$ ]]; then
   CONTINUE=true
 fi
 
-if [ -d "${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects" ]; then
-  PROJECT_FILE="${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects/${VIRTUAL_ENV_NAME}.sublime-project"
-  WORKSPACE_FILE="${HOME}/Library/Application Support/Sublime Text 3/Packages/User/Projects/${VIRTUAL_ENV_NAME}.sublime-workspace"
-elif [ -d "${HOME}/Library/Application Support/Sublime Text/Packages/User/Projects" ]; then
-  PROJECT_FILE="${HOME}/Library/Application Support/Sublime Text/Packages/User/Projects/${VIRTUAL_ENV_NAME}.sublime-project"
-  WORKSPACE_FILE="${HOME}/Library/Application Support/Sublime Text/Packages/User/Projects/${VIRTUAL_ENV_NAME}.sublime-workspace"
-fi
-
 if $CONTINUE; then
-  if [ -e "${PROJECT_FILE}" ]; then
-    rm "${PROJECT_FILE}"
-  fi
-
-  if [ -e "${WORKSPACE_FILE}" ]; then
-    rm "${WORKSPACE_FILE}"
+  if command -v subl-projects >/dev/null 2>&1; then
+    subl-projects delete "${VIRTUAL_ENV_NAME}" --force 2>/dev/null || true
   fi
 fi
 

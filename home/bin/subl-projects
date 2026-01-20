@@ -1,0 +1,515 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "typer>=0.12",
+#     "rich>=13",
+# ]
+# ///
+"""Manage Sublime Text project configurations."""
+
+import json
+import os
+import subprocess
+from pathlib import Path
+from typing import List
+
+import typer
+from rich import print as rprint
+from rich.console import Console
+from rich.table import Table
+
+app = typer.Typer(help="Manage Sublime Text project configurations.", no_args_is_help=True)
+console = Console()
+
+# Sublime Text project paths (in order of preference)
+SUBLIME_PATHS = [
+    Path.home() / "Library/Application Support/Sublime Text/Packages/User/Projects",
+    Path.home() / "Library/Application Support/Sublime Text 3/Packages/User/Projects",
+]
+
+# Legacy virtualenv path (shows warning indicator)
+VIRTUALENVS_PATH = Path.home() / ".virtualenvs"
+
+
+def get_projects_dir() -> Path | None:
+    """Find the Sublime Text projects directory."""
+    for path in SUBLIME_PATHS:
+        if path.exists():
+            return path
+    return None
+
+
+def ensure_projects_dir() -> Path:
+    """Ensure the projects directory exists and return it."""
+    # Try to find existing
+    projects_dir = get_projects_dir()
+    if projects_dir:
+        return projects_dir
+
+    # Create in the preferred location if parent exists
+    for path in SUBLIME_PATHS:
+        if path.parent.exists():
+            path.mkdir(parents=True, exist_ok=True)
+            return path
+
+    # Fallback: create the first option
+    SUBLIME_PATHS[0].mkdir(parents=True, exist_ok=True)
+    return SUBLIME_PATHS[0]
+
+
+def get_project_files(projects_dir: Path) -> list[Path]:
+    """Get all .sublime-project files."""
+    return sorted(projects_dir.glob("*.sublime-project"))
+
+
+def is_legacy_virtualenv_path(folder_path: str) -> bool:
+    """Check if path is in the legacy virtualenvs directory."""
+    try:
+        expanded = Path(folder_path).expanduser().resolve()
+        return expanded.is_relative_to(VIRTUALENVS_PATH)
+    except (ValueError, OSError):
+        return False
+
+
+def load_project(project_file: Path) -> dict | None:
+    """Load and parse a project file."""
+    try:
+        return json.loads(project_file.read_text())
+    except (json.JSONDecodeError, OSError):
+        return None
+
+
+def save_project(project_file: Path, data: dict) -> bool:
+    """Save project data to file."""
+    try:
+        project_file.write_text(json.dumps(data, indent=4) + "\n")
+        return True
+    except OSError:
+        return False
+
+
+@app.command(name="list")
+def list_projects(
+    status: List[str] = typer.Option(
+        None, "--status", "-s",
+        help="Filter by status: ok, legacy, missing, error (can specify multiple)",
+    ),
+) -> None:
+    """List all Sublime Text project configurations."""
+    projects_dir = get_projects_dir()
+
+    if not projects_dir:
+        rprint("[yellow]No Sublime Text projects directory found.[/yellow]")
+        raise typer.Exit(1)
+
+    project_files = get_project_files(projects_dir)
+
+    if not project_files:
+        rprint("[yellow]No project files found.[/yellow]")
+        raise typer.Exit(0)
+
+    # Normalize status filter
+    status_filter = None
+    if status:
+        status_filter = {s.lower() for s in status}
+
+    table = Table(title="Sublime Text Projects")
+    table.add_column("Name", style="cyan", no_wrap=True)
+    table.add_column("Folders", style="green")
+    table.add_column("Status", style="yellow")
+
+    row_count = 0
+    for project_file in project_files:
+        name = project_file.stem
+        data = load_project(project_file)
+
+        if data is None:
+            project_status = "error"
+            if status_filter and project_status not in status_filter:
+                continue
+            table.add_row(name, "[red]Invalid JSON[/red]", "[red]Error[/red]")
+            row_count += 1
+            continue
+
+        folders = data.get("folders", [])
+        folder_paths = []
+        all_valid = True
+
+        has_legacy_path = False
+        for folder in folders:
+            folder_path = folder.get("path", "")
+            if folder_path:
+                expanded = Path(folder_path).expanduser()
+                is_legacy = is_legacy_virtualenv_path(folder_path)
+                if is_legacy:
+                    has_legacy_path = True
+                if expanded.exists():
+                    if is_legacy:
+                        folder_paths.append(f"[yellow]{folder_path}[/yellow]")
+                    else:
+                        folder_paths.append(f"[green]{folder_path}[/green]")
+                else:
+                    folder_paths.append(f"[red]{folder_path}[/red]")
+                    all_valid = False
+
+        if all_valid and has_legacy_path:
+            project_status = "legacy"
+            status_display = "[yellow]Legacy[/yellow]"
+        elif all_valid:
+            project_status = "ok"
+            status_display = "[green]OK[/green]"
+        else:
+            project_status = "missing"
+            status_display = "[red]Missing[/red]"
+
+        if status_filter and project_status not in status_filter:
+            continue
+
+        table.add_row(name, "\n".join(folder_paths) if folder_paths else "[dim]None[/dim]", status_display)
+        row_count += 1
+
+    if row_count == 0:
+        rprint(f"[yellow]No projects found matching status: {', '.join(status_filter)}[/yellow]")
+        raise typer.Exit(0)
+
+    console.print(table)
+    rprint(f"\n[dim]Projects directory: {projects_dir}[/dim]")
+
+
+@app.command()
+def add(
+    project_name: str = typer.Argument(..., help="Project name"),
+    path: str = typer.Argument(..., help="Path to project folder"),
+    name: str = typer.Option(None, "--name", "-n", help="Display name for the folder"),
+) -> None:
+    """Add a folder to a Sublime Text project (creates project if needed)."""
+    projects_dir = ensure_projects_dir()
+    project_file = projects_dir / f"{project_name}.sublime-project"
+
+    # Resolve the path
+    folder_path = Path(path).expanduser().resolve()
+
+    if not folder_path.exists():
+        rprint(f"[yellow]Warning: Path does not exist: {folder_path}[/yellow]")
+        if not typer.confirm("Add anyway?"):
+            raise typer.Exit(1)
+
+    # Build folder entry
+    folder_entry: dict = {"path": str(folder_path)}
+    if name:
+        folder_entry["name"] = name
+
+    # Load existing or create new
+    if project_file.exists():
+        data = load_project(project_file)
+        if data is None:
+            rprint(f"[red]Failed to parse project '{project_name}'[/red]")
+            raise typer.Exit(1)
+
+        if "folders" not in data:
+            data["folders"] = []
+
+        # Check if path already exists
+        existing_paths = [
+            Path(f.get("path", "")).expanduser().resolve()
+            for f in data["folders"]
+        ]
+        if folder_path in existing_paths:
+            rprint(f"[yellow]Path already exists in project: {folder_path}[/yellow]")
+            raise typer.Exit(0)
+
+        data["folders"].append(folder_entry)
+        action = "Added folder to"
+    else:
+        data = {"folders": [folder_entry]}
+        action = "Created"
+
+    if save_project(project_file, data):
+        rprint(f"[green]{action} project '{project_name}'[/green]")
+        rprint(f"[dim]{folder_path}[/dim]")
+    else:
+        rprint(f"[red]Failed to save project '{project_name}'[/red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def update(
+    project_name: str = typer.Argument(..., help="Project name"),
+    path: str = typer.Argument(..., help="Path to update or add"),
+    name: str = typer.Option(None, "--name", "-n", help="Display name for the folder"),
+    remove: bool = typer.Option(False, "--remove", "-r", help="Remove this path instead of adding"),
+) -> None:
+    """Update a folder in a Sublime Text project."""
+    projects_dir = get_projects_dir()
+
+    if not projects_dir:
+        rprint("[red]No Sublime Text projects directory found.[/red]")
+        raise typer.Exit(1)
+
+    project_file = projects_dir / f"{project_name}.sublime-project"
+
+    if not project_file.exists():
+        rprint(f"[red]Project '{project_name}' not found.[/red]")
+        raise typer.Exit(1)
+
+    data = load_project(project_file)
+    if data is None:
+        rprint(f"[red]Failed to parse project '{project_name}'[/red]")
+        raise typer.Exit(1)
+
+    folder_path = Path(path).expanduser().resolve()
+
+    if "folders" not in data:
+        data["folders"] = []
+
+    if remove:
+        # Remove the path
+        original_count = len(data["folders"])
+        data["folders"] = [
+            f for f in data["folders"]
+            if Path(f.get("path", "")).expanduser().resolve() != folder_path
+        ]
+        if len(data["folders"]) < original_count:
+            rprint(f"[green]Removed folder: {folder_path}[/green]")
+        else:
+            rprint(f"[yellow]Folder not found in project: {folder_path}[/yellow]")
+            raise typer.Exit(1)
+    else:
+        # Add or update the path
+        if not folder_path.exists():
+            rprint(f"[yellow]Warning: Path does not exist: {folder_path}[/yellow]")
+
+        folder_entry: dict = {"path": str(folder_path)}
+        if name:
+            folder_entry["name"] = name
+
+        # Check if path exists and update it, or append
+        updated = False
+        for i, f in enumerate(data["folders"]):
+            if Path(f.get("path", "")).expanduser().resolve() == folder_path:
+                data["folders"][i] = folder_entry
+                updated = True
+                rprint(f"[green]Updated folder: {folder_path}[/green]")
+                break
+
+        if not updated:
+            data["folders"].append(folder_entry)
+            rprint(f"[green]Added folder: {folder_path}[/green]")
+
+    if not save_project(project_file, data):
+        rprint(f"[red]Failed to save project '{project_name}'[/red]")
+        raise typer.Exit(1)
+
+
+@app.command()
+def delete(
+    names: List[str] = typer.Argument(..., help="Project name(s) to delete"),
+    force: bool = typer.Option(False, "--force", "-f", help="Skip confirmation"),
+) -> None:
+    """Delete one or more Sublime Text project configurations."""
+    projects_dir = get_projects_dir()
+
+    if not projects_dir:
+        rprint("[red]No Sublime Text projects directory found.[/red]")
+        raise typer.Exit(1)
+
+    # Collect files to delete
+    files_to_delete = []
+    for name in names:
+        project_file = projects_dir / f"{name}.sublime-project"
+        workspace_file = projects_dir / f"{name}.sublime-workspace"
+
+        if not project_file.exists():
+            rprint(f"[red]Project '{name}' not found.[/red]")
+            continue
+
+        files_to_delete.append((name, project_file, workspace_file))
+
+    if not files_to_delete:
+        raise typer.Exit(1)
+
+    if not force:
+        rprint(f"[yellow]This will delete:[/yellow]")
+        for name, project_file, workspace_file in files_to_delete:
+            rprint(f"  - {project_file.name}")
+            if workspace_file.exists():
+                rprint(f"  - {workspace_file.name}")
+        if not typer.confirm("Are you sure?"):
+            raise typer.Exit(0)
+
+    for name, project_file, workspace_file in files_to_delete:
+        try:
+            project_file.unlink()
+            if workspace_file.exists():
+                workspace_file.unlink()
+            rprint(f"[green]Deleted project '{name}'[/green]")
+        except OSError as e:
+            rprint(f"[red]Failed to delete project '{name}': {e}[/red]")
+
+
+@app.command()
+def doctor() -> None:
+    """Check Sublime Text project configurations for issues."""
+    projects_dir = get_projects_dir()
+
+    if not projects_dir:
+        rprint("[red]No Sublime Text projects directory found.[/red]")
+        rprint("\n[yellow]Possible locations:[/yellow]")
+        for path in SUBLIME_PATHS:
+            status = "[green]exists[/green]" if path.parent.exists() else "[red]missing[/red]"
+            rprint(f"  - {path} (parent: {status})")
+        raise typer.Exit(1)
+
+    rprint(f"[bold]Projects directory:[/bold] {projects_dir}\n")
+
+    project_files = get_project_files(projects_dir)
+    workspace_files = set(projects_dir.glob("*.sublime-workspace"))
+
+    issues = []
+    warnings = []
+    valid_projects = 0
+    legacy_projects = 0
+
+    # Check each project file
+    for project_file in project_files:
+        name = project_file.stem
+        data = load_project(project_file)
+
+        if data is None:
+            issues.append(f"[red]{name}:[/red] Invalid JSON - cannot parse project file")
+            continue
+
+        folders = data.get("folders", [])
+
+        if not folders:
+            issues.append(f"[yellow]{name}:[/yellow] No folders defined")
+            continue
+
+        project_valid = True
+        project_has_legacy = False
+        for folder in folders:
+            folder_path = folder.get("path", "")
+            if not folder_path:
+                issues.append(f"[yellow]{name}:[/yellow] Empty folder path")
+                project_valid = False
+                continue
+
+            expanded = Path(folder_path).expanduser()
+            if not expanded.exists():
+                issues.append(f"[red]{name}:[/red] Missing path: {folder_path}")
+                project_valid = False
+            elif is_legacy_virtualenv_path(folder_path):
+                project_has_legacy = True
+
+        if project_valid:
+            valid_projects += 1
+            if project_has_legacy:
+                legacy_projects += 1
+                warnings.append(f"[yellow]{name}:[/yellow] Uses legacy virtualenv path")
+
+        # Track associated workspace
+        workspace = projects_dir / f"{name}.sublime-workspace"
+        workspace_files.discard(workspace)
+
+    # Check for orphaned workspace files
+    for workspace in workspace_files:
+        issues.append(f"[yellow]Orphaned workspace:[/yellow] {workspace.name} (no matching project)")
+
+    # Report
+    total = len(project_files)
+    rprint(f"[bold]Projects:[/bold] {valid_projects}/{total} healthy")
+    if legacy_projects > 0:
+        rprint(f"[bold]Legacy paths:[/bold] [yellow]{legacy_projects} projects use ~/.virtualenvs[/yellow]")
+    rprint(f"[bold]Issues found:[/bold] {len(issues)}\n")
+
+    if issues:
+        rprint("[bold]Issues:[/bold]")
+        for issue in issues:
+            rprint(f"  - {issue}")
+        rprint("")
+
+    if warnings:
+        rprint("[bold]Warnings (legacy virtualenv paths):[/bold]")
+        for warning in warnings:
+            rprint(f"  - {warning}")
+        rprint("")
+
+    # Suggestions
+    if issues or warnings:
+        rprint("[bold]Suggestions:[/bold]")
+        rprint("  - Use [cyan]subl-projects list[/cyan] to see all projects")
+        rprint("  - Use [cyan]subl-projects update NAME --path /new/path[/cyan] to fix paths")
+        rprint("  - Use [cyan]subl-projects delete NAME[/cyan] to remove broken projects")
+    else:
+        rprint("[green]All projects are healthy![/green]")
+
+
+@app.command(name="open")
+def open_project(
+    names: List[str] = typer.Argument(..., help="Project name(s) to open in Sublime Text"),
+) -> None:
+    """Open one or more projects in Sublime Text."""
+    projects_dir = get_projects_dir()
+
+    if not projects_dir:
+        rprint("[red]No Sublime Text projects directory found.[/red]")
+        raise typer.Exit(1)
+
+    subl_path = "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
+    if not Path(subl_path).exists():
+        rprint("[red]Sublime Text not found at expected location.[/red]")
+        raise typer.Exit(1)
+
+    for name in names:
+        project_file = projects_dir / f"{name}.sublime-project"
+
+        if not project_file.exists():
+            rprint(f"[red]Project '{name}' not found.[/red]")
+            continue
+
+        subprocess.run([subl_path, "--project", str(project_file)])
+
+
+@app.command()
+def edit(
+    names: List[str] = typer.Argument(..., help="Project name(s) to edit"),
+) -> None:
+    """Open one or more project config files in Sublime Text for editing."""
+    projects_dir = get_projects_dir()
+
+    if not projects_dir:
+        rprint("[red]No Sublime Text projects directory found.[/red]")
+        raise typer.Exit(1)
+
+    subl_path = "/Applications/Sublime Text.app/Contents/SharedSupport/bin/subl"
+    use_subl = Path(subl_path).exists()
+
+    project_files = []
+    for name in names:
+        project_file = projects_dir / f"{name}.sublime-project"
+
+        if not project_file.exists():
+            rprint(f"[red]Project '{name}' not found.[/red]")
+            continue
+
+        project_files.append(project_file)
+
+    if not project_files:
+        raise typer.Exit(1)
+
+    if use_subl:
+        # Open all files in a new window using open_file command
+        cmd = [subl_path, "--new-window"]
+        for pf in project_files:
+            cmd.extend(["--command", f'open_file {{"file": "{pf}"}}'])
+        subprocess.run(cmd)
+    else:
+        # Fallback to default editor
+        editor = os.environ.get("EDITOR", "open -t")
+        files = " ".join(f'"{pf}"' for pf in project_files)
+        os.system(f'{editor} {files}')
+
+
+if __name__ == "__main__":
+    app()
