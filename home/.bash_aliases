@@ -22,14 +22,12 @@ alias git-commit-msg-auto="mise run llm:git-commit-msg-auto"
 alias git-commit-msg="mise run llm:git-commit-msg"
 alias vt-claude="mise run claude"
 
-# Claude Code Model Switcher Aliases
-alias cc="claude"
-alias ccg="claude-glm"
-alias ccg47="claude-glm"
-alias ccg46="claude-glm-4.6"
-alias ccg45="claude-glm-4.5"
-alias ccf="claude-glm-fast"
-alias ccx="ccx"
+# Claude Code Model Switcher Aliases (ccx via bun)
+alias ccg='ccx --model=glm-4.7'
+alias ccg46='ccx --model=glm-4.6'
+alias ccg45='ccx --model=glm-4.5'
+alias ccf='ccx --model=glm-4.5-air'
+alias ccm='ccx --model=MiniMax-M2.1'
 
 # everything else
 alias cat="bat -p"
@@ -40,7 +38,6 @@ alias got="git"
 alias gt="gittower"
 alias nw="~/node_modules/nwjs/nwjs.app/Contents/MacOS/nwjs"
 alias outdated="brew update; brew outdated; brew cask outdated; mas outdated"
-alias pip-outdated="PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated"
 alias pycharm='open -na "PyCharm.app" --args'
 alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 alias tailscale="/Applications/Tailscale.app/Contents/MacOS/Tailscale"
