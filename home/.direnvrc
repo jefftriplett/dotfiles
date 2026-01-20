@@ -1,5 +1,252 @@
+# ----------------------------------------------------------------
+# Enhanced direnvrc - replaces virtualenvwrapper functionality
+# ----------------------------------------------------------------
+
+# Set PROJECT_HOME if not already set
+export PROJECT_HOME="${PROJECT_HOME:-${HOME}/Projects}"
+
+# Ensure PROJECT_HOME directory exists
+if [[ ! -d "${PROJECT_HOME}" ]]; then
+    mkdir -p "${PROJECT_HOME}"
+fi
+
+# Auto-detect and activate virtualenv based on project structure
+auto_virtualenv() {
+    # Check for common Python project indicators
+    if [[ -f "pyproject.toml" || -f "requirements.txt" || -f "setup.py" || -f "Pipfile" ]]; then
+        local project_name="$(basename "$(pwd)")"
+        local venv_candidates=(
+            "venv"
+            ".venv"
+            "env"
+            ".env"
+            "${HOME}/.virtualenvs/${project_name}"
+        )
+
+        for venv_dir in "${venv_candidates[@]}"; do
+            if [[ -d "$venv_dir" && -f "$venv_dir/bin/activate" ]]; then
+                layout_python_venv python3 "$venv_dir"
+                return 0
+            fi
+        done
+
+        # If no venv found but we have project indicators, offer to create one
+        if command -v uvx >/dev/null 2>&1; then
+            uvx --quiet rich --print "[yellow]Python project detected but no virtual environment found[/yellow]"
+            uvx --quiet rich --print "[blue]Consider running[/blue]: layout_python_venv python3 venv"
+        fi
+    fi
+}
+
+# Enhanced layout_python with project detection
+layout_python() {
+    local python_exe="${1:-python3}"
+    local venv_dir="${2:-venv}"
+
+    # If we're in a project directory under PROJECT_HOME, use project-specific venv
+    local current_project=""
+    if [[ "$(pwd)" == "${PROJECT_HOME}"/* ]]; then
+        current_project="$(basename "$(pwd)")"
+        venv_dir="${HOME}/.virtualenvs/${current_project}"
+    fi
+
+    layout_python_venv "$python_exe" "$venv_dir"
+}
+
+# Create and activate a Python virtual environment
+layout_python_venv() {
+    local python_exe="${1:-python3}"
+    local venv_dir="${2:-venv}"
+
+    # Create venv if it doesn't exist
+    if [[ ! -d "$venv_dir" ]]; then
+        log_status "Creating virtual environment: $venv_dir"
+        "$python_exe" -m venv "$venv_dir"
+
+        # Upgrade pip and install uv (matches your postmkvirtualenv hook)
+        "$venv_dir/bin/python" -m pip install --upgrade pip uv
+
+        # Rich output (matches your virtualenvwrapper style)
+        if command -v uvx >/dev/null 2>&1; then
+            uvx --quiet rich --print "[green]Virtual environment created[/green]: $venv_dir"
+        fi
+    fi
+
+    # Activate the virtual environment
+    source "$venv_dir/bin/activate"
+    export VIRTUAL_ENV="$(pwd)/$venv_dir"
+    PATH_add "$venv_dir/bin"
+
+    # Set environment variables (matches your postactivate hook)
+    export VIRTUAL_ENV_NAME="$(basename "$VIRTUAL_ENV")"
+
+    # Rich output for activation
+    if command -v uvx >/dev/null 2>&1; then
+        uvx --quiet rich --print "[green]Virtual environment activated[/green]: $VIRTUAL_ENV_NAME"
+    fi
+}
+
+# List all virtual environments (replaces lsvirtualenv)
+lsvirtualenv() {
+    local venvs_dir="${HOME}/.virtualenvs"
+
+    if [[ ! -d "$venvs_dir" ]]; then
+        echo "No virtual environments found"
+        return 0
+    fi
+
+    echo "Available virtual environments:"
+    for venv in "$venvs_dir"/*; do
+        if [[ -d "$venv" && -f "$venv/bin/python" ]]; then
+            local venv_name="$(basename "$venv")"
+            local python_version="$("$venv/bin/python" --version 2>/dev/null)"
+            echo "  $venv_name ($python_version)"
+        fi
+    done
+}
+
+# Create a new project with virtualenv (replaces mkproject)
+mkproject() {
+    local project_name="$1"
+    local python_version="${2:-3.11}"
+
+    if [[ -z "$project_name" ]]; then
+        echo "Usage: mkproject <project_name> [python_version]"
+        return 1
+    fi
+
+    local project_dir="${PROJECT_HOME}/${project_name}"
+    local venv_dir="${HOME}/.virtualenvs/${project_name}"
+
+    # Rich output for pre-creation
+    if command -v uvx >/dev/null 2>&1; then
+        uvx --quiet rich --print "[yellow]Creating project[/yellow]: $project_name"
+        uvx --quiet rich --print "[blue]PROJECT_HOME[/blue]: ${PROJECT_HOME}"
+    fi
+
+    # Create project directory
+    mkdir -p "$project_dir"
+
+    # Create virtual environment
+    if command -v pyenv >/dev/null 2>&1; then
+        pyenv virtualenv "$python_version" "$project_name"
+    else
+        python3 -m venv "$venv_dir"
+        "$venv_dir/bin/python" -m pip install --upgrade pip uv
+    fi
+
+    # Rich output for post-creation
+    if command -v uvx >/dev/null 2>&1; then
+        uvx --quiet rich --print "[green]Project created[/green]: $project_dir"
+        uvx --quiet rich --print "[green]Virtual environment created[/green]: $project_name"
+    fi
+
+    # Change to project directory
+    cd "$project_dir"
+}
+
+# Remove a project and its virtualenv (replaces rmproject)
+rmproject() {
+    local project_name="$1"
+
+    if [[ -z "$project_name" ]]; then
+        echo "Usage: rmproject <project_name>"
+        return 1
+    fi
+
+    local project_dir="${PROJECT_HOME}/${project_name}"
+    local venv_dir="${HOME}/.virtualenvs/${project_name}"
+
+    # Rich output for pre-removal
+    if command -v uvx >/dev/null 2>&1; then
+        uvx --quiet rich --print "[yellow]Removing project[/yellow]: $project_name"
+    fi
+
+    # Remove project directory
+    if [[ -d "$project_dir" ]]; then
+        rm -rf "$project_dir"
+    fi
+
+    # Remove virtual environment
+    if [[ -d "$venv_dir" ]]; then
+        rm -rf "$venv_dir"
+    elif command -v pyenv >/dev/null 2>&1; then
+        pyenv virtualenv-delete -f "$project_name"
+    fi
+
+    # Rich output for post-removal
+    if command -v uvx >/dev/null 2>&1; then
+        uvx --quiet rich --print "[green]Project removed[/green]: $project_name"
+    fi
+}
+
+# Scan virtualenvs and display their python versions (from your virtualenv.justfile)
+scan_virtualenvs() {
+    python3 -c "
+import subprocess
+from pathlib import Path
+
+folders = [folder for folder in Path(Path.home(), '.virtualenvs').glob('*/bin/python')]
+for command in folders:
+    try:
+        output = subprocess.run(f'{command} --version'.split(), capture_output=True, text=True)
+        venv_name = command.parent.parent.name
+        version = output.stdout.strip() or output.stderr.strip()
+        print(f'{venv_name}: {version}')
+    except FileNotFoundError:
+        pass
+"
+}
+
+# Upgrade pip in all virtualenvs (from your virtualenv.justfile)
+upgrade_all_virtualenvs() {
+    for venv_dir in "${HOME}/.virtualenvs"/*/; do
+        if [[ -f "${venv_dir}bin/python" ]]; then
+            echo "Upgrading: $(basename "$venv_dir")"
+            "${venv_dir}bin/python" --version
+            "${venv_dir}bin/python" -m pip --version
+            "${venv_dir}bin/python" -m pip install --upgrade pip uv
+            echo
+        fi
+    done
+}
+
+# Enhanced use_python function with virtualenv management
 use_python() {
-    local python_root=$HOME/.pyenv/versions/$1
+    local python_version="$1"
+    local python_root="$HOME/.pyenv/versions/$python_version"
+
+    if [[ ! -d "$python_root" ]]; then
+        log_error "Python version $python_version not found in pyenv"
+        return 1
+    fi
+
     load_prefix "$python_root"
     layout_python "$python_root/bin/python"
 }
+
+# Use a specific virtualenv by name (replaces workon)
+use_virtualenv() {
+    local venv_name="$1"
+    local venv_dir="${HOME}/.virtualenvs/${venv_name}"
+
+    if [[ ! -d "$venv_dir" ]]; then
+        log_error "Virtual environment '$venv_name' not found"
+        return 1
+    fi
+
+    export VIRTUAL_ENV="$venv_dir"
+    export VIRTUAL_ENV_NAME="$venv_name"
+    PATH_add "$venv_dir/bin"
+
+    # Rich output for activation
+    if command -v uvx >/dev/null 2>&1; then
+        uvx --quiet rich --print "[green]Virtual environment activated[/green]: $venv_name"
+    fi
+}
+
+# Hook into direnv's directory change detection
+# This replaces the need for manual workon/deactivate
+if [[ -n "$DIRENV_DIR" ]]; then
+    auto_virtualenv
+fi
