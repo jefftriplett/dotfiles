@@ -6,9 +6,13 @@
 local config = require('config')
 local log = require('logger')
 require('hs.ipc')
+
+-- Enable Spotlight for better app name matching
+hs.application.enableSpotlightForNameSearches(true)
 require('keys')
 require('sizeup')
 require('tabletools')
+require('display_grid')
 
 --------------------------------------------------
 -- Reload at the top in case we break something --
