@@ -201,6 +201,7 @@ def add(
         folder_entry["name"] = name
 
     # Load existing or create new
+    is_new = False
     if project_file.exists():
         data = load_project(project_file)
         if data is None:
@@ -224,8 +225,14 @@ def add(
     else:
         data = {"folders": [folder_entry]}
         action = "Created"
+        is_new = True
 
     if save_project(project_file, data):
+        # Create empty workspace file for new projects
+        if is_new:
+            workspace_file = projects_dir / f"{project_name}.sublime-workspace"
+            if not workspace_file.exists():
+                workspace_file.write_text("{}\n")
         rprint(f"[green]{action} project '{project_name}'[/green]")
         rprint(f"[dim]{folder_path}[/dim]")
     else:
