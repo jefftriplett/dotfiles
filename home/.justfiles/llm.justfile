@@ -43,11 +43,11 @@ mod pi-coding-agent 'pi-coding-agent.justfile'
 outdated:
     #!/usr/bin/env bash
     echo "==> Checking npm packages..."
-    npm outdated -g @github/copilot @openai/codex 2>/dev/null || true
+    npm outdated -g @github/copilot 2>/dev/null || true
 
     echo ""
     echo "==> Checking bun packages..."
-    for pkg in clawdbot clawdhub cc-x10ded happy-coder moltbot @mariozechner/pi-coding-agent; do
+    for pkg in @openai/codex clawdbot clawdhub cc-x10ded happy-coder moltbot @mariozechner/pi-coding-agent; do
         installed=$(bun pm ls -g 2>/dev/null | grep "$pkg" | sed 's/.*@//' | head -1)
         latest=$(npm view "$pkg" version 2>/dev/null)
         if [ -n "$installed" ] && [ -n "$latest" ]; then
