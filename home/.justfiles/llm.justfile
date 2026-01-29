@@ -11,6 +11,7 @@ mod claude 'claude.justfile'
 mod clawdbot 'clawdbot.justfile'
 mod clawdhub 'clawdhub.justfile'
 mod codex 'codex.justfile'
+mod moltbot 'moltbot.justfile'
 mod copilot 'copilot.justfile'
 mod glm 'glm.justfile'
 mod happy 'happy.justfile'
@@ -31,6 +32,7 @@ mod pi-coding-agent 'pi-coding-agent.justfile'
     just llm clawdhub fmt
     just llm codex fmt
     just llm copilot fmt
+    just llm moltbot fmt
     just llm glm fmt
     just llm happy fmt
     just llm llm-cli fmt
@@ -45,7 +47,7 @@ outdated:
 
     echo ""
     echo "==> Checking bun packages..."
-    for pkg in clawdbot clawdhub cc-x10ded happy-coder @mariozechner/pi-coding-agent; do
+    for pkg in clawdbot clawdhub cc-x10ded happy-coder moltbot @mariozechner/pi-coding-agent; do
         installed=$(bun pm ls -g 2>/dev/null | grep "$pkg" | sed 's/.*@//' | head -1)
         latest=$(npm view "$pkg" version 2>/dev/null)
         if [ -n "$installed" ] && [ -n "$latest" ]; then
@@ -71,4 +73,5 @@ outdated:
     -just llm glm upgrade
     -just llm happy upgrade
     -just llm llm-cli upgrade
+    -just llm moltbot upgrade
     -just llm pi-coding-agent upgrade
