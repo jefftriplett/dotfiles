@@ -6,6 +6,7 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/glm.justfile"
+package := "cc-x10ded"
 
 # list all available recipes
 [private]
@@ -19,17 +20,17 @@ justfile := justfile_directory() + "/.justfiles/glm.justfile"
 
 # install ccx CLI
 @install:
-    bun install -g cc-x10ded@latest
+    bun install -g {{ package }}@latest
     just --justfile {{ justfile }} version
 
 # uninstall ccx CLI
 @uninstall:
-    bun remove -g cc-x10ded
+    bun remove -g {{ package }}
 
 # update ccx CLI to the latest version
 @upgrade:
     just --justfile {{ justfile }} version
-    bun install -g cc-x10ded@latest
+    bun install -g {{ package }}@latest
     just --justfile {{ justfile }} version
 
 # show available ccx model usage

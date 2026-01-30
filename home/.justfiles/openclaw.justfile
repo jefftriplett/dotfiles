@@ -6,6 +6,7 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/openclaw.justfile"
+package := "openclaw"
 
 # list all available recipes
 [private]
@@ -27,12 +28,12 @@ justfile := justfile_directory() + "/.justfiles/openclaw.justfile"
 
 # install openclaw CLI
 @install:
-    bun install -g openclaw@latest
+    bun install -g {{ package }}@latest
     # just --justfile {{ justfile }} restart
 
 # uninstall openclaw CLI
 @uninstall:
-    bun remove -g openclaw
+    bun remove -g {{ package }}
 
 # restart openclaw daemon
 @restart:
@@ -40,7 +41,7 @@ justfile := justfile_directory() + "/.justfiles/openclaw.justfile"
 
 # upgrade openclaw to the latest version
 @upgrade:
-    bun install -g openclaw@latest
+    bun install -g {{ package }}@latest
     -just --justfile {{ justfile }} restart
 
 # display openclaw version

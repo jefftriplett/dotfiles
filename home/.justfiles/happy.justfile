@@ -7,6 +7,7 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/happy.justfile"
+package := "happy-coder"
 
 # list all available recipes
 [private]
@@ -20,7 +21,7 @@ justfile := justfile_directory() + "/.justfiles/happy.justfile"
 
 # install happy-coder CLI
 @install:
-    bun install -g happy-coder
+    bun install -g {{ package }}
     just --justfile {{ justfile }} version
 
 # run happy CLI
@@ -29,11 +30,11 @@ justfile := justfile_directory() + "/.justfiles/happy.justfile"
 
 # uninstall happy-coder CLI
 @uninstall:
-    bun remove -g happy-coder
+    bun remove -g {{ package }}
 
 # upgrade happy-coder to the latest version
 @upgrade:
-    bun install -g happy-coder
+    bun install -g {{ package }}
     just --justfile {{ justfile }} version
 
 # display happy-coder version

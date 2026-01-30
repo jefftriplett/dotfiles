@@ -6,6 +6,7 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/codex.justfile"
+package := "@openai/codex"
 
 # list all available recipes
 [private]
@@ -23,16 +24,16 @@ justfile := justfile_directory() + "/.justfiles/codex.justfile"
 
 # install Codex CLI
 @install:
-    bun install -g @openai/codex
+    bun install -g {{ package }}
 
 # uninstall Codex CLI
 @uninstall:
-    bun remove -g @openai/codex
+    bun remove -g {{ package }}
 
 # update Codex CLI to the latest version
 @upgrade:
     just --justfile {{ justfile }} version
-    bun install -g @openai/codex
+    bun install -g {{ package }}
     just --justfile {{ justfile }} version
 
 # see Codex CLI usage

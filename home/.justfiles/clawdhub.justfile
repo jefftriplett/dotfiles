@@ -6,6 +6,7 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/clawdhub.justfile"
+package := "clawdhub"
 
 # list all available recipes
 [private]
@@ -19,15 +20,15 @@ justfile := justfile_directory() + "/.justfiles/clawdhub.justfile"
 
 # install clawdhub CLI
 @install:
-    bun add -g clawdhub
+    bun add -g {{ package }}
 
 # uninstall clawdhub CLI
 @uninstall:
-    bun remove -g clawdhub
+    bun remove -g {{ package }}
 
 # upgrade clawdhub to the latest version
 @upgrade:
-    bun add -g clawdhub
+    bun add -g {{ package }}
 
 # display clawdhub version
 @version:

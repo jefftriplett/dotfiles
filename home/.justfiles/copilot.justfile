@@ -6,6 +6,7 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/copilot.justfile"
+package := "@github/copilot"
 
 # list all available recipes
 [private]
@@ -23,16 +24,16 @@ justfile := justfile_directory() + "/.justfiles/copilot.justfile"
 
 # check for outdated Copilot npm package
 @outdated:
-    npm outdated @github/copilot
+    npm outdated {{ package }}
 
 # uninstall Copilot CLI
 @uninstall:
-    npm uninstall -g @github/copilot
+    npm uninstall -g {{ package }}
 
 # update Copilot CLI to the latest version
 @upgrade:
     just --justfile {{ justfile }} version
-    npm install -g @github/copilot
+    npm install -g {{ package }}
     just --justfile {{ justfile }} version
 
 # display Copilot CLI version

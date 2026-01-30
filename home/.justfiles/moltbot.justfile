@@ -6,6 +6,7 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/moltbot.justfile"
+package := "moltbot"
 
 # list all available recipes
 [private]
@@ -27,12 +28,12 @@ justfile := justfile_directory() + "/.justfiles/moltbot.justfile"
 
 # install moltbot CLI
 @install:
-    bun install -g moltbot@latest
+    bun install -g {{ package }}@latest
     # just --justfile {{ justfile }} restart
 
 # uninstall moltbot CLI
 @uninstall:
-    bun remove -g moltbot
+    bun remove -g {{ package }}
 
 # restart moltbot daemon
 @restart:
@@ -40,7 +41,7 @@ justfile := justfile_directory() + "/.justfiles/moltbot.justfile"
 
 # upgrade moltbot to the latest version
 @upgrade:
-    bun install -g moltbot@latest
+    bun install -g {{ package }}@latest
     -just --justfile {{ justfile }} restart
 
 # display moltbot version

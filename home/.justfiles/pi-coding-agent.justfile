@@ -6,6 +6,7 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/pi-coding-agent.justfile"
+package := "@mariozechner/pi-coding-agent"
 
 # list all available recipes
 [private]
@@ -23,7 +24,7 @@ justfile := justfile_directory() + "/.justfiles/pi-coding-agent.justfile"
 
 # install pi-coding-agent CLI
 @install:
-    bun install -g @mariozechner/pi-coding-agent
+    bun install -g {{ package }}
     just --justfile {{ justfile }} version
 
 # list available models
@@ -36,11 +37,11 @@ justfile := justfile_directory() + "/.justfiles/pi-coding-agent.justfile"
 
 # uninstall pi-coding-agent CLI
 @uninstall:
-    bun remove -g @mariozechner/pi-coding-agent
+    bun remove -g {{ package }}
 
 # upgrade pi-coding-agent to the latest version
 @upgrade:
-    bun install -g @mariozechner/pi-coding-agent
+    bun install -g {{ package }}
     just --justfile {{ justfile }} version
 
 # display pi-coding-agent version

@@ -6,6 +6,7 @@ set dotenv-load := false
 set export := true
 
 justfile := justfile_directory() + "/.justfiles/clawdbot.justfile"
+package := "clawdbot"
 
 # list all available recipes
 [private]
@@ -27,12 +28,12 @@ justfile := justfile_directory() + "/.justfiles/clawdbot.justfile"
 
 # install clawdbot CLI
 @install:
-    bun install -g clawdbot@latest
+    bun install -g {{ package }}@latest
     # just --justfile {{ justfile }} restart
 
 # uninstall clawdbot CLI
 @uninstall:
-    bun remove -g clawdbot
+    bun remove -g {{ package }}
 
 # restart clawdbot daemon
 @restart:
@@ -40,7 +41,7 @@ justfile := justfile_directory() + "/.justfiles/clawdbot.justfile"
 
 # upgrade clawdbot to the latest version
 @upgrade:
-    bun install -g clawdbot@latest
+    bun install -g {{ package }}@latest
     -just --justfile {{ justfile }} restart
 
 # display clawdbot version
