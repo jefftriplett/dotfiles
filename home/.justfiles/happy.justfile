@@ -27,6 +27,10 @@ justfile := justfile_directory() + "/.justfiles/happy.justfile"
 @run:
     happy
 
+# uninstall happy-coder CLI
+@uninstall:
+    bun remove -g happy-coder
+
 # upgrade happy-coder to the latest version
 @upgrade:
     bun install -g happy-coder

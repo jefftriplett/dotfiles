@@ -25,6 +25,10 @@ justfile := justfile_directory() + "/.justfiles/codex.justfile"
 @install:
     bun install -g @openai/codex
 
+# uninstall Codex CLI
+@uninstall:
+    bun remove -g @openai/codex
+
 # update Codex CLI to the latest version
 @upgrade:
     just --justfile {{ justfile }} version

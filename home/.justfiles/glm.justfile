@@ -22,6 +22,10 @@ justfile := justfile_directory() + "/.justfiles/glm.justfile"
     bun install -g cc-x10ded@latest
     just --justfile {{ justfile }} version
 
+# uninstall ccx CLI
+@uninstall:
+    bun remove -g cc-x10ded
+
 # update ccx CLI to the latest version
 @upgrade:
     just --justfile {{ justfile }} version

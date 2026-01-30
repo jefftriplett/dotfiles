@@ -34,6 +34,10 @@ justfile := justfile_directory() + "/.justfiles/pi-coding-agent.justfile"
 @resume:
     pi --resume
 
+# uninstall pi-coding-agent CLI
+@uninstall:
+    bun remove -g @mariozechner/pi-coding-agent
+
 # upgrade pi-coding-agent to the latest version
 @upgrade:
     bun install -g @mariozechner/pi-coding-agent

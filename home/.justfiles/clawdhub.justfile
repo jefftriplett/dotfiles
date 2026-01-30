@@ -21,6 +21,10 @@ justfile := justfile_directory() + "/.justfiles/clawdhub.justfile"
 @install:
     bun add -g clawdhub
 
+# uninstall clawdhub CLI
+@uninstall:
+    bun remove -g clawdhub
+
 # upgrade clawdhub to the latest version
 @upgrade:
     bun add -g clawdhub
