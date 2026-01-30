@@ -30,6 +30,10 @@ justfile := justfile_directory() + "/.justfiles/moltbot.justfile"
     bun install -g moltbot@latest
     # just --justfile {{ justfile }} restart
 
+# uninstall moltbot CLI
+@uninstall:
+    bun remove -g moltbot
+
 # restart moltbot daemon
 @restart:
     moltbot daemon restart

@@ -30,6 +30,10 @@ justfile := justfile_directory() + "/.justfiles/clawdbot.justfile"
     bun install -g clawdbot@latest
     # just --justfile {{ justfile }} restart
 
+# uninstall clawdbot CLI
+@uninstall:
+    bun remove -g clawdbot
+
 # restart clawdbot daemon
 @restart:
     clawdbot daemon restart
