@@ -81,8 +81,9 @@ Available recipes:
         update           # update Homebrew package database
         upgrade          # upgrade all outdated Homebrew packages
     llm:
-        fmt     # format all AI/LLM justfiles
-        upgrade # upgrade all AI/LLM tools
+        fmt      # format all AI/LLM justfiles
+        outdated # check for outdated AI/LLM tools
+        upgrade  # upgrade all AI/LLM tools
         claude:
             config  # open Claude Desktop configuration file in Sublime Text
             install # install Claude Code CLI
@@ -91,42 +92,63 @@ Available recipes:
             version # display Claude Code CLI version
 
         clawdbot:
-            doctor  # run clawdbot doctor to check configuration
-            health  # check clawdbot health status
-            install # install clawdbot CLI
-            restart # restart clawdbot daemon
-            upgrade # upgrade clawdbot to the latest version
-            version # display clawdbot version
+            doctor    # run clawdbot doctor to check configuration
+            health    # check clawdbot health status
+            install   # install clawdbot CLI
+            restart   # restart clawdbot daemon
+            uninstall # uninstall clawdbot CLI
+            upgrade   # upgrade clawdbot to the latest version
+            version   # display clawdbot version
 
         clawdhub:
-            install # install clawdhub CLI
-            upgrade # upgrade clawdhub to the latest version
-            version # display clawdhub version
+            install   # install clawdhub CLI
+            uninstall # uninstall clawdhub CLI
+            upgrade   # upgrade clawdhub to the latest version
+            version   # display clawdhub version
 
         codex:
-            config   # open Codex configuration file in Sublime Text
-            outdated # check for outdated Codex npm package
-            upgrade  # update Codex CLI to the latest version
-            usage    # see Codex CLI usage
-            version  # display Codex CLI version
+            config    # open Codex configuration file in Sublime Text
+            install   # install Codex CLI
+            uninstall # uninstall Codex CLI
+            upgrade   # update Codex CLI to the latest version
+            usage     # see Codex CLI usage
+            version   # display Codex CLI version
 
         copilot:
-            config   # open Copilot configuration file in Sublime Text
-            outdated # check for outdated Copilot npm package
-            upgrade  # update Copilot CLI to the latest version
-            version  # display Copilot CLI version
+            config    # open Copilot configuration file in Sublime Text
+            outdated  # check for outdated Copilot npm package
+            uninstall # uninstall Copilot CLI
+            upgrade   # update Copilot CLI to the latest version
+            version   # display Copilot CLI version
 
         glm:
-            install # install ccx CLI
-            upgrade # update ccx CLI to the latest version
-            usage   # show available ccx model usage
-            version # display ccx CLI version
+            install   # install ccx CLI
+            uninstall # uninstall ccx CLI
+            upgrade   # update ccx CLI to the latest version
+            usage     # show available ccx model usage
+            version   # display ccx CLI version
+
+        happy:
+            install   # install happy-coder CLI
+            run       # run happy CLI
+            uninstall # uninstall happy-coder CLI
+            upgrade   # upgrade happy-coder to the latest version
+            version   # display happy-coder version
 
         llm-cli:
             force-reinstall # upgrade all installed LLM plugins with --force-reinstall
             install *ARGS   # install LLM plugins with optional arguments
             path            # open LLM templates directory in Sublime Text
             upgrade         # upgrade all installed LLM plugins
+
+        moltbot:
+            doctor    # run moltbot doctor to check configuration
+            health    # check moltbot health status
+            install   # install moltbot CLI
+            restart   # restart moltbot daemon
+            uninstall # uninstall moltbot CLI
+            upgrade   # upgrade moltbot to the latest version
+            version   # display moltbot version
 
         ollama:
             copy-plist  # copy custom ollama plist file to homebrew directory
@@ -137,11 +159,21 @@ Available recipes:
             serve *ARGS # serve ollama in a tandem process with optional arguments
             setenv      # set ollama environment variables in launchctl
 
+        openclaw:
+            doctor    # run openclaw doctor to check configuration
+            health    # check openclaw health status
+            install   # install openclaw CLI
+            restart   # restart openclaw daemon
+            uninstall # uninstall openclaw CLI
+            upgrade   # upgrade openclaw to the latest version
+            version   # display openclaw version
+
         pi-coding-agent:
             help              # display pi CLI help
             install           # install pi-coding-agent CLI
             list-models *ARGS # list available models
             resume            # resume a previous pi session
+            uninstall         # uninstall pi-coding-agent CLI
             upgrade           # upgrade pi-coding-agent to the latest version
             version           # display pi-coding-agent version
     macos:
