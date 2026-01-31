@@ -27,9 +27,9 @@ package := "moltbot"
     moltbot health
 
 # install moltbot CLI
-@install:
-    bun install -g {{ package }}@latest
-    # just --justfile {{ justfile }} restart
+# @install:
+#     bun install -g {{ package }}@latest
+#     # just --justfile {{ justfile }} restart
 
 # uninstall moltbot CLI
 @uninstall:
@@ -40,9 +40,9 @@ package := "moltbot"
     moltbot daemon restart
 
 # upgrade moltbot to the latest version
-@upgrade:
-    bun install -g {{ package }}@latest
-    -just --justfile {{ justfile }} restart
+# @upgrade:
+#     bun install -g {{ package }}@latest
+#     -just --justfile {{ justfile }} restart
 
 # display moltbot version
 @version:

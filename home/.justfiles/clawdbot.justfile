@@ -27,9 +27,9 @@ package := "clawdbot"
     clawdbot health
 
 # install clawdbot CLI
-@install:
-    bun install -g {{ package }}@latest
-    # just --justfile {{ justfile }} restart
+# @install:
+#     bun install -g {{ package }}@latest
+#     # just --justfile {{ justfile }} restart
 
 # uninstall clawdbot CLI
 @uninstall:
@@ -40,9 +40,9 @@ package := "clawdbot"
     clawdbot daemon restart
 
 # upgrade clawdbot to the latest version
-@upgrade:
-    bun install -g {{ package }}@latest
-    -just --justfile {{ justfile }} restart
+# @upgrade:
+#     bun install -g {{ package }}@latest
+#     -just --justfile {{ justfile }} restart
 
 # display clawdbot version
 @version:
