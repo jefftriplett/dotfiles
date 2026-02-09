@@ -28,19 +28,15 @@ run = "mise upgrade"
 
 [tasks.claude]
 description = "Run Claude dangerously"
-run = "vt command claude --dangerously-skip-permissions --continue || vt command claude --dangerously-skip-permissions"
+run = "command claude --dangerously-skip-permissions --continue || command claude --dangerously-skip-permissions"
 
 [tasks.claude-resume]
 description = "Run Claude dangerously with resume fallback"
-run = "vt command claude --dangerously-skip-permissions --resume || vt command claude --dangerously-skip-permissions"
-
-[tasks.vt-claude]
-description = "Run Claude dangerously with VibeTunnel"
-run = "vt claude --dangerously-skip-permissions --continue || vt claude --dangerously-skip-permissions"
+run = "command claude --dangerously-skip-permissions --resume || command claude --dangerously-skip-permissions"
 
 [tasks.codex]
 description = "Run Codex dangerously with resume fallback"
-run = "vt codex --dangerously-bypass-approvals-and-sandbox resume || vt codex --dangerously-bypass-approvals-and-sandbox"
+run = "codex --dangerously-bypass-approvals-and-sandbox resume || codex --dangerously-bypass-approvals-and-sandbox"
 
 [tasks.copilot]
 description = "Run Copilot with allow-all-tools and resume fallback"
