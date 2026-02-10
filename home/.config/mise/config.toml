@@ -35,7 +35,7 @@ description = "Run Claude dangerously with resume fallback"
 run = "command claude --dangerously-skip-permissions --resume || command claude --dangerously-skip-permissions"
 
 [tasks.codex]
-description = "Run Codex dangerously with resume fallback"
+description = "Run Codex with auto-approve-everything and resume fallback"
 run = "codex --dangerously-auto-approve-everything resume || codex --dangerously-auto-approve-everything"
 
 [tasks.copilot]
