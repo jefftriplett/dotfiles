@@ -27,11 +27,11 @@ description = "Bootstrap our CLI"
 run = "mise upgrade"
 
 [tasks.claude]
-description = "Run Claude dangerously"
+description = "Run Claude with skip-permissions and continue fallback"
 run = "command claude --dangerously-skip-permissions --continue || command claude --dangerously-skip-permissions"
 
 [tasks.claude-resume]
-description = "Run Claude dangerously with resume fallback"
+description = "Run Claude with skip-permissions and resume fallback"
 run = "command claude --dangerously-skip-permissions --resume || command claude --dangerously-skip-permissions"
 
 [tasks.codex]
