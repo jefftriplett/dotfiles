@@ -3,10 +3,10 @@
 local log = require('logger')
 
 local displayGrid = {
-    A = "B32F530C-62CF-4F0D-9997-80BF2B812AC8",  -- WQX DP (1) - top-left
-    B = "B43E3352-ACB7-4163-A25B-2DDAE0174571",  -- WQX DP (2) - top-right
-    C = "C9240C8E-A9D2-418A-89AC-28D3B5DEE5FC",  -- PM161Q B1 - bottom-left
-    D = "D34AF5EB-6B1B-4FE5-BD65-532CDB306959",  -- HDMI SPLITTER - bottom-right
+    A = "B43E3352-ACB7-4163-A25B-2DDAE0174571",  -- WQX DP (2) - top-left
+    B = "B32F530C-62CF-4F0D-9997-80BF2B812AC8",  -- WQX DP (1) - top-right
+    C = "C9240C8E-A9D2-418A-89AC-28D3B5DEE5FC",  -- PM161Q B1 (2) - bottom-left
+    D = "14682E62-19DE-4AF3-A74A-76445F230CAB",  -- PM161Q B1 (1) - bottom-right
 }
 
 local function resolveScreens()
