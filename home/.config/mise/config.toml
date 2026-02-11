@@ -35,8 +35,8 @@ description = "Run Claude with skip-permissions and resume fallback"
 run = "command claude --dangerously-skip-permissions --resume || command claude --dangerously-skip-permissions"
 
 [tasks.codex]
-description = "Run Codex with auto-approve-everything and resume fallback"
-run = "codex --dangerously-auto-approve-everything resume || codex --dangerously-auto-approve-everything"
+description = "Run Codex with bypass-approvals-and-sandbox and resume fallback"
+run = "codex --dangerously-bypass-approvals-and-sandbox resume || codex --dangerously-bypass-approvals-and-sandbox"
 
 [tasks.copilot]
 description = "Run Copilot with allow-all-tools and resume fallback"
