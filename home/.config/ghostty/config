@@ -6,7 +6,7 @@ copy-on-select = clipboard
 cursor-style-blink = false
 font-family = Hack Nerd Font Mono
 font-feature=-liga
-font-size = 18
+font-size = 16
 # font-thicken = true
 keybind = cmd+left=previous_tab
 keybind = cmd+right=next_tab
