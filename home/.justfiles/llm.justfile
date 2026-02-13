@@ -8,10 +8,8 @@ set export := true
 justfile := justfile_directory() + "/.justfiles/llm.justfile"
 
 mod claude 'claude.justfile'
-mod clawdbot 'clawdbot.justfile'
 mod clawdhub 'clawdhub.justfile'
 mod codex 'codex.justfile'
-mod moltbot 'moltbot.justfile'
 mod openclaw 'openclaw.justfile'
 mod copilot 'copilot.justfile'
 mod glm 'glm.justfile'
