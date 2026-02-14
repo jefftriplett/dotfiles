@@ -23,6 +23,11 @@ if [[ -f ~/.orbstack/shell/init.bash ]]; then
     source ~/.orbstack/shell/init.bash
 fi
 
+# OpenClaw completion
+if [[ -f "$HOME/.openclaw/completions/openclaw.bash" ]]; then
+    source "$HOME/.openclaw/completions/openclaw.bash"
+fi
+
 if command -v try &> /dev/null; then
     eval "$(try init ~//Projects/tries)"
 fi
