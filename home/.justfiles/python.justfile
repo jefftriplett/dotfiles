@@ -86,6 +86,7 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
     -uv tool install --python 3.12 llm {{ ARGS }}
     -uv tool install --python 3.12 pyright {{ ARGS }}
     -uv tool install --python 3.12 rich-cli {{ ARGS }}
+    -uv tool install --python 3.12 rodney {{ ARGS }}
     -uv tool install --python 3.12 ruff-lsp {{ ARGS }}
     -uv tool install --python 3.12 ttok {{ ARGS }}
     -uv tool install --python 3.12 yt-dlp[default] {{ ARGS }}
