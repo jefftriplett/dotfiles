@@ -7,6 +7,49 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "session": {
+    "trust_all_worktrees": true,
+  },
+  "ssh_connections": [
+    {
+      "host": "mac-studio-2023",
+      "args": [],
+      "projects": [
+        {
+          "paths": [
+            "/Users/jefftriplett"
+          ]
+        },
+        {
+          "paths": [
+            "/home/pi"
+          ]
+        }
+      ]
+    },
+    {
+      "host": "mac-mini-pro-2023",
+      "args": [],
+      "projects": [
+        {
+          "paths": [
+            "/Users/jefftriplett"
+          ]
+        }
+      ]
+    },
+    {
+      "host": "rpi4-8g-2023",
+      "args": [],
+      "projects": [
+        {
+          "paths": [
+            "/home/pi"
+          ]
+        }
+      ]
+    }
+  ],
   "agent": {
     "default_model": {
       "provider": "zed.dev",
