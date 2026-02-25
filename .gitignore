@@ -85,3 +85,4 @@ home/Library/Application Support/Claude/*
 home/Library/Application Support/io.datasette.llm/*
 !home/Library/Application Support/io.datasette.llm/
 !home/Library/Application Support/io.datasette.llm/templates/
+home/.config/zed/settings.json
