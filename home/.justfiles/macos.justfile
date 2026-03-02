@@ -53,3 +53,15 @@ justfile := justfile_directory() + "/.justfiles/macos.justfile"
 @xcode-upgrade:
     sudo rm -rf /Library/Developer/CommandLineTools
     just --justfile {{ justfile }} xcode-bootstrap
+
+# ----------------------------------------------------------------
+# Default applications (duti)
+# ----------------------------------------------------------------
+
+# set default applications for file types using duti
+@duti-setup:
+    brew install duti
+
+    # 3D printing
+    duti -s com.bambulab.bambu-studio .stl all
+    duti -s com.bambulab.bambu-studio .3mf all
