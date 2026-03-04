@@ -35,7 +35,11 @@ fi
 if command -v pyenv > /dev/null; then
     eval "$(pyenv init --path --no-rehash)";
     eval "$(pyenv init - --no-rehash)";
-    pyenv virtualenvwrapper_lazy
+fi
+
+# workon/mkproject bash functions (replaces pyenv-virtualenvwrapper)
+if [[ -f "${HOME}/.workon.bash" ]]; then
+    source "${HOME}/.workon.bash"
 fi
 
 ###################
