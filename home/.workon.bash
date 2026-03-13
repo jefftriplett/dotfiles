@@ -25,9 +25,32 @@ workon() {
         fi
     done
 
+    # Fallback to ~/.virtualenvs/<name> if no project dir found
     if [[ -z "$project_dir" ]]; then
+        local venv_fallback="${HOME}/.virtualenvs/${project_name}"
+        if [[ -f "${venv_fallback}/bin/activate" ]]; then
+            # Deactivate any existing virtualenv
+            if [[ -n "$VIRTUAL_ENV" ]]; then
+                deactivate 2>/dev/null
+            fi
+
+            source "${venv_fallback}/bin/activate"
+
+            # cd to src dir if it exists, otherwise stay put
+            if [[ -d "${venv_fallback}/src" ]]; then
+                cd "${venv_fallback}/src" || return 1
+            fi
+
+            if command -v uvx >/dev/null 2>&1; then
+                uvx --quiet rich --print "[green]Activated[/green]: $project_name ([blue]${venv_fallback}[/blue])"
+            else
+                echo "Activated: $project_name (${venv_fallback})"
+            fi
+            return 0
+        fi
+
         echo "Project not found: $project_name"
-        echo "Searched in: ${WORKON_PROJECT_DIRS[*]}"
+        echo "Searched in: ${WORKON_PROJECT_DIRS[*]} ~/.virtualenvs/"
         return 1
     fi
 
@@ -59,6 +82,11 @@ workon() {
 
             source "${full_venv_path}/bin/activate"
 
+            # For ~/.virtualenvs match, cd to src dir if it exists
+            if [[ "$venv_dir" == /* && -d "${full_venv_path}/src" ]]; then
+                cd "${full_venv_path}/src" || return 1
+            fi
+
             if command -v uvx >/dev/null 2>&1; then
                 uvx --quiet rich --print "[green]Activated[/green]: $project_name ([blue]${full_venv_path}[/blue])"
             else
@@ -78,15 +106,27 @@ workon() {
 
 # Helper: List all projects
 _workon_list_projects() {
-    for base_dir in "${WORKON_PROJECT_DIRS[@]}"; do
-        if [[ -d "$base_dir" ]]; then
-            for project in "$base_dir"/*/; do
-                if [[ -d "$project" ]]; then
-                    basename "$project"
+    {
+        # List projects from configured directories
+        for base_dir in "${WORKON_PROJECT_DIRS[@]}"; do
+            if [[ -d "$base_dir" ]]; then
+                for project in "$base_dir"/*/; do
+                    if [[ -d "$project" ]]; then
+                        basename "$project"
+                    fi
+                done
+            fi
+        done
+
+        # List virtualenvs from ~/.virtualenvs
+        if [[ -d "${HOME}/.virtualenvs" ]]; then
+            for venv in "${HOME}/.virtualenvs"/*/; do
+                if [[ -f "${venv}bin/activate" ]]; then
+                    basename "$venv"
                 fi
             done
         fi
-    done | sort -u
+    } | sort -u
 }
 
 # Bash completion for workon
