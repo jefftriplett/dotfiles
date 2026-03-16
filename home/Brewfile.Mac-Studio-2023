@@ -337,6 +337,9 @@ mas "ToothFairy", id: 1191449274
 mas "Xcode", id: 497799835
 go "cmd/go"
 go "cmd/gofmt"
+cargo "mdbook"
+cargo "modenv"
+cargo "rustywind"
 uv "aider-install"
 uv "batrachian-toad"
 uv "claude-code-transcripts"
