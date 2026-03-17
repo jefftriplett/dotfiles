@@ -89,3 +89,26 @@ home/.config/zed/settings.json
 
 # tmux plugins (managed by TPM)
 home/.tmux/plugins/
+
+# App-generated state/cache
+.homesick/
+home/.claude/
+home/.codex/
+home/.copilot/
+home/.idea/
+home/.config/BlueSherpa/
+home/.config/Modern CSV/
+home/.config/chezmoi/
+home/.config/flameshot/
+home/.config/flipperdevices.com/
+home/.config/flutter/
+home/.config/gh-search-cli/
+home/.config/github-copilot/
+home/.config/grammarly-languageserver/
+home/.config/raycast/
+home/.config/safebrowsing
+home/.config/scc-cli.json
+home/.config/zed/conversations/
+home/.config/zed/settings_backup.json
+home/package.json
+package.json
