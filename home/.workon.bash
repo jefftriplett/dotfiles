@@ -112,7 +112,8 @@ _workon_list_projects() {
             if [[ -d "$base_dir" ]]; then
                 for project in "$base_dir"/*/; do
                     if [[ -d "$project" ]]; then
-                        basename "$project"
+                        project="${project%/}"
+                        echo "${project##*/}"
                     fi
                 done
             fi
@@ -122,7 +123,8 @@ _workon_list_projects() {
         if [[ -d "${HOME}/.virtualenvs" ]]; then
             for venv in "${HOME}/.virtualenvs"/*/; do
                 if [[ -f "${venv}bin/activate" ]]; then
-                    basename "$venv"
+                    venv="${venv%/}"
+                    echo "${venv##*/}"
                 fi
             done
         fi
