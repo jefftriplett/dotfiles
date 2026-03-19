@@ -99,7 +99,11 @@ export BUN_INSTALL="${HOME}/.bun"
 
 PATH="${PATH}:${BUN_INSTALL}/bin"
 
+############
+# obsidian #
+############
 
+PATH="${PATH}:/Applications/Obsidian.app/Contents/MacOS"
 
 ################
 # clean / done #
