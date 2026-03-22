@@ -42,7 +42,7 @@ brew "dockutil"
 brew "doctl"
 brew "duf"
 brew "dyld-headers"
-brew "gflags"
+brew "gflags", link: false
 brew "enchant"
 brew "sdl2"
 brew "ffmpeg"
@@ -69,6 +69,7 @@ brew "glow"
 brew "libksba"
 brew "gnupg"
 brew "go"
+brew "googleworkspace-cli"
 brew "libtool"
 brew "graphviz"
 brew "guetzli"
@@ -271,15 +272,6 @@ cask "vivaldi"
 cask "vlc"
 cask "xbar"
 cask "yubico-authenticator"
-mas "GarageBand", id: 682658836
-mas "Hand Mirror", id: 1502839586
-mas "iMovie", id: 408981434
-mas "Keynote", id: 409183694
-mas "Meeter", id: 1510445899
-mas "Numbers", id: 409203825
-mas "Pages", id: 409201541
-mas "Parachute", id: 6748614170
-mas "Xcode", id: 497799835
 go "cmd/go"
 go "cmd/gofmt"
 uv "-"
@@ -293,7 +285,7 @@ uv "em-keyboard"
 uv "files-to-claude-xml"
 uv "grip"
 uv "justpath"
-uv "llm"
+uv "llm", with: ["llm-anthropic", "llm-claude", "llm-docs", "llm-filesystem", "llm-fragments-github", "llm-gemini", "llm-hacker-news", "llm-jina-reader", "llm-ollama", "llm-openai-plugin", "llm-pdf-to-images", "llm-uv-tool"]
 uv "mistral-vibe"
 uv "pyright"
 uv "rich-cli"
