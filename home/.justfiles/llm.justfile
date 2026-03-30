@@ -64,7 +64,7 @@ outdated:
     -just llm claude upgrade
     -just llm clawdhub upgrade
     -just llm codex upgrade
-    -just llm copilot upgrade
+    # -just llm copilot upgrade
     -just llm glm upgrade
     -just llm llm-cli upgrade
     # -just llm openclaw upgrade
