@@ -64,6 +64,7 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
 
 # install python versions using uv installer
 @uv-python-install *ARGS:
+    -uv python install {{ ARGS }} 3.14
     -uv python install {{ ARGS }} 3.13
     -uv python install {{ ARGS }} 3.12
     -uv python install {{ ARGS }} 3.11
