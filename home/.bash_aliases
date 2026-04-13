@@ -29,6 +29,10 @@ alias ccg45='ccx --model=glm-4.5'
 alias ccf='ccx --model=glm-4.5-air'
 alias ccm='ccx --model=MiniMax-M2.1'
 
+# tmux
+alias tmux-new='tmux new-session -s "$(basename "$PWD")"'
+alias tmux-resume='tmux attach-session -t'
+
 # everything else
 alias cat="bat -p"
 alias chrome="/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome"
