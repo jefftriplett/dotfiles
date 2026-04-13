@@ -28,11 +28,11 @@ run = "mise upgrade"
 
 [tasks.claude]
 description = "Run Claude with skip-permissions and continue fallback"
-run = "command claude --dangerously-skip-permissions --continue || command claude --dangerously-skip-permissions"
+run = "command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --continue || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
 
 [tasks.claude-resume]
 description = "Run Claude with skip-permissions and resume fallback"
-run = "command claude --dangerously-skip-permissions --resume || command claude --dangerously-skip-permissions"
+run = "command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --resume || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
 
 [tasks.codex]
 description = "Run Codex with bypass-approvals-and-sandbox and resume fallback"

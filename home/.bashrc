@@ -8,3 +8,6 @@ export OLLAMA_ORIGINS=*
 
 # [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
 # eval "$(atuin init bash)"
+
+# OpenClaw Completion
+source "/Users/jefftriplett/.openclaw/completions/openclaw.bash"
