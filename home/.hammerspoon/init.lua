@@ -198,7 +198,7 @@ end)
 -- end)
 
 hs.hotkey.bind(hyper, 'I', function()
-    toggle_application('iTerm2')
+    toggle_application('Ghostty')
 end)
 
 hs.hotkey.bind(hyper, 'D', function()

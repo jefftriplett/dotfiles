@@ -5,8 +5,8 @@ local log = require('logger')
 local displayGrid = {
     A = "B43E3352-ACB7-4163-A25B-2DDAE0174571",  -- WQX DP (2) - top-left
     B = "B32F530C-62CF-4F0D-9997-80BF2B812AC8",  -- WQX DP (1) - top-right
-    C = "C9240C8E-A9D2-418A-89AC-28D3B5DEE5FC",  -- PM161Q B1 (2) - bottom-left
-    D = "14682E62-19DE-4AF3-A74A-76445F230CAB",  -- PM161Q B1 (1) - bottom-right
+    C = "C9240C8E-A9D2-418A-89AC-28D3B5DEE5FC",  -- PM161Q B1 (1) - bottom-left
+    D = "F4AB0D6C-8E85-4E84-B5AB-C5B388536E3D",  -- PM161Q B1 (2) - bottom-right
 }
 
 local function resolveScreens()
@@ -37,14 +37,21 @@ function fix2x2Grid()
     local frameB = screens.B:fullFrame()
     local frameC = screens.C:fullFrame()
 
-    -- D (bottom-right) is anchor at origin
-    screens.D:setOrigin(0, 0)
-    -- C (bottom-left) is left of D
-    screens.C:setOrigin(-frameC.w, 0)
-    -- B (top-right) is above D
-    screens.B:setOrigin(0, -frameB.h)
-    -- A (top-left) is above C
-    screens.A:setOrigin(-frameA.w, -frameA.h)
+    local function applyPositions()
+        -- D (bottom-right) is anchor at origin
+        screens.D:setOrigin(0, 0)
+        -- A (top-left) above C — set before B so B doesn't get shoved
+        screens.A:setOrigin(-frameA.w, -frameA.h)
+        -- C (bottom-left) is left of D
+        screens.C:setOrigin(-frameC.w, 0)
+        -- B (top-right) is above D
+        screens.B:setOrigin(0, -frameB.h)
+    end
+
+    applyPositions()
+    -- Second pass: macOS sometimes shoves displays during the first pass
+    -- before all positions are known. Re-applying locks things in place.
+    hs.timer.doAfter(0.4, applyPositions)
 
     log.i("Applied 2x2 display grid")
 end

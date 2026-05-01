@@ -46,16 +46,16 @@ config.displays = {
 config.layouts = {
     -- Vertical monitor setup
     vertical = {
-        {"iTerm2", nil, "main", hs.layout.maximized, nil, nil},
+        {"Ghostty", nil, "main", hs.layout.maximized, nil, nil},
         {"Slack", nil, "vertical", {x=0, y=0, w=1, h=0.5}, nil, nil},
         {"Caprine", nil, "vertical", {x=0, y=0.5, w=1, h=0.5}, nil, nil},
         {"Messages", nil, "vertical", {x=0, y=0.5, w=1, h=0.5}, nil, nil},
         {"Telegram", nil, "vertical", {x=0, y=0.5, w=1, h=0.5}, nil, nil},
     },
-    
+
     -- Default layout (no vertical monitor)
     default = {
-        {"iTerm2", nil, "main", hs.layout.maximized, nil, nil},
+        {"Ghostty", nil, "main", hs.layout.maximized, nil, nil},
     }
 }
 
