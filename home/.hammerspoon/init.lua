@@ -39,13 +39,15 @@ local display = config.displays.names
 
 function setup_grid()
     log.i('Setting up window grid')
-    
-    for displayName, gridConfig in pairs(config.displays.grids) do
-        log.d(displayName, gridConfig)
-        local screen = hs.screen.find(displayName)
-        if screen then
-            log.d('Found display:', displayName, 'with grid:', gridConfig)
+
+    for _, screen in ipairs(hs.screen.allScreens()) do
+        local screenName = screen:name()
+        local gridConfig = config.displays.grids[screenName]
+        if gridConfig then
+            log.d('Found display:', screenName, 'with grid:', gridConfig)
             hs.grid.setGrid(gridConfig, screen)
+        else
+            log.w('No grid config for display:', screenName)
         end
     end
 end
