@@ -41,13 +41,22 @@ function setup_grid()
     log.i('Setting up window grid')
 
     for _, screen in ipairs(hs.screen.allScreens()) do
+        local mode = screen:currentMode()
+        local frame = screen:frame()
+        log.i(string.format(
+            'Screen: %-20s | mode=%dx%d scale=%s | frame=%dx%d',
+            screen:name(),
+            mode.w, mode.h, tostring(mode.scale),
+            frame.w, frame.h
+        ))
+
         local screenName = screen:name()
         local gridConfig = config.displays.grids[screenName]
         if gridConfig then
-            log.d('Found display:', screenName, 'with grid:', gridConfig)
+            log.d('  -> grid:', gridConfig)
             hs.grid.setGrid(gridConfig, screen)
         else
-            log.w('No grid config for display:', screenName)
+            log.w('  -> no grid config')
         end
     end
 end
