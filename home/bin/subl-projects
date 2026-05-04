@@ -31,6 +31,12 @@ SUBLIME_PATHS = [
 # Legacy virtualenv path (shows warning indicator)
 VIRTUALENVS_PATH = Path.home() / ".virtualenvs"
 
+# Migration targets: checked in order when fixing legacy paths
+MIGRATION_PATHS = [
+    Path.home() / "Projects",
+    Path.home() / "Work",
+]
+
 
 def get_projects_dir() -> Path | None:
     """Find the Sublime Text projects directory."""
@@ -56,6 +62,23 @@ def ensure_projects_dir() -> Path:
     # Fallback: create the first option
     SUBLIME_PATHS[0].mkdir(parents=True, exist_ok=True)
     return SUBLIME_PATHS[0]
+
+
+def find_migrated_path(legacy_path: str) -> Path | None:
+    """Try to find a migrated path for a legacy ~/.virtualenvs/{name}/src/ path."""
+    try:
+        expanded = Path(legacy_path).expanduser()
+        rel = expanded.relative_to(VIRTUALENVS_PATH)
+        project_name = rel.parts[0]
+    except (ValueError, IndexError):
+        return None
+
+    for base in MIGRATION_PATHS:
+        candidate = base / project_name
+        if candidate.exists():
+            return candidate
+
+    return None
 
 
 def get_project_files(projects_dir: Path) -> list[Path]:
@@ -356,7 +379,9 @@ def delete(
 
 
 @app.command()
-def doctor() -> None:
+def doctor(
+    fix: bool = typer.Option(False, "--fix", help="Fix legacy ~/.virtualenvs paths by migrating to ~/Projects or ~/Work"),
+) -> None:
     """Check Sublime Text project configurations for issues."""
     projects_dir = get_projects_dir()
 
@@ -395,6 +420,7 @@ def doctor() -> None:
 
         project_valid = True
         project_has_legacy = False
+        project_modified = False
         for folder in folders:
             folder_path = folder.get("path", "")
             if not folder_path:
@@ -403,11 +429,28 @@ def doctor() -> None:
                 continue
 
             expanded = Path(folder_path).expanduser()
+            is_legacy = is_legacy_virtualenv_path(folder_path)
+
             if not expanded.exists():
-                issues.append(f"[red]{name}:[/red] Missing path: {folder_path}")
-                project_valid = False
-            elif is_legacy_virtualenv_path(folder_path):
+                migrated = find_migrated_path(folder_path) if is_legacy else None
+                if migrated and fix:
+                    folder["path"] = str(migrated)
+                    project_modified = True
+                    rprint(f"[green]{name}:[/green] {folder_path} → {migrated}")
+                elif migrated:
+                    issues.append(f"[yellow]{name}:[/yellow] Can migrate: {folder_path} → {migrated}")
+                    project_valid = False
+                else:
+                    issues.append(f"[red]{name}:[/red] Missing path: {folder_path}")
+                    project_valid = False
+            elif is_legacy:
                 project_has_legacy = True
+
+        if project_modified:
+            if save_project(project_file, data):
+                rprint(f"[green]Saved {name}[/green]")
+            else:
+                rprint(f"[red]Failed to save {name}[/red]")
 
         if project_valid:
             valid_projects += 1
@@ -446,10 +489,13 @@ def doctor() -> None:
     if issues or warnings:
         rprint("[bold]Suggestions:[/bold]")
         rprint("  - Use [cyan]subl-projects list[/cyan] to see all projects")
-        rprint("  - Use [cyan]subl-projects update NAME --path /new/path[/cyan] to fix paths")
+        rprint("  - Use [cyan]subl-projects doctor --fix[/cyan] to auto-migrate legacy ~/.virtualenvs paths")
+        rprint("  - Use [cyan]subl-projects update NAME PATH[/cyan] to fix paths manually")
         rprint("  - Use [cyan]subl-projects delete NAME[/cyan] to remove broken projects")
     else:
         rprint("[green]All projects are healthy![/green]")
+        if not fix and legacy_projects > 0:
+            rprint(f"\n[dim]Tip: run [cyan]subl-projects doctor --fix[/cyan] to migrate legacy ~/.virtualenvs paths to ~/Projects or ~/Work[/dim]")
 
 
 @app.command(name="open")
