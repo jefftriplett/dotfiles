@@ -1,5 +1,10 @@
 # shellcheck shell=bash
 
+# TEMPORARY WORKAROUND (cmux): silence background job control messages
+# emitted by cmux's _cmux_send hooks (e.g. "[1]- Done ..."). Remove this
+# once cmux stops printing job-control notifications.
+set +m
+
 # shellcheck source=/dev/null
 for filename in "${HOME}"/.{bash_exports,bash_aliases,bash_functions,bash_secrets,docker_alias}; do
     if [[ -r "${filename}" ]] ; then

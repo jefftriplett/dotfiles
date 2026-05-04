@@ -1,5 +1,10 @@
 # shellcheck shell=bash
 
+# TEMPORARY WORKAROUND (cmux): silence background job control messages
+# emitted by cmux's _cmux_send hooks (e.g. "[1]- Done ..."). Remove this
+# once cmux stops printing job-control notifications.
+set +m
+
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 # export PATH="$PATH:$HOME/.rvm/bin"
 # export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
