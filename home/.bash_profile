@@ -30,6 +30,7 @@ fi
 
 # OpenClaw completion
 if [[ -f "$HOME/.openclaw/completions/openclaw.bash" ]]; then
+    # shellcheck source=/dev/null
     source "$HOME/.openclaw/completions/openclaw.bash"
 fi
 

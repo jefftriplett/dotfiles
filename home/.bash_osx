@@ -10,6 +10,7 @@ if type brew &>/dev/null
 then
   HOMEBREW_PREFIX="$(brew --prefix)"
   if [ -f "$(brew --prefix)/etc/profile.d/bash_completion.sh" ]; then
+    # shellcheck source=/dev/null
     . "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
   fi
 fi
@@ -39,6 +40,7 @@ fi
 
 # workon/mkproject bash functions (replaces pyenv-virtualenvwrapper)
 if [[ -f "${HOME}/.workon.bash" ]]; then
+    # shellcheck source=/dev/null
     source "${HOME}/.workon.bash"
 fi
 
