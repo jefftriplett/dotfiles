@@ -33,6 +33,7 @@ node_modules/
 *.user-ca-bundle
 .bash_secrets
 .secrets
+.ssh/
 apps/*-x64/*
 apps/*/*-darwin-x64/*
 apps/*/build/*
