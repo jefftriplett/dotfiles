@@ -11,6 +11,14 @@ set +m
 export OLLAMA_HOST=0.0.0.0:11434
 export OLLAMA_ORIGINS=*
 
+if command -v starship > /dev/null; then
+    eval "$(starship init bash)";
+fi
+
+if command -v direnv > /dev/null; then
+    eval "$(direnv hook bash)";
+fi
+
 # [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh
 # eval "$(atuin init bash)"
 
