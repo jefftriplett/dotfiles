@@ -30,6 +30,10 @@ run = "mise upgrade"
 description = "Run Claude with skip-permissions and continue fallback"
 run = "command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --continue || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
 
+[tasks.claude-agents]
+description = "Run Claude agents with skip-permissions"
+run = "command claude agents"
+
 [tasks.claude-resume]
 description = "Run Claude with skip-permissions and resume fallback"
 run = "command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --resume || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"

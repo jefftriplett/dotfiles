@@ -1,0 +1,6 @@
+{
+  "checks": {
+    "cursing.filth": false,
+    "typography.symbols.curly_quotes": false
+  }
+}
