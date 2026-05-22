@@ -91,6 +91,9 @@ home/.config/zed/settings.json
 # tmux plugins (managed by TPM)
 home/.tmux/plugins/
 
+# Ollama
+home/Library/Application Support/Ollama/
+
 # App-generated state/cache
 .homesick/
 home/.claude/
