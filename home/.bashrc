@@ -39,6 +39,17 @@ PROMPT_COMMAND="set +m;${PROMPT_COMMAND}"
 
 if command -v direnv > /dev/null; then
     eval "$(direnv hook bash)";
+
+    # Auto-attach tmux when a project's .envrc calls `use_tmux`.
+    # `direnv hook bash` only fires on PROMPT_COMMAND, so evaluate the
+    # current dir's .envrc synchronously to pick up TMUX_AUTOATTACH now.
+    # Escape hatch: NO_TMUX_AUTOATTACH=1 bash
+    if [ -z "$TMUX" ] && [ -t 1 ] && [ -z "$NO_TMUX_AUTOATTACH" ]; then
+        eval "$(direnv export bash 2>/dev/null)"
+        if [ -n "$TMUX_AUTOATTACH" ]; then
+            exec direnv exec / tmux new-session -A -s "$TMUX_AUTOATTACH"
+        fi
+    fi
 fi
 
 # [[ -f ~/.bash-preexec.sh ]] && source ~/.bash-preexec.sh

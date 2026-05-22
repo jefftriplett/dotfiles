@@ -17,3 +17,8 @@ layout_uv() {
     export UV_ACTIVE=1  # or VENV_ACTIVE=1
     export VIRTUAL_ENV
 }
+
+use_tmux() {
+    local name="${1:-$(basename "$PWD")}"
+    export TMUX_AUTOATTACH="$name"
+}
