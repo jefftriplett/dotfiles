@@ -31,8 +31,10 @@ alias ccf='ccx --model=glm-4.5-air'
 alias ccm='ccx --model=MiniMax-M2.1'
 
 # tmux
-tmux-new() { local name; name="$(basename "$PWD")"; printf '\033]0;%s\007' "$name"; tmux new-session -s "$name"; }
-alias tmux-resume='tmux attach-session -t'
+alias tmux='direnv exec / tmux'
+tmux-new() { local name; name="$(basename "$PWD")"; printf '\033]0;%s\007' "$name"; direnv exec / tmux new-session -s "$name"; }
+tmux-resume() { local name; name="$(basename "$PWD")"; printf '\033]0;%s\007' "$name"; direnv exec / tmux new-session -A -s "$name"; }
+tmux-attach() { local name; name="$(basename "$PWD")"; printf '\033]0;%s\007' "$name"; direnv exec / tmux new-session -A -s "$name"; }
 
 # everything else
 alias cat="bat -p"
