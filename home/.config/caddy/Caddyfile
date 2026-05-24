@@ -1,0 +1,6 @@
+# Local HTTPS reverse proxy for Django apps
+# Each app needs a corresponding entry in /etc/hosts or dnsmasq
+
+myapp.localhost {
+    reverse_proxy localhost:8000
+}
