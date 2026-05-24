@@ -1,24 +1,38 @@
+# shellcheck shell=bash
+
 layout_uv() {
-    if [[ -d ".venv" ]]; then
-        VIRTUAL_ENV="$(pwd)/.venv"
+    local venv_dir="${1:-.venv}"
+
+    watch_file pyproject.toml uv.lock .python-version
+
+    if [[ ! -d "$venv_dir" ]]; then
+        if ! command -v uv >/dev/null 2>&1; then
+            log_error "uv is required to create $venv_dir"
+            return 1
+        fi
+
+        log_status "No virtual environment exists. Executing \`uv venv $venv_dir\` to create one."
+        uv venv "$venv_dir"
     fi
 
-    if [[ -z $VIRTUAL_ENV || ! -d $VIRTUAL_ENV ]]; then
-        log_status "No virtual environment exists. Executing \`uv venv\` to create one."
-        uv venv
-        VIRTUAL_ENV="$(pwd)/.venv"
+    VIRTUAL_ENV="$(cd "$venv_dir" && pwd)"
+
+    if [[ -d "$VIRTUAL_ENV/bin" ]]; then
+        PATH_add "$VIRTUAL_ENV/bin"
+    elif [[ -d "$VIRTUAL_ENV/Scripts" ]]; then
+        PATH_add "$VIRTUAL_ENV/Scripts"
+    else
+        log_error "No bin directory found in $VIRTUAL_ENV"
+        return 1
     fi
 
-    if [ -d ".venv/bin" ]; then
-        PATH_add .venv/bin
-    elif [ -d ".venv/Scripts" ]; then
-        PATH_add .venv/Scripts
-    fi
-    export UV_ACTIVE=1  # or VENV_ACTIVE=1
+    export UV_ACTIVE=1
     export VIRTUAL_ENV
 }
 
 use_tmux() {
     local name="${1:-$(basename "$PWD")}"
+    name="${name//:/-}"
+    name="${name// /-}"
     export TMUX_AUTOATTACH="$name"
 }

@@ -10,7 +10,12 @@ set +m
 # export PATH="$PATH:$HOME/.rvm/bin"
 # export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
 export OLLAMA_HOST=0.0.0.0:11434
-export OLLAMA_ORIGINS=*
+export OLLAMA_ORIGINS="*"
+
+if [[ -r "${HOME}/.bash_tmux" ]]; then
+    # shellcheck source=/dev/null
+    source "${HOME}/.bash_tmux"
+fi
 
 # CMUX fix: ensure cmux's bootstrap runs before starship initializes,
 # otherwise starship's prompt clobbers cmux's shell integration.
@@ -40,15 +45,8 @@ PROMPT_COMMAND="set +m;${PROMPT_COMMAND}"
 if command -v direnv > /dev/null; then
     eval "$(direnv hook bash)";
 
-    # Auto-attach tmux when a project's .envrc calls `use_tmux`.
-    # `direnv hook bash` only fires on PROMPT_COMMAND, so evaluate the
-    # current dir's .envrc synchronously to pick up TMUX_AUTOATTACH now.
-    # Escape hatch: NO_TMUX_AUTOATTACH=1 bash
-    if [ -z "$TMUX" ] && [ -t 1 ] && [ -z "$NO_TMUX_AUTOATTACH" ]; then
-        eval "$(direnv export bash 2>/dev/null)"
-        if [ -n "$TMUX_AUTOATTACH" ]; then
-            exec direnv exec / tmux new-session -A -s "$TMUX_AUTOATTACH"
-        fi
+    if declare -F __tmux_autoattach >/dev/null; then
+        __tmux_autoattach
     fi
 fi
 

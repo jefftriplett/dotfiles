@@ -1,0 +1,91 @@
+# shellcheck shell=bash
+
+__tmux_session_name() {
+    local name="${1:-${TMUX_AUTOATTACH:-$(basename "$PWD")}}"
+
+    name="${name//:/-}"
+    name="${name// /-}"
+    printf '%s' "$name"
+}
+
+__tmux_set_title() {
+    printf '\033]0;%s\007' "$1"
+}
+
+tmux() {
+    direnv exec / env tmux "$@"
+}
+
+tmux-new() {
+    local name
+    name="$(__tmux_session_name "$1")"
+    __tmux_set_title "$name"
+    tmux new-session -s "$name"
+}
+
+tmux-go() {
+    local name
+    name="$(__tmux_session_name "$1")"
+    __tmux_set_title "$name"
+
+    if [[ -n "$TMUX" ]]; then
+        tmux has-session -t "$name" 2>/dev/null || tmux new-session -d -s "$name"
+        tmux switch-client -t "$name"
+    else
+        tmux new-session -A -s "$name"
+    fi
+}
+
+tmux-resume() {
+    tmux-go "$@"
+}
+
+tmux-attach() {
+    tmux-go "$@"
+}
+
+tmux-ls() {
+    tmux list-sessions "$@"
+}
+
+tmux-kill() {
+    local name
+    name="$(__tmux_session_name "$1")"
+    tmux kill-session -t "$name"
+}
+
+__tmux_autoattach() {
+    local name
+
+    [[ $- == *i* ]] || return 0
+    [[ -z "$TMUX" ]] || return 0
+    [[ -t 1 ]] || return 0
+    [[ -z "$NO_TMUX_AUTOATTACH" ]] || return 0
+    command -v direnv >/dev/null 2>&1 || return 0
+
+    eval "$(direnv export bash 2>/dev/null)"
+    [[ -n "$TMUX_AUTOATTACH" ]] || return 0
+
+    name="$(__tmux_session_name "$TMUX_AUTOATTACH")"
+    __tmux_set_title "$name"
+    exec direnv exec / env tmux new-session -A -s "$name"
+}
+
+__tmux_sessions() {
+    tmux list-sessions -F '#S' 2>/dev/null
+}
+
+_tmux_session_completions() {
+    local cur sessions
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    sessions="$(__tmux_sessions)"
+    mapfile -t COMPREPLY < <(compgen -W "$sessions" -- "$cur")
+}
+
+complete -F _tmux_session_completions tmux-go tmux-resume tmux-attach tmux-kill
+
+alias t='tmux'
+alias ta='tmux-go'
+alias tn='tmux-new'
+alias tr='tmux-resume'
+alias tls='tmux-ls'

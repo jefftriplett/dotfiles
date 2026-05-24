@@ -7,7 +7,7 @@
 set +m
 
 # shellcheck source=/dev/null
-for filename in "${HOME}"/.{bash_exports,bash_aliases,bash_functions,bash_secrets,docker_alias}; do
+for filename in "${HOME}"/.{bash_exports,bash_tmux,bash_aliases,bash_functions,bash_secrets,docker_alias}; do
     if [[ -r "${filename}" ]] ; then
         source "${filename}"
     fi
@@ -22,6 +22,10 @@ if [[ "${unamestr}" == 'Darwin' ]]; then
 elif [[ "${unamestr}" == 'Linux' ]]; then
     # shellcheck source=/dev/null
     source "${HOME}/.bash_linux"
+fi
+
+if declare -F __tmux_autoattach >/dev/null; then
+    __tmux_autoattach
 fi
 
 # OrbStack: Load command-line tools and integration if installed
