@@ -15,7 +15,6 @@ links = [
     "home/.codex",
     "home/.config/direnv",
     "home/.copilot",
-    "home/.direnvrc",
     "home/.docker_aliases",
     "home/.foreman",
     "home/.gitlab.yml",

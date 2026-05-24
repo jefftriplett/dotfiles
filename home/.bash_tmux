@@ -13,14 +13,14 @@ __tmux_set_title() {
 }
 
 tmux() {
-    direnv exec / env tmux "$@"
+    direnv exec / tmux "$@"
 }
 
 tmux-new() {
     local name
     name="$(__tmux_session_name "$1")"
     __tmux_set_title "$name"
-    tmux new-session -s "$name"
+    tmux new-session -A -s "$name"
 }
 
 tmux-go() {
@@ -88,4 +88,5 @@ alias t='tmux'
 alias ta='tmux-go'
 alias tn='tmux-new'
 alias tr='tmux-resume'
+alias tk='tmux-kill'
 alias tls='tmux-ls'
