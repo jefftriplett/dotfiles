@@ -30,9 +30,58 @@ layout_uv() {
     export VIRTUAL_ENV
 }
 
+# Project .envrc examples:
+#   use tmux
+#   use tmux project-name
+#   use tmux project-name --machine Mac-Studio-2023
+#   use tmux project-name --profile Mac-Studio-2023
+#   use tmux project-name cog
 use_tmux() {
-    local name="${1:-$(basename "$PWD")}"
+    local machine=""
+    local name=""
+
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --machine | --host | --profile)
+                shift
+                if [[ -z "${1:-}" ]]; then
+                    log_error "use tmux: missing machine after option"
+                    return 1
+                fi
+                machine="$1"
+                ;;
+            --machine=* | --host=* | --profile=*)
+                machine="${1#*=}"
+                ;;
+            --local)
+                machine=""
+                ;;
+            *)
+                if [[ -z "$name" ]]; then
+                    name="$1"
+                elif [[ -z "$machine" ]]; then
+                    machine="$1"
+                else
+                    log_error "use tmux: unexpected argument: $1"
+                    return 1
+                fi
+                ;;
+        esac
+
+        shift
+    done
+
+    name="${name:-$(basename "$PWD")}"
     name="${name//:/-}"
     name="${name// /-}"
+
     export TMUX_AUTOATTACH="$name"
+
+    if [[ -n "$machine" ]]; then
+        export TMUX_AUTOATTACH_MACHINE="$machine"
+        export TMUX_AUTOATTACH_HOST="$machine"
+    else
+        unset TMUX_AUTOATTACH_MACHINE
+        unset TMUX_AUTOATTACH_HOST
+    fi
 }
