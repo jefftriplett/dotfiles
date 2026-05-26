@@ -1,0 +1,162 @@
+#!/usr/bin/env bash
+
+set -u
+
+usage() {
+    cat <<'EOF'
+Usage: project-shell [session]
+
+Attach to a project tmux session locally or through Mosh, using direnv-loaded
+project environment variables:
+
+  PROJECT_REMOTE_HOST    SSH/Mosh host or alias, for example mac-studio
+  PROJECT_REMOTE_NAME    Local hostname to avoid mosh-ing into self
+  PROJECT_TMUX_SESSION   tmux session name; defaults to the current directory
+  PROJECT_REMOTE_MODE    auto, remote, local, or off; defaults to auto
+
+PROJECT_REMOTE_MODE:
+  auto    Use Mosh when PROJECT_REMOTE_HOST is set, otherwise local tmux.
+  remote  Require PROJECT_REMOTE_HOST, then offer retry/local/abort on failure.
+  local   Always use local tmux.
+  off     Same as local.
+EOF
+}
+
+project_shell_session_name() {
+    local name="${1:-${PROJECT_TMUX_SESSION:-$(basename "$PWD")}}"
+
+    name="${name//:/-}"
+    name="${name// /-}"
+    printf '%s' "$name" | tr -c 'A-Za-z0-9_.-' '-'
+}
+
+project_shell_short_host() {
+    local host="$1"
+
+    host="${host##*@}"
+    host="${host%%.*}"
+    printf '%s' "$host"
+}
+
+project_shell_local_tmux() {
+    local session="$1"
+
+    command -v tmux >/dev/null 2>&1 || {
+        printf 'project-shell: tmux is not installed or not on PATH.\n' >&2
+        return 127
+    }
+
+    printf '\033]0;%s\007' "$session"
+
+    if [[ -n "${TMUX:-}" ]]; then
+        tmux has-session -t "$session" 2>/dev/null || tmux new-session -d -s "$session"
+        tmux switch-client -t "$session"
+    else
+        exec tmux new-session -A -s "$session"
+    fi
+}
+
+project_shell_remote_tmux() {
+    local remote_host="$1"
+    local session="$2"
+    local timeout="${PROJECT_REMOTE_CONNECT_TIMEOUT:-5}"
+    local ssh_cmd
+
+    command -v mosh >/dev/null 2>&1 || {
+        printf 'project-shell: mosh is not installed or not on PATH.\n' >&2
+        return 127
+    }
+
+    ssh_cmd="ssh -o ConnectTimeout=${timeout} -o ServerAliveInterval=5"
+
+    printf 'project-shell: connecting to %s tmux session %s...\n' "$remote_host" "$session" >&2
+    mosh --ssh="$ssh_cmd" -- "$remote_host" tmux new-session -A -s "$session"
+}
+
+project_shell_choose_after_failure() {
+    local remote_host="$1"
+    local session="$2"
+    local reply
+
+    if [[ ! -t 0 ]]; then
+        printf 'project-shell: remote connection to %s failed; no TTY available for fallback prompt.\n' "$remote_host" >&2
+        return 1
+    fi
+
+    while true; do
+        printf 'project-shell: remote connection to %s failed. [l]ocal, [r]etry, [a]bort? ' "$remote_host" >&2
+        IFS= read -r reply || return 1
+
+        case "$reply" in
+            [Ll]|local)
+                project_shell_local_tmux "$session"
+                return $?
+                ;;
+            [Rr]|retry)
+                project_shell_remote_tmux "$remote_host" "$session" && return 0
+                ;;
+            [Aa]|abort|'')
+                return 1
+                ;;
+            *)
+                printf 'project-shell: choose local, retry, or abort.\n' >&2
+                ;;
+        esac
+    done
+}
+
+main() {
+    local mode="${PROJECT_REMOTE_MODE:-auto}"
+    local remote_host="${PROJECT_REMOTE_HOST:-}"
+    local remote_name="${PROJECT_REMOTE_NAME:-}"
+    local session
+    local current_host
+    local remote_short
+
+    case "${1:-}" in
+        -h|--help)
+            usage
+            return 0
+            ;;
+    esac
+
+    session="$(project_shell_session_name "${1:-}")"
+
+    case "$mode" in
+        local|off|none|disabled)
+            project_shell_local_tmux "$session"
+            return $?
+            ;;
+        auto|'')
+            if [[ -z "$remote_host" ]]; then
+                project_shell_local_tmux "$session"
+                return $?
+            fi
+            ;;
+        remote)
+            if [[ -z "$remote_host" ]]; then
+                printf 'project-shell: PROJECT_REMOTE_HOST is required when PROJECT_REMOTE_MODE=remote.\n' >&2
+                return 2
+            fi
+            ;;
+        *)
+            printf 'project-shell: unknown PROJECT_REMOTE_MODE=%s\n' "$mode" >&2
+            return 2
+            ;;
+    esac
+
+    current_host="$(hostname -s 2>/dev/null || hostname)"
+    remote_short="$(project_shell_short_host "$remote_host")"
+    remote_name="${remote_name:-$remote_short}"
+
+    if [[ "$current_host" == "$remote_name" || "$current_host" == "$remote_short" ]]; then
+        printf 'project-shell: already on %s; using local tmux.\n' "$current_host" >&2
+        project_shell_local_tmux "$session"
+        return $?
+    fi
+
+    project_shell_remote_tmux "$remote_host" "$session" && return 0
+    project_shell_choose_after_failure "$remote_host" "$session"
+}
+
+main "$@"

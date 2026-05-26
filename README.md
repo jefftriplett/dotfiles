@@ -60,6 +60,42 @@ $ just --justfile=./home/justfile update
 $ just --justfile=./home/justfile update-readme-docs
 ```
 
+## Project Shell
+
+`project-shell` uses per-project direnv config to attach to the right tmux
+session locally or over Mosh:
+
+```shell
+$ project-shell
+```
+
+Example work-project `.envrc`:
+
+```shell
+export PROJECT_REMOTE_HOST=mac-studio
+export PROJECT_REMOTE_NAME=mac-studio
+export PROJECT_TMUX_SESSION=my-work-project
+export PROJECT_REMOTE_MODE=auto
+```
+
+Example personal-project `.envrc`:
+
+```shell
+export PROJECT_REMOTE_HOST=mac-mini
+export PROJECT_REMOTE_NAME=mac-mini
+export PROJECT_TMUX_SESSION=my-home-project
+export PROJECT_REMOTE_MODE=auto
+```
+
+Run `direnv allow` after creating or changing a project `.envrc`. Set
+`PROJECT_REMOTE_CONNECT_TIMEOUT` to override the default five-second SSH
+connection timeout used by Mosh startup.
+
+Modes are `auto`, `remote`, `local`, and `off`. `auto` uses Mosh when
+`PROJECT_REMOTE_HOST` is set, avoids connecting to the current machine, and
+falls back to local tmux if no remote is configured. Failed remote attempts ask
+whether to use local tmux, retry, or abort.
+
 ## Justfile Usage
 
 <!-- [[[cog
