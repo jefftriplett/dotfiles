@@ -313,6 +313,80 @@ Available recipes:
 | battery/screen callbacks     | <kbd>hyper</kbd> + <kbd>,</kbd> |
 | display watcher status       | <kbd>hyper</kbd> + <kbd>0</kbd> |
 
+## tmux Setup
+
+Session management and key bindings are defined in `home/.tmux.conf` and `home/.bash_tmux`.
+
+### Shell Aliases
+
+| Alias | Command | Description |
+| ----- | ------- | ----------- |
+| `t` | `tmux` | Run tmux |
+| `ta [name]` | `tmux-go` | Attach to or create a named session |
+| `tn [name]` | `tmux-new` | Create a new session (attaches if it already exists) |
+| `tr [name]` | `tmux-resume` | Alias for `tmux-go` |
+| `tk [name]` | `tmux-kill` | Kill a named session |
+| `tls` | `tmux-ls` | List all sessions |
+
+Tab completion for session names is available on `ta`, `tr`, `tn`, and `tk`.
+
+### Key Bindings
+
+Prefix is `Ctrl-b`.
+
+#### Panes
+
+| Action | Key |
+| ------ | --- |
+| Split horizontally | `prefix + \|` |
+| Split vertically | `prefix + -` |
+| Navigate left/down/up/right | `prefix + h/j/k/l` |
+| Resize left/down/up/right | `prefix + H/J/K/L` (repeatable) |
+
+#### Windows
+
+| Action | Key |
+| ------ | --- |
+| New window (current directory) | `prefix + c` |
+
+#### Copy Mode
+
+| Action | Key |
+| ------ | --- |
+| Enter copy mode | `prefix + [` |
+| Start selection | `v` |
+| Copy selection to clipboard | `y` |
+| Mouse drag | auto-copies to clipboard |
+
+#### Misc
+
+| Action | Key |
+| ------ | --- |
+| Reload config | `prefix + r` |
+| Clear screen and scrollback | `prefix + Ctrl-k` |
+
+### direnv Auto-Attach
+
+Add `use_tmux` to any project's `.envrc` to automatically attach to (or create) a tmux session when entering that directory:
+
+```shell
+# .envrc
+use_tmux            # session name defaults to the directory name
+use_tmux myproject  # explicit session name
+```
+
+Set `NO_TMUX_AUTOATTACH=1` to skip auto-attach for a shell session.
+
+### Remote Sessions
+
+Set `TMUX_AUTOATTACH_MACHINE` in an `.envrc` to have `tmux-go` and auto-attach SSH to a remote host's tmux session instead:
+
+```shell
+# .envrc
+use_tmux myproject
+export TMUX_AUTOATTACH_MACHINE=myserver
+```
+
 ## Terminal theme
 
 - [Dracula][dracula] Dark theme for iTerm and 294+ apps.
