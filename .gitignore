@@ -52,6 +52,7 @@ override
 
 # my files
 home/.claude/statsig/
+home/.claude.json.tmp*
 home/.config/MusicBrainz/
 home/.config/syncthing/
 home/.config/autostart/
