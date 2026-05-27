@@ -16,6 +16,10 @@ __tmux_target_machine() {
     printf '%s' "${TMUX_AUTOATTACH_MACHINE:-${TMUX_AUTOATTACH_HOST:-}}"
 }
 
+__tmux_target_path() {
+    printf '%s' "${TMUX_AUTOATTACH_PATH:-}"
+}
+
 __tmux_remote_tmux_command() {
     local quoted
     local remote_command="tmux"
@@ -31,11 +35,21 @@ __tmux_remote_tmux_command() {
 __tmux_attach() {
     local machine="$1"
     local name="$2"
+    local path
+    path="$(__tmux_target_path)"
 
     if [[ -n "$machine" ]]; then
-        direnv exec / env ssh -t "$machine" "$(__tmux_remote_tmux_command new-session -A -s "$name")"
+        if [[ -n "$path" ]]; then
+            direnv exec / env ssh -t "$machine" "$(__tmux_remote_tmux_command new-session -A -s "$name" -c "$path")"
+        else
+            direnv exec / env ssh -t "$machine" "$(__tmux_remote_tmux_command new-session -A -s "$name")"
+        fi
     else
-        tmux new-session -A -s "$name"
+        if [[ -n "$path" ]]; then
+            tmux new-session -A -s "$name" -c "$path"
+        else
+            tmux new-session -A -s "$name"
+        fi
     fi
 }
 
@@ -115,6 +129,7 @@ tmux-kill() {
 __tmux_autoattach() {
     local machine
     local name
+    local path
 
     [[ $- == *i* ]] || return 0
     [[ -z "$TMUX" ]] || return 0
@@ -127,13 +142,22 @@ __tmux_autoattach() {
 
     name="$(__tmux_session_name "$TMUX_AUTOATTACH")"
     machine="$(__tmux_target_machine)"
+    path="$(__tmux_target_path)"
 
     if [[ -n "$machine" ]]; then
         __tmux_set_title "${machine}:${name}"
-        exec direnv exec / env ssh -t "$machine" "$(__tmux_remote_tmux_command new-session -A -s "$name")"
+        if [[ -n "$path" ]]; then
+            exec direnv exec / env ssh -t "$machine" "$(__tmux_remote_tmux_command new-session -A -s "$name" -c "$path")"
+        else
+            exec direnv exec / env ssh -t "$machine" "$(__tmux_remote_tmux_command new-session -A -s "$name")"
+        fi
     else
         __tmux_set_title "$name"
-        exec direnv exec / env tmux new-session -A -s "$name"
+        if [[ -n "$path" ]]; then
+            exec direnv exec / env tmux new-session -A -s "$name" -c "$path"
+        else
+            exec direnv exec / env tmux new-session -A -s "$name"
+        fi
     fi
 }
 

@@ -35,10 +35,12 @@ layout_uv() {
 #   use tmux project-name
 #   use tmux project-name --machine Mac-Studio-2023
 #   use tmux project-name --profile Mac-Studio-2023
+#   use tmux project-name --machine Mac-Studio-2023 --path /home/jeff/projects/myproject
 #   use tmux project-name cog
 use_tmux() {
     local machine=""
     local name=""
+    local path=""
 
     while [[ $# -gt 0 ]]; do
         case "$1" in
@@ -52,6 +54,17 @@ use_tmux() {
                 ;;
             --machine=* | --host=* | --profile=*)
                 machine="${1#*=}"
+                ;;
+            --path | --dir)
+                shift
+                if [[ -z "${1:-}" ]]; then
+                    log_error "use tmux: missing path after option"
+                    return 1
+                fi
+                path="$1"
+                ;;
+            --path=* | --dir=*)
+                path="${1#*=}"
                 ;;
             --local)
                 machine=""
@@ -83,5 +96,11 @@ use_tmux() {
     else
         unset TMUX_AUTOATTACH_MACHINE
         unset TMUX_AUTOATTACH_HOST
+    fi
+
+    if [[ -n "$path" ]]; then
+        export TMUX_AUTOATTACH_PATH="$path"
+    else
+        unset TMUX_AUTOATTACH_PATH
     fi
 }

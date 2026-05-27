@@ -403,25 +403,43 @@ Prefix is `Ctrl-b`.
 
 ### direnv Auto-Attach
 
-Add `use_tmux` to any project's `.envrc` to automatically attach to (or create) a tmux session when entering that directory:
+Add `use tmux` to any project's `.envrc` to automatically attach to (or create) a tmux session when entering that directory:
 
 ```shell
 # .envrc
-use_tmux            # session name defaults to the directory name
-use_tmux myproject  # explicit session name
+use tmux                                          # session name defaults to the directory name
+use tmux myproject                                # explicit session name
+use tmux myproject --machine myserver             # SSH to a remote host's tmux session
+use tmux myproject --machine myserver --path /home/jeff/projects/myproject  # with a remote start path
 ```
 
 Set `NO_TMUX_AUTOATTACH=1` to skip auto-attach for a shell session.
 
+### Environment Variables
+
+These variables are exported by `use tmux` in `.envrc` and read by the shell functions in `home/.bash_tmux`. They can also be set manually without direnv.
+
+| Variable | Description |
+| -------- | ----------- |
+| `TMUX_AUTOATTACH` | Session name to attach to or create on shell startup |
+| `TMUX_AUTOATTACH_MACHINE` | SSH hostname to route all tmux commands through |
+| `TMUX_AUTOATTACH_HOST` | Alias for `TMUX_AUTOATTACH_MACHINE` |
+| `TMUX_AUTOATTACH_PATH` | Working directory passed to `tmux new-session -c` (creation only, not re-attach) |
+| `NO_TMUX_AUTOATTACH` | Set to `1` to disable auto-attach for a shell session |
+
 ### Remote Sessions
 
-Set `TMUX_AUTOATTACH_MACHINE` in an `.envrc` to have `tmux-go` and auto-attach SSH to a remote host's tmux session instead:
+Set `--machine` (or `--host` / `--profile`) to SSH into a remote host's tmux session instead of the local one. All commands — `tmux-go`, `tmux-ls`, `tmux-kill`, and auto-attach — are routed through `ssh -t` automatically.
 
 ```shell
 # .envrc
-use_tmux myproject
-export TMUX_AUTOATTACH_MACHINE=myserver
+use tmux myproject --machine myserver
+
+# With a starting directory on the remote host (only applies when creating a new session)
+use tmux myproject --machine myserver --path /home/jeff/projects/myproject
 ```
+
+Requires key-based SSH auth (no password prompt) since the connection is non-interactive.
 
 ## Terminal theme
 
