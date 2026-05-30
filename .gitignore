@@ -76,11 +76,10 @@ home/bin/gam
 home/.config/zed/embeddings/
 home/.config/zed/prompts/
 
-# Ignore generated/local Claude config
+# Ignore everything in Claude
 .claude.json
 claude_desktop_config.json
-home/Library/Application Support/Claude/*
-!home/Library/Application Support/Claude/
+home/Library/Application Support/Claude/
 
 # Ignore everything in io.datasette.llm except for the templates folder
 home/Library/Application Support/io.datasette.llm/*
