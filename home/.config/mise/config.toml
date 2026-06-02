@@ -28,28 +28,23 @@ run = "mise upgrade"
 
 [tasks.claude]
 description = "Run Claude with skip-permissions and continue fallback"
-dir = "{cwd}"
-run = "command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --continue || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
+run = "cd $MISE_ORIGINAL_CWD && command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --continue || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
 
 [tasks.claude-agents]
 description = "Run Claude agents with skip-permissions"
-dir = "{cwd}"
-run = "command claude agents"
+run = "cd $MISE_ORIGINAL_CWD && command claude agents"
 
 [tasks.claude-resume]
 description = "Run Claude with skip-permissions and resume fallback"
-dir = "{cwd}"
-run = "command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --resume || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
+run = "cd $MISE_ORIGINAL_CWD && command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --resume || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
 
 [tasks.codex]
 description = "Run Codex with bypass-approvals-and-sandbox and resume fallback"
-dir = "{cwd}"
-run = "codex --dangerously-bypass-approvals-and-sandbox resume || codex --dangerously-bypass-approvals-and-sandbox"
+run = "cd $MISE_ORIGINAL_CWD && codex --dangerously-bypass-approvals-and-sandbox resume || codex --dangerously-bypass-approvals-and-sandbox"
 
 [tasks.copilot]
 description = "Run Copilot with allow-all-tools and resume fallback"
-dir = "{cwd}"
-run = "command copilot --allow-all-tools --resume || command copilot --allow-all-tools"
+run = "cd $MISE_ORIGINAL_CWD && command copilot --allow-all-tools --resume || command copilot --allow-all-tools"
 
 [tasks."llm:git-branch-name"]
 description = "Generate GitHub branch name repository from git diff using LLM generation"
