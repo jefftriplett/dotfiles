@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Print the remote host when the current tmux pane is running ssh,
+# otherwise the local short hostname. Used by the tmux status bar.
+
+set -u
+export LC_ALL=en_US.UTF-8
+
+is_ssh() {
+    local cmd
+    cmd=$(tmux display-message -p '#{pane_current_command}' 2>/dev/null)
+    [[ "$cmd" == "ssh" || "$cmd" == "sshpass" ]]
+}
+
+remote_host() {
+    local pid cmd
+    pid=$(tmux display-message -p '#{pane_pid}' 2>/dev/null)
+    cmd=$(
+        { pgrep -flaP "$pid" 2>/dev/null; ps -o command= -p "$pid" 2>/dev/null; } \
+            | grep -m1 ssh \
+            | sed -E 's/^[0-9]+[[:space:]]*ssh //; s/-p[[:space:]]+[0-9]+//'
+    )
+    awk '{print $NF}' <<<"$cmd" | cut -d@ -f2-
+}
+
+if is_ssh; then
+    host=$(remote_host)
+    [[ -n "$host" ]] && { echo "$host"; exit 0; }
+fi
+
+hostname -s
