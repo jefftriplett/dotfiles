@@ -1,26 +1,41 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.12"
-# dependencies = []
+# dependencies = [
+#     "tomli-w",
+#     "typer",
+# ]
 # ///
-"""Dump cmux workspace session (titles, cwds, colors, pins, descriptions) to JSON.
-
-Usage: cmux-dump [output-file]   (default: ~/.config/cmux/session-dump.json)
-"""
+"""Dump cmux workspace session (titles, cwds, colors, pins, descriptions)."""
 
 import json
 import subprocess
-import sys
 from pathlib import Path
+from typing import Annotated, Optional
+
+import tomli_w
+import typer
+
+DEFAULT_OUTPUT = Path.home() / ".config" / "cmux" / "session-dump.json"
 
 
-def main() -> None:
-    out = Path(
-        sys.argv[1]
-        if len(sys.argv) > 1
-        else Path.home() / ".config" / "cmux" / "session-dump.json"
-    )
-    out.parent.mkdir(parents=True, exist_ok=True)
+def main(
+    output: Annotated[
+        Optional[Path],
+        typer.Argument(help="Output file (default: ~/.config/cmux/session-dump.json)"),
+    ] = None,
+    as_json: Annotated[
+        bool, typer.Option("--json", help="Write JSON (default unless file ends in .toml)")
+    ] = False,
+    as_toml: Annotated[bool, typer.Option("--toml", help="Write TOML")] = False,
+) -> None:
+    if as_json and as_toml:
+        raise typer.BadParameter("Pass only one of --json or --toml")
+
+    if output is None:
+        output = DEFAULT_OUTPUT.with_suffix(".toml") if as_toml else DEFAULT_OUTPUT
+    use_toml = as_toml or (not as_json and output.suffix == ".toml")
+    output.parent.mkdir(parents=True, exist_ok=True)
 
     result = subprocess.run(
         ["cmux", "workspace", "list", "--json"],
@@ -39,9 +54,18 @@ def main() -> None:
         for ws in json.loads(result.stdout)["workspaces"]
     ]
 
-    out.write_text(json.dumps(workspaces, indent=2) + "\n")
-    print(f"Saved {len(workspaces)} workspaces to {out}")
+    if use_toml:
+        # TOML has no null; drop empty fields instead
+        cleaned = [
+            {key: value for key, value in ws.items() if value is not None}
+            for ws in workspaces
+        ]
+        output.write_text(tomli_w.dumps({"workspaces": cleaned}))
+    else:
+        output.write_text(json.dumps(workspaces, indent=2) + "\n")
+
+    print(f"Saved {len(workspaces)} workspaces to {output}")
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)

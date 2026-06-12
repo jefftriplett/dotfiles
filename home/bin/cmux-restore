@@ -1,19 +1,24 @@
 #!/usr/bin/env -S uv run --script
 # /// script
 # requires-python = ">=3.12"
-# dependencies = []
+# dependencies = [
+#     "typer",
+# ]
 # ///
-"""Restore cmux workspaces from a cmux-dump JSON file.
+"""Restore cmux workspaces from a cmux-dump file (JSON or TOML, by extension).
 
 Skips workspaces whose title already exists, so it is safe to rerun.
-
-Usage: cmux-restore [input-file]   (default: ~/.config/cmux/session-dump.json)
 """
 
 import json
 import subprocess
-import sys
+import tomllib
 from pathlib import Path
+from typing import Annotated, Optional
+
+import typer
+
+DEFAULT_INPUT = Path.home() / ".config" / "cmux" / "session-dump.json"
 
 
 def cmux(*args: str) -> str:
@@ -30,16 +35,22 @@ def workspace_action(ref: str, action: str, *extra: str) -> None:
     cmux("workspace-action", "--action", action, "--workspace", ref, *extra)
 
 
-def main() -> None:
-    source = Path(
-        sys.argv[1]
-        if len(sys.argv) > 1
-        else Path.home() / ".config" / "cmux" / "session-dump.json"
-    )
+def main(
+    source: Annotated[
+        Optional[Path],
+        typer.Argument(help="Dump file (default: ~/.config/cmux/session-dump.json)"),
+    ] = None,
+) -> None:
+    if source is None:
+        source = DEFAULT_INPUT
     if not source.is_file():
-        sys.exit(f"No dump file at {source}")
+        raise typer.BadParameter(f"No dump file at {source}")
 
-    dumped = json.loads(source.read_text())
+    if source.suffix == ".toml":
+        dumped = tomllib.loads(source.read_text())["workspaces"]
+    else:
+        dumped = json.loads(source.read_text())
+
     existing = {
         ws["title"]
         for ws in json.loads(cmux("workspace", "list", "--json"))["workspaces"]
@@ -72,4 +83,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    typer.run(main)
