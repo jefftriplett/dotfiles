@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# Restore cmux workspaces from a cmux-dump JSON file.
+# Usage: cmux-restore [input-file]   (default: ~/.config/cmux/session-dump.json)
+set -euo pipefail
+
+in="${1:-$HOME/.config/cmux/session-dump.json}"
+[[ -f "$in" ]] || { echo "No dump file at $in" >&2; exit 1; }
+
+existing=$(cmux workspace list --json | jq -r '.workspaces[].title')
+
+jq -c '.[]' "$in" | while read -r ws; do
+    title=$(jq -r '.title' <<<"$ws")
+    cwd=$(jq -r '.cwd' <<<"$ws")
+    color=$(jq -r '.color // empty' <<<"$ws")
+    pinned=$(jq -r '.pinned' <<<"$ws")
+    description=$(jq -r '.description // empty' <<<"$ws")
+
+    if grep -qxF "$title" <<<"$existing"; then
+        echo "skip   $title (already exists)"
+        continue
+    fi
+
+    ref=$(cmux workspace create --name "$title" --cwd "$cwd" --focus false | awk '{print $2}')
+    [[ -n "$color" ]] && cmux workspace-action --action set-color --workspace "$ref" --color "$color" >/dev/null
+    [[ "$pinned" == "true" ]] && cmux workspace-action --action pin --workspace "$ref" >/dev/null
+    [[ -n "$description" ]] && cmux workspace-action --action set-description --workspace "$ref" --description "$description" >/dev/null
+    echo "create $title -> $ref"
+done

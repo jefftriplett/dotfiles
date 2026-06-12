@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Dump cmux workspace session (titles, cwds, colors, pins, descriptions) to JSON.
+# Usage: cmux-dump [output-file]   (default: ~/.config/cmux/session-dump.json)
+set -euo pipefail
+
+out="${1:-$HOME/.config/cmux/session-dump.json}"
+mkdir -p "$(dirname "$out")"
+
+cmux workspace list --json | jq '[.workspaces[] | {
+    title: .title,
+    cwd: .current_directory,
+    color: .custom_color,
+    pinned: .pinned,
+    description: .description
+}]' > "$out"
+
+echo "Saved $(jq length "$out") workspaces to $out"
