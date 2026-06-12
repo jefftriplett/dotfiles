@@ -1,17 +1,47 @@
-#!/usr/bin/env bash
-# Dump cmux workspace session (titles, cwds, colors, pins, descriptions) to JSON.
-# Usage: cmux-dump [output-file]   (default: ~/.config/cmux/session-dump.json)
-set -euo pipefail
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = []
+# ///
+"""Dump cmux workspace session (titles, cwds, colors, pins, descriptions) to JSON.
 
-out="${1:-$HOME/.config/cmux/session-dump.json}"
-mkdir -p "$(dirname "$out")"
+Usage: cmux-dump [output-file]   (default: ~/.config/cmux/session-dump.json)
+"""
 
-cmux workspace list --json | jq '[.workspaces[] | {
-    title: .title,
-    cwd: .current_directory,
-    color: .custom_color,
-    pinned: .pinned,
-    description: .description
-}]' > "$out"
+import json
+import subprocess
+import sys
+from pathlib import Path
 
-echo "Saved $(jq length "$out") workspaces to $out"
+
+def main() -> None:
+    out = Path(
+        sys.argv[1]
+        if len(sys.argv) > 1
+        else Path.home() / ".config" / "cmux" / "session-dump.json"
+    )
+    out.parent.mkdir(parents=True, exist_ok=True)
+
+    result = subprocess.run(
+        ["cmux", "workspace", "list", "--json"],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    workspaces = [
+        {
+            "title": ws["title"],
+            "cwd": ws["current_directory"],
+            "color": ws["custom_color"],
+            "pinned": ws["pinned"],
+            "description": ws["description"],
+        }
+        for ws in json.loads(result.stdout)["workspaces"]
+    ]
+
+    out.write_text(json.dumps(workspaces, indent=2) + "\n")
+    print(f"Saved {len(workspaces)} workspaces to {out}")
+
+
+if __name__ == "__main__":
+    main()

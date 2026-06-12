@@ -1,28 +1,75 @@
-#!/usr/bin/env bash
-# Restore cmux workspaces from a cmux-dump JSON file.
-# Usage: cmux-restore [input-file]   (default: ~/.config/cmux/session-dump.json)
-set -euo pipefail
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = []
+# ///
+"""Restore cmux workspaces from a cmux-dump JSON file.
 
-in="${1:-$HOME/.config/cmux/session-dump.json}"
-[[ -f "$in" ]] || { echo "No dump file at $in" >&2; exit 1; }
+Skips workspaces whose title already exists, so it is safe to rerun.
 
-existing=$(cmux workspace list --json | jq -r '.workspaces[].title')
+Usage: cmux-restore [input-file]   (default: ~/.config/cmux/session-dump.json)
+"""
 
-jq -c '.[]' "$in" | while read -r ws; do
-    title=$(jq -r '.title' <<<"$ws")
-    cwd=$(jq -r '.cwd' <<<"$ws")
-    color=$(jq -r '.color // empty' <<<"$ws")
-    pinned=$(jq -r '.pinned' <<<"$ws")
-    description=$(jq -r '.description // empty' <<<"$ws")
+import json
+import subprocess
+import sys
+from pathlib import Path
 
-    if grep -qxF "$title" <<<"$existing"; then
-        echo "skip   $title (already exists)"
-        continue
-    fi
 
-    ref=$(cmux workspace create --name "$title" --cwd "$cwd" --focus false | awk '{print $2}')
-    [[ -n "$color" ]] && cmux workspace-action --action set-color --workspace "$ref" --color "$color" >/dev/null
-    [[ "$pinned" == "true" ]] && cmux workspace-action --action pin --workspace "$ref" >/dev/null
-    [[ -n "$description" ]] && cmux workspace-action --action set-description --workspace "$ref" --description "$description" >/dev/null
-    echo "create $title -> $ref"
-done
+def cmux(*args: str) -> str:
+    result = subprocess.run(
+        ["cmux", *args],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return result.stdout.strip()
+
+
+def workspace_action(ref: str, action: str, *extra: str) -> None:
+    cmux("workspace-action", "--action", action, "--workspace", ref, *extra)
+
+
+def main() -> None:
+    source = Path(
+        sys.argv[1]
+        if len(sys.argv) > 1
+        else Path.home() / ".config" / "cmux" / "session-dump.json"
+    )
+    if not source.is_file():
+        sys.exit(f"No dump file at {source}")
+
+    dumped = json.loads(source.read_text())
+    existing = {
+        ws["title"]
+        for ws in json.loads(cmux("workspace", "list", "--json"))["workspaces"]
+    }
+
+    for ws in dumped:
+        title = ws["title"]
+        if title in existing:
+            print(f"skip   {title} (already exists)")
+            continue
+
+        output = cmux(
+            "workspace",
+            "create",
+            "--name",
+            title,
+            "--cwd",
+            ws["cwd"],
+            "--focus",
+            "false",
+        )
+        ref = output.split()[-1]
+        if ws.get("color"):
+            workspace_action(ref, "set-color", "--color", ws["color"])
+        if ws.get("pinned"):
+            workspace_action(ref, "pin")
+        if ws.get("description"):
+            workspace_action(ref, "set-description", "--description", ws["description"])
+        print(f"create {title} -> {ref}")
+
+
+if __name__ == "__main__":
+    main()
