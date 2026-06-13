@@ -6,10 +6,20 @@
 #     "typer",
 # ]
 # ///
-"""Dump cmux workspace session (titles, cwds, colors, pins, descriptions)."""
+"""Dump cmux workspace session (titles, cwds, colors, pins, descriptions).
+
+cmux can't tell us whether a workspace is running mosh or tmux, so the
+optional `machine` and `tmux` fields are hand-edited in the dump file and
+preserved (matched by title) when re-dumping over an existing file.
+Annotated entries whose workspaces are closed are kept too, so closing a
+workspace doesn't lose its config. cmux-restore uses these fields to mosh
+to a remote host and/or attach a tmux session.
+"""
 
 import json
 import subprocess
+import tomllib
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Annotated, Optional
 
@@ -17,6 +27,69 @@ import tomli_w
 import typer
 
 DEFAULT_OUTPUT = Path.home() / ".config" / "cmux" / "session-dump.json"
+
+
+@dataclass
+class Workspace:
+    title: str
+    cwd: str
+    color: str | None = None
+    pinned: bool = False
+    description: str | None = None
+    machine: str | None = None
+    tmux: bool = False
+
+    @classmethod
+    def from_cmux(cls, ws: dict) -> "Workspace":
+        return cls(
+            title=ws["title"],
+            cwd=ws["current_directory"],
+            color=ws["custom_color"],
+            pinned=ws["pinned"],
+            description=ws["description"],
+        )
+
+    @classmethod
+    def from_dump(cls, ws: dict) -> "Workspace":
+        return cls(
+            title=ws["title"],
+            cwd=ws["cwd"],
+            color=ws.get("color"),
+            pinned=ws.get("pinned", False),
+            description=ws.get("description"),
+            machine=ws.get("machine"),
+            tmux=ws.get("tmux", False),
+        )
+
+    @property
+    def annotated(self) -> bool:
+        return bool(self.machine) or self.tmux
+
+    def to_dict(self, compact: bool = False) -> dict:
+        data = asdict(self)
+        if compact:
+            return {
+                key: value
+                for key, value in data.items()
+                if value is not None and value is not False
+            }
+        return data
+
+
+def load_previous(path: Path) -> dict[str, Workspace]:
+    """Map titles to prior dump entries so hand-edited fields survive."""
+    if not path.is_file():
+        return {}
+    try:
+        if path.suffix == ".toml":
+            entries = tomllib.loads(path.read_text())["workspaces"]
+        else:
+            entries = json.loads(path.read_text())
+        return {ws["title"]: Workspace.from_dump(ws) for ws in entries}
+    except (json.JSONDecodeError, tomllib.TOMLDecodeError, KeyError, TypeError) as exc:
+        print(f"Refusing to overwrite unparseable {path}: {exc}")
+        print("Fix or remove the file, then re-run.")
+        raise typer.Exit(code=1)
 
 
 def main(
@@ -43,28 +116,34 @@ def main(
         text=True,
         check=True,
     )
-    workspaces = [
-        {
-            "title": ws["title"],
-            "cwd": ws["current_directory"],
-            "color": ws["custom_color"],
-            "pinned": ws["pinned"],
-            "description": ws["description"],
-        }
-        for ws in json.loads(result.stdout)["workspaces"]
-    ]
+    previous = load_previous(output)
+    workspaces = []
+    for entry in json.loads(result.stdout)["workspaces"]:
+        ws = Workspace.from_cmux(entry)
+        prior = previous.pop(ws.title, None)
+        if prior is not None:
+            ws.machine = prior.machine
+            ws.tmux = prior.tmux
+        workspaces.append(ws)
+
+    # Keep annotated entries whose workspaces are no longer open
+    kept = [ws for ws in previous.values() if ws.annotated]
+    workspaces.extend(kept)
 
     if use_toml:
-        # TOML has no null; drop empty fields instead
-        cleaned = [
-            {key: value for key, value in ws.items() if value is not None}
-            for ws in workspaces
-        ]
-        output.write_text(tomli_w.dumps({"workspaces": cleaned}))
+        # TOML has no null; drop empty/default fields instead
+        cleaned = [ws.to_dict(compact=True) for ws in workspaces]
+        content = tomli_w.dumps({"workspaces": cleaned})
     else:
-        output.write_text(json.dumps(workspaces, indent=2) + "\n")
+        content = json.dumps([ws.to_dict() for ws in workspaces], indent=2) + "\n"
 
-    print(f"Saved {len(workspaces)} workspaces to {output}")
+    # Write atomically so an interrupt can't corrupt hand-edited fields
+    tmp = output.with_suffix(output.suffix + ".tmp")
+    tmp.write_text(content)
+    tmp.rename(output)
+
+    note = f" (kept {len(kept)} closed annotated)" if kept else ""
+    print(f"Saved {len(workspaces)} workspaces to {output}{note}")
 
 
 if __name__ == "__main__":

@@ -8,17 +8,89 @@
 """Restore cmux workspaces from a cmux-dump file (JSON or TOML, by extension).
 
 Skips workspaces whose title already exists, so it is safe to rerun.
+
+Optional per-workspace fields control where the workspace runs:
+
+  machine + tmux = true   mosh to the host and attach a tmux session named
+                          after the workspace, started in cwd
+  machine only            plain mosh to the host
+  tmux = true only        attach a local tmux session, started in cwd
+  neither                 plain local workspace
+
+If `machine` matches the local hostname, the workspace is treated as local.
+tmux sessions use `new-session -A`, so restores resume existing sessions.
 """
 
 import json
+import shlex
+import socket
 import subprocess
 import tomllib
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
 
 DEFAULT_INPUT = Path.home() / ".config" / "cmux" / "session-dump.json"
+
+
+def local_hostnames() -> set[str]:
+    hostname = socket.gethostname()
+    return {hostname.lower(), hostname.split(".")[0].lower()}
+
+
+@dataclass
+class Workspace:
+    title: str
+    cwd: str
+    color: str | None = None
+    pinned: bool = False
+    description: str | None = None
+    machine: str | None = None
+    tmux: bool = False
+
+    @classmethod
+    def from_dump(cls, ws: dict) -> "Workspace":
+        return cls(
+            title=ws["title"],
+            cwd=ws["cwd"],
+            color=ws.get("color"),
+            pinned=ws.get("pinned", False),
+            description=ws.get("description"),
+            machine=ws.get("machine"),
+            tmux=ws.get("tmux", False),
+        )
+
+    @property
+    def session_name(self) -> str:
+        # tmux session names may not contain ":" or "."
+        return self.title.replace(":", "-").replace(".", "-").replace(" ", "-")
+
+    @property
+    def is_remote(self) -> bool:
+        return bool(self.machine) and self.machine.lower() not in local_hostnames()
+
+    def command(self) -> str | None:
+        tmux_command = (
+            f"tmux new-session -A -s {shlex.quote(self.session_name)}"
+            f" -c {shlex.quote(self.cwd)}"
+        )
+
+        if self.is_remote:
+            if self.tmux:
+                # mosh re-evaluates its command through the remote shell, so
+                # the tmux command needs a second layer of quoting
+                return (
+                    f"mosh {shlex.quote(self.machine)} --"
+                    f" sh -c {shlex.quote(shlex.quote(tmux_command))}"
+                )
+            return f"mosh {shlex.quote(self.machine)}"
+
+        if self.tmux:
+            return tmux_command
+
+        return None
 
 
 def cmux(*args: str) -> str:
@@ -33,6 +105,29 @@ def cmux(*args: str) -> str:
 
 def workspace_action(ref: str, action: str, *extra: str) -> None:
     cmux("workspace-action", "--action", action, "--workspace", ref, *extra)
+
+
+def restore(ws: Workspace) -> str:
+    create_args = ["workspace", "create", "--name", ws.title, "--focus", "false"]
+    # A remote workspace's cwd lives on the remote host; don't use it locally
+    if not ws.is_remote:
+        create_args += ["--cwd", ws.cwd]
+
+    command = ws.command()
+    if command:
+        create_args += ["--command", command]
+
+    output = cmux(*create_args)
+    ref = output.split()[-1]
+    if not ref.startswith("workspace:"):
+        raise RuntimeError(f"Unexpected cmux output creating {ws.title!r}: {output!r}")
+    if ws.color:
+        workspace_action(ref, "set-color", "--color", ws.color)
+    if ws.pinned:
+        workspace_action(ref, "pin")
+    if ws.description:
+        workspace_action(ref, "set-description", "--description", ws.description)
+    return ref
 
 
 def main(
@@ -51,35 +146,27 @@ def main(
     else:
         dumped = json.loads(source.read_text())
 
+    workspaces = [Workspace.from_dump(ws) for ws in dumped]
+
     existing = {
         ws["title"]
         for ws in json.loads(cmux("workspace", "list", "--json"))["workspaces"]
     }
 
-    for ws in dumped:
-        title = ws["title"]
-        if title in existing:
-            print(f"skip   {title} (already exists)")
+    for ws in workspaces:
+        if ws.title in existing:
+            print(f"skip   {ws.title} (already exists)")
             continue
+        existing.add(ws.title)
 
-        output = cmux(
-            "workspace",
-            "create",
-            "--name",
-            title,
-            "--cwd",
-            ws["cwd"],
-            "--focus",
-            "false",
-        )
-        ref = output.split()[-1]
-        if ws.get("color"):
-            workspace_action(ref, "set-color", "--color", ws["color"])
-        if ws.get("pinned"):
-            workspace_action(ref, "pin")
-        if ws.get("description"):
-            workspace_action(ref, "set-description", "--description", ws["description"])
-        print(f"create {title} -> {ref}")
+        ref = restore(ws)
+        details = []
+        if ws.is_remote:
+            details.append(f"mosh:{ws.machine}")
+        if ws.tmux:
+            details.append(f"tmux:{ws.session_name}")
+        suffix = f" ({', '.join(details)})" if details else ""
+        print(f"create {ws.title} -> {ref}{suffix}")
 
 
 if __name__ == "__main__":
