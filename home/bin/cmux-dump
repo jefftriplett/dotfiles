@@ -38,6 +38,7 @@ class Workspace:
     description: str | None = None
     machine: str | None = None
     tmux: bool = False
+    session: str | None = None
 
     @classmethod
     def from_cmux(cls, ws: dict) -> "Workspace":
@@ -59,11 +60,12 @@ class Workspace:
             description=ws.get("description"),
             machine=ws.get("machine"),
             tmux=ws.get("tmux", False),
+            session=ws.get("session"),
         )
 
     @property
     def annotated(self) -> bool:
-        return bool(self.machine) or self.tmux
+        return bool(self.machine) or self.tmux or bool(self.session)
 
     def to_dict(self, compact: bool = False) -> dict:
         data = asdict(self)
@@ -124,6 +126,7 @@ def main(
         if prior is not None:
             ws.machine = prior.machine
             ws.tmux = prior.tmux
+            ws.session = prior.session
         workspaces.append(ws)
 
     # Keep annotated entries whose workspaces are no longer open

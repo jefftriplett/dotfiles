@@ -19,6 +19,10 @@ Optional per-workspace fields control where the workspace runs:
 
 If `machine` matches the local hostname, the workspace is treated as local.
 tmux sessions use `new-session -A`, so restores resume existing sessions.
+The shell cds into cwd before launching tmux, so a freshly created session
+starts there even if tmux's -c is bypassed. An optional `session` field
+overrides the tmux session name when the cmux title carries a label (e.g.
+"[mosh] foo") that differs from the session name.
 """
 
 import json
@@ -49,6 +53,7 @@ class Workspace:
     description: str | None = None
     machine: str | None = None
     tmux: bool = False
+    session: str | None = None
 
     @classmethod
     def from_dump(cls, ws: dict) -> "Workspace":
@@ -60,35 +65,45 @@ class Workspace:
             description=ws.get("description"),
             machine=ws.get("machine"),
             tmux=ws.get("tmux", False),
+            session=ws.get("session"),
         )
 
     @property
     def session_name(self) -> str:
-        # tmux session names may not contain ":" or "."
-        return self.title.replace(":", "-").replace(".", "-").replace(" ", "-")
+        # An explicit `session` overrides the title-derived name; useful when
+        # the cmux title carries a label (e.g. "[mosh] foo") that isn't the
+        # tmux session name. tmux session names may not contain ":" or ".".
+        name = self.session or self.title
+        return name.replace(":", "-").replace(".", "-").replace(" ", "-")
 
     @property
     def is_remote(self) -> bool:
         return bool(self.machine) and self.machine.lower() not in local_hostnames()
 
     def command(self) -> str | None:
+        cwd = shlex.quote(self.cwd)
         tmux_command = (
-            f"tmux new-session -A -s {shlex.quote(self.session_name)}"
-            f" -c {shlex.quote(self.cwd)}"
+            f"tmux new-session -A -s {shlex.quote(self.session_name)} -c {cwd}"
         )
+        # cd first so a freshly created session lands in cwd even if tmux's
+        # -c is bypassed; ";" (not "&&") so attaching to an existing session
+        # still works when the directory is missing on the remote
+        shell_command = f"cd {cwd}; {tmux_command}"
 
         if self.is_remote:
             if self.tmux:
-                # mosh re-evaluates its command through the remote shell, so
-                # the tmux command needs a second layer of quoting
+                # mosh passes the command to mosh-server as a clean argv and
+                # execs it directly (no remote login shell re-parse), so the
+                # command is quoted once, only for the local cmux-pane shell.
+                # The "--" stops mosh parsing "-c" as its own option.
                 return (
                     f"mosh {shlex.quote(self.machine)} --"
-                    f" sh -c {shlex.quote(shlex.quote(tmux_command))}"
+                    f" sh -c {shlex.quote(shell_command)}"
                 )
             return f"mosh {shlex.quote(self.machine)}"
 
         if self.tmux:
-            return tmux_command
+            return shell_command
 
         return None
 
@@ -108,10 +123,12 @@ def workspace_action(ref: str, action: str, *extra: str) -> None:
 
 
 def restore(ws: Workspace) -> str:
-    create_args = ["workspace", "create", "--name", ws.title, "--focus", "false"]
-    # A remote workspace's cwd lives on the remote host; don't use it locally
-    if not ws.is_remote:
-        create_args += ["--cwd", ws.cwd]
+    # Always set the local pane's cwd. For remote workspaces the path is the
+    # same on both hosts (matching home dirs), so the local shell lands in the
+    # right place too; cmux tolerates a path that doesn't exist locally.
+    create_args = [
+        "workspace", "create", "--name", ws.title, "--cwd", ws.cwd, "--focus", "false"
+    ]
 
     command = ws.command()
     if command:
