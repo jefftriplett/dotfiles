@@ -28,6 +28,17 @@ import typer
 
 DEFAULT_OUTPUT = Path.home() / ".config" / "cmux" / "session-dump.json"
 
+# cmux-restore adds this display-only label to remote workspace titles. Strip
+# it on dump so the file stores the base title (stable across re-dumps, and so
+# the title-keyed merge of hand-edited fields keeps matching).
+MOSH_PREFIX = "[mosh] "
+
+
+def strip_mosh_prefix(title: str) -> str:
+    while title.startswith(MOSH_PREFIX):
+        title = title[len(MOSH_PREFIX):]
+    return title
+
 
 @dataclass
 class Workspace:
@@ -43,7 +54,7 @@ class Workspace:
     @classmethod
     def from_cmux(cls, ws: dict) -> "Workspace":
         return cls(
-            title=ws["title"],
+            title=strip_mosh_prefix(ws["title"]),
             cwd=ws["current_directory"],
             color=ws["custom_color"],
             pinned=ws["pinned"],

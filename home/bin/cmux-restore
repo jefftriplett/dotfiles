@@ -20,9 +20,11 @@ Optional per-workspace fields control where the workspace runs:
 If `machine` matches the local hostname, the workspace is treated as local.
 tmux sessions use `new-session -A`, so restores resume existing sessions.
 The shell cds into cwd before launching tmux, so a freshly created session
-starts there even if tmux's -c is bypassed. An optional `session` field
-overrides the tmux session name when the cmux title carries a label (e.g.
-"[mosh] foo") that differs from the session name.
+starts there even if tmux's -c is bypassed.
+
+Remote (mosh) workspaces get a "[mosh] " label on the cmux title. The label is
+display-only: the tmux session name comes from the base title (or an explicit
+`session` field), so the prefix and its slugified form never reach the remote.
 """
 
 import json
@@ -37,6 +39,11 @@ from typing import Annotated, Optional
 import typer
 
 DEFAULT_INPUT = Path.home() / ".config" / "cmux" / "session-dump.json"
+
+# Label prefixed onto the cmux workspace title for remote (mosh) workspaces.
+# It is display-only: the remote tmux session name is derived from the base
+# title (or `session`), so the prefix never reaches the remote host.
+MOSH_PREFIX = "[mosh] "
 
 
 def local_hostnames() -> set[str]:
@@ -69,11 +76,28 @@ class Workspace:
         )
 
     @property
+    def base_title(self) -> str:
+        # The title without the display-only "[mosh] " label, so the prefix is
+        # never doubled and never leaks into the tmux session name.
+        title = self.title
+        while title.startswith(MOSH_PREFIX):
+            title = title[len(MOSH_PREFIX):]
+        return title
+
+    @property
+    def display_title(self) -> str:
+        # cmux workspace title: remote workspaces get the "[mosh] " label.
+        if self.is_remote:
+            return f"{MOSH_PREFIX}{self.base_title}"
+        return self.base_title
+
+    @property
     def session_name(self) -> str:
-        # An explicit `session` overrides the title-derived name; useful when
-        # the cmux title carries a label (e.g. "[mosh] foo") that isn't the
-        # tmux session name. tmux session names may not contain ":" or ".".
-        name = self.session or self.title
+        # An explicit `session` overrides the title-derived name. Built from the
+        # base title (not display_title), so the "[mosh] " label and its
+        # slugified form never reach the remote tmux. tmux session names may
+        # not contain ":" or ".".
+        name = self.session or self.base_title
         return name.replace(":", "-").replace(".", "-").replace(" ", "-")
 
     @property
@@ -133,7 +157,10 @@ def restore(ws: Workspace) -> str:
     # their cwd so their normal .envrc autoattach behaves as usual.
     local_cwd = str(Path.home()) if command else ws.cwd
     create_args = [
-        "workspace", "create", "--name", ws.title, "--cwd", local_cwd, "--focus", "false"
+        "workspace", "create",
+        "--name", ws.display_title,
+        "--cwd", local_cwd,
+        "--focus", "false",
     ]
 
     if command:
@@ -142,7 +169,9 @@ def restore(ws: Workspace) -> str:
     output = cmux(*create_args)
     ref = output.split()[-1]
     if not ref.startswith("workspace:"):
-        raise RuntimeError(f"Unexpected cmux output creating {ws.title!r}: {output!r}")
+        raise RuntimeError(
+            f"Unexpected cmux output creating {ws.display_title!r}: {output!r}"
+        )
     if ws.color:
         workspace_action(ref, "set-color", "--color", ws.color)
     if ws.pinned:
@@ -176,10 +205,12 @@ def main(
     }
 
     for ws in workspaces:
-        if ws.title in existing:
-            print(f"skip   {ws.title} (already exists)")
+        # Compare against the displayed title, which carries the "[mosh] "
+        # label for remote workspaces, so re-runs match and don't duplicate.
+        if ws.display_title in existing:
+            print(f"skip   {ws.display_title} (already exists)")
             continue
-        existing.add(ws.title)
+        existing.add(ws.display_title)
 
         ref = restore(ws)
         details = []
@@ -188,7 +219,7 @@ def main(
         if ws.tmux:
             details.append(f"tmux:{ws.session_name}")
         suffix = f" ({', '.join(details)})" if details else ""
-        print(f"create {ws.title} -> {ref}{suffix}")
+        print(f"create {ws.display_title} -> {ref}{suffix}")
 
 
 if __name__ == "__main__":
