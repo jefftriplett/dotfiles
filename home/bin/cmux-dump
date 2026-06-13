@@ -26,7 +26,7 @@ from typing import Annotated, Optional
 import tomli_w
 import typer
 
-DEFAULT_OUTPUT = Path.home() / ".config" / "cmux" / "session-dump.json"
+DEFAULT_OUTPUT = Path.home() / ".config" / "cmux" / "session-dump.toml"
 
 # cmux-restore adds this display-only label to remote workspace titles. Strip
 # it on dump so the file stores the base title (stable across re-dumps, and so
@@ -94,10 +94,10 @@ def load_previous(path: Path) -> dict[str, Workspace]:
     if not path.is_file():
         return {}
     try:
-        if path.suffix == ".toml":
-            entries = tomllib.loads(path.read_text())["workspaces"]
-        else:
+        if path.suffix == ".json":
             entries = json.loads(path.read_text())
+        else:
+            entries = tomllib.loads(path.read_text())["workspaces"]
         return {ws["title"]: Workspace.from_dump(ws) for ws in entries}
     except (json.JSONDecodeError, tomllib.TOMLDecodeError, KeyError, TypeError) as exc:
         print(f"Refusing to overwrite unparseable {path}: {exc}")
@@ -108,19 +108,20 @@ def load_previous(path: Path) -> dict[str, Workspace]:
 def main(
     output: Annotated[
         Optional[Path],
-        typer.Argument(help="Output file (default: ~/.config/cmux/session-dump.json)"),
+        typer.Argument(help="Output file (default: ~/.config/cmux/session-dump.toml)"),
     ] = None,
     as_json: Annotated[
-        bool, typer.Option("--json", help="Write JSON (default unless file ends in .toml)")
+        bool, typer.Option("--json", help="Write JSON (default is TOML unless file ends in .json)")
     ] = False,
-    as_toml: Annotated[bool, typer.Option("--toml", help="Write TOML")] = False,
+    as_toml: Annotated[bool, typer.Option("--toml", help="Write TOML (the default)")] = False,
 ) -> None:
     if as_json and as_toml:
         raise typer.BadParameter("Pass only one of --json or --toml")
 
     if output is None:
-        output = DEFAULT_OUTPUT.with_suffix(".toml") if as_toml else DEFAULT_OUTPUT
-    use_toml = as_toml or (not as_json and output.suffix == ".toml")
+        output = DEFAULT_OUTPUT.with_suffix(".json") if as_json else DEFAULT_OUTPUT
+    # Default to TOML; emit JSON only when asked or the path ends in .json
+    use_toml = not as_json and (as_toml or output.suffix != ".json")
     output.parent.mkdir(parents=True, exist_ok=True)
 
     result = subprocess.run(

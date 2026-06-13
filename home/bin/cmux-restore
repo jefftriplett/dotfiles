@@ -5,7 +5,11 @@
 #     "typer",
 # ]
 # ///
-"""Restore cmux workspaces from a cmux-dump file (JSON or TOML, by extension).
+"""Restore cmux workspaces from a cmux-dump file (TOML by default, or JSON).
+
+The format is detected by extension (.json is JSON, anything else is TOML).
+With no path, the default ~/.config/cmux/session-dump.toml is used, falling
+back to session-dump.json when the TOML file is absent.
 
 Skips workspaces whose title already exists, so it is safe to rerun.
 
@@ -38,7 +42,9 @@ from typing import Annotated, Optional
 
 import typer
 
-DEFAULT_INPUT = Path.home() / ".config" / "cmux" / "session-dump.json"
+DEFAULT_DIR = Path.home() / ".config" / "cmux"
+DEFAULT_TOML = DEFAULT_DIR / "session-dump.toml"
+DEFAULT_JSON = DEFAULT_DIR / "session-dump.json"
 
 # Label prefixed onto the cmux workspace title for remote (mosh) workspaces.
 # It is display-only: the remote tmux session name is derived from the base
@@ -184,18 +190,19 @@ def restore(ws: Workspace) -> str:
 def main(
     source: Annotated[
         Optional[Path],
-        typer.Argument(help="Dump file (default: ~/.config/cmux/session-dump.json)"),
+        typer.Argument(help="Dump file (default: ~/.config/cmux/session-dump.toml, falls back to .json)"),
     ] = None,
 ) -> None:
     if source is None:
-        source = DEFAULT_INPUT
+        # Prefer TOML; fall back to JSON only if the TOML file is absent
+        source = DEFAULT_TOML if DEFAULT_TOML.is_file() else DEFAULT_JSON
     if not source.is_file():
         raise typer.BadParameter(f"No dump file at {source}")
 
-    if source.suffix == ".toml":
-        dumped = tomllib.loads(source.read_text())["workspaces"]
-    else:
+    if source.suffix == ".json":
         dumped = json.loads(source.read_text())
+    else:
+        dumped = tomllib.loads(source.read_text())["workspaces"]
 
     workspaces = [Workspace.from_dump(ws) for ws in dumped]
 
