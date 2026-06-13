@@ -123,14 +123,19 @@ def workspace_action(ref: str, action: str, *extra: str) -> None:
 
 
 def restore(ws: Workspace) -> str:
-    # Always set the local pane's cwd. For remote workspaces the path is the
-    # same on both hosts (matching home dirs), so the local shell lands in the
-    # right place too; cmux tolerates a path that doesn't exist locally.
+    command = ws.command()
+
+    # When we issue our own launch command (mosh and/or tmux), open the local
+    # pane in a neutral dir. Otherwise the shell's tmux autoattach -- triggered
+    # by a project .envrc (`use tmux`) -- execs a local tmux session before our
+    # command runs, and the mosh/tmux command ends up nested inside it. The
+    # command's own `cd` sets the real working directory. Plain workspaces keep
+    # their cwd so their normal .envrc autoattach behaves as usual.
+    local_cwd = str(Path.home()) if command else ws.cwd
     create_args = [
-        "workspace", "create", "--name", ws.title, "--cwd", ws.cwd, "--focus", "false"
+        "workspace", "create", "--name", ws.title, "--cwd", local_cwd, "--focus", "false"
     ]
 
-    command = ws.command()
     if command:
         create_args += ["--command", command]
 
