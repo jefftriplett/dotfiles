@@ -1,0 +1,116 @@
+# mise dotfiles config — mirrors the homesick castle (home/) one-for-one.
+# Lives at the castle ROOT (NOT under home/), so homesick never links it.
+# Run from this directory:  mise dotfiles apply --dry-run
+#
+# Coexists with homesick: targets are identical, so apply is idempotent.
+# 'symlink-each' entries mirror your .homesick_subdir (descend & link contents).
+
+[settings]
+dotfiles.root = "~/.homesick/repos/dotfiles/home"
+dotfiles.default_mode = "symlink"
+
+[dotfiles]
+# --- whole-entry symlinks (top level of home/) ---
+"~/.actrc" = {}
+"~/.asdf" = {}
+"~/.bash_aliases" = {}
+"~/.bash_exports" = {}
+"~/.bash_functions" = {}
+"~/.bash_linux" = {}
+"~/.bash_osx" = {}
+"~/.bash_profile" = {}
+"~/.bash_secrets" = {}
+"~/.bash_tmux" = {}
+"~/.bashrc" = {}
+"~/.claude" = {}
+"~/.claude.json" = {}
+"~/.codex" = {}
+"~/.copilot" = {}
+"~/.direnvrc" = {}
+"~/.docker_aliases" = {}
+"~/.foreman" = {}
+"~/.gitlab.yml" = {}
+"~/.hammerspoon" = {}
+"~/.idea" = {}
+"~/.isort.cfg" = {}
+"~/.justfiles" = {}
+"~/.maid" = {}
+"~/.personal.gitconfig" = {}
+"~/.pip" = {}
+"~/.plists" = {}
+"~/.proselintrc.json" = {}
+"~/.stglobalignore" = {}
+"~/.stignore" = {}
+"~/.tabset" = {}
+"~/.teamocil" = {}
+"~/.tmux" = {}
+"~/.tmux.conf" = {}
+"~/.workon.bash" = {}
+"~/bin" = {}
+"~/Brewfile" = {}
+"~/justfile" = {}
+"~/minica-key.pem" = {}
+"~/minica.pem" = {}
+"~/package-lock.json" = {}
+"~/package.json" = {}
+
+# --- subdir children (mirrors homesick's .homesick_subdir: link the
+#     immediate children as whole symlinks, NOT recurse to leaves).
+#     symlink-each was wrong here: it descended into ~/.config/iterm2/
+#     sockets/secrets (a live socket) and refused to overwrite it.
+#     .pyenv/.sshrc.d/.zsh omitted: empty in the castle, nothing to link. ---
+# --- .config (immediate children, mirroring homesick) ---
+"~/.config/aerospace" = {}
+"~/.config/atuin" = {}
+"~/.config/autostart" = {}
+"~/.config/BlueSherpa" = {}
+"~/.config/caddy" = {}
+"~/.config/chezmoi" = {}
+"~/.config/configstore" = {}
+"~/.config/direnv" = {}
+"~/.config/enchant" = {}
+"~/.config/flameshot" = {}
+"~/.config/flipperdevices.com" = {}
+"~/.config/flutter" = {}
+"~/.config/gcloud" = {}
+"~/.config/gh" = {}
+"~/.config/gh-search-cli" = {}
+"~/.config/ghostty" = {}
+"~/.config/git" = {}
+"~/.config/github-copilot" = {}
+"~/.config/grammarly-languageserver" = {}
+"~/.config/iterm2" = {}
+"~/.config/menus" = {}
+"~/.config/mise" = {}
+"~/.config/MusicBrainz" = {}
+"~/.config/prompts" = {}
+"~/.config/raycast" = {}
+"~/.config/rclone" = {}
+"~/.config/safebrowsing" = {}
+"~/.config/scc-cli.json" = {}
+"~/.config/skhd" = {}
+"~/.config/spacebar" = {}
+"~/.config/starship.toml" = {}
+"~/.config/syncthing" = {}
+"~/.config/vmd" = {}
+"~/.config/yabai" = {}
+"~/.config/zed" = {}
+
+# --- .virtualenvs (immediate children, mirroring homesick) ---
+"~/.virtualenvs/get_env_details" = {}
+"~/.virtualenvs/initialize" = {}
+"~/.virtualenvs/postactivate" = {}
+"~/.virtualenvs/postdeactivate" = {}
+"~/.virtualenvs/postmkproject" = {}
+"~/.virtualenvs/postmkvirtualenv" = {}
+"~/.virtualenvs/postrmvirtualenv" = {}
+"~/.virtualenvs/preactivate" = {}
+"~/.virtualenvs/predeactivate" = {}
+"~/.virtualenvs/premkproject" = {}
+"~/.virtualenvs/premkvirtualenv" = {}
+"~/.virtualenvs/prermvirtualenv" = {}
+# (postrmproject/prermproject omitted: dangling homesick links, source gone)
+
+# --- Library/Application Support (immediate children, mirroring homesick) ---
+"~/Library/Application Support/Claude" = {}
+"~/Library/Application Support/io.datasette.llm" = {}
