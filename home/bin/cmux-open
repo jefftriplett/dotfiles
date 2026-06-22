@@ -1,0 +1,49 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "typer",
+# ]
+# ///
+"""Open the cmux session-dump file in $EDITOR.
+
+With no path, the default ~/.config/cmux/session-dump.toml is used, falling
+back to session-dump.json when the TOML file is absent.
+"""
+
+import os
+import shlex
+import subprocess
+from pathlib import Path
+from typing import Annotated, Optional
+
+import typer
+
+DEFAULT_DIR = Path.home() / ".config" / "cmux"
+DEFAULT_TOML = DEFAULT_DIR / "session-dump.toml"
+DEFAULT_JSON = DEFAULT_DIR / "session-dump.json"
+
+
+def main(
+    source: Annotated[
+        Optional[Path],
+        typer.Argument(
+            help="Dump file (default: ~/.config/cmux/session-dump.toml, falls back to .json)"
+        ),
+    ] = None,
+) -> None:
+    if source is None:
+        # Prefer TOML; fall back to JSON only if the TOML file is absent
+        source = DEFAULT_TOML if DEFAULT_TOML.is_file() else DEFAULT_JSON
+    if not source.is_file():
+        raise typer.BadParameter(f"No dump file at {source} (run cmux-dump first)")
+
+    editor = os.environ.get("EDITOR") or os.environ.get("VISUAL")
+    if not editor:
+        raise typer.BadParameter("Set $EDITOR (or $VISUAL) to open the dump file")
+
+    subprocess.run([*shlex.split(editor), str(source)], check=True)
+
+
+if __name__ == "__main__":
+    typer.run(main)
