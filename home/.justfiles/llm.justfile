@@ -43,7 +43,7 @@ outdated:
 
     echo ""
     echo "==> Checking bun packages..."
-    for pkg in @openai/codex clawdhub cc-x10ded @mariozechner/pi-coding-agent; do
+    for pkg in @openai/codex clawdhub cc-x10ded @earendil-works/pi-coding-agent; do
         installed=$(bun pm ls -g 2>/dev/null | grep "$pkg" | sed 's/.*@//' | head -1)
         latest=$(npm view "$pkg" version 2>/dev/null)
         if [ -n "$installed" ] && [ -n "$latest" ]; then
