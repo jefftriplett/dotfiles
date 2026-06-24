@@ -24,9 +24,10 @@ elif [[ "${unamestr}" == 'Linux' ]]; then
     source "${HOME}/.bash_linux"
 fi
 
-if declare -F __tmux_autoattach >/dev/null; then
-    __tmux_autoattach
-fi
+# tmux auto-attach disabled (function kept in .bash_tmux for re-enabling)
+# if declare -F __tmux_autoattach >/dev/null; then
+#     __tmux_autoattach
+# fi
 
 # OrbStack: Load command-line tools and integration if installed
 if [[ -f ~/.orbstack/shell/init.bash ]]; then
