@@ -206,18 +206,20 @@ def main(
 
     workspaces = [Workspace.from_dump(ws) for ws in dumped]
 
-    existing = {
-        ws["title"]
-        for ws in json.loads(cmux("workspace", "list", "--json"))["workspaces"]
-    }
+    existing = set()
+    for ws_data in json.loads(cmux("workspace", "list", "--json"))["workspaces"]:
+        title = ws_data["title"]
+        existing.add(title)
+        base = title
+        while base.startswith(MOSH_PREFIX):
+            base = base[len(MOSH_PREFIX):]
+        existing.add(base)
 
     for ws in workspaces:
-        # Compare against the displayed title, which carries the "[mosh] "
-        # label for remote workspaces, so re-runs match and don't duplicate.
-        if ws.display_title in existing:
+        if ws.base_title in existing:
             print(f"skip   {ws.display_title} (already exists)")
             continue
-        existing.add(ws.display_title)
+        existing.add(ws.base_title)
 
         ref = restore(ws)
         details = []
