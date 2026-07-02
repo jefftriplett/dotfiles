@@ -4,6 +4,7 @@ __tmux_session_name() {
     local name="${1:-${TMUX_AUTOATTACH:-$(basename "$PWD")}}"
 
     name="${name//:/-}"
+    name="${name//./-}"
     name="${name// /-}"
     printf '%s' "$name"
 }
