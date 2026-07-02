@@ -19,74 +19,15 @@ to a remote host and/or attach a tmux session.
 import json
 import subprocess
 import tomllib
-from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Annotated, Optional
 
 import tomli_w
 import typer
 
-DEFAULT_OUTPUT = Path.home() / ".config" / "cmux" / "session-dump.toml"
+from _cmux import DEFAULT_TOML, Workspace, load_dump
 
-# cmux-restore adds this display-only label to remote workspace titles. Strip
-# it on dump so the file stores the base title (stable across re-dumps, and so
-# the title-keyed merge of hand-edited fields keeps matching).
-MOSH_PREFIX = "[mosh] "
-
-
-def strip_mosh_prefix(title: str) -> str:
-    while title.startswith(MOSH_PREFIX):
-        title = title[len(MOSH_PREFIX):]
-    return title
-
-
-@dataclass
-class Workspace:
-    title: str
-    cwd: str
-    color: str | None = None
-    pinned: bool = False
-    description: str | None = None
-    machine: str | None = None
-    tmux: bool = False
-    session: str | None = None
-
-    @classmethod
-    def from_cmux(cls, ws: dict) -> "Workspace":
-        return cls(
-            title=strip_mosh_prefix(ws["title"]),
-            cwd=ws["current_directory"],
-            color=ws["custom_color"],
-            pinned=ws["pinned"],
-            description=ws["description"],
-        )
-
-    @classmethod
-    def from_dump(cls, ws: dict) -> "Workspace":
-        return cls(
-            title=ws["title"],
-            cwd=ws["cwd"],
-            color=ws.get("color"),
-            pinned=ws.get("pinned", False),
-            description=ws.get("description"),
-            machine=ws.get("machine"),
-            tmux=ws.get("tmux", False),
-            session=ws.get("session"),
-        )
-
-    @property
-    def annotated(self) -> bool:
-        return bool(self.machine) or self.tmux or bool(self.session)
-
-    def to_dict(self, compact: bool = False) -> dict:
-        data = asdict(self)
-        if compact:
-            return {
-                key: value
-                for key, value in data.items()
-                if value is not None and value is not False
-            }
-        return data
+DEFAULT_OUTPUT = DEFAULT_TOML
 
 
 def load_previous(path: Path) -> dict[str, Workspace]:
@@ -94,10 +35,7 @@ def load_previous(path: Path) -> dict[str, Workspace]:
     if not path.is_file():
         return {}
     try:
-        if path.suffix == ".json":
-            entries = json.loads(path.read_text())
-        else:
-            entries = tomllib.loads(path.read_text())["workspaces"]
+        entries = load_dump(path)
         return {ws["title"]: Workspace.from_dump(ws) for ws in entries}
     except (json.JSONDecodeError, tomllib.TOMLDecodeError, KeyError, TypeError) as exc:
         print(f"Refusing to overwrite unparseable {path}: {exc}")

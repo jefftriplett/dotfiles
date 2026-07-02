@@ -19,9 +19,7 @@ from typing import Annotated, Optional
 
 import typer
 
-DEFAULT_DIR = Path.home() / ".config" / "cmux"
-DEFAULT_TOML = DEFAULT_DIR / "session-dump.toml"
-DEFAULT_JSON = DEFAULT_DIR / "session-dump.json"
+from _cmux import default_dump_path
 
 
 def main(
@@ -33,8 +31,7 @@ def main(
     ] = None,
 ) -> None:
     if source is None:
-        # Prefer TOML; fall back to JSON only if the TOML file is absent
-        source = DEFAULT_TOML if DEFAULT_TOML.is_file() else DEFAULT_JSON
+        source = default_dump_path()
     if not source.is_file():
         raise typer.BadParameter(f"No dump file at {source} (run cmux-dump first)")
 

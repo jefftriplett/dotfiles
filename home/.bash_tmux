@@ -1,6 +1,8 @@
 # shellcheck shell=bash
 
 __tmux_session_name() {
+    # tmux session names may not contain ":" or ".". Keep the replacement
+    # set in sync with Workspace.session_name in ~/bin/_cmux.py.
     local name="${1:-${TMUX_AUTOATTACH:-$(basename "$PWD")}}"
 
     name="${name//:/-}"
@@ -21,7 +23,7 @@ __tmux_target_path() {
     printf '%s' "${TMUX_AUTOATTACH_PATH:-}"
 }
 
-__tmux_remote_tmux_command() {
+__tmux_remote_tmux_string() {
     local quoted
     local remote_command="tmux"
 
@@ -30,7 +32,29 @@ __tmux_remote_tmux_command() {
         remote_command="${remote_command} ${quoted}"
     done
 
-    printf 'bash -lc %q' "$remote_command"
+    printf '%s' "$remote_command"
+}
+
+__tmux_remote_tmux_command() {
+    printf 'bash -lc %q' "$(__tmux_remote_tmux_string "$@")"
+}
+
+# Sets __tmux_argv to the local command that attaches the remote session.
+# Interactive attaches use mosh when available (matching cmux-restore),
+# falling back to ssh. mosh passes the command to mosh-server as a clean
+# argv, so it is quoted once; ssh re-parses on the remote, so it gets the
+# extra %q layer.
+__tmux_remote_attach_argv() {
+    local machine="$1"
+    shift
+    local tmux_string
+    tmux_string="$(__tmux_remote_tmux_string "$@")"
+
+    if command -v mosh >/dev/null 2>&1; then
+        __tmux_argv=(direnv exec / env mosh "$machine" -- bash -lc "$tmux_string")
+    else
+        __tmux_argv=(direnv exec / env ssh -t "$machine" "bash -lc $(printf '%q' "$tmux_string")")
+    fi
 }
 
 __tmux_attach() {
@@ -41,10 +65,11 @@ __tmux_attach() {
 
     if [[ -n "$machine" ]]; then
         if [[ -n "$path" ]]; then
-            direnv exec / env ssh -t "$machine" "$(__tmux_remote_tmux_command new-session -A -s "$name" -c "$path")"
+            __tmux_remote_attach_argv "$machine" new-session -A -s "$name" -c "$path"
         else
-            direnv exec / env ssh -t "$machine" "$(__tmux_remote_tmux_command new-session -A -s "$name")"
+            __tmux_remote_attach_argv "$machine" new-session -A -s "$name"
         fi
+        "${__tmux_argv[@]}"
     else
         if [[ -n "$path" ]]; then
             tmux new-session -A -s "$name" -c "$path"
@@ -148,10 +173,11 @@ __tmux_autoattach() {
     if [[ -n "$machine" ]]; then
         __tmux_set_title "${machine}:${name}"
         if [[ -n "$path" ]]; then
-            exec direnv exec / env ssh -t "$machine" "$(__tmux_remote_tmux_command new-session -A -s "$name" -c "$path")"
+            __tmux_remote_attach_argv "$machine" new-session -A -s "$name" -c "$path"
         else
-            exec direnv exec / env ssh -t "$machine" "$(__tmux_remote_tmux_command new-session -A -s "$name")"
+            __tmux_remote_attach_argv "$machine" new-session -A -s "$name"
         fi
+        exec "${__tmux_argv[@]}"
     else
         __tmux_set_title "$name"
         if [[ -n "$path" ]]; then
@@ -179,6 +205,5 @@ complete -F _tmux_session_completions tmux-go tmux-resume tmux-attach tmux-kill
 alias t='tmux'
 alias ta='tmux-go'
 alias tn='tmux-new'
-alias tr='tmux-resume'
 alias tk='tmux-kill'
 alias tls='tmux-ls'

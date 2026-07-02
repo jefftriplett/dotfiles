@@ -32,110 +32,13 @@ display-only: the tmux session name comes from the base title (or an explicit
 """
 
 import json
-import shlex
-import socket
 import subprocess
-import tomllib
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
 
-DEFAULT_DIR = Path.home() / ".config" / "cmux"
-DEFAULT_TOML = DEFAULT_DIR / "session-dump.toml"
-DEFAULT_JSON = DEFAULT_DIR / "session-dump.json"
-
-# Label prefixed onto the cmux workspace title for remote (mosh) workspaces.
-# It is display-only: the remote tmux session name is derived from the base
-# title (or `session`), so the prefix never reaches the remote host.
-MOSH_PREFIX = "[mosh] "
-
-
-def local_hostnames() -> set[str]:
-    hostname = socket.gethostname()
-    return {hostname.lower(), hostname.split(".")[0].lower()}
-
-
-@dataclass
-class Workspace:
-    title: str
-    cwd: str
-    color: str | None = None
-    pinned: bool = False
-    description: str | None = None
-    machine: str | None = None
-    tmux: bool = False
-    session: str | None = None
-
-    @classmethod
-    def from_dump(cls, ws: dict) -> "Workspace":
-        return cls(
-            title=ws["title"],
-            cwd=ws["cwd"],
-            color=ws.get("color"),
-            pinned=ws.get("pinned", False),
-            description=ws.get("description"),
-            machine=ws.get("machine"),
-            tmux=ws.get("tmux", False),
-            session=ws.get("session"),
-        )
-
-    @property
-    def base_title(self) -> str:
-        # The title without the display-only "[mosh] " label, so the prefix is
-        # never doubled and never leaks into the tmux session name.
-        title = self.title
-        while title.startswith(MOSH_PREFIX):
-            title = title[len(MOSH_PREFIX):]
-        return title
-
-    @property
-    def display_title(self) -> str:
-        # cmux workspace title: remote workspaces get the "[mosh] " label.
-        if self.is_remote:
-            return f"{MOSH_PREFIX}{self.base_title}"
-        return self.base_title
-
-    @property
-    def session_name(self) -> str:
-        # An explicit `session` overrides the title-derived name. Built from the
-        # base title (not display_title), so the "[mosh] " label and its
-        # slugified form never reach the remote tmux. tmux session names may
-        # not contain ":" or ".".
-        name = self.session or self.base_title
-        return name.replace(":", "-").replace(".", "-").replace(" ", "-")
-
-    @property
-    def is_remote(self) -> bool:
-        return bool(self.machine) and self.machine.lower() not in local_hostnames()
-
-    def command(self) -> str | None:
-        cwd = shlex.quote(self.cwd)
-        tmux_command = (
-            f"tmux new-session -A -s {shlex.quote(self.session_name)} -c {cwd}"
-        )
-        # cd first so a freshly created session lands in cwd even if tmux's
-        # -c is bypassed; ";" (not "&&") so attaching to an existing session
-        # still works when the directory is missing on the remote
-        shell_command = f"cd {cwd}; {tmux_command}"
-
-        if self.is_remote:
-            if self.tmux:
-                # mosh passes the command to mosh-server as a clean argv and
-                # execs it directly (no remote login shell re-parse), so the
-                # command is quoted once, only for the local cmux-pane shell.
-                # The "--" stops mosh parsing "-c" as its own option.
-                return (
-                    f"mosh {shlex.quote(self.machine)} --"
-                    f" sh -c {shlex.quote(shell_command)}"
-                )
-            return f"mosh {shlex.quote(self.machine)}"
-
-        if self.tmux:
-            return shell_command
-
-        return None
+from _cmux import Workspace, default_dump_path, load_dump, strip_mosh_prefix
 
 
 def cmux(*args: str) -> str:
@@ -194,26 +97,17 @@ def main(
     ] = None,
 ) -> None:
     if source is None:
-        # Prefer TOML; fall back to JSON only if the TOML file is absent
-        source = DEFAULT_TOML if DEFAULT_TOML.is_file() else DEFAULT_JSON
+        source = default_dump_path()
     if not source.is_file():
         raise typer.BadParameter(f"No dump file at {source}")
 
-    if source.suffix == ".json":
-        dumped = json.loads(source.read_text())
-    else:
-        dumped = tomllib.loads(source.read_text())["workspaces"]
-
-    workspaces = [Workspace.from_dump(ws) for ws in dumped]
+    workspaces = [Workspace.from_dump(ws) for ws in load_dump(source)]
 
     existing = set()
     for ws_data in json.loads(cmux("workspace", "list", "--json"))["workspaces"]:
         title = ws_data["title"]
         existing.add(title)
-        base = title
-        while base.startswith(MOSH_PREFIX):
-            base = base[len(MOSH_PREFIX):]
-        existing.add(base)
+        existing.add(strip_mosh_prefix(title))
 
     for ws in workspaces:
         if ws.base_title in existing:
