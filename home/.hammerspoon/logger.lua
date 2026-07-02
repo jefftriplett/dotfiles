@@ -14,7 +14,6 @@ logger.LEVELS = {
 logger.config = {
     level = logger.LEVELS.INFO,  -- Default log level
     showLevel = true,            -- Include level in output
-    showTimestamp = true,        -- Include timestamps in output
     historySize = 200            -- Number of log entries to keep in history
 }
 
@@ -81,12 +80,6 @@ end
 -- Set whether to show log level in output
 logger.showLevel = function(show)
     logger.config.showLevel = show
-    return logger
-end
-
--- Set whether to show timestamps in output
-logger.showTimestamp = function(show)
-    logger.config.showTimestamp = show
     return logger
 end
 

@@ -114,7 +114,7 @@ function sizeup.send_window_left()
   sizeup.set_frame("Left", {
     x = s.x,
     y = s.y,
-    w = (s.w * ssp.x) - sizeup.gutter().x,
+    w = (s.w * ssp.x) - g.x,
     h = s.h
   })
 end
@@ -268,8 +268,7 @@ end
 -- Internal API --
 ------------------
 
--- SizeUp uses no animations
-hs.window.animationDuration = 0.0
+-- Animation duration is set in init.lua from config.animationDuration
 
 -- Initialize Snapback state
 sizeup.snapback_window_state = { }

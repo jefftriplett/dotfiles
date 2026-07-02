@@ -78,7 +78,7 @@ end
 
 function caffeinate_changed_callback(event_type)
     log.d('Caffeinate changed:', event_type)
-    
+
     if (event_type == hs.caffeinate.watcher.screensDidSleep) then
         log.i('Screens went to sleep')
     elseif (event_type == hs.caffeinate.watcher.screensDidWake) then
@@ -94,47 +94,42 @@ end
 function screens_changed_callback()
     log.i('Screen configuration changed')
     log.d('Number of screens:', #hs.screen.allScreens())
-    
+
     -- Restructure the grid
     setup_grid()
-    
+
     -- Arrange apps based on available screens
     local vertical = hs.screen.find(display.display_1200x1920)
     local main = hs.screen.find(display.display_1792x1120)
-    
+
     if not main then
         main = hs.screen.find(display.display_1440x900)
     end
-    
+
     log.d('Main screen:', main)
-    
+
+    -- Build a layout with screen placeholders resolved, without
+    -- mutating the config templates (they must stay reusable)
+    local screens = { main = main, vertical = vertical }
+
+    local function resolve_layout(template)
+        local layout = {}
+        for _, item in ipairs(template) do
+            table.insert(layout, {
+                item[1], item[2], screens[item[3]] or item[3],
+                item[4], item[5], item[6],
+            })
+        end
+        return layout
+    end
+
     -- Apply the appropriate layout
     if vertical then
         log.i('Applying vertical monitor layout')
-        local layout = config.layouts.vertical
-        
-        -- Update the screen references in the layout
-        for _, item in ipairs(layout) do
-            if item[3] == "main" then
-                item[3] = main
-            elseif item[3] == "vertical" then
-                item[3] = vertical
-            end
-        end
-        
-        hs.layout.apply(layout)
+        hs.layout.apply(resolve_layout(config.layouts.vertical))
     else
         log.i('Applying default layout')
-        local layout = config.layouts.default
-        
-        -- Update the screen references in the layout
-        for _, item in ipairs(layout) do
-            if item[3] == "main" then
-                item[3] = main
-            end
-        end
-        
-        hs.layout.apply(layout)
+        hs.layout.apply(resolve_layout(config.layouts.default))
     end
 end
 
@@ -199,14 +194,6 @@ hs.hotkey.bind(hyper, '0', function()
     log.i('  usb_watcher:', usb_watcher)
     log.i('  wifi_watcher:', wifi_watcher)
 end)
-
--- hs.hotkey.bind(hyper, 'Q', function()
---     toggle_application('iTerm')
--- end)
-
--- hs.hotkey.bind(hyper, 'W', function()
---     toggle_application('Sublime Text')
--- end)
 
 hs.hotkey.bind(hyper, 'I', function()
     toggle_application('Ghostty')

@@ -11,8 +11,8 @@ function table.show(t, name, indent)
   local autoref = "" -- For storing self references
 
   -- Returns true if the table is empty
-  local function isemptytable(t) 
-    return next(t) == nil 
+  local function isemptytable(t)
+    return next(t) == nil
   end
 
   -- Serializes primitive types

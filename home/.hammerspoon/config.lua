@@ -7,23 +7,13 @@ config.debug = false
 
 -- Define display configurations
 config.displays = {
-    -- Display names
+    -- Display names (used by screens_changed_callback in init.lua)
     names = {
-        display_1200x1920 = '1200x1920',
-        display_1366x1024 = '1366x1024@2x',
-        display_1440x900 = '1440x900@2x',
-        display_1600x2560 = '1600x2560',
-        display_1680x1050 = '1680x1050',
-        display_1792x1120 = '1792x1120@2x',
-        display_1920x1080 = '1920x1080@2x',
-        display_1920x1200 = '1920x1200',
-        display_2048x1152 = '2048x1152@2x',
-        display_2048x1280 = '2048x1280',
-        display_2560x1440 = '2560x1440',
-        display_2560x1440x1 = '2560x1440@1x',
-        display_2560x1600 = '2560x1600',
+        display_1200x1920 = '1200x1920',    -- vertical monitor
+        display_1440x900 = '1440x900@2x',   -- built-in fallback
+        display_1792x1120 = '1792x1120@2x', -- main
     },
-    
+
     -- Monitor grid configurations (keyed by screen name)
     grids = {
         ['WQX DP (1)']    = '6x4',  -- 2048x1280
