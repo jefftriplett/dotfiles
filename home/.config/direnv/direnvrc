@@ -85,7 +85,10 @@ use_tmux() {
     done
 
     name="${name:-$(basename "$PWD")}"
+    # tmux session names may not contain ":" or ".". Keep the replacement
+    # set in sync with __tmux_session_name in ~/.bash_tmux.
     name="${name//:/-}"
+    name="${name//./-}"
     name="${name// /-}"
 
     export TMUX_AUTOATTACH="$name"
