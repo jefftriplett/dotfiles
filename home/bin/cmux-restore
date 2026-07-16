@@ -31,63 +31,18 @@ display-only: the tmux session name comes from the base title (or an explicit
 `session` field), so the prefix and its slugified form never reach the remote.
 """
 
-import json
-import subprocess
 from pathlib import Path
 from typing import Annotated, Optional
 
 import typer
 
-from _cmux import Workspace, default_dump_path, load_dump, strip_mosh_prefix
-
-
-def cmux(*args: str) -> str:
-    result = subprocess.run(
-        ["cmux", *args],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
-    return result.stdout.strip()
-
-
-def workspace_action(ref: str, action: str, *extra: str) -> None:
-    cmux("workspace-action", "--action", action, "--workspace", ref, *extra)
-
-
-def restore(ws: Workspace) -> str:
-    command = ws.command()
-
-    # When we issue our own launch command (mosh and/or tmux), open the local
-    # pane in a neutral dir. Otherwise the shell's tmux autoattach -- triggered
-    # by a project .envrc (`use tmux`) -- execs a local tmux session before our
-    # command runs, and the mosh/tmux command ends up nested inside it. The
-    # command's own `cd` sets the real working directory. Plain workspaces keep
-    # their cwd so their normal .envrc autoattach behaves as usual.
-    local_cwd = str(Path.home()) if command else ws.cwd
-    create_args = [
-        "workspace", "create",
-        "--name", ws.display_title,
-        "--cwd", local_cwd,
-        "--focus", "false",
-    ]
-
-    if command:
-        create_args += ["--command", command]
-
-    output = cmux(*create_args)
-    ref = output.split()[-1]
-    if not ref.startswith("workspace:"):
-        raise RuntimeError(
-            f"Unexpected cmux output creating {ws.display_title!r}: {output!r}"
-        )
-    if ws.color:
-        workspace_action(ref, "set-color", "--color", ws.color)
-    if ws.pinned:
-        workspace_action(ref, "pin")
-    if ws.description:
-        workspace_action(ref, "set-description", "--description", ws.description)
-    return ref
+from _cmux import (
+    Workspace,
+    cmux_workspaces,
+    create_workspace,
+    default_dump_path,
+    load_dump,
+)
 
 
 def main(
@@ -103,11 +58,9 @@ def main(
 
     workspaces = [Workspace.from_dump(ws) for ws in load_dump(source)]
 
-    existing = set()
-    for ws_data in json.loads(cmux("workspace", "list", "--json"))["workspaces"]:
-        title = ws_data["title"]
-        existing.add(title)
-        existing.add(strip_mosh_prefix(title))
+    # from_cmux already strips the display-only "[mosh] " label, so both the
+    # labelled and plain titles compare equal to a dump entry's base_title.
+    existing = {open_ws.title for open_ws in cmux_workspaces()}
 
     for ws in workspaces:
         if ws.base_title in existing:
@@ -115,7 +68,7 @@ def main(
             continue
         existing.add(ws.base_title)
 
-        ref = restore(ws)
+        ref = create_workspace(ws)
         details = []
         if ws.is_remote:
             details.append(f"mosh:{ws.machine}")

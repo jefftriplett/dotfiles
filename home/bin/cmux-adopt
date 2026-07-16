@@ -1,0 +1,85 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "typer",
+# ]
+# ///
+"""Give every unattached tmux session a cmux workspace to live in.
+
+Where cmux-restore rebuilds workspaces from a hand-maintained dump file, this
+works the other way round: it takes the running tmux server as the source of
+truth and adopts the sessions nothing is attached to, so work left behind in a
+detached session gets a window back instead of quietly aging out.
+
+A session is adopted when it has no clients AND no open cmux workspace already
+maps to it. Attached sessions are left alone: a second client on one session
+squeezes both panes to the smallest client's size, so adopting one would
+disrupt the terminal already showing it. Pass --include-attached to override
+that (useful when a session is only attached from outside cmux).
+
+Workspaces are matched to sessions by Workspace.session_name, the same slug
+cmux-restore feeds to `tmux new-session`, so a workspace titled "thumb.im"
+counts as covering the "thumb-im" session and isn't adopted twice.
+
+Sessions are attached by name (`tmux new-session -A -s <name>`) rather than by
+cwd. That matters: a project .envrc running `use tmux` exports TMUX_AUTOATTACH,
+which outranks the directory basename in ~/.bash_tmux, so a cwd-derived attach
+inside e.g. writing-bot/writing-bot-git lands on the "writing-bot" session
+instead of "writing-bot-git".
+"""
+
+from typing import Annotated
+
+import typer
+
+from _cmux import Workspace, cmux_workspaces, create_workspace, tmux_sessions
+
+
+def main(
+    dry_run: Annotated[
+        bool, typer.Option("--dry-run", "-n", help="Show what would be adopted")
+    ] = False,
+    include_attached: Annotated[
+        bool,
+        typer.Option("--include-attached", help="Also adopt sessions that have clients"),
+    ] = False,
+) -> None:
+    sessions = tmux_sessions()
+    if not sessions:
+        print("No tmux sessions running")
+        return
+
+    covered = {ws.session_name for ws in cmux_workspaces()}
+    adopted = 0
+
+    for session in sorted(sessions, key=lambda item: item.name):
+        if session.is_attached and not include_attached:
+            print(f"skip   {session.name} (attached)")
+            continue
+        if session.name in covered:
+            print(f"skip   {session.name} (workspace exists)")
+            continue
+        covered.add(session.name)
+
+        ws = Workspace(
+            title=session.name,
+            cwd=session.path,
+            tmux=True,
+            session=session.name,
+        )
+        if dry_run:
+            print(f"would  {session.name} -> {ws.command()}")
+            adopted += 1
+            continue
+
+        ref = create_workspace(ws)
+        print(f"adopt  {session.name} -> {ref} ({session.path})")
+        adopted += 1
+
+    if not adopted:
+        print("Nothing to adopt; every tmux session is attached or has a workspace")
+
+
+if __name__ == "__main__":
+    typer.run(main)

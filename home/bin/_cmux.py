@@ -1,4 +1,4 @@
-"""Shared model and helpers for cmux-dump / cmux-restore / cmux-open.
+"""Shared model and helpers for cmux-dump / cmux-restore / cmux-open / cmux-adopt.
 
 Not a standalone script: the cmux-* uv scripts import it, and find it because
 Python puts the script's own directory on sys.path.
@@ -7,6 +7,7 @@ Python puts the script's own directory on sys.path.
 import json
 import shlex
 import socket
+import subprocess
 import tomllib
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -145,3 +146,93 @@ class Workspace:
             return shell_command
 
         return None
+
+
+@dataclass
+class TmuxSession:
+    name: str
+    attached: int
+    path: str
+
+    @property
+    def is_attached(self) -> bool:
+        return self.attached > 0
+
+
+def cmux(*args: str) -> str:
+    result = subprocess.run(
+        ["cmux", *args],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    return result.stdout.strip()
+
+
+def cmux_workspaces() -> list[Workspace]:
+    entries = json.loads(cmux("workspace", "list", "--json"))["workspaces"]
+    return [Workspace.from_cmux(entry) for entry in entries]
+
+
+def tmux_sessions() -> list[TmuxSession]:
+    """Running tmux sessions, newest server state. Empty when no server runs."""
+    result = subprocess.run(
+        [
+            "tmux", "list-sessions",
+            "-F", "#{session_name}\t#{session_attached}\t#{session_path}",
+        ],
+        capture_output=True,
+        text=True,
+    )
+    if result.returncode != 0:
+        # "no server running on ..." is the normal no-sessions case, not an error
+        if "no server running" in result.stderr:
+            return []
+        raise RuntimeError(f"tmux list-sessions failed: {result.stderr.strip()}")
+
+    sessions = []
+    for line in result.stdout.splitlines():
+        if not line.strip():
+            continue
+        name, attached, path = line.split("\t")
+        sessions.append(TmuxSession(name=name, attached=int(attached), path=path))
+    return sessions
+
+
+def workspace_action(ref: str, action: str, *extra: str) -> None:
+    cmux("workspace-action", "--action", action, "--workspace", ref, *extra)
+
+
+def create_workspace(ws: Workspace) -> str:
+    command = ws.command()
+
+    # When we issue our own launch command (mosh and/or tmux), open the local
+    # pane in a neutral dir. Otherwise the shell's tmux autoattach -- triggered
+    # by a project .envrc (`use tmux`) -- execs a local tmux session before our
+    # command runs, and the mosh/tmux command ends up nested inside it. The
+    # command's own `cd` sets the real working directory. Plain workspaces keep
+    # their cwd so their normal .envrc autoattach behaves as usual.
+    local_cwd = str(Path.home()) if command else ws.cwd
+    create_args = [
+        "workspace", "create",
+        "--name", ws.display_title,
+        "--cwd", local_cwd,
+        "--focus", "false",
+    ]
+
+    if command:
+        create_args += ["--command", command]
+
+    output = cmux(*create_args)
+    ref = output.split()[-1]
+    if not ref.startswith("workspace:"):
+        raise RuntimeError(
+            f"Unexpected cmux output creating {ws.display_title!r}: {output!r}"
+        )
+    if ws.color:
+        workspace_action(ref, "set-color", "--color", ws.color)
+    if ws.pinned:
+        workspace_action(ref, "pin")
+    if ws.description:
+        workspace_action(ref, "set-description", "--description", ws.description)
+    return ref
