@@ -24,7 +24,7 @@ package := "@github/copilot"
 
 # check for outdated Copilot npm package
 @outdated:
-    npm outdated {{ package }}
+    npm outdated -g {{ package }}
 
 # uninstall Copilot CLI
 @uninstall:

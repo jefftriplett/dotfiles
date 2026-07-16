@@ -123,7 +123,7 @@ alias lock := freeze
 [group("maintenance")]
 @upgrade-all:
     just pyenv::upgrade-all
-    just mise::install
+    just mise::upgrade
 
 # ----------------------------------------------------------------
 # Database operations

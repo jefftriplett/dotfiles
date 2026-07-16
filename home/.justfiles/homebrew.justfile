@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------
 
 set dotenv-load := false
-set export := true
+set export
 
 justfile := justfile_directory() + "/.justfiles/homebrew.justfile"
 
@@ -23,9 +23,8 @@ justfile := justfile_directory() + "/.justfiles/homebrew.justfile"
 
 # freeze current Homebrew packages to Brewfile
 @freeze:
-    # touch "$HOME/.homesick/repos/dotfiles/home/Brewfile.$HOST"
     cd "$HOME/.homesick/repos/dotfiles/home" && \
-        mv "Brewfile.$HOST" "Brewfile.$HOST.bak" && \
+        { [ -f "Brewfile.$HOST" ] && mv "Brewfile.$HOST" "Brewfile.$HOST.bak" || true; } && \
         brew bundle dump --file="Brewfile.$HOST" --no-vscode
 
 # list outdated Homebrew packages

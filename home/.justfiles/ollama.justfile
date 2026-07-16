@@ -76,8 +76,8 @@ export OLLAMA_ORIGINS := "http://*"
 
 # set ollama environment variables in launchctl
 @setenv:
-    launchctl setenv OLLAMA_FLASH_ATTENTION {{ OLLAMA_FLASH_ATTENTION }}
-    launchctl setenv OLLAMA_HOST {{ OLLAMA_HOST }}
-    launchctl setenv OLLAMA_KEEP_ALIVE {{ OLLAMA_KEEP_ALIVE }}
-    launchctl setenv OLLAMA_KV_CACHE_TYPE {{ OLLAMA_KV_CACHE_TYPE }}
-    launchctl setenv OLLAMA_ORIGINS {{ OLLAMA_ORIGINS }}
+    launchctl setenv OLLAMA_FLASH_ATTENTION "{{ OLLAMA_FLASH_ATTENTION }}"
+    launchctl setenv OLLAMA_HOST "{{ OLLAMA_HOST }}"
+    launchctl setenv OLLAMA_KEEP_ALIVE "{{ OLLAMA_KEEP_ALIVE }}"
+    launchctl setenv OLLAMA_KV_CACHE_TYPE "{{ OLLAMA_KV_CACHE_TYPE }}"
+    launchctl setenv OLLAMA_ORIGINS "{{ OLLAMA_ORIGINS }}"
