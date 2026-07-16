@@ -1,13 +1,13 @@
 # CLAUDE.md - Dotfiles Developer Guide
 
 ## Build Commands
-- Format justfile: `just --fmt --unstable`
-- Update Brewfile: `just _update-brewfile`
-- Update README docs: `just _update-readme-docs`
+- Format all justfiles: `just fmt`
+- Update Brewfile: `just update-brewfile`
+- Update README docs: `just update-readme-docs`
 
 ## Python Setup
-- Install Python tools: `just _python-bootstrap`
-- Install specific Python packages: `just pip-install PACKAGE`
+- Install Python tools: `just python::bootstrap`
+- Install specific Python packages: `just python::uv-pip-install PACKAGE`
 - Linting tools: pyright, ruff-lsp
 
 ## Code Style Guidelines
