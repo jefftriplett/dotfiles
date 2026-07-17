@@ -18,6 +18,7 @@ justfile := justfile_directory() + "/.justfiles/homebrew.justfile"
     just --justfile {{ justfile }} --fmt
 
 # clean up old Homebrew packages and cache
+[arg("DAYS", long="days", pattern='\d+|all', help="prune cache older than DAYS, or 'all'")]
 @cleanup DAYS="0":
     brew cleanup --prune={{ DAYS }}
 

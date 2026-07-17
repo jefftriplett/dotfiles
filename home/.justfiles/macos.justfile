@@ -34,7 +34,7 @@ justfile := justfile_directory() + "/.justfiles/macos.justfile"
     sudo sysctl debug.lowpri_throttle_enabled=1
 
 # delete specific Time Machine backups
-@timemachine-delete *ARGS:
+@timemachine-delete +ARGS:
     sudo tmutil delete {{ ARGS }}
 
 # list all Time Machine backups

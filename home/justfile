@@ -52,8 +52,9 @@ alias lock := freeze
 
 # clean up old Homebrew packages and casks
 [group("maintenance")]
+[arg("DAYS", long="days", pattern='\d+|all', help="prune cache older than DAYS, or 'all'")]
 @cleanup DAYS="0":
-    just homebrew::cleanup {{ DAYS }}
+    just homebrew::cleanup --days={{ DAYS }}
 
 # format and overwrite justfile
 [group("utils")]
