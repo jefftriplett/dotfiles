@@ -97,7 +97,19 @@ PATH="${PATH}:${HOME}/.local/bin"
 
 export BUN_INSTALL="${HOME}/.bun"
 
-PATH="${PATH}:${BUN_INSTALL}/bin"
+case ":${PATH}:" in
+    *":${BUN_INSTALL}/bin:"*) ;;
+    *) PATH="${PATH}:${BUN_INSTALL}/bin" ;;
+esac
+
+#############
+# kimi-code #
+#############
+
+case ":${PATH}:" in
+    *":${HOME}/.kimi-code/bin:"*) ;;
+    *) PATH="${HOME}/.kimi-code/bin:${PATH}" ;;
+esac
 
 ############
 # obsidian #
