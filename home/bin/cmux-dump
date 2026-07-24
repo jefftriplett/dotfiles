@@ -17,6 +17,7 @@ to a remote host and/or attach a tmux session.
 """
 
 import json
+import os
 import subprocess
 import tomllib
 from pathlib import Path
@@ -90,10 +91,11 @@ def main(
     else:
         content = json.dumps([ws.to_dict() for ws in workspaces], indent=2) + "\n"
 
-    # Write atomically so an interrupt can't corrupt hand-edited fields
+    # Write atomically so an interrupt can't corrupt hand-edited fields;
+    # os.replace also works if the tmp file lands on a different filesystem
     tmp = output.with_suffix(output.suffix + ".tmp")
     tmp.write_text(content)
-    tmp.rename(output)
+    os.replace(tmp, output)
 
     note = f" (kept {len(kept)} closed annotated)" if kept else ""
     print(f"Saved {len(workspaces)} workspaces to {output}{note}")

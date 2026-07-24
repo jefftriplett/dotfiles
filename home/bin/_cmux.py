@@ -34,10 +34,18 @@ def default_dump_path() -> Path:
 
 
 def load_dump(path: Path) -> list[dict]:
-    """Read a dump file; format detected by extension (.json, else TOML)."""
+    """Read a dump file; format detected by extension (.json, else TOML).
+
+    Accepts either a bare list of workspaces or a {"workspaces": [...]}
+    wrapper in both formats, so hand-written files match either style.
+    """
     if path.suffix == ".json":
-        return json.loads(path.read_text())
-    return tomllib.loads(path.read_text())["workspaces"]
+        data = json.loads(path.read_text())
+    else:
+        data = tomllib.loads(path.read_text())
+    if isinstance(data, dict):
+        return data["workspaces"]
+    return data
 
 
 def local_hostnames() -> set[str]:
@@ -58,12 +66,21 @@ class Workspace:
 
     @classmethod
     def from_cmux(cls, ws: dict) -> "Workspace":
+        # .get() throughout: cmux's --json schema may drift, and a missing
+        # key should degrade to the default rather than crash with KeyError
+        try:
+            title = ws["title"]
+            cwd = ws["current_directory"]
+        except KeyError as exc:
+            raise RuntimeError(
+                f"cmux workspace entry missing required key {exc}: {ws!r}"
+            ) from exc
         return cls(
-            title=strip_mosh_prefix(ws["title"]),
-            cwd=ws["current_directory"],
-            color=ws["custom_color"],
-            pinned=ws["pinned"],
-            description=ws["description"],
+            title=strip_mosh_prefix(title),
+            cwd=cwd,
+            color=ws.get("custom_color"),
+            pinned=ws.get("pinned", False),
+            description=ws.get("description"),
         )
 
     @classmethod
@@ -108,13 +125,16 @@ class Workspace:
 
     @property
     def session_name(self) -> str:
-        # An explicit `session` overrides the title-derived name. Built from the
-        # base title (not display_title), so the "[mosh] " label and its
-        # slugified form never reach the remote tmux. tmux session names may
-        # not contain ":" or ".". Keep the replacement set in sync with
+        # An explicit `session` is already a valid tmux session name and is
+        # used verbatim (tmux allows spaces; slugifying it would attach a
+        # different session). Title-derived names are slugified because tmux
+        # session names may not contain ":" or ".". Built from the base title
+        # (not display_title), so the "[mosh] " label and its slugified form
+        # never reach the remote tmux. Keep the replacement set in sync with
         # __tmux_session_name in ~/.bash_tmux.
-        name = self.session or self.base_title
-        return name.replace(":", "-").replace(".", "-").replace(" ", "-")
+        if self.session:
+            return self.session
+        return self.base_title.replace(":", "-").replace(".", "-").replace(" ", "-")
 
     @property
     def is_remote(self) -> bool:
