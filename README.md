@@ -374,6 +374,7 @@ Standalone executables in `home/bin/` (symlinked onto `$PATH` as `~/bin`).
 | ------ | ----------- |
 | `tmux-host` | Print the pane's remote host when it is running ssh, else the local short hostname. Used by the status bar |
 | `tmux-remote-ls` | List tmux sessions across every Mac at once |
+| `tmux-remote-hosts` | Add, remove, and list the Macs in `hosts.toml` |
 
 `tmux-remote-ls` is roughly `ssh <host> tmux ls` for each machine, but parsed: sessions are
 sorted and annotated with attached/detached state, window count, and path.
@@ -387,9 +388,8 @@ mac-studio-2023:
   default  [detached, 1 window]  /Users/jefftriplett/Vaults/default
 ```
 
-Hosts are listed in `DEFAULT_HOSTS` in `home/bin/_cmux.py` — edit it when a machine joins or
-leaves — and can be overridden per-run with `--host` or by setting `$TMUX_REMOTE_HOSTS`. The
-same list drives `cmux-tmux-sync --all`.
+Hosts come from [`~/.config/tmux/hosts.toml`](#machine-list) and can be overridden per-run
+with `--host` or by setting `$TMUX_REMOTE_HOSTS`. The same list drives `cmux-tmux-sync --all`.
 Whichever machine you are sitting at is skipped rather than dialed over ssh; `--include-local`
 adds it back, querying tmux directly instead of over the network. Hosts are queried
 concurrently, so one unreachable machine costs only its own timeout.
@@ -406,6 +406,58 @@ distinguishes "no sessions anywhere" from "never got an answer".
 | `--include-local` | Also list this machine, run locally rather than over ssh |
 | `--sessions-only`, `-s` | Print bare `host:session` lines with no headers, for piping |
 | `--json` | Emit JSON instead of text |
+
+### Machine List
+
+The Macs live in `home/.config/tmux/hosts.toml` (symlinked to `~/.config/tmux/hosts.toml`),
+not in any script — adding a machine means editing config, and the list travels with the
+dotfiles to every Mac.
+
+`tmux-remote-hosts` edits it for you, keeping the entries sorted and the alias table in step
+with the host list:
+
+```shell
+tmux-remote-hosts                                  # list what is configured
+tmux-remote-hosts add mac-test-2026                # add a machine
+tmux-remote-hosts add mac-test-2026 --alias Mac-Test-2026   # ...with its own hostname
+tmux-remote-hosts add mac-test-2026 --check        # only add if it answers over ssh
+tmux-remote-hosts remove mac-test-2026             # remove it, and its alias
+```
+
+Hand-editing the file is still fine — the command uses a format-preserving TOML writer, so
+comments and layout survive a round trip either way.
+
+```toml
+hosts = [
+    "mac-mini-pro-2023",
+    "mac-studio-2023",
+    "mba-2025",
+]
+
+# ssh name -> that machine's own `hostname`, where the two differ
+[aliases]
+mba-2025 = "MacBook-Air-2025"
+```
+
+Names must be resolvable by ssh — Tailscale MagicDNS or a `Host` entry in `~/.ssh/config`.
+
+`aliases` exists because the machine you are sitting at has to be recognized so it is skipped
+rather than dialed. The Air answers to `mba-2025` over ssh but reports `MacBook-Air-2025` as
+its own hostname, and without the mapping it would try to reach its own address.
+
+It lives under `~/.config/tmux/` rather than `~/.config/cmux/` because that second directory
+belongs to the cmux app itself — it holds `cmux.json` and `settings.json`, so it cannot be
+symlinked into this repo.
+
+`$TMUX_REMOTE_HOSTS` (space separated) overrides the file for a single run, and `--host`
+overrides both:
+
+```shell
+TMUX_REMOTE_HOSTS="mac-studio-2023" tmux-remote-ls
+```
+
+Both `tmux-remote-ls` and `cmux-tmux-sync` read the same list. With no config file and no
+`--host`, they report what to fix rather than falling back to a built-in list.
 
 ### Key Bindings
 
@@ -558,7 +610,7 @@ and never reaches the remote tmux session name.
 cmux-tmux-sync --dry-run              # show which local sessions would get a workspace
 cmux-tmux-sync                        # create the missing workspaces
 cmux-tmux-sync --host mac-studio-2023 # sync that Mac as mosh workspaces
-cmux-tmux-sync --all                  # every host in DEFAULT_HOSTS
+cmux-tmux-sync --all                  # every host in hosts.toml
 cmux-tmux-watch                        # keep syncing local sessions as they appear
 ```
 

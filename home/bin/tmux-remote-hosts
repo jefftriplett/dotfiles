@@ -1,0 +1,182 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "tomlkit",
+#     "typer",
+# ]
+# ///
+"""Manage the machine list that tmux-remote-ls and cmux-tmux-sync read.
+
+The list lives in ~/.config/tmux/hosts.toml. Editing it by hand is still fine
+-- this just saves the round trip, and keeps the entries sorted and the alias
+table in step with the host list.
+
+tomlkit rather than tomli-w: the config carries comments explaining what the
+aliases are for, and a plain TOML writer would silently drop them on the first
+edit.
+
+Named tmux-remote-hosts, not tmux-hosts, to stay clear of tmux-host, which
+prints the current pane's hostname for the status bar.
+"""
+
+import subprocess
+from typing import Annotated, Optional
+
+import tomlkit
+import typer
+
+from _cmux import HOSTS_TOML, is_local_host, write_atomic
+
+app = typer.Typer(
+    help="Add, remove, and list the Macs in ~/.config/tmux/hosts.toml",
+    no_args_is_help=False,
+)
+
+NEW_FILE_HEADER = """\
+# Machines that run tmux, read by tmux-remote-ls and cmux-tmux-sync.
+#
+# Names must be resolvable by ssh -- Tailscale MagicDNS or a Host entry in
+# ~/.ssh/config. The machine you are sitting at is recognized and skipped
+# rather than dialed, so it is fine to list every Mac here.
+#
+# Override for one run with --host, or by exporting TMUX_REMOTE_HOSTS as a
+# space-separated list.
+"""
+
+
+def load_doc() -> tomlkit.TOMLDocument:
+    if HOSTS_TOML.is_file():
+        return tomlkit.parse(HOSTS_TOML.read_text())
+    doc = tomlkit.parse(NEW_FILE_HEADER)
+    doc["hosts"] = tomlkit.array().multiline(True)
+    return doc
+
+
+def save_doc(doc: tomlkit.TOMLDocument) -> None:
+    HOSTS_TOML.parent.mkdir(parents=True, exist_ok=True)
+    write_atomic(HOSTS_TOML, tomlkit.dumps(doc))
+
+
+def host_names(doc: tomlkit.TOMLDocument) -> list[str]:
+    return [str(host) for host in doc.get("hosts", [])]
+
+
+def set_hosts(doc: tomlkit.TOMLDocument, names: list[str]) -> None:
+    # Rebuild as a multiline array so the file keeps the one-host-per-line
+    # shape a hand-edited config has, rather than collapsing to one long row.
+    array = tomlkit.array().multiline(True)
+    array.extend(sorted(names))
+    doc["hosts"] = array
+
+
+def reachable(host: str) -> bool:
+    result = subprocess.run(
+        ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=5", host, "true"],
+        capture_output=True,
+        timeout=30,
+    )
+    return result.returncode == 0
+
+
+@app.callback(invoke_without_command=True)
+def default(ctx: typer.Context) -> None:
+    if ctx.invoked_subcommand is None:
+        show()
+
+
+@app.command("list")
+def show() -> None:
+    """List the configured hosts."""
+    doc = load_doc()
+    names = host_names(doc)
+    if not names:
+        print(f"No hosts configured in {HOSTS_TOML}")
+        return
+
+    aliases = doc.get("aliases", {})
+    for name in names:
+        marks = []
+        if is_local_host(name):
+            marks.append("this machine")
+        if name in aliases:
+            marks.append(f"hostname {aliases[name]}")
+        suffix = f"  ({', '.join(marks)})" if marks else ""
+        print(f"{name}{suffix}")
+
+
+@app.command()
+def add(
+    host: Annotated[str, typer.Argument(help="ssh name of the machine to add")],
+    alias: Annotated[
+        Optional[str],
+        typer.Option(
+            "--alias",
+            help="That machine's own hostname, when it differs from the ssh name",
+        ),
+    ] = None,
+    check: Annotated[
+        bool, typer.Option("--check", help="Verify the host answers over ssh first")
+    ] = False,
+) -> None:
+    """Add a machine to the list."""
+    doc = load_doc()
+    names = host_names(doc)
+
+    if host in names:
+        print(f"{host} is already configured")
+        raise typer.Exit(code=1)
+
+    if check and not reachable(host):
+        print(f"{host} did not answer over ssh; not added (drop --check to add anyway)")
+        raise typer.Exit(code=1)
+
+    set_hosts(doc, names + [host])
+
+    if alias:
+        # setdefault so an existing alias table keeps its comments
+        if "aliases" not in doc:
+            doc["aliases"] = tomlkit.table()
+        doc["aliases"][host] = alias
+
+    save_doc(doc)
+    note = f" (hostname {alias})" if alias else ""
+    print(f"Added {host}{note} to {HOSTS_TOML}")
+
+    # The ssh name and the machine's own hostname differing is exactly what
+    # the alias table is for; without it this host is never recognized as
+    # local and gets dialed over ssh from itself.
+    if not alias and not is_local_host(host):
+        print(
+            f"If {host} reports a different hostname to itself, add it with "
+            f"--alias so this machine is skipped when you run there."
+        )
+
+
+@app.command("remove")
+def remove(
+    host: Annotated[str, typer.Argument(help="ssh name of the machine to remove")],
+) -> None:
+    """Remove a machine from the list."""
+    doc = load_doc()
+    names = host_names(doc)
+
+    if host not in names:
+        print(f"{host} is not configured")
+        raise typer.Exit(code=1)
+
+    set_hosts(doc, [name for name in names if name != host])
+
+    # Drop the alias too, or it lingers pointing at a machine we no longer use
+    aliases = doc.get("aliases")
+    dropped_alias = aliases is not None and host in aliases
+    if dropped_alias:
+        del doc["aliases"][host]
+
+    save_doc(doc)
+    note = " (and its alias)" if dropped_alias else ""
+    print(f"Removed {host}{note} from {HOSTS_TOML}")
+
+
+if __name__ == "__main__":
+    app()

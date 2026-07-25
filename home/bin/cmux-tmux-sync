@@ -47,7 +47,7 @@ from typing import Annotated, Optional
 import typer
 
 from _cmux import (
-    DEFAULT_HOSTS,
+    default_hosts,
     Workspace,
     cmux_workspaces,
     create_workspace,
@@ -136,7 +136,7 @@ def main(
         typer.Option("--host", "-H", help="Sync sessions from this host (repeatable)"),
     ] = None,
     all_hosts: Annotated[
-        bool, typer.Option("--all", help="Sync every host in DEFAULT_HOSTS")
+        bool, typer.Option("--all", help="Sync every host in hosts.toml")
     ] = False,
     dry_run: Annotated[
         bool, typer.Option("--dry-run", "-n", help="Show what would be created")
@@ -153,7 +153,7 @@ def main(
     ] = 5,
 ) -> None:
     if all_hosts:
-        targets = DEFAULT_HOSTS
+        targets = default_hosts()
     elif hosts:
         targets = hosts
     else:

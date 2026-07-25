@@ -20,7 +20,7 @@ Whichever machine you are sitting at is skipped -- no point sshing to
 localhost, and it may not even accept ssh. Pass --include-local to include it
 anyway; it is then queried by running tmux directly, never over the network.
 
-Hosts come from DEFAULT_HOSTS in _cmux.py (edit it when a machine joins or
+Hosts come from ~/.config/tmux/hosts.toml (edit it when a machine joins or
 leaves), or from --host / $TMUX_REMOTE_HOSTS.
 
 Remote hosts are queried with ssh, not mosh: this is a one-shot non-interactive
@@ -29,8 +29,6 @@ unreachable or auth-prompting host fails fast instead of hanging the whole run.
 """
 
 import json
-import os
-import shlex
 import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
@@ -39,7 +37,7 @@ from typing import Annotated, Optional
 import typer
 
 from _cmux import (
-    DEFAULT_HOSTS,
+    default_hosts,
     TmuxSession,
     is_local_host,
     remote_tmux_sessions,
@@ -115,7 +113,7 @@ def main(
     ] = False,
     as_json: Annotated[bool, typer.Option("--json", help="Emit JSON instead of text")] = False,
 ) -> None:
-    targets = hosts or shlex.split(os.environ.get("TMUX_REMOTE_HOSTS", "")) or DEFAULT_HOSTS
+    targets = hosts or default_hosts()
 
     if not include_local:
         targets = [host for host in targets if not is_local_host(host)]

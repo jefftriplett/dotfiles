@@ -52,13 +52,21 @@ def load_dump(path: Path) -> list[dict]:
     return data
 
 
-def save_dump(path: Path, workspaces: list["Workspace"], use_toml: bool = True) -> None:
-    """Write a dump file atomically. The counterpart to load_dump().
+def write_atomic(path: Path, content: str) -> None:
+    """Replace a file's contents in one step.
 
-    Atomic because the file holds hand-edited fields: an interrupted write
-    would lose annotations that cannot be recovered from cmux. os.replace
-    also works when the tmp file lands on a different filesystem.
+    These files hold hand-edited data that cannot be recovered from cmux or
+    from tmux, so a half-written file after an interrupt is worse than no
+    write at all. os.replace is atomic within a filesystem and still works
+    when the tmp file lands on a different one.
     """
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(content)
+    os.replace(tmp, path)
+
+
+def save_dump(path: Path, workspaces: list["Workspace"], use_toml: bool = True) -> None:
+    """Write a dump file. The counterpart to load_dump()."""
     # Imported here, not at module scope: only cmux-dump-save declares
     # tomli-w in its uv header, and a top-level import would break every
     # other script that imports this module.
@@ -71,9 +79,7 @@ def save_dump(path: Path, workspaces: list["Workspace"], use_toml: bool = True) 
     else:
         content = json.dumps([ws.to_dict() for ws in workspaces], indent=2) + "\n"
 
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(content)
-    os.replace(tmp, path)
+    write_atomic(path, content)
 
 
 def local_hostnames() -> set[str]:
@@ -81,26 +87,58 @@ def local_hostnames() -> set[str]:
     return {hostname.lower(), hostname.split(".")[0].lower()}
 
 
-# The Macs. Names must be resolvable by ssh (Tailscale MagicDNS or
-# ~/.ssh/config). Edit when a machine joins or leaves.
-DEFAULT_HOSTS = [
-    "mac-mini-pro-2023",
-    "mac-studio-2023",
-    "mba-2025",
-]
+# Machine list lives in config, not code, so adding a Mac does not mean
+# editing a script. Not under ~/.config/cmux: that directory belongs to the
+# cmux app (cmux.json, settings.json), so it cannot be symlinked into the
+# dotfiles repo the way this file is.
+HOSTS_TOML = Path.home() / ".config" / "tmux" / "hosts.toml"
 
-# ssh name -> that machine's own `hostname`, for hosts where the two differ.
-# Without this, running on the Air (hostname MacBook-Air-2025) would not
-# recognize "mba-2025" as itself and would try to reach its own address.
-HOST_ALIASES = {
-    "mba-2025": "MacBook-Air-2025",
-}
+_hosts_cache: dict | None = None
+
+
+def _load_hosts() -> dict:
+    """Parse hosts.toml once per process.
+
+    Missing file is not an error here -- an explicit --host still works
+    without one. Callers that need the list raise their own error.
+    """
+    global _hosts_cache
+    if _hosts_cache is None:
+        if HOSTS_TOML.is_file():
+            _hosts_cache = tomllib.loads(HOSTS_TOML.read_text())
+        else:
+            _hosts_cache = {}
+    return _hosts_cache
+
+
+def default_hosts() -> list[str]:
+    """Hosts to act on when none were named on the command line.
+
+    $TMUX_REMOTE_HOSTS (space separated) wins over the config file, so a
+    one-off run can target a different set without editing anything.
+    """
+    override = os.environ.get("TMUX_REMOTE_HOSTS", "").strip()
+    if override:
+        return shlex.split(override)
+
+    hosts = _load_hosts().get("hosts", [])
+    if not hosts:
+        raise RuntimeError(
+            f"No hosts configured. Add a `hosts = [...]` list to {HOSTS_TOML}, "
+            f"or pass --host explicitly."
+        )
+    return hosts
+
+
+def host_aliases() -> dict[str, str]:
+    """ssh name -> that machine's own hostname, where the two differ."""
+    return _load_hosts().get("aliases", {})
 
 
 def is_local_host(host: str) -> bool:
     """True when `host` names the machine we are running on."""
     names = {host.lower()}
-    alias = HOST_ALIASES.get(host)
+    alias = host_aliases().get(host)
     if alias:
         names.add(alias.lower())
     return bool(names & local_hostnames())
