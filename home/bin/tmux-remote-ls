@@ -1,0 +1,208 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "typer",
+# ]
+# ///
+"""List tmux sessions across the Macs in one view.
+
+Roughly `ssh <host> tmux ls` for each machine, but parsed: sessions are sorted,
+annotated with attached/detached and window count, and grouped under their
+host.
+
+`tmux-ls` in ~/.bash_tmux shows one host at a time, and only the host that
+direnv happens to have exported. This asks every machine at once, so a session
+left running on the Studio is visible from the Air without guessing where it
+went.
+
+Whichever machine you are sitting at is skipped -- no point sshing to
+localhost, and it may not even accept ssh. Pass --include-local to include it
+anyway; it is then queried by running tmux directly, never over the network.
+
+Hosts come from DEFAULT_HOSTS below (edit it when a machine joins or leaves),
+or from --host / $TMUX_REMOTE_HOSTS.
+
+Remote hosts are queried with ssh, not mosh: this is a one-shot non-interactive
+command, matching what tmux-ls and tmux-kill already do. BatchMode means an
+unreachable or auth-prompting host fails fast instead of hanging the whole run.
+"""
+
+import json
+import os
+import shlex
+import subprocess
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
+from typing import Annotated, Optional
+
+import typer
+
+from _cmux import (
+    SESSION_FORMAT,
+    TmuxSession,
+    local_hostnames,
+    parse_sessions,
+    tmux_sessions,
+)
+
+# The Macs. Names must be resolvable by ssh (Tailscale MagicDNS or
+# ~/.ssh/config); the machine we are running on is skipped, not dialed.
+DEFAULT_HOSTS = [
+    "mac-mini-pro-2023",
+    "mac-studio-2023",
+    "mba-2025",
+]
+
+# ssh name -> that machine's own `hostname`, for hosts where the two differ.
+# Without this, running on the Air (hostname MacBook-Air-2025) would not
+# recognize "mba-2025" as itself and would try to ssh to its own address.
+HOST_ALIASES = {
+    "mba-2025": "MacBook-Air-2025",
+}
+
+
+@dataclass
+class HostResult:
+    host: str
+    sessions: list[TmuxSession]
+    error: str | None = None
+
+
+def is_local(host: str) -> bool:
+    names = {host.lower()}
+    alias = HOST_ALIASES.get(host)
+    if alias:
+        names.add(alias.lower())
+    return bool(names & local_hostnames())
+
+
+def remote_sessions(host: str, timeout: int) -> list[TmuxSession]:
+    # bash -lc so the login profile puts Homebrew's tmux on PATH; the remote
+    # shell re-parses, so the tmux command is quoted as a single word.
+    tmux_command = shlex.join(["tmux", "list-sessions", "-F", SESSION_FORMAT])
+    result = subprocess.run(
+        [
+            "ssh",
+            "-o", "BatchMode=yes",
+            "-o", f"ConnectTimeout={timeout}",
+            host,
+            f"bash -lc {shlex.quote(tmux_command)}",
+        ],
+        capture_output=True,
+        text=True,
+        # Guard against an ssh that connects but then never returns; the
+        # ConnectTimeout above only covers establishing the connection.
+        timeout=timeout * 4,
+    )
+    if result.returncode != 0:
+        if "no server running" in result.stderr:
+            return []
+        raise RuntimeError(result.stderr.strip() or f"ssh exited {result.returncode}")
+    return parse_sessions(result.stdout)
+
+
+def query(host: str, timeout: int) -> HostResult:
+    try:
+        # tmux_sessions() runs tmux here rather than over ssh, so
+        # --include-local works on a machine with no ssh server.
+        sessions = tmux_sessions() if is_local(host) else remote_sessions(host, timeout)
+    except subprocess.TimeoutExpired:
+        return HostResult(host, [], error=f"timed out after {timeout * 4}s")
+    except (RuntimeError, OSError) as exc:
+        return HostResult(host, [], error=str(exc))
+    return HostResult(host, sorted(sessions, key=lambda session: session.name))
+
+
+def report(results: list[HostResult], sessions_only: bool) -> int:
+    failures = 0
+    for result in results:
+        if result.error:
+            failures += 1
+            if not sessions_only:
+                print(f"{result.host}: error: {result.error}")
+            continue
+
+        if sessions_only:
+            for session in result.sessions:
+                print(f"{result.host}:{session.name}")
+            continue
+
+        if not result.sessions:
+            print(f"{result.host}: no sessions")
+            continue
+
+        print(f"{result.host}:")
+        for session in result.sessions:
+            state = "attached" if session.is_attached else "detached"
+            windows = f"{session.windows} window{'' if session.windows == 1 else 's'}"
+            print(f"  {session.name}  [{state}, {windows}]  {session.path}")
+
+    return failures
+
+
+def main(
+    hosts: Annotated[
+        Optional[list[str]],
+        typer.Option("--host", "-H", help="Host to query (repeatable); overrides the defaults"),
+    ] = None,
+    timeout: Annotated[
+        int, typer.Option("--timeout", "-t", help="ssh connect timeout in seconds")
+    ] = 5,
+    include_local: Annotated[
+        bool,
+        typer.Option("--include-local", help="Also list this machine (run locally, no ssh)"),
+    ] = False,
+    sessions_only: Annotated[
+        bool,
+        typer.Option("--sessions-only", "-s", help="Print bare host:session lines, no headers"),
+    ] = False,
+    as_json: Annotated[bool, typer.Option("--json", help="Emit JSON instead of text")] = False,
+) -> None:
+    targets = hosts or shlex.split(os.environ.get("TMUX_REMOTE_HOSTS", "")) or DEFAULT_HOSTS
+
+    if not include_local:
+        targets = [host for host in targets if not is_local(host)]
+    if not targets:
+        print("No hosts to query (only this machine; pass --include-local to see it)")
+        return
+
+    # Hosts are queried concurrently so one unreachable machine costs its own
+    # timeout rather than delaying every host behind it.
+    with ThreadPoolExecutor(max_workers=len(targets)) as pool:
+        results = list(pool.map(lambda host: query(host, timeout), targets))
+
+    if as_json:
+        print(
+            json.dumps(
+                [
+                    {
+                        "host": result.host,
+                        "error": result.error,
+                        "sessions": [
+                            {
+                                "name": session.name,
+                                "attached": session.is_attached,
+                                "windows": session.windows,
+                                "path": session.path,
+                            }
+                            for session in result.sessions
+                        ],
+                    }
+                    for result in results
+                ],
+                indent=2,
+            )
+        )
+        failures = sum(1 for result in results if result.error)
+    else:
+        failures = report(results, sessions_only)
+
+    # Non-zero when a host could not be reached, so scripted callers can tell
+    # "no sessions anywhere" apart from "we never got an answer".
+    if failures:
+        raise typer.Exit(code=1)
+
+
+if __name__ == "__main__":
+    typer.run(main)

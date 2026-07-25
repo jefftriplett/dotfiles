@@ -168,15 +168,41 @@ class Workspace:
         return None
 
 
+# Fields requested from `tmux list-sessions -F`, in the order parse_sessions
+# expects them. Shared so local and remote callers stay in lockstep.
+SESSION_FORMAT = (
+    "#{session_name}\t#{session_attached}\t#{session_path}\t#{session_windows}"
+)
+
+
 @dataclass
 class TmuxSession:
     name: str
     attached: int
     path: str
+    windows: int = 0
 
     @property
     def is_attached(self) -> bool:
         return self.attached > 0
+
+
+def parse_sessions(stdout: str) -> list[TmuxSession]:
+    """Parse `tmux list-sessions -F SESSION_FORMAT` output."""
+    sessions = []
+    for line in stdout.splitlines():
+        if not line.strip():
+            continue
+        name, attached, path, windows = line.split("\t")
+        sessions.append(
+            TmuxSession(
+                name=name,
+                attached=int(attached),
+                path=path,
+                windows=int(windows),
+            )
+        )
+    return sessions
 
 
 def cmux(*args: str) -> str:
@@ -197,10 +223,7 @@ def cmux_workspaces() -> list[Workspace]:
 def tmux_sessions() -> list[TmuxSession]:
     """Running tmux sessions, newest server state. Empty when no server runs."""
     result = subprocess.run(
-        [
-            "tmux", "list-sessions",
-            "-F", "#{session_name}\t#{session_attached}\t#{session_path}",
-        ],
+        ["tmux", "list-sessions", "-F", SESSION_FORMAT],
         capture_output=True,
         text=True,
     )
@@ -210,13 +233,7 @@ def tmux_sessions() -> list[TmuxSession]:
             return []
         raise RuntimeError(f"tmux list-sessions failed: {result.stderr.strip()}")
 
-    sessions = []
-    for line in result.stdout.splitlines():
-        if not line.strip():
-            continue
-        name, attached, path = line.split("\t")
-        sessions.append(TmuxSession(name=name, attached=int(attached), path=path))
-    return sessions
+    return parse_sessions(result.stdout)
 
 
 def workspace_action(ref: str, action: str, *extra: str) -> None:

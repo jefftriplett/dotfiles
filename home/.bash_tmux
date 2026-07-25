@@ -130,12 +130,42 @@ tmux-attach() {
 
 tmux-ls() {
     local machine
+    local json=0
+    local args=()
+
+    for arg in "$@"; do
+        if [[ "$arg" == "--json" ]]; then
+            json=1
+        else
+            args+=("$arg")
+        fi
+    done
+
     machine="$(__tmux_target_machine)"
 
+    if (( json )); then
+        # Remaining args would be tmux list-sessions flags (-F and friends),
+        # which conflict with the fixed format the JSON output is built from.
+        if (( ${#args[@]} )); then
+            printf 'tmux-ls: --json cannot be combined with %s\n' "${args[*]}" >&2
+            return 2
+        fi
+        # Hand off to tmux-remote-ls so it owns the JSON schema and the string
+        # escaping; a session name or path with a quote in it stays valid JSON.
+        # It is given one explicit host so the output covers the same machine
+        # this function would have listed, not the whole fleet.
+        if [[ -n "$machine" ]]; then
+            tmux-remote-ls --json --host "$machine"
+        else
+            tmux-remote-ls --json --include-local --host "$(hostname -s)"
+        fi
+        return $?
+    fi
+
     if [[ -n "$machine" ]]; then
-        direnv exec / env ssh "$machine" "$(__tmux_remote_tmux_command list-sessions "$@")"
+        direnv exec / env ssh "$machine" "$(__tmux_remote_tmux_command list-sessions "${args[@]}")"
     else
-        tmux list-sessions "$@"
+        tmux list-sessions "${args[@]}"
     fi
 }
 
