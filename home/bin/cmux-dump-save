@@ -12,7 +12,7 @@ cmux can't tell us whether a workspace is running mosh or tmux, so the
 optional `machine` and `tmux` fields are hand-edited in the dump file and
 preserved (matched by title) when re-dumping over an existing file.
 Annotated entries whose workspaces are closed are kept too, so closing a
-workspace doesn't lose its config. cmux-restore uses these fields to mosh
+workspace doesn't lose its config. cmux-dump-restore uses these fields to mosh
 to a remote host and/or attach a tmux session.
 """
 

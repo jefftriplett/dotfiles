@@ -5,7 +5,7 @@
 #     "typer",
 # ]
 # ///
-"""Restore cmux workspaces from a cmux-dump file (TOML by default, or JSON).
+"""Restore cmux workspaces from a dump file written by cmux-dump-save.
 
 The format is detected by extension (.json is JSON, anything else is TOML).
 With no path, the default ~/.config/cmux/session-dump.toml is used, falling

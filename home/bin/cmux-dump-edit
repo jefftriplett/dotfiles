@@ -33,7 +33,7 @@ def main(
     if source is None:
         source = default_dump_path()
     if not source.is_file():
-        raise typer.BadParameter(f"No dump file at {source} (run cmux-dump first)")
+        raise typer.BadParameter(f"No dump file at {source} (run cmux-dump-save first)")
 
     editor = os.environ.get("EDITOR") or os.environ.get("VISUAL")
     if not editor:

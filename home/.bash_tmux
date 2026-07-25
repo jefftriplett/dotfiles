@@ -40,7 +40,7 @@ __tmux_remote_tmux_command() {
 }
 
 # Sets __tmux_argv to the local command that attaches the remote session.
-# Interactive attaches use mosh when available (matching cmux-restore),
+# Interactive attaches use mosh when available (matching cmux-dump-restore),
 # falling back to ssh. mosh passes the command to mosh-server as a clean
 # argv, so it is quoted once; ssh re-parses on the remote, so it gets the
 # extra %q layer.

@@ -1,0 +1,184 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "typer",
+# ]
+# ///
+"""Bring cmux into line with tmux: a workspace for every session missing one.
+
+Where cmux-dump-restore rebuilds workspaces from a hand-maintained dump file,
+this works the other way round: it takes the running tmux server as the source
+of truth, so work left behind in a detached session gets a window back instead
+of quietly aging out.
+
+The sync only ever adds. A workspace whose session has since died is left
+alone, because closing someone's window is a good deal more disruptive than
+leaving a stale one around -- prune those by hand.
+
+A session gets a workspace when it has no clients AND no open cmux workspace
+already maps to it. Attached sessions are left alone: opening a workspace for
+one adds a second client to a session you are already using, which resizes it
+under you. Pass --include-attached to override that (useful when a session is
+only attached from outside cmux).
+
+Workspaces are matched to sessions by Workspace.session_name, the same slug
+cmux-dump-restore feeds to `tmux new-session`, so a workspace titled "thumb.im"
+counts as covering the "thumb-im" session and isn't created twice.
+
+Sessions are attached by name (`tmux new-session -A -s <name>`) rather than by
+cwd. That matters: a project .envrc running `use tmux` exports TMUX_AUTOATTACH,
+which outranks the directory basename in ~/.bash_tmux, so a cwd-derived attach
+inside e.g. writing-bot/writing-bot-git lands on the "writing-bot" session
+instead of "writing-bot-git".
+
+With --host (or --all) the same idea reaches the other Macs: sessions on a
+remote host become workspaces that mosh in and attach there. The "unattached"
+test does not carry over, though. A session on the mini reads as attached
+because a workspace *on the mini* holds it, which says nothing about whether
+this machine can see it. So a remote session gets a workspace when none here
+already points at it, regardless of who else has it open. Remote workspaces are
+titled "host:session" so the same session name on two Macs stays distinct.
+"""
+
+import subprocess
+from typing import Annotated, Optional
+
+import typer
+
+from _cmux import (
+    DEFAULT_HOSTS,
+    Workspace,
+    cmux_workspaces,
+    create_workspace,
+    is_local_host,
+    remote_tmux_sessions,
+    tmux_sessions,
+)
+
+
+def create(ws: Workspace, label: str, dry_run: bool, detail: str) -> bool:
+    if dry_run:
+        print(f"would  {label} -> {ws.command()}")
+        return True
+    ref = create_workspace(ws)
+    print(f"sync   {label} -> {ref} ({detail})")
+    return True
+
+
+def sync_local(covered: set[str], dry_run: bool, include_attached: bool) -> int:
+    sessions = tmux_sessions()
+    if not sessions:
+        print("No local tmux sessions running")
+        return 0
+
+    created = 0
+    for session in sorted(sessions, key=lambda item: item.name):
+        if session.is_attached and not include_attached:
+            print(f"skip   {session.name} (attached)")
+            continue
+        if session.name in covered:
+            print(f"skip   {session.name} (workspace exists)")
+            continue
+        covered.add(session.name)
+
+        ws = Workspace(
+            title=session.name,
+            cwd=session.path,
+            tmux=True,
+            session=session.name,
+        )
+        created += create(ws, session.name, dry_run, session.path)
+    return created
+
+
+def sync_remote(host: str, covered: set[str], dry_run: bool, timeout: int) -> int:
+    try:
+        sessions = remote_tmux_sessions(host, timeout)
+    except subprocess.TimeoutExpired:
+        print(f"error  {host}: timed out after {timeout * 4}s")
+        return 0
+    except (RuntimeError, OSError) as exc:
+        # One unreachable Mac should not abandon the hosts after it.
+        print(f"error  {host}: {exc}")
+        return 0
+
+    if not sessions:
+        print(f"No tmux sessions running on {host}")
+        return 0
+
+    created = 0
+    for session in sorted(sessions, key=lambda item: item.name):
+        # Host-qualified, so "default" on the Studio and "default" on the mini
+        # are two workspaces rather than one. create_workspace prefixes the
+        # display title with "[mosh] "; the explicit `session` below means that
+        # label never reaches the remote tmux session name.
+        title = f"{host}:{session.name}"
+        if title in covered:
+            print(f"skip   {title} (workspace exists)")
+            continue
+        covered.add(title)
+
+        ws = Workspace(
+            title=title,
+            cwd=session.path,
+            machine=host,
+            tmux=True,
+            session=session.name,
+        )
+        created += create(ws, title, dry_run, f"mosh:{host}, tmux:{session.name}")
+    return created
+
+
+def main(
+    hosts: Annotated[
+        Optional[list[str]],
+        typer.Option("--host", "-H", help="Sync sessions from this host (repeatable)"),
+    ] = None,
+    all_hosts: Annotated[
+        bool, typer.Option("--all", help="Sync every host in DEFAULT_HOSTS")
+    ] = False,
+    dry_run: Annotated[
+        bool, typer.Option("--dry-run", "-n", help="Show what would be created")
+    ] = False,
+    include_attached: Annotated[
+        bool,
+        typer.Option(
+            "--include-attached",
+            help="Also sync local sessions that have clients (remote is unaffected)",
+        ),
+    ] = False,
+    timeout: Annotated[
+        int, typer.Option("--timeout", "-t", help="ssh connect timeout in seconds")
+    ] = 5,
+) -> None:
+    if all_hosts:
+        targets = DEFAULT_HOSTS
+    elif hosts:
+        targets = hosts
+    else:
+        targets = None
+
+    # from_cmux leaves machine/session unset, so session_name falls back to the
+    # slugified title -- which is what the local pass matches on, and is why a
+    # workspace titled "thumb.im" covers the "thumb-im" session. The remote
+    # pass compares its "host:session" title against the same set.
+    workspaces = cmux_workspaces()
+    covered = {ws.session_name for ws in workspaces} | {ws.base_title for ws in workspaces}
+    created = 0
+
+    if targets is None:
+        created += sync_local(covered, dry_run, include_attached)
+    else:
+        for host in targets:
+            if is_local_host(host):
+                created += sync_local(covered, dry_run, include_attached)
+            else:
+                created += sync_remote(host, covered, dry_run, timeout)
+
+    if not created:
+        print("Nothing to sync; every session is attached or has a workspace")
+
+
+if __name__ == "__main__":
+    typer.run(main)

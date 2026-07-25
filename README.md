@@ -108,14 +108,14 @@ $ just --justfile=./home/justfile --list --list-submodules
 
 Available recipes:
     homebrew:
-        cleanup DAYS="0" # clean up old Homebrew packages and cache
-        freeze           # freeze current Homebrew packages to Brewfile
-        outdated         # list outdated Homebrew packages
-        services         # list all Homebrew services
-        services-restart # restart all running Homebrew services
-        services-stop    # stop specific Homebrew services (with non-fatal errors)
-        update           # update Homebrew package database
-        upgrade          # upgrade all outdated Homebrew packages
+        cleanup [OPTIONS] # clean up old Homebrew packages and cache
+        freeze            # freeze current Homebrew packages to Brewfile
+        outdated          # list outdated Homebrew packages
+        services          # list all Homebrew services
+        services-restart  # restart all running Homebrew services
+        services-stop     # stop specific Homebrew services (with non-fatal errors)
+        update            # update Homebrew package database
+        upgrade           # upgrade all outdated Homebrew packages
     llm:
         fmt      # format all AI/LLM justfiles
         outdated # check for outdated AI/LLM tools
@@ -126,15 +126,6 @@ Available recipes:
             upgrade # update Claude Code CLI to the latest version
             usage   # see Claude Code API/CLI usage
             version # display Claude Code CLI version
-
-        clawdbot:
-            doctor    # run clawdbot doctor to check configuration
-            health    # check clawdbot health status
-            install   # install clawdbot CLI
-            restart   # restart clawdbot daemon
-            uninstall # uninstall clawdbot CLI
-            upgrade   # upgrade clawdbot to the latest version
-            version   # display clawdbot version
 
         clawdhub:
             install   # install clawdhub CLI
@@ -164,27 +155,11 @@ Available recipes:
             usage     # show available ccx model usage
             version   # display ccx CLI version
 
-        happy:
-            install   # install happy-coder CLI
-            run       # run happy CLI
-            uninstall # uninstall happy-coder CLI
-            upgrade   # upgrade happy-coder to the latest version
-            version   # display happy-coder version
-
         llm-cli:
             force-reinstall # upgrade all installed LLM plugins with --force-reinstall
             install *ARGS   # install LLM plugins with optional arguments
             path            # open LLM templates directory in Sublime Text
             upgrade         # upgrade all installed LLM plugins
-
-        moltbot:
-            doctor    # run moltbot doctor to check configuration
-            health    # check moltbot health status
-            install   # install moltbot CLI
-            restart   # restart moltbot daemon
-            uninstall # uninstall moltbot CLI
-            upgrade   # upgrade moltbot to the latest version
-            version   # display moltbot version
 
         ollama:
             copy-plist  # copy custom ollama plist file to homebrew directory
@@ -195,15 +170,6 @@ Available recipes:
             serve *ARGS # serve ollama in a tandem process with optional arguments
             setenv      # set ollama environment variables in launchctl
 
-        openclaw:
-            doctor    # run openclaw doctor to check configuration
-            health    # check openclaw health status
-            install   # install openclaw CLI
-            restart   # restart openclaw daemon
-            uninstall # uninstall openclaw CLI
-            upgrade   # upgrade openclaw to the latest version
-            version   # display openclaw version
-
         pi-coding-agent:
             help              # display pi CLI help
             install           # install pi-coding-agent CLI
@@ -213,9 +179,10 @@ Available recipes:
             upgrade           # upgrade pi-coding-agent to the latest version
             version           # display pi-coding-agent version
     macos:
+        duti-setup                 # set default applications for file types using duti
         timemachine-boost          # boost Time Machine backup speed by increasing IO priority
         timemachine-boost-complete # restore normal IO priority after Time Machine backup completes
-        timemachine-delete *ARGS   # delete specific Time Machine backups
+        timemachine-delete +ARGS   # delete specific Time Machine backups
         timemachine-list           # list all Time Machine backups
         xcode-bootstrap            # install Xcode command line tools
         xcode-upgrade              # upgrade Xcode command line tools by removing and reinstalling
@@ -260,7 +227,7 @@ Available recipes:
     postgresql-upgrade # upgrade PostgreSQL to latest version and migrate databases
 
     [maintenance]
-    cleanup DAYS="0"   # clean up old Homebrew packages and casks
+    cleanup [OPTIONS]  # clean up old Homebrew packages and casks
     outdated           # list outdated packages from Homebrew and pip
     update             # update project to run at its current version
     upgrade            # update and upgrade Homebrew packages
@@ -420,8 +387,9 @@ mac-studio-2023:
   default  [detached, 1 window]  /Users/jefftriplett/Vaults/default
 ```
 
-Hosts are listed in `DEFAULT_HOSTS` at the top of the script — edit it when a machine joins
-or leaves — and can be overridden per-run with `--host` or by setting `$TMUX_REMOTE_HOSTS`.
+Hosts are listed in `DEFAULT_HOSTS` in `home/bin/_cmux.py` — edit it when a machine joins or
+leaves — and can be overridden per-run with `--host` or by setting `$TMUX_REMOTE_HOSTS`. The
+same list drives `cmux-tmux-sync --all`.
 Whichever machine you are sitting at is skipped rather than dialed over ssh; `--include-local`
 adds it back, querying tmux directly instead of over the network. Hosts are queried
 concurrently, so one unreachable machine costs only its own timeout.
@@ -522,28 +490,28 @@ Scripts in `home/bin/` that keep [cmux][cmux] workspaces and tmux sessions in sy
 
 | Script | Description |
 | ------ | ----------- |
-| `cmux-dump` | Save the open workspaces to a dump file |
-| `cmux-restore` | Recreate workspaces from a dump file |
-| `cmux-open` | Open the dump file in `$EDITOR` |
-| `cmux-adopt` | Give unattached tmux sessions a workspace, once |
-| `cmux-watch` | Same as adopt, but polling continuously |
+| `cmux-dump-save` | Save the open workspaces to a dump file |
+| `cmux-dump-restore` | Recreate workspaces from a dump file |
+| `cmux-dump-edit` | Open the dump file in `$EDITOR` |
+| `cmux-tmux-sync` | Give unattached tmux sessions a workspace, once; `--host`/`--all` to cover the other Macs |
+| `cmux-tmux-watch` | Same as sync, but polling continuously |
 | `_cmux.py` | Shared helpers; imported by the above, not run directly |
 
-The two halves work in opposite directions. `cmux-dump` / `cmux-restore` treat a
-hand-editable file as the source of truth and rebuild workspaces from it. `cmux-adopt` /
-`cmux-watch` treat the running tmux server as the source of truth, so work left behind in a
+The two halves work in opposite directions. `cmux-dump-save` / `cmux-dump-restore` treat a
+hand-editable file as the source of truth and rebuild workspaces from it. `cmux-tmux-sync` /
+`cmux-tmux-watch` treat the running tmux server as the source of truth, so work left behind in a
 detached session gets a window back instead of quietly aging out.
 
 ### Dump and Restore
 
 ```shell
-cmux-dump          # save open workspaces to ~/.config/cmux/session-dump.toml
-cmux-open          # edit that file to add machine / tmux / session fields
-cmux-restore       # recreate any workspace that is not already open
+cmux-dump-save          # save open workspaces to ~/.config/cmux/session-dump.toml
+cmux-dump-edit          # edit that file to add machine / tmux / session fields
+cmux-dump-restore       # recreate any workspace that is not already open
 ```
 
 The dump defaults to `~/.config/cmux/session-dump.toml`; pass a path to use another file, or
-`--json` to write JSON. `cmux-restore` and `cmux-open` detect the format from the extension
+`--json` to write JSON. `cmux-dump-restore` and `cmux-dump-edit` detect the format from the extension
 and fall back to `session-dump.json` when no TOML file exists.
 
 cmux cannot report whether a workspace is running mosh or tmux, so `machine`, `tmux`, and
@@ -584,26 +552,47 @@ sessions use `new-session -A`, so a restore resumes an existing session rather t
 duplicating it. Remote workspaces get a `[mosh] ` label on the cmux title; it is display-only
 and never reaches the remote tmux session name.
 
-### Adopt and Watch
+### Sync and Watch
 
 ```shell
-cmux-adopt --dry-run   # show which sessions would get a workspace
-cmux-adopt             # adopt them
-cmux-watch             # keep adopting as new sessions appear
+cmux-tmux-sync --dry-run              # show which local sessions would get a workspace
+cmux-tmux-sync                        # create the missing workspaces
+cmux-tmux-sync --host mac-studio-2023 # sync that Mac as mosh workspaces
+cmux-tmux-sync --all                  # every host in DEFAULT_HOSTS
+cmux-tmux-watch                        # keep syncing local sessions as they appear
 ```
 
-`cmux-adopt` adopts a session when nothing is attached to it *and* no open workspace already
-maps to it. Attached sessions are left alone because a second client on one session squeezes
-both panes down to the smallest client's size; `--include-attached` overrides that, which is
-useful when a session is only attached from outside cmux.
+`cmux-tmux-sync` gives a local session a workspace when nothing is attached to it *and* no open
+workspace already maps to it. Attached sessions are left alone so opening the new workspace
+does not add a second client to a session you are already using; `--include-attached`
+overrides that, which is useful when a session is only attached from outside cmux.
 
-`cmux-watch` polls on an interval (`--interval`, default 5s) and adopts both attached and
-detached sessions — its only requirement is that no workspace already covers the session. Use
-`--once` for a single pass.
+### Syncing Across Macs
 
-Workspaces are matched to sessions by the same slug `cmux-restore` feeds to `tmux
+`--host` (repeatable) and `--all` extend the same idea to the other Macs, using the same ssh
+path as `tmux-remote-ls`. A remote session becomes a workspace that moshes to the host and
+attaches there, exactly like a `machine` + `tmux = true` entry in the dump file.
+
+The unattached test does not carry over. A session on the mini reads as attached because a
+workspace *on the mini* holds it, which says nothing about whether this machine can see it —
+so a remote session gets a workspace when none here already points at it, regardless of who
+else has it open. Remote workspaces are titled `host:session`, so the same session name on two
+Macs stays distinct. A host that cannot be reached prints an error and the remaining hosts
+still run.
+
+Because most remote sessions *are* attached on their own machine, opening a synced workspace
+adds a second client to a live session. With `window-size latest` (the tmux default, and what
+these Macs run) the window resizes to whichever client was most recently active, so the other
+Mac's view changes size while you work in it. That is the tradeoff for seeing every session
+from one place.
+
+`cmux-tmux-watch` polls on an interval (`--interval`, default 5s) and covers both attached and
+detached sessions — its only requirement is that no workspace already covers the session. It is
+local-only; use `cmux-tmux-sync --all` for the other Macs. Use `--once` for a single pass.
+
+Workspaces are matched to sessions by the same slug `cmux-dump-restore` feeds to `tmux
 new-session`, so a workspace titled `thumb.im` counts as covering the `thumb-im` session and
-is not adopted twice. Sessions are attached by name rather than by directory, which matters
+is not created twice. Sessions are attached by name rather than by directory, which matters
 when two projects share a parent directory.
 
 ## Terminal theme

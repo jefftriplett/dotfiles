@@ -20,8 +20,8 @@ Whichever machine you are sitting at is skipped -- no point sshing to
 localhost, and it may not even accept ssh. Pass --include-local to include it
 anyway; it is then queried by running tmux directly, never over the network.
 
-Hosts come from DEFAULT_HOSTS below (edit it when a machine joins or leaves),
-or from --host / $TMUX_REMOTE_HOSTS.
+Hosts come from DEFAULT_HOSTS in _cmux.py (edit it when a machine joins or
+leaves), or from --host / $TMUX_REMOTE_HOSTS.
 
 Remote hosts are queried with ssh, not mosh: this is a one-shot non-interactive
 command, matching what tmux-ls and tmux-kill already do. BatchMode means an
@@ -39,27 +39,12 @@ from typing import Annotated, Optional
 import typer
 
 from _cmux import (
-    SESSION_FORMAT,
+    DEFAULT_HOSTS,
     TmuxSession,
-    local_hostnames,
-    parse_sessions,
+    is_local_host,
+    remote_tmux_sessions,
     tmux_sessions,
 )
-
-# The Macs. Names must be resolvable by ssh (Tailscale MagicDNS or
-# ~/.ssh/config); the machine we are running on is skipped, not dialed.
-DEFAULT_HOSTS = [
-    "mac-mini-pro-2023",
-    "mac-studio-2023",
-    "mba-2025",
-]
-
-# ssh name -> that machine's own `hostname`, for hosts where the two differ.
-# Without this, running on the Air (hostname MacBook-Air-2025) would not
-# recognize "mba-2025" as itself and would try to ssh to its own address.
-HOST_ALIASES = {
-    "mba-2025": "MacBook-Air-2025",
-}
 
 
 @dataclass
@@ -69,44 +54,15 @@ class HostResult:
     error: str | None = None
 
 
-def is_local(host: str) -> bool:
-    names = {host.lower()}
-    alias = HOST_ALIASES.get(host)
-    if alias:
-        names.add(alias.lower())
-    return bool(names & local_hostnames())
-
-
-def remote_sessions(host: str, timeout: int) -> list[TmuxSession]:
-    # bash -lc so the login profile puts Homebrew's tmux on PATH; the remote
-    # shell re-parses, so the tmux command is quoted as a single word.
-    tmux_command = shlex.join(["tmux", "list-sessions", "-F", SESSION_FORMAT])
-    result = subprocess.run(
-        [
-            "ssh",
-            "-o", "BatchMode=yes",
-            "-o", f"ConnectTimeout={timeout}",
-            host,
-            f"bash -lc {shlex.quote(tmux_command)}",
-        ],
-        capture_output=True,
-        text=True,
-        # Guard against an ssh that connects but then never returns; the
-        # ConnectTimeout above only covers establishing the connection.
-        timeout=timeout * 4,
-    )
-    if result.returncode != 0:
-        if "no server running" in result.stderr:
-            return []
-        raise RuntimeError(result.stderr.strip() or f"ssh exited {result.returncode}")
-    return parse_sessions(result.stdout)
-
-
 def query(host: str, timeout: int) -> HostResult:
     try:
         # tmux_sessions() runs tmux here rather than over ssh, so
         # --include-local works on a machine with no ssh server.
-        sessions = tmux_sessions() if is_local(host) else remote_sessions(host, timeout)
+        sessions = (
+            tmux_sessions()
+            if is_local_host(host)
+            else remote_tmux_sessions(host, timeout)
+        )
     except subprocess.TimeoutExpired:
         return HostResult(host, [], error=f"timed out after {timeout * 4}s")
     except (RuntimeError, OSError) as exc:
@@ -162,7 +118,7 @@ def main(
     targets = hosts or shlex.split(os.environ.get("TMUX_REMOTE_HOSTS", "")) or DEFAULT_HOSTS
 
     if not include_local:
-        targets = [host for host in targets if not is_local(host)]
+        targets = [host for host in targets if not is_local_host(host)]
     if not targets:
         print("No hosts to query (only this machine; pass --include-local to see it)")
         return

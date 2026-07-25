@@ -1,7 +1,10 @@
-"""Shared model and helpers for cmux-dump / cmux-restore / cmux-open / cmux-adopt.
+"""Shared model and helpers for the cmux-* scripts.
 
-Not a standalone script: the cmux-* uv scripts import it, and find it because
-Python puts the script's own directory on sys.path.
+Used by cmux-dump-save, cmux-dump-restore, cmux-dump-edit, cmux-tmux-sync,
+and cmux-tmux-watch, plus tmux-remote-ls for its session parsing.
+
+Not a standalone script: those uv scripts import it, and find it because Python
+puts the script's own directory on sys.path.
 """
 
 import json
@@ -51,6 +54,31 @@ def load_dump(path: Path) -> list[dict]:
 def local_hostnames() -> set[str]:
     hostname = socket.gethostname()
     return {hostname.lower(), hostname.split(".")[0].lower()}
+
+
+# The Macs. Names must be resolvable by ssh (Tailscale MagicDNS or
+# ~/.ssh/config). Edit when a machine joins or leaves.
+DEFAULT_HOSTS = [
+    "mac-mini-pro-2023",
+    "mac-studio-2023",
+    "mba-2025",
+]
+
+# ssh name -> that machine's own `hostname`, for hosts where the two differ.
+# Without this, running on the Air (hostname MacBook-Air-2025) would not
+# recognize "mba-2025" as itself and would try to reach its own address.
+HOST_ALIASES = {
+    "mba-2025": "MacBook-Air-2025",
+}
+
+
+def is_local_host(host: str) -> bool:
+    """True when `host` names the machine we are running on."""
+    names = {host.lower()}
+    alias = HOST_ALIASES.get(host)
+    if alias:
+        names.add(alias.lower())
+    return bool(names & local_hostnames())
 
 
 @dataclass
@@ -233,6 +261,37 @@ def tmux_sessions() -> list[TmuxSession]:
             return []
         raise RuntimeError(f"tmux list-sessions failed: {result.stderr.strip()}")
 
+    return parse_sessions(result.stdout)
+
+
+def remote_tmux_sessions(host: str, timeout: int = 5) -> list[TmuxSession]:
+    """Sessions on a remote host, over ssh. Empty when no server runs there.
+
+    ssh rather than mosh: this is a one-shot non-interactive command, matching
+    what tmux-ls and tmux-kill do. BatchMode means a host that would prompt
+    fails fast instead of hanging.
+    """
+    # bash -lc so the login profile puts Homebrew's tmux on PATH; the remote
+    # shell re-parses, so the tmux command is quoted as a single word.
+    tmux_command = shlex.join(["tmux", "list-sessions", "-F", SESSION_FORMAT])
+    result = subprocess.run(
+        [
+            "ssh",
+            "-o", "BatchMode=yes",
+            "-o", f"ConnectTimeout={timeout}",
+            host,
+            f"bash -lc {shlex.quote(tmux_command)}",
+        ],
+        capture_output=True,
+        text=True,
+        # Guard against an ssh that connects but then never returns; the
+        # ConnectTimeout above only covers establishing the connection.
+        timeout=timeout * 4,
+    )
+    if result.returncode != 0:
+        if "no server running" in result.stderr:
+            return []
+        raise RuntimeError(result.stderr.strip() or f"ssh exited {result.returncode}")
     return parse_sessions(result.stdout)
 
 

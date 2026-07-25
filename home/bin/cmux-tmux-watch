@@ -8,8 +8,8 @@
 """Watch for tmux sessions and ensure each has a matching cmux workspace.
 
 Polls the tmux server on an interval and creates a cmux workspace for any
-session that doesn't already have one. Unlike cmux-adopt, this runs
-continuously and adopts both attached and detached sessions — the only
+session that doesn't already have one. Unlike cmux-tmux-sync, this runs
+continuously and covers both attached and detached sessions — the only
 requirement is that no cmux workspace already covers the session.
 """
 
@@ -29,7 +29,7 @@ def sync_once(*, quiet: bool = False) -> int:
         return 0
 
     covered = {ws.session_name for ws in cmux_workspaces()}
-    adopted = 0
+    created = 0
 
     for session in sorted(sessions, key=lambda s: s.name):
         if session.name in covered:
@@ -42,10 +42,10 @@ def sync_once(*, quiet: bool = False) -> int:
             session=session.name,
         )
         ref = create_workspace(ws)
-        print(f"adopt  {session.name} -> {ref} ({session.path})")
-        adopted += 1
+        print(f"sync   {session.name} -> {ref} ({session.path})")
+        created += 1
 
-    return adopted
+    return created
 
 
 def main(
