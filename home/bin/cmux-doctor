@@ -1,0 +1,259 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "typer",
+# ]
+# ///
+"""Diagnose the cmux/tmux setup: tools, config, and host reachability.
+
+Checks the external commands these scripts shell out to (tmux, cmux, mosh,
+ssh, and the status-bar helpers), confirms the config dir and hosts.toml are
+in place and parseable, verifies this machine recognizes itself in the host
+list, and probes each remote host over ssh so a broken link shows up here
+rather than as a silent failure inside a cmux pane.
+
+Exit status is non-zero when any required check fails, so it doubles as a
+preflight in scripts.
+"""
+
+import shutil
+import socket
+import subprocess
+import sys
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import dataclass
+from typing import Annotated
+
+import typer
+
+from _cmux import (
+    CONFIG_DIR,
+    DEFAULT_TOML,
+    HOSTS_TOML,
+    default_dump_path,
+    host_aliases,
+    is_local_host,
+    local_hostnames,
+    remote_tmux_sessions,
+    tmux_sessions,
+)
+
+# ---- output helpers ---------------------------------------------------------
+
+_USE_COLOR = sys.stdout.isatty()
+
+
+def _c(code: str, text: str) -> str:
+    return f"\033[{code}m{text}\033[0m" if _USE_COLOR else text
+
+
+# Tallied so the summary and exit code reflect the run.
+counts = {"ok": 0, "warn": 0, "fail": 0}
+
+
+def ok(msg: str, detail: str = "") -> None:
+    counts["ok"] += 1
+    print(f"  {_c('32', 'OK')}   {msg}" + (f"  {_c('2', detail)}" if detail else ""))
+
+
+def warn(msg: str, detail: str = "") -> None:
+    counts["warn"] += 1
+    print(f"  {_c('33', 'WARN')} {msg}" + (f"  {_c('2', detail)}" if detail else ""))
+
+
+def fail(msg: str, detail: str = "") -> None:
+    counts["fail"] += 1
+    print(f"  {_c('31', 'FAIL')} {msg}" + (f"  {_c('2', detail)}" if detail else ""))
+
+
+def section(title: str) -> None:
+    print(f"\n{_c('1', title)}")
+
+
+# ---- tool checks ------------------------------------------------------------
+
+
+# Version flags differ per tool and several print to stderr; pgrep/ps have no
+# version flag at all and fall back to their path.
+VERSION_CMD = {
+    "tmux": ["tmux", "-V"],
+    "cmux": ["cmux", "--version"],
+    "mosh": ["mosh", "--version"],
+    "ssh": ["ssh", "-V"],
+}
+
+
+def tool_version(binary: str) -> str:
+    """Best-effort version string, or "" if the tool has no usable one."""
+    args = VERSION_CMD.get(binary)
+    if not args:
+        return ""
+    try:
+        result = subprocess.run(args, capture_output=True, text=True, timeout=5)
+    except (OSError, subprocess.SubprocessError):
+        return ""
+    for line in (result.stdout + result.stderr).splitlines():
+        line = line.strip()
+        # Skip usage/error noise from a tool that rejected the flag.
+        if line and not any(
+            m in line.lower() for m in ("illegal option", "unknown option", "usage:")
+        ):
+            return line
+    return ""
+
+
+@dataclass
+class Tool:
+    name: str
+    required: bool
+    reason: str
+
+
+TOOLS = [
+    Tool("tmux", required=True, reason="list and create tmux sessions"),
+    Tool("cmux", required=True, reason="list and create cmux workspaces"),
+    Tool("mosh", required=False, reason="reach remote workspaces"),
+    Tool("ssh", required=False, reason="list sessions on remote hosts"),
+    Tool("pgrep", required=False, reason="tmux-host status-bar ssh detection"),
+    Tool("ps", required=False, reason="tmux-host status-bar fallback"),
+]
+
+
+def check_tools() -> None:
+    section("Tools")
+    for tool in TOOLS:
+        path = shutil.which(tool.name)
+        if path:
+            ok(f"{tool.name:<6}", f"{tool_version(tool.name) or path}")
+        elif tool.required:
+            fail(f"{tool.name:<6}", f"missing -- {tool.reason}")
+        else:
+            warn(f"{tool.name:<6}", f"missing -- {tool.reason}")
+
+
+# ---- config checks ----------------------------------------------------------
+
+
+def check_config() -> None:
+    section("Config")
+    if CONFIG_DIR.is_dir():
+        ok("config dir", str(CONFIG_DIR))
+    else:
+        warn("config dir", f"{CONFIG_DIR} does not exist yet (created on first save)")
+
+    dump = default_dump_path()
+    if dump.is_file():
+        which = "TOML" if dump == DEFAULT_TOML else "legacy JSON"
+        ok("session dump", f"{dump} ({which})")
+    else:
+        warn("session dump", f"none yet -- run cmux-dump-save (expected {DEFAULT_TOML})")
+
+
+# ---- host checks ------------------------------------------------------------
+
+
+@dataclass
+class HostProbe:
+    host: str
+    local: bool
+    error: str | None = None
+    sessions: int = 0
+
+
+def probe_host(host: str, timeout: int) -> HostProbe:
+    if is_local_host(host):
+        return HostProbe(host, local=True)
+    try:
+        sessions = remote_tmux_sessions(host, timeout)
+    except subprocess.TimeoutExpired:
+        return HostProbe(host, local=False, error=f"timed out after {timeout * 4}s")
+    except (RuntimeError, OSError) as exc:
+        return HostProbe(host, local=False, error=str(exc))
+    return HostProbe(host, local=False, sessions=len(sessions))
+
+
+def check_hosts(skip_probe: bool, timeout: int) -> None:
+    section("Hosts")
+
+    if not HOSTS_TOML.is_file():
+        warn("hosts.toml", f"not found at {HOSTS_TOML} -- run tmux-remote-hosts add")
+        return
+
+    try:
+        import tomllib
+
+        data = tomllib.loads(HOSTS_TOML.read_text())
+    except (OSError, tomllib.TOMLDecodeError) as exc:
+        fail("hosts.toml", f"unreadable/unparseable: {exc}")
+        return
+
+    hosts = data.get("hosts", [])
+    aliases = host_aliases()
+    if not hosts:
+        warn("hosts.toml", "no hosts listed -- add some with tmux-remote-hosts add")
+        return
+    ok("hosts.toml", f"{len(hosts)} host(s), {len(aliases)} alias(es)")
+
+    # This machine must recognize itself, or it would try to mosh into itself.
+    this = socket.gethostname()
+    local_matches = [h for h in hosts if is_local_host(h)]
+    if local_matches:
+        ok("self recognized", f"{', '.join(local_matches)} == {this}")
+    else:
+        warn(
+            "self recognized",
+            f"none of the hosts resolve to this machine ({this}); "
+            f"add an [aliases] entry if its ssh name differs",
+        )
+
+    if skip_probe:
+        warn("reachability", "skipped (--skip-hosts)")
+        return
+
+    remotes = [h for h in hosts if not is_local_host(h)]
+    if not remotes:
+        return
+
+    print(f"  {_c('2', f'probing {len(remotes)} remote host(s) over ssh...')}")
+    with ThreadPoolExecutor(max_workers=min(8, len(remotes))) as pool:
+        results = list(pool.map(lambda h: probe_host(h, timeout), remotes))
+
+    for r in sorted(results, key=lambda r: r.host):
+        if r.error:
+            warn(f"{r.host:<20}", r.error)
+        else:
+            noun = "session" if r.sessions == 1 else "sessions"
+            ok(f"{r.host:<20}", f"reachable, {r.sessions} tmux {noun}")
+
+
+# ---- entrypoint -------------------------------------------------------------
+
+
+def main(
+    skip_hosts: Annotated[
+        bool,
+        typer.Option("--skip-hosts", help="Don't probe remote hosts over ssh"),
+    ] = False,
+    timeout: Annotated[
+        int,
+        typer.Option("--timeout", help="Per-host ssh connect timeout (seconds)"),
+    ] = 5,
+) -> None:
+    check_tools()
+    check_config()
+    check_hosts(skip_probe=skip_hosts, timeout=timeout)
+
+    section("Summary")
+    print(
+        f"  {_c('32', str(counts['ok']) + ' ok')}, "
+        f"{_c('33', str(counts['warn']) + ' warn')}, "
+        f"{_c('31', str(counts['fail']) + ' fail')}"
+    )
+    # Only hard failures (missing required tool, broken config) set the exit
+    # code; warnings are advisory so the command stays usable as a preflight.
+    raise typer.Exit(code=1 if counts["fail"] else 0)
+
+
+if __name__ == "__main__":
+    typer.run(main)
