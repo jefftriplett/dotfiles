@@ -9,7 +9,7 @@
 """Dump cmux workspace session (titles, cwds, colors, pins, descriptions).
 
 cmux can't tell us whether a workspace is running mosh or tmux, so the
-optional `machine` and `tmux` fields are hand-edited in the dump file and
+optional `host` and `tmux` fields are hand-edited in the dump file and
 preserved (matched by title) when re-dumping over an existing file.
 Annotated entries whose workspaces are closed are kept too, so closing a
 workspace doesn't lose its config. cmux-dump-restore uses these fields to mosh
@@ -17,16 +17,14 @@ to a remote host and/or attach a tmux session.
 """
 
 import json
-import os
 import subprocess
 import tomllib
 from pathlib import Path
 from typing import Annotated, Optional
 
-import tomli_w
 import typer
 
-from _cmux import DEFAULT_TOML, Workspace, load_dump
+from _cmux import DEFAULT_TOML, Workspace, load_dump, save_dump
 
 DEFAULT_OUTPUT = DEFAULT_TOML
 
@@ -75,7 +73,7 @@ def main(
         ws = Workspace.from_cmux(entry)
         prior = previous.pop(ws.title, None)
         if prior is not None:
-            ws.machine = prior.machine
+            ws.host = prior.host
             ws.tmux = prior.tmux
             ws.session = prior.session
         workspaces.append(ws)
@@ -84,18 +82,7 @@ def main(
     kept = [ws for ws in previous.values() if ws.annotated]
     workspaces.extend(kept)
 
-    if use_toml:
-        # TOML has no null; drop empty/default fields instead
-        cleaned = [ws.to_dict(compact=True) for ws in workspaces]
-        content = tomli_w.dumps({"workspaces": cleaned})
-    else:
-        content = json.dumps([ws.to_dict() for ws in workspaces], indent=2) + "\n"
-
-    # Write atomically so an interrupt can't corrupt hand-edited fields;
-    # os.replace also works if the tmp file lands on a different filesystem
-    tmp = output.with_suffix(output.suffix + ".tmp")
-    tmp.write_text(content)
-    os.replace(tmp, output)
+    save_dump(output, workspaces, use_toml)
 
     note = f" (kept {len(kept)} closed annotated)" if kept else ""
     print(f"Saved {len(workspaces)} workspaces to {output}{note}")

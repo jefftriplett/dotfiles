@@ -15,13 +15,13 @@ Skips workspaces whose title already exists, so it is safe to rerun.
 
 Optional per-workspace fields control where the workspace runs:
 
-  machine + tmux = true   mosh to the host and attach a tmux session named
+  host + tmux = true      mosh to the host and attach a tmux session named
                           after the workspace, started in cwd
-  machine only            plain mosh to the host
+  host only               plain mosh to the host
   tmux = true only        attach a local tmux session, started in cwd
   neither                 plain local workspace
 
-If `machine` matches the local hostname, the workspace is treated as local.
+If `host` matches the local hostname, the workspace is treated as local.
 tmux sessions use `new-session -A`, so restores resume existing sessions.
 The shell cds into cwd before launching tmux, so a freshly created session
 starts there even if tmux's -c is bypassed.
@@ -71,7 +71,7 @@ def main(
         ref = create_workspace(ws)
         details = []
         if ws.is_remote:
-            details.append(f"mosh:{ws.machine}")
+            details.append(f"mosh:{ws.host}")
         if ws.tmux:
             details.append(f"tmux:{ws.session_name}")
         suffix = f" ({', '.join(details)})" if details else ""

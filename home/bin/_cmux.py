@@ -8,6 +8,7 @@ puts the script's own directory on sys.path.
 """
 
 import json
+import os
 import shlex
 import socket
 import subprocess
@@ -51,6 +52,30 @@ def load_dump(path: Path) -> list[dict]:
     return data
 
 
+def save_dump(path: Path, workspaces: list["Workspace"], use_toml: bool = True) -> None:
+    """Write a dump file atomically. The counterpart to load_dump().
+
+    Atomic because the file holds hand-edited fields: an interrupted write
+    would lose annotations that cannot be recovered from cmux. os.replace
+    also works when the tmp file lands on a different filesystem.
+    """
+    # Imported here, not at module scope: only cmux-dump-save declares
+    # tomli-w in its uv header, and a top-level import would break every
+    # other script that imports this module.
+    import tomli_w
+
+    if use_toml:
+        # TOML has no null; drop empty/default fields instead
+        cleaned = [ws.to_dict(compact=True) for ws in workspaces]
+        content = tomli_w.dumps({"workspaces": cleaned})
+    else:
+        content = json.dumps([ws.to_dict() for ws in workspaces], indent=2) + "\n"
+
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(content)
+    os.replace(tmp, path)
+
+
 def local_hostnames() -> set[str]:
     hostname = socket.gethostname()
     return {hostname.lower(), hostname.split(".")[0].lower()}
@@ -88,7 +113,7 @@ class Workspace:
     color: str | None = None
     pinned: bool = False
     description: str | None = None
-    machine: str | None = None
+    host: str | None = None
     tmux: bool = False
     session: str | None = None
 
@@ -119,14 +144,17 @@ class Workspace:
             color=ws.get("color"),
             pinned=ws.get("pinned", False),
             description=ws.get("description"),
-            machine=ws.get("machine"),
+            # "machine" is the pre-rename spelling of "host". Still read so
+            # hand-edited dump files keep working; cmux-dump-save rewrites the
+            # key as "host" the next time it runs.
+            host=ws.get("host", ws.get("machine")),
             tmux=ws.get("tmux", False),
             session=ws.get("session"),
         )
 
     @property
     def annotated(self) -> bool:
-        return bool(self.machine) or self.tmux or bool(self.session)
+        return bool(self.host) or self.tmux or bool(self.session)
 
     def to_dict(self, compact: bool = False) -> dict:
         data = asdict(self)
@@ -166,7 +194,12 @@ class Workspace:
 
     @property
     def is_remote(self) -> bool:
-        return bool(self.machine) and self.machine.lower() not in local_hostnames()
+        # is_local_host, not local_hostnames: the ssh name and the machine's
+        # own hostname differ (mba-2025 vs MacBook-Air-2025), and only
+        # is_local_host consults HOST_ALIASES to bridge them. Comparing
+        # against local_hostnames alone would call this Mac remote and try to
+        # mosh into itself.
+        return bool(self.host) and not is_local_host(self.host)
 
     def command(self) -> str | None:
         cwd = shlex.quote(self.cwd)
@@ -185,10 +218,10 @@ class Workspace:
                 # command is quoted once, only for the local cmux-pane shell.
                 # The "--" stops mosh parsing "-c" as its own option.
                 return (
-                    f"mosh {shlex.quote(self.machine)} --"
+                    f"mosh {shlex.quote(self.host)} --"
                     f" sh -c {shlex.quote(shell_command)}"
                 )
-            return f"mosh {shlex.quote(self.machine)}"
+            return f"mosh {shlex.quote(self.host)}"
 
         if self.tmux:
             return shell_command

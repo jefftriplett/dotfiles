@@ -450,8 +450,8 @@ Add `use tmux` to any project's `.envrc` to automatically attach to (or create) 
 # .envrc
 use tmux                                          # session name defaults to the directory name
 use tmux myproject                                # explicit session name
-use tmux myproject --machine myserver             # SSH to a remote host's tmux session
-use tmux myproject --machine myserver --path /home/jeff/projects/myproject  # with a remote start path
+use tmux myproject --host myserver                # SSH to a remote host's tmux session
+use tmux myproject --host myserver --path /home/jeff/projects/myproject     # with a remote start path
 ```
 
 Set `NO_TMUX_AUTOATTACH=1` to skip auto-attach for a shell session.
@@ -470,14 +470,14 @@ These variables are exported by `use tmux` in `.envrc` and read by the shell fun
 
 ### Remote Sessions
 
-Set `--machine` (or `--host` / `--profile`) to SSH into a remote host's tmux session instead of the local one. All commands — `tmux-go`, `tmux-ls`, `tmux-kill`, and auto-attach — are routed through `ssh -t` automatically.
+Set `--host` (also accepted: `--machine`, `--profile`) to SSH into a remote host's tmux session instead of the local one. All commands — `tmux-go`, `tmux-ls`, `tmux-kill`, and auto-attach — are routed through `ssh -t` automatically.
 
 ```shell
 # .envrc
-use tmux myproject --machine myserver
+use tmux myproject --host myserver
 
 # With a starting directory on the remote host (only applies when creating a new session)
-use tmux myproject --machine myserver --path /home/jeff/projects/myproject
+use tmux myproject --host myserver --path /home/jeff/projects/myproject
 ```
 
 Requires key-based SSH auth (no password prompt) since the connection is non-interactive.
@@ -506,7 +506,7 @@ detached session gets a window back instead of quietly aging out.
 
 ```shell
 cmux-dump-save          # save open workspaces to ~/.config/cmux/session-dump.toml
-cmux-dump-edit          # edit that file to add machine / tmux / session fields
+cmux-dump-edit          # edit that file to add host / tmux / session fields
 cmux-dump-restore       # recreate any workspace that is not already open
 ```
 
@@ -514,7 +514,7 @@ The dump defaults to `~/.config/cmux/session-dump.toml`; pass a path to use anot
 `--json` to write JSON. `cmux-dump-restore` and `cmux-dump-edit` detect the format from the extension
 and fall back to `session-dump.json` when no TOML file exists.
 
-cmux cannot report whether a workspace is running mosh or tmux, so `machine`, `tmux`, and
+cmux cannot report whether a workspace is running mosh or tmux, so `host`, `tmux`, and
 `session` are hand-added. Re-dumping preserves them by matching on title, and keeps annotated
 entries whose workspaces have since been closed, so closing a workspace does not lose its
 config. Writes are atomic, so an interrupted dump cannot corrupt those hand-edited fields.
@@ -526,7 +526,7 @@ config. Writes are atomic, so an interrupted dump cannot corrupt those hand-edit
 | `color` | Custom workspace color |
 | `pinned` | Whether the workspace is pinned |
 | `description` | Workspace description |
-| `machine` | Host to mosh to; treated as local if it matches this hostname |
+| `host` | Host to mosh to; treated as local if it matches this machine |
 | `tmux` | Attach a tmux session in the workspace |
 | `session` | Explicit tmux session name, overriding the title-derived one |
 
@@ -534,7 +534,7 @@ config. Writes are atomic, so an interrupted dump cannot corrupt those hand-edit
 [[workspaces]]
 title = "thumb.im"
 cwd = "/Users/jefftriplett/Projects/thumb.im/thumb.im-git"
-machine = "mac-mini-pro-2023"
+host = "mac-mini-pro-2023"
 tmux = true
 ```
 
@@ -542,8 +542,8 @@ The last three fields combine to decide where a workspace runs:
 
 | Fields | Result |
 | ------ | ------ |
-| `machine` + `tmux = true` | mosh to the host and attach a tmux session there, started in `cwd` |
-| `machine` only | plain mosh to the host |
+| `host` + `tmux = true` | mosh to the host and attach a tmux session there, started in `cwd` |
+| `host` only | plain mosh to the host |
 | `tmux = true` only | attach a local tmux session, started in `cwd` |
 | neither | plain local workspace |
 
@@ -571,7 +571,7 @@ overrides that, which is useful when a session is only attached from outside cmu
 
 `--host` (repeatable) and `--all` extend the same idea to the other Macs, using the same ssh
 path as `tmux-remote-ls`. A remote session becomes a workspace that moshes to the host and
-attaches there, exactly like a `machine` + `tmux = true` entry in the dump file.
+attaches there, exactly like a `host` + `tmux = true` entry in the dump file.
 
 The unattached test does not carry over. A session on the mini reads as attached because a
 workspace *on the mini* holds it, which says nothing about whether this machine can see it —

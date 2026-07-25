@@ -57,7 +57,7 @@ from _cmux import (
 )
 
 
-def create(ws: Workspace, label: str, dry_run: bool, detail: str) -> bool:
+def open_workspace(ws: Workspace, label: str, dry_run: bool, detail: str) -> bool:
     if dry_run:
         print(f"would  {label} -> {ws.command()}")
         return True
@@ -88,7 +88,7 @@ def sync_local(covered: set[str], dry_run: bool, include_attached: bool) -> int:
             tmux=True,
             session=session.name,
         )
-        created += create(ws, session.name, dry_run, session.path)
+        created += open_workspace(ws, session.name, dry_run, session.path)
     return created
 
 
@@ -122,11 +122,11 @@ def sync_remote(host: str, covered: set[str], dry_run: bool, timeout: int) -> in
         ws = Workspace(
             title=title,
             cwd=session.path,
-            machine=host,
+            host=host,
             tmux=True,
             session=session.name,
         )
-        created += create(ws, title, dry_run, f"mosh:{host}, tmux:{session.name}")
+        created += open_workspace(ws, title, dry_run, f"mosh:{host}, tmux:{session.name}")
     return created
 
 
@@ -159,7 +159,7 @@ def main(
     else:
         targets = None
 
-    # from_cmux leaves machine/session unset, so session_name falls back to the
+    # from_cmux leaves host/session unset, so session_name falls back to the
     # slugified title -- which is what the local pass matches on, and is why a
     # workspace titled "thumb.im" covers the "thumb-im" session. The remote
     # pass compares its "host:session" title against the same set.

@@ -15,8 +15,8 @@ __tmux_set_title() {
     printf '\033]0;%s\007' "$1"
 }
 
-__tmux_target_machine() {
-    printf '%s' "${TMUX_AUTOATTACH_MACHINE:-${TMUX_AUTOATTACH_HOST:-}}"
+__tmux_target_host() {
+    printf '%s' "${TMUX_AUTOATTACH_HOST:-${TMUX_AUTOATTACH_MACHINE:-}}"
 }
 
 __tmux_target_path() {
@@ -45,29 +45,29 @@ __tmux_remote_tmux_command() {
 # argv, so it is quoted once; ssh re-parses on the remote, so it gets the
 # extra %q layer.
 __tmux_remote_attach_argv() {
-    local machine="$1"
+    local host="$1"
     shift
     local tmux_string
     tmux_string="$(__tmux_remote_tmux_string "$@")"
 
     if command -v mosh >/dev/null 2>&1; then
-        __tmux_argv=(direnv exec / env mosh "$machine" -- bash -lc "$tmux_string")
+        __tmux_argv=(direnv exec / env mosh "$host" -- bash -lc "$tmux_string")
     else
-        __tmux_argv=(direnv exec / env ssh -t "$machine" "bash -lc $(printf '%q' "$tmux_string")")
+        __tmux_argv=(direnv exec / env ssh -t "$host" "bash -lc $(printf '%q' "$tmux_string")")
     fi
 }
 
 __tmux_attach() {
-    local machine="$1"
+    local host="$1"
     local name="$2"
     local path
     path="$(__tmux_target_path)"
 
-    if [[ -n "$machine" ]]; then
+    if [[ -n "$host" ]]; then
         if [[ -n "$path" ]]; then
-            __tmux_remote_attach_argv "$machine" new-session -A -s "$name" -c "$path"
+            __tmux_remote_attach_argv "$host" new-session -A -s "$name" -c "$path"
         else
-            __tmux_remote_attach_argv "$machine" new-session -A -s "$name"
+            __tmux_remote_attach_argv "$host" new-session -A -s "$name"
         fi
         "${__tmux_argv[@]}"
     else
@@ -84,29 +84,29 @@ tmux() {
 }
 
 tmux-new() {
-    local machine
+    local host
     local name
     name="$(__tmux_session_name "$1")"
-    machine="$(__tmux_target_machine)"
+    host="$(__tmux_target_host)"
 
-    if [[ -n "$machine" ]]; then
-        __tmux_set_title "${machine}:${name}"
+    if [[ -n "$host" ]]; then
+        __tmux_set_title "${host}:${name}"
     else
         __tmux_set_title "$name"
     fi
 
-    __tmux_attach "$machine" "$name"
+    __tmux_attach "$host" "$name"
 }
 
 tmux-go() {
-    local machine
+    local host
     local name
     name="$(__tmux_session_name "$1")"
-    machine="$(__tmux_target_machine)"
+    host="$(__tmux_target_host)"
 
-    if [[ -n "$machine" ]]; then
-        __tmux_set_title "${machine}:${name}"
-        __tmux_attach "$machine" "$name"
+    if [[ -n "$host" ]]; then
+        __tmux_set_title "${host}:${name}"
+        __tmux_attach "$host" "$name"
         return $?
     fi
 
@@ -129,7 +129,7 @@ tmux-attach() {
 }
 
 tmux-ls() {
-    local machine
+    local host
     local json=0
     local args=()
 
@@ -141,7 +141,7 @@ tmux-ls() {
         fi
     done
 
-    machine="$(__tmux_target_machine)"
+    host="$(__tmux_target_host)"
 
     if (( json )); then
         # Remaining args would be tmux list-sessions flags (-F and friends),
@@ -154,36 +154,36 @@ tmux-ls() {
         # escaping; a session name or path with a quote in it stays valid JSON.
         # It is given one explicit host so the output covers the same machine
         # this function would have listed, not the whole fleet.
-        if [[ -n "$machine" ]]; then
-            tmux-remote-ls --json --host "$machine"
+        if [[ -n "$host" ]]; then
+            tmux-remote-ls --json --host "$host"
         else
             tmux-remote-ls --json --include-local --host "$(hostname -s)"
         fi
         return $?
     fi
 
-    if [[ -n "$machine" ]]; then
-        direnv exec / env ssh "$machine" "$(__tmux_remote_tmux_command list-sessions "${args[@]}")"
+    if [[ -n "$host" ]]; then
+        direnv exec / env ssh "$host" "$(__tmux_remote_tmux_command list-sessions "${args[@]}")"
     else
         tmux list-sessions "${args[@]}"
     fi
 }
 
 tmux-kill() {
-    local machine
+    local host
     local name
     name="$(__tmux_session_name "$1")"
-    machine="$(__tmux_target_machine)"
+    host="$(__tmux_target_host)"
 
-    if [[ -n "$machine" ]]; then
-        direnv exec / env ssh "$machine" "$(__tmux_remote_tmux_command kill-session -t "$name")"
+    if [[ -n "$host" ]]; then
+        direnv exec / env ssh "$host" "$(__tmux_remote_tmux_command kill-session -t "$name")"
     else
         tmux kill-session -t "$name"
     fi
 }
 
 __tmux_autoattach() {
-    local machine
+    local host
     local name
     local path
 
@@ -197,15 +197,15 @@ __tmux_autoattach() {
     [[ -n "$TMUX_AUTOATTACH" ]] || return 0
 
     name="$(__tmux_session_name "$TMUX_AUTOATTACH")"
-    machine="$(__tmux_target_machine)"
+    host="$(__tmux_target_host)"
     path="$(__tmux_target_path)"
 
-    if [[ -n "$machine" ]]; then
-        __tmux_set_title "${machine}:${name}"
+    if [[ -n "$host" ]]; then
+        __tmux_set_title "${host}:${name}"
         if [[ -n "$path" ]]; then
-            __tmux_remote_attach_argv "$machine" new-session -A -s "$name" -c "$path"
+            __tmux_remote_attach_argv "$host" new-session -A -s "$name" -c "$path"
         else
-            __tmux_remote_attach_argv "$machine" new-session -A -s "$name"
+            __tmux_remote_attach_argv "$host" new-session -A -s "$name"
         fi
         exec "${__tmux_argv[@]}"
     else
@@ -219,7 +219,7 @@ __tmux_autoattach() {
 }
 
 __tmux_sessions() {
-    [[ -z "$(__tmux_target_machine)" ]] || return 0
+    [[ -z "$(__tmux_target_host)" ]] || return 0
     tmux list-sessions -F '#S' 2>/dev/null
 }
 
