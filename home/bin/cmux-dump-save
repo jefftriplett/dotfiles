@@ -75,7 +75,7 @@ def main(
     kept = [ws for ws in previous.values() if ws.annotated]
     workspaces.extend(kept)
 
-    save_dump(output, workspaces)
+    save_dump(output, workspaces=workspaces)
 
     note = f" (kept {len(kept)} closed annotated)" if kept else ""
     print(f"Saved {len(workspaces)} workspaces to {output}{note}")

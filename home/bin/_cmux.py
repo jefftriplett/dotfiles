@@ -75,7 +75,7 @@ def load_dump(path: Path) -> list[dict]:
     return data
 
 
-def write_atomic(path: Path, content: str) -> None:
+def write_atomic(path: Path, *, content: str) -> None:
     """Replace a file's contents in one step.
 
     These files hold hand-edited data that cannot be recovered from cmux or
@@ -88,7 +88,7 @@ def write_atomic(path: Path, content: str) -> None:
     os.replace(tmp, path)
 
 
-def save_dump(path: Path, workspaces: list["Workspace"], use_toml: bool = True) -> None:
+def save_dump(path: Path, *, workspaces: list["Workspace"], use_toml: bool = True) -> None:
     """Write a dump file. The counterpart to load_dump()."""
     # Imported here, not at module scope: only cmux-dump-save declares
     # tomli-w in its uv header, and a top-level import would break every
@@ -102,7 +102,7 @@ def save_dump(path: Path, workspaces: list["Workspace"], use_toml: bool = True) 
     else:
         content = json.dumps([ws.to_dict() for ws in workspaces], indent=2) + "\n"
 
-    write_atomic(path, content)
+    write_atomic(path, content=content)
 
 
 def local_hostnames() -> set[str]:
@@ -422,7 +422,7 @@ def tmux_sessions() -> list[TmuxSession]:
     return parse_sessions(result.stdout)
 
 
-def remote_tmux_sessions(host: str, timeout: int = 5) -> list[TmuxSession]:
+def remote_tmux_sessions(host: str, *, timeout: int = 5) -> list[TmuxSession]:
     """Sessions on a remote host, over ssh. Empty when no server runs there.
 
     ssh rather than mosh: this is a one-shot non-interactive command, matching

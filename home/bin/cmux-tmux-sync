@@ -57,7 +57,7 @@ from _cmux import (
 )
 
 
-def open_workspace(ws: Workspace, label: str, dry_run: bool, detail: str) -> bool:
+def open_workspace(ws: Workspace, *, label: str, dry_run: bool, detail: str) -> bool:
     if dry_run:
         print(f"would  {label} -> {ws.command()}")
         return True
@@ -66,7 +66,7 @@ def open_workspace(ws: Workspace, label: str, dry_run: bool, detail: str) -> boo
     return True
 
 
-def sync_local(covered: set[str], dry_run: bool, include_attached: bool) -> int:
+def sync_local(covered: set[str], *, dry_run: bool, include_attached: bool) -> int:
     sessions = tmux_sessions()
     if not sessions:
         print("No local tmux sessions running")
@@ -88,13 +88,15 @@ def sync_local(covered: set[str], dry_run: bool, include_attached: bool) -> int:
             tmux=True,
             session=session.name,
         )
-        created += open_workspace(ws, session.name, dry_run, session.path)
+        created += open_workspace(
+            ws, label=session.name, dry_run=dry_run, detail=session.path
+        )
     return created
 
 
-def sync_remote(host: str, covered: set[str], dry_run: bool, timeout: int) -> int:
+def sync_remote(host: str, *, covered: set[str], dry_run: bool, timeout: int) -> int:
     try:
-        sessions = remote_tmux_sessions(host, timeout)
+        sessions = remote_tmux_sessions(host, timeout=timeout)
     except subprocess.TimeoutExpired:
         print(f"error  {host}: timed out after {timeout * 4}s")
         return 0
@@ -126,7 +128,9 @@ def sync_remote(host: str, covered: set[str], dry_run: bool, timeout: int) -> in
             tmux=True,
             session=session.name,
         )
-        created += open_workspace(ws, title, dry_run, f"mosh:{host}, tmux:{session.name}")
+        created += open_workspace(
+            ws, label=title, dry_run=dry_run, detail=f"mosh:{host}, tmux:{session.name}"
+        )
     return created
 
 
@@ -168,13 +172,17 @@ def main(
     created = 0
 
     if targets is None:
-        created += sync_local(covered, dry_run, include_attached)
+        created += sync_local(covered, dry_run=dry_run, include_attached=include_attached)
     else:
         for host in targets:
             if is_local_host(host):
-                created += sync_local(covered, dry_run, include_attached)
+                created += sync_local(
+                    covered, dry_run=dry_run, include_attached=include_attached
+                )
             else:
-                created += sync_remote(host, covered, dry_run, timeout)
+                created += sync_remote(
+                    host, covered=covered, dry_run=dry_run, timeout=timeout
+                )
 
     if not created:
         print("Nothing to sync; every session is attached or has a workspace")

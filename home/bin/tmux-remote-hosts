@@ -55,14 +55,14 @@ def load_doc() -> tomlkit.TOMLDocument:
 
 def save_doc(doc: tomlkit.TOMLDocument) -> None:
     HOSTS_TOML.parent.mkdir(parents=True, exist_ok=True)
-    write_atomic(HOSTS_TOML, tomlkit.dumps(doc))
+    write_atomic(HOSTS_TOML, content=tomlkit.dumps(doc))
 
 
 def host_names(doc: tomlkit.TOMLDocument) -> list[str]:
     return [str(host) for host in doc.get("hosts", [])]
 
 
-def set_hosts(doc: tomlkit.TOMLDocument, names: list[str]) -> None:
+def set_hosts(doc: tomlkit.TOMLDocument, *, names: list[str]) -> None:
     # Rebuild as a multiline array so the file keeps the one-host-per-line
     # shape a hand-edited config has, rather than collapsing to one long row.
     array = tomlkit.array().multiline(True)
@@ -131,7 +131,7 @@ def add(
         print(f"{host} did not answer over ssh; not added (drop --check to add anyway)")
         raise typer.Exit(code=1)
 
-    set_hosts(doc, names + [host])
+    set_hosts(doc, names=names + [host])
 
     if alias:
         # setdefault so an existing alias table keeps its comments
@@ -165,7 +165,7 @@ def remove(
         print(f"{host} is not configured")
         raise typer.Exit(code=1)
 
-    set_hosts(doc, [name for name in names if name != host])
+    set_hosts(doc, names=[name for name in names if name != host])
 
     # Drop the alias too, or it lingers pointing at a machine we no longer use
     aliases = doc.get("aliases")

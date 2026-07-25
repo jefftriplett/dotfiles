@@ -52,14 +52,14 @@ class HostResult:
     error: str | None = None
 
 
-def query(host: str, timeout: int) -> HostResult:
+def query(host: str, *, timeout: int) -> HostResult:
     try:
         # tmux_sessions() runs tmux here rather than over ssh, so
         # --include-local works on a machine with no ssh server.
         sessions = (
             tmux_sessions()
             if is_local_host(host)
-            else remote_tmux_sessions(host, timeout)
+            else remote_tmux_sessions(host, timeout=timeout)
         )
     except subprocess.TimeoutExpired:
         return HostResult(host, [], error=f"timed out after {timeout * 4}s")
@@ -68,7 +68,7 @@ def query(host: str, timeout: int) -> HostResult:
     return HostResult(host, sorted(sessions, key=lambda session: session.name))
 
 
-def report(results: list[HostResult], sessions_only: bool) -> int:
+def report(results: list[HostResult], *, sessions_only: bool) -> int:
     failures = 0
     for result in results:
         if result.error:
@@ -124,7 +124,7 @@ def main(
     # Hosts are queried concurrently so one unreachable machine costs its own
     # timeout rather than delaying every host behind it.
     with ThreadPoolExecutor(max_workers=len(targets)) as pool:
-        results = list(pool.map(lambda host: query(host, timeout), targets))
+        results = list(pool.map(lambda host: query(host, timeout=timeout), targets))
 
     if as_json:
         print(
@@ -150,7 +150,7 @@ def main(
         )
         failures = sum(1 for result in results if result.error)
     else:
-        failures = report(results, sessions_only)
+        failures = report(results, sessions_only=sessions_only)
 
     # Non-zero when a host could not be reached, so scripted callers can tell
     # "no sessions anywhere" apart from "we never got an answer".

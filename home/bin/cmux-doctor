@@ -44,7 +44,7 @@ from _cmux import (
 _USE_COLOR = sys.stdout.isatty()
 
 
-def _c(code: str, text: str) -> str:
+def _c(code: str, *, text: str) -> str:
     return f"\033[{code}m{text}\033[0m" if _USE_COLOR else text
 
 
@@ -52,23 +52,26 @@ def _c(code: str, text: str) -> str:
 counts = {"ok": 0, "warn": 0, "fail": 0}
 
 
-def ok(msg: str, detail: str = "") -> None:
+def ok(msg: str, *, detail: str = "") -> None:
     counts["ok"] += 1
-    print(f"  {_c('32', 'OK')}   {msg}" + (f"  {_c('2', detail)}" if detail else ""))
+    label = _c("32", text="OK")
+    print(f"  {label}   {msg}" + (f"  {_c('2', text=detail)}" if detail else ""))
 
 
-def warn(msg: str, detail: str = "") -> None:
+def warn(msg: str, *, detail: str = "") -> None:
     counts["warn"] += 1
-    print(f"  {_c('33', 'WARN')} {msg}" + (f"  {_c('2', detail)}" if detail else ""))
+    label = _c("33", text="WARN")
+    print(f"  {label} {msg}" + (f"  {_c('2', text=detail)}" if detail else ""))
 
 
-def fail(msg: str, detail: str = "") -> None:
+def fail(msg: str, *, detail: str = "") -> None:
     counts["fail"] += 1
-    print(f"  {_c('31', 'FAIL')} {msg}" + (f"  {_c('2', detail)}" if detail else ""))
+    label = _c("31", text="FAIL")
+    print(f"  {label} {msg}" + (f"  {_c('2', text=detail)}" if detail else ""))
 
 
 def section(title: str) -> None:
-    print(f"\n{_c('1', title)}")
+    print(f"\n{_c('1', text=title)}")
 
 
 # ---- tool checks ------------------------------------------------------------
@@ -125,11 +128,11 @@ def check_tools() -> None:
     for tool in TOOLS:
         path = shutil.which(tool.name)
         if path:
-            ok(f"{tool.name:<6}", f"{tool_version(tool.name) or path}")
+            ok(f"{tool.name:<6}", detail=f"{tool_version(tool.name) or path}")
         elif tool.required:
-            fail(f"{tool.name:<6}", f"missing -- {tool.reason}")
+            fail(f"{tool.name:<6}", detail=f"missing -- {tool.reason}")
         else:
-            warn(f"{tool.name:<6}", f"missing -- {tool.reason}")
+            warn(f"{tool.name:<6}", detail=f"missing -- {tool.reason}")
 
 
 # ---- config checks ----------------------------------------------------------
@@ -138,16 +141,16 @@ def check_tools() -> None:
 def check_config() -> None:
     section("Config")
     if CONFIG_DIR.is_dir():
-        ok("config dir", str(CONFIG_DIR))
+        ok(str(CONFIG_DIR), detail="config dir")
     else:
-        warn("config dir", f"{CONFIG_DIR} does not exist yet (created on first save)")
+        warn(str(CONFIG_DIR), detail="config dir does not exist yet (created on first save)")
 
     dump = default_dump_path()
     if dump.is_file():
         which = "TOML" if dump == DEFAULT_TOML else "legacy JSON"
-        ok("session dump", f"{dump} ({which})")
+        ok(str(dump), detail=f"session dump ({which})")
     else:
-        warn("session dump", f"none yet -- run cmux-dump-save (expected {DEFAULT_TOML})")
+        warn(str(DEFAULT_TOML), detail="no session dump yet -- run cmux-dump-save")
 
 
 # ---- host checks ------------------------------------------------------------
@@ -161,11 +164,11 @@ class HostProbe:
     sessions: int = 0
 
 
-def probe_host(host: str, timeout: int) -> HostProbe:
+def probe_host(host: str, *, timeout: int) -> HostProbe:
     if is_local_host(host):
         return HostProbe(host, local=True)
     try:
-        sessions = remote_tmux_sessions(host, timeout)
+        sessions = remote_tmux_sessions(host, timeout=timeout)
     except subprocess.TimeoutExpired:
         return HostProbe(host, local=False, error=f"timed out after {timeout * 4}s")
     except (RuntimeError, OSError) as exc:
@@ -173,11 +176,11 @@ def probe_host(host: str, timeout: int) -> HostProbe:
     return HostProbe(host, local=False, sessions=len(sessions))
 
 
-def check_hosts(skip_probe: bool, timeout: int) -> None:
+def check_hosts(skip_probe: bool, *, timeout: int) -> None:
     section("Hosts")
 
     if not HOSTS_TOML.is_file():
-        warn("hosts.toml", f"not found at {HOSTS_TOML} -- run tmux-remote-hosts add")
+        warn(str(HOSTS_TOML), detail="not found -- run tmux-remote-hosts add")
         return
 
     try:
@@ -185,46 +188,48 @@ def check_hosts(skip_probe: bool, timeout: int) -> None:
 
         data = tomllib.loads(HOSTS_TOML.read_text())
     except (OSError, tomllib.TOMLDecodeError) as exc:
-        fail("hosts.toml", f"unreadable/unparseable: {exc}")
+        fail(str(HOSTS_TOML), detail=f"unreadable/unparseable: {exc}")
         return
 
     hosts = data.get("hosts", [])
     aliases = host_aliases()
     if not hosts:
-        warn("hosts.toml", "no hosts listed -- add some with tmux-remote-hosts add")
+        warn(str(HOSTS_TOML), detail="no hosts listed -- add some with tmux-remote-hosts add")
         return
-    ok("hosts.toml", f"{len(hosts)} host(s), {len(aliases)} alias(es)")
+    ok(str(HOSTS_TOML), detail=f"{len(hosts)} host(s), {len(aliases)} alias(es)")
 
     # This machine must recognize itself, or it would try to mosh into itself.
     this = socket.gethostname()
     local_matches = [h for h in hosts if is_local_host(h)]
     if local_matches:
-        ok("self recognized", f"{', '.join(local_matches)} == {this}")
+        ok("self recognized", detail=f"{', '.join(local_matches)} == {this}")
     else:
         warn(
             "self recognized",
-            f"none of the hosts resolve to this machine ({this}); "
-            f"add an [aliases] entry if its ssh name differs",
+            detail=(
+                f"none of the hosts resolve to this machine ({this}); "
+                f"add an [aliases] entry if its ssh name differs"
+            ),
         )
 
     if skip_probe:
-        warn("reachability", "skipped (--skip-hosts)")
+        warn("reachability", detail="skipped (--skip-hosts)")
         return
 
     remotes = [h for h in hosts if not is_local_host(h)]
     if not remotes:
         return
 
-    print(f"  {_c('2', f'probing {len(remotes)} remote host(s) over ssh...')}")
+    print(f"  {_c('2', text=f'probing {len(remotes)} remote host(s) over ssh...')}")
     with ThreadPoolExecutor(max_workers=min(8, len(remotes))) as pool:
-        results = list(pool.map(lambda h: probe_host(h, timeout), remotes))
+        results = list(pool.map(lambda h: probe_host(h, timeout=timeout), remotes))
 
     for r in sorted(results, key=lambda r: r.host):
         if r.error:
-            warn(f"{r.host:<20}", r.error)
+            warn(f"{r.host:<20}", detail=r.error)
         else:
             noun = "session" if r.sessions == 1 else "sessions"
-            ok(f"{r.host:<20}", f"reachable, {r.sessions} tmux {noun}")
+            ok(f"{r.host:<20}", detail=f"reachable, {r.sessions} tmux {noun}")
 
 
 # ---- entrypoint -------------------------------------------------------------
@@ -246,9 +251,9 @@ def main(
 
     section("Summary")
     print(
-        f"  {_c('32', str(counts['ok']) + ' ok')}, "
-        f"{_c('33', str(counts['warn']) + ' warn')}, "
-        f"{_c('31', str(counts['fail']) + ' fail')}"
+        f"  {_c('32', text=str(counts['ok']) + ' ok')}, "
+        f"{_c('33', text=str(counts['warn']) + ' warn')}, "
+        f"{_c('31', text=str(counts['fail']) + ' fail')}"
     )
     # Only hard failures (missing required tool, broken config) set the exit
     # code; warnings are advisory so the command stays usable as a preflight.
