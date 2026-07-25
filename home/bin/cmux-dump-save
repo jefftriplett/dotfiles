@@ -36,8 +36,8 @@ def load_previous(path: Path) -> dict[str, Workspace]:
     try:
         entries = load_dump(path)
         return {ws["title"]: Workspace.from_dump(ws) for ws in entries}
-    except (json.JSONDecodeError, tomllib.TOMLDecodeError, KeyError, TypeError) as exc:
-        print(f"Refusing to overwrite unparseable {path}: {exc}")
+    except (json.JSONDecodeError, tomllib.TOMLDecodeError, KeyError, TypeError, OSError) as exc:
+        print(f"Refusing to overwrite unreadable {path}: {exc}")
         print("Fix or remove the file, then re-run.")
         raise typer.Exit(code=1)
 

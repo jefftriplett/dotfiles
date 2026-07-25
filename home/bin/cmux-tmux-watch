@@ -23,16 +23,23 @@ import typer
 from _cmux import Workspace, cmux_workspaces, create_workspace, tmux_sessions
 
 
-def sync_once(*, quiet: bool = False) -> int:
+def sync_once(recent: dict[str, float], *, grace: float) -> int:
     sessions = tmux_sessions()
     if not sessions:
         return 0
 
     covered = {ws.session_name for ws in cmux_workspaces()}
+    now = time.monotonic()
+    # Forget sessions whose grace window has passed, so one that genuinely
+    # closes and reopens is created again rather than suppressed forever.
+    for name in [n for n, t in recent.items() if now - t > grace]:
+        del recent[name]
     created = 0
 
     for session in sorted(sessions, key=lambda s: s.name):
-        if session.name in covered:
+        # `covered` is a snapshot; `recent` covers the window where cmux hasn't
+        # yet reported a workspace we just created, preventing a duplicate.
+        if session.name in covered or session.name in recent:
             continue
 
         ws = Workspace(
@@ -42,6 +49,7 @@ def sync_once(*, quiet: bool = False) -> int:
             session=session.name,
         )
         ref = create_workspace(ws)
+        recent[session.name] = time.monotonic()
         print(f"sync   {session.name} -> {ref} ({session.path})")
         created += 1
 
@@ -57,20 +65,41 @@ def main(
         bool,
         typer.Option("--once", help="Run a single sync and exit"),
     ] = False,
+    max_failures: Annotated[
+        int,
+        typer.Option("--max-failures", help="Exit after this many consecutive errors"),
+    ] = 5,
 ) -> None:
     if once:
-        sync_once()
+        sync_once({}, grace=0.0)
         return
 
     signal.signal(signal.SIGINT, lambda *_: sys.exit(0))
     signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
 
+    recent: dict[str, float] = {}
+    grace = max(interval * 3, 10.0)
+    failures = 0
+
     print(f"watching tmux sessions every {interval}s")
     while True:
         try:
-            sync_once(quiet=True)
+            sync_once(recent, grace=grace)
         except Exception as exc:
-            print(f"error: {exc}", file=sys.stderr)
+            failures += 1
+            print(f"error ({failures}/{max_failures}): {exc}", file=sys.stderr)
+            if failures >= max_failures:
+                print(
+                    f"giving up after {max_failures} consecutive failures",
+                    file=sys.stderr,
+                )
+                sys.exit(1)
+            # Back off as failures mount so a persistent fault (e.g. cmux not
+            # running) doesn't spin at the poll rate. Capped so recovery is
+            # still noticed promptly.
+            time.sleep(min(interval * failures, 60.0))
+            continue
+        failures = 0
         time.sleep(interval)
 
 

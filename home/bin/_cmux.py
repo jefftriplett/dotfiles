@@ -10,11 +10,24 @@ puts the script's own directory on sys.path.
 import json
 import os
 import shlex
+import shutil
 import socket
 import subprocess
 import tomllib
 from dataclasses import asdict, dataclass
 from pathlib import Path
+
+
+def require(binary: str, *, reason: str = "") -> None:
+    """Fail early and clearly when a required command is missing.
+
+    The remote/tmux launch commands run inside a cmux pane where their failure
+    is invisible to us, so it is better to refuse up front than to create a
+    workspace whose command silently dies.
+    """
+    if shutil.which(binary) is None:
+        hint = f" ({reason})" if reason else ""
+        raise RuntimeError(f"required command not found: {binary}{hint}")
 
 # Base config dir for these scripts. Honors XDG_CONFIG_HOME (falling back to
 # ~/.config), and deliberately uses its own `cmux-tmux` subdir rather than
@@ -295,6 +308,7 @@ class Workspace:
         shell_command = f"cd {cwd}; {tmux_command}"
 
         if self.is_remote:
+            require("mosh", reason=f"needed to reach {self.host}")
             if self.tmux:
                 # mosh passes the command to mosh-server as a clean argv and
                 # execs it directly (no remote login shell re-parse), so the
@@ -314,8 +328,19 @@ class Workspace:
 
 # Fields requested from `tmux list-sessions -F`, in the order parse_sessions
 # expects them. Shared so local and remote callers stay in lockstep.
-SESSION_FORMAT = (
-    "#{session_name}\t#{session_attached}\t#{session_path}\t#{session_windows}"
+#
+# Fields are joined with US (unit separator, \x1f) rather than a tab: a
+# session name or path may legitimately contain a tab, which would misalign a
+# tab-split, but no tmux name or filesystem path contains a control char, so
+# \x1f is an unambiguous delimiter.
+SESSION_DELIM = "\x1f"
+SESSION_FORMAT = SESSION_DELIM.join(
+    (
+        "#{session_name}",
+        "#{session_attached}",
+        "#{session_path}",
+        "#{session_windows}",
+    )
 )
 
 
@@ -332,30 +357,47 @@ class TmuxSession:
 
 
 def parse_sessions(stdout: str) -> list[TmuxSession]:
-    """Parse `tmux list-sessions -F SESSION_FORMAT` output."""
+    """Parse `tmux list-sessions -F SESSION_FORMAT` output.
+
+    Lines that don't split into the expected fields are skipped rather than
+    raising: a remote `bash -lc` may interleave login-profile chatter with the
+    real output, and one noisy line shouldn't abort the whole listing.
+    """
     sessions = []
     for line in stdout.splitlines():
         if not line.strip():
             continue
-        name, attached, path, windows = line.split("\t")
-        sessions.append(
-            TmuxSession(
-                name=name,
-                attached=int(attached),
-                path=path,
-                windows=int(windows),
+        parts = line.split(SESSION_DELIM)
+        if len(parts) != 4:
+            continue
+        name, attached, path, windows = parts
+        try:
+            sessions.append(
+                TmuxSession(
+                    name=name,
+                    attached=int(attached),
+                    path=path,
+                    windows=int(windows),
+                )
             )
-        )
+        except ValueError:
+            # attached/windows weren't integers -- not a real session line
+            continue
     return sessions
 
 
 def cmux(*args: str) -> str:
-    result = subprocess.run(
-        ["cmux", *args],
-        capture_output=True,
-        text=True,
-        check=True,
-    )
+    try:
+        result = subprocess.run(
+            ["cmux", *args],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+    except FileNotFoundError:
+        raise RuntimeError(
+            "required command not found: cmux (is the cmux app installed and on PATH?)"
+        )
     return result.stdout.strip()
 
 

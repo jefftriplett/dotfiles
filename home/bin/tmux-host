@@ -12,14 +12,30 @@ is_ssh() {
 }
 
 remote_host() {
-    local pid cmd
-    pid=$(tmux display-message -p '#{pane_pid}' 2>/dev/null)
-    cmd=$(
+    local pid line
+    pid=$(tmux display-message -p '#{pane_pid}' 2>/dev/null) || return
+    # Match ssh as a whole word so sshfs / a path containing "ssh" don't hit.
+    line=$(
         { pgrep -flaP "$pid" 2>/dev/null; ps -o command= -p "$pid" 2>/dev/null; } \
-            | grep -m1 ssh \
-            | sed -E 's/^[0-9]+[[:space:]]*ssh //; s/-p[[:space:]]+[0-9]+//'
+            | grep -m1 -E '(^|[/[:space:]])ssh[[:space:]]'
     )
-    awk '{print $NF}' <<<"$cmd" | cut -d@ -f2-
+    [[ -n "$line" ]] || return
+    # The destination is the first token after "ssh" that is neither an option
+    # nor an option's value. Options taking a separate value (e.g. -p 22, -o
+    # Foo=bar) consume the next token so it isn't mistaken for the host.
+    awk '
+        BEGIN { takes_arg = "bcDEeFIiJLlmOopQRSWw" }
+        {
+            for (start = 1; start <= NF && $start !~ /(^|\/)ssh$/; start++);
+            for (i = start + 1; i <= NF; i++) {
+                if (substr($i, 1, 1) == "-") {
+                    if (length($i) == 2 && index(takes_arg, substr($i, 2, 1))) i++
+                    continue
+                }
+                print $i; exit
+            }
+        }
+    ' <<<"$line" | cut -d@ -f2-
 }
 
 if is_ssh; then
