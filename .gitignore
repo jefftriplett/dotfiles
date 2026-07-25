@@ -115,3 +115,8 @@ home/.config/zed/conversations/
 home/.config/zed/settings_backup.json
 home/package.json
 package.json
+
+# Host list for the cmux/tmux scripts — machine-local, lives at
+# ~/.config/cmux-tmux/hosts.toml (managed by tmux-remote-hosts), not tracked.
+home/.config/tmux/hosts.toml
+home/.config/cmux-tmux/hosts.toml
