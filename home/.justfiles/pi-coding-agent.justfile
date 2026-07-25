@@ -3,7 +3,7 @@
 # ----------------------
 
 set dotenv-load := false
-set export := true
+set export
 
 justfile := justfile_directory() + "/.justfiles/pi-coding-agent.justfile"
 package := "@earendil-works/pi-coding-agent"

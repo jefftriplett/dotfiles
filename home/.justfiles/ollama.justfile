@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------
 
 set dotenv-load := false
-set export := true
+set export
 
 justfile := justfile_directory() + "/.justfiles/ollama.justfile"
 export OLLAMA_FLASH_ATTENTION := "true"

@@ -3,7 +3,7 @@
 # ----------------------------------------------------------------
 
 set dotenv-load := false
-set export := true
+set export
 
 justfile := justfile_directory() + "/.justfiles/pyenv.justfile"
 python_311 := `pyenv latest 3.11`

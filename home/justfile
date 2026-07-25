@@ -1,7 +1,7 @@
 set dotenv-load := false
-set export := true
-set quiet := true
-set unstable := true
+set export
+set quiet
+set unstable
 
 export HOMEBREW_NO_ENV_HINTS := "true"
 export JUST_UNSTABLE := "true"
@@ -51,8 +51,8 @@ alias lock := freeze
     just python::bootstrap
 
 # clean up old Homebrew packages and casks
-[group("maintenance")]
 [arg("DAYS", long="days", pattern='\d+|all', help="prune cache older than DAYS, or 'all'")]
+[group("maintenance")]
 @cleanup DAYS="0":
     just homebrew::cleanup --days={{ DAYS }}
 
