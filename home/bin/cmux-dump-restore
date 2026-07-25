@@ -8,7 +8,7 @@
 """Restore cmux workspaces from a dump file written by cmux-dump-save.
 
 The format is detected by extension (.json is JSON, anything else is TOML).
-With no path, the default ~/.config/cmux/session-dump.toml is used, falling
+With no path, the default ~/.config/cmux-tmux/session-dump.toml is used, falling
 back to session-dump.json when the TOML file is absent.
 
 Skips workspaces whose title already exists, so it is safe to rerun.
@@ -48,7 +48,7 @@ from _cmux import (
 def main(
     source: Annotated[
         Optional[Path],
-        typer.Argument(help="Dump file (default: ~/.config/cmux/session-dump.toml, falls back to .json)"),
+        typer.Argument(help="Dump file (default: ~/.config/cmux-tmux/session-dump.toml, falls back to .json)"),
     ] = None,
 ) -> None:
     if source is None:

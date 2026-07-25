@@ -7,7 +7,7 @@
 # ///
 """Open the cmux session-dump file in $EDITOR.
 
-With no path, the default ~/.config/cmux/session-dump.toml is used, falling
+With no path, the default ~/.config/cmux-tmux/session-dump.toml is used, falling
 back to session-dump.json when the TOML file is absent.
 """
 
@@ -26,7 +26,7 @@ def main(
     source: Annotated[
         Optional[Path],
         typer.Argument(
-            help="Dump file (default: ~/.config/cmux/session-dump.toml, falls back to .json)"
+            help="Dump file (default: ~/.config/cmux-tmux/session-dump.toml, falls back to .json)"
         ),
     ] = None,
 ) -> None:

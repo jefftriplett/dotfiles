@@ -16,9 +16,19 @@ import tomllib
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-DEFAULT_DIR = Path.home() / ".config" / "cmux"
-DEFAULT_TOML = DEFAULT_DIR / "session-dump.toml"
-DEFAULT_JSON = DEFAULT_DIR / "session-dump.json"
+# Base config dir for these scripts. Honors XDG_CONFIG_HOME (falling back to
+# ~/.config), and deliberately uses its own `cmux-tmux` subdir rather than
+# `cmux`: that directory belongs to the cmux app (cmux.json, settings.json),
+# so keeping our files apart avoids collisions and lets this dir be managed
+# independently.
+def config_home() -> Path:
+    xdg = os.environ.get("XDG_CONFIG_HOME")
+    return Path(xdg) if xdg else Path.home() / ".config"
+
+
+CONFIG_DIR = config_home() / "cmux-tmux"
+DEFAULT_TOML = CONFIG_DIR / "session-dump.toml"
+DEFAULT_JSON = CONFIG_DIR / "session-dump.json"
 
 # Label prefixed onto the cmux workspace title for remote (mosh) workspaces.
 # It is display-only: the remote tmux session name is derived from the base
@@ -88,10 +98,45 @@ def local_hostnames() -> set[str]:
 
 
 # Machine list lives in config, not code, so adding a Mac does not mean
-# editing a script. Not under ~/.config/cmux: that directory belongs to the
-# cmux app (cmux.json, settings.json), so it cannot be symlinked into the
-# dotfiles repo the way this file is.
-HOSTS_TOML = Path.home() / ".config" / "tmux" / "hosts.toml"
+# editing a script. Kept alongside the session dump in CONFIG_DIR.
+HOSTS_TOML = CONFIG_DIR / "hosts.toml"
+
+# Legacy locations, from before these files were consolidated under
+# CONFIG_DIR. migrate_legacy_config() relocates any that still exist so the
+# move happens automatically on each machine the dotfiles sync to.
+_LEGACY_PATHS = {
+    config_home() / "cmux" / "session-dump.toml": DEFAULT_TOML,
+    config_home() / "cmux" / "session-dump.json": DEFAULT_JSON,
+    config_home() / "tmux" / "hosts.toml": HOSTS_TOML,
+}
+
+
+def migrate_legacy_config() -> None:
+    """Move config from its pre-consolidation paths into CONFIG_DIR, once.
+
+    Idempotent and safe: only moves a legacy file when the new location does
+    not already exist, so a machine that has already migrated (or been set up
+    fresh) is untouched. Best-effort -- a move that fails (e.g. permissions)
+    is left for the reader guards to handle rather than crashing a script.
+    """
+    to_move = {
+        old: new
+        for old, new in _LEGACY_PATHS.items()
+        if old.is_file() and not new.exists()
+    }
+    if not to_move:
+        return
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    for old, new in to_move.items():
+        try:
+            os.replace(old, new)
+        except OSError:
+            pass
+
+
+# Run once when any cmux-* script imports this module, so the relocation
+# happens transparently on every machine the dotfiles reach.
+migrate_legacy_config()
 
 _hosts_cache: dict | None = None
 

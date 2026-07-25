@@ -20,7 +20,7 @@ Whichever machine you are sitting at is skipped -- no point sshing to
 localhost, and it may not even accept ssh. Pass --include-local to include it
 anyway; it is then queried by running tmux directly, never over the network.
 
-Hosts come from ~/.config/tmux/hosts.toml (edit it when a machine joins or
+Hosts come from ~/.config/cmux-tmux/hosts.toml (edit it when a machine joins or
 leaves), or from --host / $TMUX_REMOTE_HOSTS.
 
 Remote hosts are queried with ssh, not mosh: this is a one-shot non-interactive

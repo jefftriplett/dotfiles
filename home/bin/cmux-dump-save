@@ -45,20 +45,13 @@ def load_previous(path: Path) -> dict[str, Workspace]:
 def main(
     output: Annotated[
         Optional[Path],
-        typer.Argument(help="Output file (default: ~/.config/cmux/session-dump.toml)"),
+        typer.Argument(help="Output file (default: ~/.config/cmux-tmux/session-dump.toml)"),
     ] = None,
-    as_json: Annotated[
-        bool, typer.Option("--json", help="Write JSON (default is TOML unless file ends in .json)")
-    ] = False,
-    as_toml: Annotated[bool, typer.Option("--toml", help="Write TOML (the default)")] = False,
 ) -> None:
-    if as_json and as_toml:
-        raise typer.BadParameter("Pass only one of --json or --toml")
-
+    # TOML is the only output format. Legacy JSON dumps are still read (see
+    # load_dump / default_dump_path), but new writes are always TOML.
     if output is None:
-        output = DEFAULT_OUTPUT.with_suffix(".json") if as_json else DEFAULT_OUTPUT
-    # Default to TOML; emit JSON only when asked or the path ends in .json
-    use_toml = not as_json and (as_toml or output.suffix != ".json")
+        output = DEFAULT_OUTPUT
     output.parent.mkdir(parents=True, exist_ok=True)
 
     result = subprocess.run(
@@ -82,7 +75,7 @@ def main(
     kept = [ws for ws in previous.values() if ws.annotated]
     workspaces.extend(kept)
 
-    save_dump(output, workspaces, use_toml)
+    save_dump(output, workspaces)
 
     note = f" (kept {len(kept)} closed annotated)" if kept else ""
     print(f"Saved {len(workspaces)} workspaces to {output}{note}")

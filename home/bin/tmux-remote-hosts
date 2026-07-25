@@ -8,7 +8,7 @@
 # ///
 """Manage the machine list that tmux-remote-ls and cmux-tmux-sync read.
 
-The list lives in ~/.config/tmux/hosts.toml. Editing it by hand is still fine
+The list lives in ~/.config/cmux-tmux/hosts.toml. Editing it by hand is still fine
 -- this just saves the round trip, and keeps the entries sorted and the alias
 table in step with the host list.
 
@@ -29,7 +29,7 @@ import typer
 from _cmux import HOSTS_TOML, is_local_host, write_atomic
 
 app = typer.Typer(
-    help="Add, remove, and list the Macs in ~/.config/tmux/hosts.toml",
+    help="Add, remove, and list the Macs in ~/.config/cmux-tmux/hosts.toml",
     no_args_is_help=False,
 )
 
