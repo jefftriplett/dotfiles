@@ -42,6 +42,7 @@ titled "host:session" so the same session name on two Macs stays distinct.
 """
 
 import subprocess
+import sys
 from typing import Annotated, Optional
 
 import typer
@@ -56,29 +57,36 @@ from _cmux import (
     tmux_sessions,
 )
 
+_USE_COLOR = sys.stdout.isatty()
+
+YELLOW = "\033[33m" if _USE_COLOR else ""
+DIM = "\033[2m" if _USE_COLOR else ""
+RED = "\033[31m" if _USE_COLOR else ""
+RESET = "\033[0m" if _USE_COLOR else ""
+
 
 def open_workspace(ws: Workspace, *, label: str, dry_run: bool, detail: str) -> bool:
     if dry_run:
-        print(f"would  {label} -> {ws.command()}")
+        print(f"{YELLOW}would  {label} -> {ws.command()}{RESET}")
         return True
     ref = create_workspace(ws)
-    print(f"sync   {label} -> {ref} ({detail})")
+    print(f"{YELLOW}sync   {label} -> {ref} ({detail}){RESET}")
     return True
 
 
 def sync_local(covered: set[str], *, dry_run: bool, include_attached: bool) -> int:
     sessions = tmux_sessions()
     if not sessions:
-        print("No local tmux sessions running")
+        print(f"{DIM}No local tmux sessions running{RESET}")
         return 0
 
     created = 0
     for session in sorted(sessions, key=lambda item: item.name):
         if session.is_attached and not include_attached:
-            print(f"skip   {session.name} (attached)")
+            print(f"{DIM}skip   {session.name} (attached){RESET}")
             continue
         if session.name in covered:
-            print(f"skip   {session.name} (workspace exists)")
+            print(f"{DIM}skip   {session.name} (workspace exists){RESET}")
             continue
         covered.add(session.name)
 
@@ -98,15 +106,14 @@ def sync_remote(host: str, *, covered: set[str], dry_run: bool, timeout: int) ->
     try:
         sessions = remote_tmux_sessions(host, timeout=timeout)
     except subprocess.TimeoutExpired:
-        print(f"error  {host}: timed out after {timeout * 4}s")
+        print(f"{RED}error  {host}: timed out after {timeout * 4}s{RESET}")
         return 0
     except (RuntimeError, OSError) as exc:
-        # One unreachable Mac should not abandon the hosts after it.
-        print(f"error  {host}: {exc}")
+        print(f"{RED}error  {host}: {exc}{RESET}")
         return 0
 
     if not sessions:
-        print(f"No tmux sessions running on {host}")
+        print(f"{DIM}No tmux sessions running on {host}{RESET}")
         return 0
 
     created = 0
@@ -117,7 +124,7 @@ def sync_remote(host: str, *, covered: set[str], dry_run: bool, timeout: int) ->
         # label never reaches the remote tmux session name.
         title = f"{host}:{session.name}"
         if title in covered:
-            print(f"skip   {title} (workspace exists)")
+            print(f"{DIM}skip   {title} (workspace exists){RESET}")
             continue
         covered.add(title)
 
@@ -185,7 +192,7 @@ def main(
                 )
 
     if not created:
-        print("Nothing to sync; every session is attached or has a workspace")
+        print(f"{DIM}Nothing to sync; every session is attached or has a workspace{RESET}")
 
 
 if __name__ == "__main__":
