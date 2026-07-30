@@ -91,3 +91,5 @@
 
 [include]
     path = ~/.config/git/override
+[rebase]
+    autoStash = true
