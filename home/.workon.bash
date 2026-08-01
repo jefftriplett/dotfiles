@@ -1,73 +1,265 @@
-# workon - Project directory switcher with virtualenv activation
+# workon - Open a project, wherever it lives
+#
 # Source this file in your .bashrc:
 #   source ~/.workon.bash
+#
+# One command for local and remote. `workon <name>` consults the registry in
+# ~/Projects/projects.toml: a project on this Mac is a cd + virtualenv
+# activation, one on another Mac is a mosh in and a tmux attach. The old
+# directory scan is still the fallback for anything unregistered, so a project
+# you have never registered behaves exactly as it always did.
+#
+#   workon <name>                 auto (default): let the registry decide
+#   workon --local[=<name>]       force local, even if it is registered elsewhere
+#   workon --remote[=<name>]      force remote, using its registered machine
+#   workon --host=<machine> <name>  open it on this machine instead
+#
+# --local and --remote take either form: `--local foo` or `--local=foo`.
+#
+# Local opens are a cd + activate, not a tmux attach -- that is what `workon`
+# has always done and it stays fast. Add --tmux (or export WORKON_TMUX=1) to
+# attach a session locally too. Remote opens always attach, since a tmux
+# session is the thing being reached for.
 
-# Directories to search for projects
+# Directories to search for projects that are not in the registry
 WORKON_PROJECT_DIRS=("${HOME}/Projects" "${HOME}/Work")
 
-# workon: Switch to a project directory and activate its virtualenv
 workon() {
-    local project_name="$1"
+    local mode="auto"
+    local name=""
+    local host=""
+    local want_tmux="${WORKON_TMUX:-}"
 
-    if [[ -z "$project_name" ]]; then
-        echo "Usage: workon <project_name>"
-        echo "Available projects:"
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h | --help)
+                _workon_usage
+                return 0
+                ;;
+            -l | --list)
+                _workon_list_projects
+                return 0
+                ;;
+            --auto)     mode="auto" ;;
+            --auto=*)   mode="auto";   name="${1#*=}" ;;
+            --local)    mode="local" ;;
+            --local=*)  mode="local";  name="${1#*=}" ;;
+            --remote)   mode="remote" ;;
+            --remote=*) mode="remote"; name="${1#*=}" ;;
+            --host | --machine)
+                shift
+                if [[ -z "${1:-}" ]]; then
+                    echo "workon: --host needs a machine name" >&2
+                    return 2
+                fi
+                host="$1"
+                ;;
+            --host=* | --machine=*)
+                host="${1#*=}"
+                ;;
+            --tmux)     want_tmux=1 ;;
+            --no-tmux)  want_tmux=0 ;;
+            -*)
+                echo "workon: unknown option: $1" >&2
+                _workon_usage >&2
+                return 2
+                ;;
+            *)
+                if [[ -z "$name" ]]; then
+                    name="$1"
+                else
+                    echo "workon: unexpected argument: $1" >&2
+                    return 2
+                fi
+                ;;
+        esac
+        shift
+    done
+
+    if [[ -z "$name" ]]; then
+        _workon_usage
+        echo
+        echo "Projects:"
         _workon_list_projects | sed 's/^/  /'
         return 1
     fi
 
-    # Search for project in configured directories
-    local project_dir=""
+    # --host implies "somewhere specific", which is a remote-style open unless
+    # the machine named turns out to be this one -- `projects resolve` works
+    # that out, so the mode stays auto and the answer decides.
+    local resolve_args=("$name" "--shell")
+    if [[ -n "$host" ]]; then
+        resolve_args+=("--host" "$host")
+    fi
+
+    local resolved
+    if ! resolved="$(projects resolve "${resolve_args[@]}" 2>/dev/null)"; then
+        # Not in the registry. --remote and --host have nothing to work from,
+        # so they are an error rather than a silent local open.
+        if [[ "$mode" == "remote" || -n "$host" ]]; then
+            echo "workon: $name is not in the registry, so it has no machine." >&2
+            echo "Register it with: projects add $(printf '%q' "$name")" >&2
+            return 1
+        fi
+        _workon_local_fallback "$name"
+        return $?
+    fi
+
+    # All declared local so the eval below cannot leak resolver state into the
+    # calling shell, even the fields this function does not read.
+    # shellcheck disable=SC2034  # set by the eval; some are read only by callees
+    local WORKON_RESOLVED_NAME WORKON_RESOLVED_KIND WORKON_RESOLVED_MACHINE
+    # shellcheck disable=SC2034
+    local WORKON_RESOLVED_HOST WORKON_RESOLVED_PATH WORKON_RESOLVED_PROJECT_PATH
+    # shellcheck disable=SC2034
+    local WORKON_RESOLVED_SESSION WORKON_RESOLVED_TMUX WORKON_RESOLVED_ARGV
+    eval "$resolved"
+
+    # A project with `tmux = false` stays a plain cd + activate even when asked
+    # for a session, since it has deliberately opted out of one.
+    if [[ -z "$WORKON_RESOLVED_TMUX" ]]; then
+        want_tmux=0
+    fi
+
+    case "$mode" in
+        local)
+            _workon_open_local "$WORKON_RESOLVED_NAME" "$WORKON_RESOLVED_PATH" \
+                "$WORKON_RESOLVED_SESSION" "$want_tmux"
+            return $?
+            ;;
+        remote)
+            if [[ "$WORKON_RESOLVED_KIND" != "remote" ]]; then
+                echo "workon: $WORKON_RESOLVED_NAME is registered to this machine (${WORKON_RESOLVED_MACHINE})." >&2
+                echo "Use --host=<machine> to open it somewhere else." >&2
+                return 1
+            fi
+            ;;
+    esac
+
+    if [[ "$WORKON_RESOLVED_KIND" == "remote" ]]; then
+        _workon_open_remote
+        return $?
+    fi
+
+    _workon_open_local "$WORKON_RESOLVED_NAME" "$WORKON_RESOLVED_PATH" \
+        "$WORKON_RESOLVED_SESSION" "$want_tmux"
+}
+
+_workon_usage() {
+    cat <<'EOF'
+Usage: workon [--auto|--local|--remote] [--host=MACHINE] [--tmux] <project>
+
+  workon notes                open it wherever the registry says it lives
+  workon --local=pghub        force a local cd + activate
+  workon --remote=pghub       force a mosh to its registered machine
+  workon --host=studio pghub  open it on the Studio instead, just this once
+  workon --list               list registered projects
+
+Local opens cd and activate the virtualenv. Add --tmux (or export WORKON_TMUX=1)
+to attach a tmux session locally too; remote opens always attach one.
+EOF
+}
+
+# Open a project on this machine: cd in, then either attach tmux or activate.
+_workon_open_local() {
+    local name="$1"
+    local path="$2"
+    local session="$3"
+    local want_tmux="$4"
+
+    # The registry stores "~/..." so a path means the same thing on every Mac;
+    # expand it here for local use.
+    path="${path/#\~/$HOME}"
+
+    if [[ ! -d "$path" ]]; then
+        echo "workon: $name is registered here but $path does not exist" >&2
+        echo "Fix it with: projects add $(printf '%q' "$name") --force --path ..." >&2
+        return 1
+    fi
+
+    cd "$path" || return 1
+
+    if [[ "$want_tmux" == "1" ]]; then
+        # In a subshell, and unsetting both host variables: the registry has
+        # already told us this project is local, so a TMUX_AUTOATTACH_HOST left
+        # over from the directory we came from must not send tmux-go over the
+        # network. A `VAR=x tmux-go ...` prefix would not do -- assignments in
+        # front of a *function* persist in the calling shell afterwards.
+        (
+            unset TMUX_AUTOATTACH_HOST TMUX_AUTOATTACH_MACHINE
+            export TMUX_AUTOATTACH_PATH="$path"
+            tmux-go "$session"
+        )
+        return $?
+    fi
+
+    _workon_activate "$path" "$name"
+}
+
+# Mosh (or ssh) to the machine and attach the session. Uses the argv the
+# resolver built, which is already quoted for both hops.
+_workon_open_remote() {
+    if (( ${#WORKON_RESOLVED_ARGV[@]} == 0 )); then
+        echo "workon: no command to reach $WORKON_RESOLVED_HOST" >&2
+        return 1
+    fi
+
+    # Title the terminal tab before handing the session over, the way tmux-go
+    # does -- once mosh takes the tty we no longer get to.
+    printf '\033]0;%s\007' "${WORKON_RESOLVED_MACHINE}:${WORKON_RESOLVED_SESSION}"
+    echo "workon: ${WORKON_RESOLVED_NAME} on ${WORKON_RESOLVED_MACHINE} (${WORKON_RESOLVED_HOST})" >&2
+
+    # direnv exec / so the current project's direnv environment (which may
+    # export TMUX_AUTOATTACH and re-trigger an attach) is out of the way.
+    direnv exec / "${WORKON_RESOLVED_ARGV[@]}"
+}
+
+# Unregistered projects: the original directory scan, unchanged, so anything
+# that worked before the registry existed still works.
+_workon_local_fallback() {
+    local name="$1"
+    local base_dir project_dir=""
+
     for base_dir in "${WORKON_PROJECT_DIRS[@]}"; do
-        if [[ -d "${base_dir}/${project_name}" ]]; then
-            project_dir="${base_dir}/${project_name}"
+        if [[ -d "${base_dir}/${name}" ]]; then
+            project_dir="${base_dir}/${name}"
             break
         fi
     done
 
-    # Fallback to ~/.virtualenvs/<name> if no project dir found
     if [[ -z "$project_dir" ]]; then
-        local venv_fallback="${HOME}/.virtualenvs/${project_name}"
+        # Fall back to a bare ~/.virtualenvs/<name>, which has no project dir
+        # of its own; cd into its src/ when it has one.
+        local venv_fallback="${HOME}/.virtualenvs/${name}"
         if [[ -f "${venv_fallback}/bin/activate" ]]; then
-            # Deactivate any existing virtualenv
             if [[ -n "$VIRTUAL_ENV" ]]; then
                 deactivate 2>/dev/null
             fi
-
+            # shellcheck source=/dev/null
             source "${venv_fallback}/bin/activate"
-
-            # cd to src dir if it exists, otherwise stay put
             if [[ -d "${venv_fallback}/src" ]]; then
                 cd "${venv_fallback}/src" || return 1
             fi
-
-            if command -v uvx >/dev/null 2>&1; then
-                uvx --quiet rich --print "[green]Activated[/green]: $project_name ([blue]${venv_fallback}[/blue])"
-            else
-                echo "Activated: $project_name (${venv_fallback})"
-            fi
+            echo "Activated: ${name} (${venv_fallback})"
             return 0
         fi
 
-        echo "Project not found: $project_name"
-        echo "Searched in: ${WORKON_PROJECT_DIRS[*]} ~/.virtualenvs/"
+        echo "workon: project not found: $name" >&2
+        echo "Searched the registry, ${WORKON_PROJECT_DIRS[*]}, and ~/.virtualenvs/" >&2
         return 1
     fi
 
-    # Change to project directory
     cd "$project_dir" || return 1
+    _workon_activate "$project_dir" "$name"
+}
 
-    # Look for and activate virtualenv
-    local venv_candidates=(
-        ".venv"
-        "venv"
-        "env"
-        "${HOME}/.virtualenvs/${project_name}"
-    )
+# Activate a project's virtualenv in the current shell.
+_workon_activate() {
+    local project_dir="$1"
+    local name="$2"
+    local venv_dir full_venv_path
 
-    for venv_dir in "${venv_candidates[@]}"; do
-        # Handle both relative and absolute paths
-        local full_venv_path
+    for venv_dir in ".venv" "venv" "env" "${HOME}/.virtualenvs/${name}"; do
         if [[ "$venv_dir" == /* ]]; then
             full_venv_path="$venv_dir"
         else
@@ -75,52 +267,37 @@ workon() {
         fi
 
         if [[ -f "${full_venv_path}/bin/activate" ]]; then
-            # Deactivate any existing virtualenv
             if [[ -n "$VIRTUAL_ENV" ]]; then
                 deactivate 2>/dev/null
             fi
-
+            # shellcheck source=/dev/null
             source "${full_venv_path}/bin/activate"
-
-            # For ~/.virtualenvs match, cd to src dir if it exists
-            if [[ "$venv_dir" == /* && -d "${full_venv_path}/src" ]]; then
-                cd "${full_venv_path}/src" || return 1
-            fi
-
-            if command -v uvx >/dev/null 2>&1; then
-                uvx --quiet rich --print "[green]Activated[/green]: $project_name ([blue]${full_venv_path}[/blue])"
-            else
-                echo "Activated: $project_name (${full_venv_path})"
-            fi
+            echo "Activated: ${name} (${full_venv_path})"
             return 0
         fi
     done
 
-    # No virtualenv found, just notify
-    if command -v uvx >/dev/null 2>&1; then
-        uvx --quiet rich --print "[yellow]No virtualenv found for[/yellow]: $project_name"
-    else
-        echo "No virtualenv found for: $project_name"
-    fi
+    echo "No virtualenv found for: ${name}"
 }
 
-# Helper: List all projects
+# Registered projects first, then any unregistered directory, so completion
+# covers everything workon can actually open.
 _workon_list_projects() {
     {
-        # List projects from configured directories
+        projects list 2>/dev/null
+
+        local base_dir project
         for base_dir in "${WORKON_PROJECT_DIRS[@]}"; do
-            if [[ -d "$base_dir" ]]; then
-                for project in "$base_dir"/*/; do
-                    if [[ -d "$project" ]]; then
-                        project="${project%/}"
-                        echo "${project##*/}"
-                    fi
-                done
-            fi
+            [[ -d "$base_dir" ]] || continue
+            for project in "$base_dir"/*/; do
+                [[ -d "$project" ]] || continue
+                project="${project%/}"
+                echo "${project##*/}"
+            done
         done
 
-        # List virtualenvs from ~/.virtualenvs
         if [[ -d "${HOME}/.virtualenvs" ]]; then
+            local venv
             for venv in "${HOME}/.virtualenvs"/*/; do
                 if [[ -f "${venv}bin/activate" ]]; then
                     venv="${venv%/}"
@@ -131,113 +308,137 @@ _workon_list_projects() {
     } | sort -u
 }
 
-# Bash completion for workon
 _workon_completions() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    local projects
-    projects=$(_workon_list_projects)
-    COMPREPLY=($(compgen -W "$projects" -- "$cur"))
+    local prev="${COMP_WORDS[COMP_CWORD - 1]}"
+
+    if [[ "$prev" == "--host" || "$prev" == "--machine" ]]; then
+        mapfile -t COMPREPLY < <(
+            compgen -W "$(projects machines 2>/dev/null | awk '{print $1}')" -- "$cur"
+        )
+        return
+    fi
+
+    case "$cur" in
+        --local=* | --remote=* | --auto=*)
+            local flag="${cur%%=*}"
+            local partial="${cur#*=}"
+            mapfile -t COMPREPLY < <(
+                compgen -P "${flag}=" -W "$(_workon_list_projects)" -- "$partial"
+            )
+            return
+            ;;
+        -*)
+            mapfile -t COMPREPLY < <(
+                compgen -W "--auto --local --remote --host --tmux --no-tmux --list --help" -- "$cur"
+            )
+            return
+            ;;
+    esac
+
+    mapfile -t COMPREPLY < <(compgen -W "$(_workon_list_projects)" -- "$cur")
 }
 
 complete -F _workon_completions workon
 
-# Default base directory for new projects
-MKPROJECT_DEFAULT_DIR="${HOME}/Projects"
+# ---------------------------------------------------------------------------
+# mkproject
+# ---------------------------------------------------------------------------
 
-# mkproject: Create a new project with uv venv and direnv .envrc
-# Usage: mkproject <project_name> [python_version] [base_dir]
+# mkproject: create a project, register it, and open it.
+# Delegates to `projects create`, which builds the directory, a uv venv, and an
+# .envrc (layout uv + use tmux) here, then records it in the registry. Always
+# here, even for a project owned by another Mac: ~/Projects and ~/Work are
+# Syncthing folders, so the directory and .envrc arrive on their own, and
+# `layout uv` builds a native venv the first time direnv sees it over there.
 mkproject() {
-    local project_name="$1"
-    local python_version="${2:-3}"  # Default to python3
-    local base_dir="${3:-$MKPROJECT_DEFAULT_DIR}"
+    local name=""
+    local attach=1
+    local args=()
 
-    if [[ -z "$project_name" ]]; then
-        echo "Usage: mkproject <project_name> [python_version] [base_dir]"
-        echo ""
-        echo "Arguments:"
-        echo "  project_name    Name of the project to create"
-        echo "  python_version  Python version (default: 3, or specify like 3.11, 3.12, 3.13)"
-        echo "  base_dir        Base directory (default: ~/Projects)"
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -h | --help)
+                cat <<'EOF'
+Usage: mkproject <name> [--machine KEY] [--host KEY] [--path DIR] [--work]
+                        [--session NAME] [--tmux|--no-tmux]
+                        [--python VERSION] [--no-attach] [--dry-run]
+
+Creates the directory, a uv venv, and an .envrc (layout uv + use tmux) here,
+registers it in ~/Projects/projects.toml, then opens it with workon. Syncthing
+carries the directory to the other Macs; --machine only says which one owns it.
+
+--work puts it under work_dir and on work_machine; otherwise home_dir and
+home_machine apply. --machine/--host and --path override both.
+
+--no-tmux registers the project with tmux off and leaves `use tmux` out of the
+.envrc, so it is a plain cd + activate everywhere. --session names the session
+when the project key is not what you want tmux to show.
+EOF
+                return 0
+                ;;
+            --no-attach)
+                attach=0
+                ;;
+            --dry-run | -n)
+                attach=0
+                args+=("$1")
+                ;;
+            --host)
+                shift
+                args+=("--machine" "$1")
+                ;;
+            --host=*)
+                args+=("--machine" "${1#*=}")
+                ;;
+            -*)
+                args+=("$1")
+                ;;
+            *)
+                if [[ -z "$name" ]]; then
+                    name="$1"
+                else
+                    args+=("$1")
+                fi
+                ;;
+        esac
+        shift
+    done
+
+    if [[ -z "$name" ]]; then
+        echo "Usage: mkproject <name> [options]  (--help for details)" >&2
         return 1
     fi
 
-    local project_dir="${base_dir}/${project_name}"
-    local venv_dir="${project_dir}/.venv"
+    projects create "$name" "${args[@]}" || return $?
 
-    # Check if project already exists
-    if [[ -d "$project_dir" ]]; then
-        echo "Error: Project already exists: $project_dir"
-        return 1
-    fi
-
-    if command -v uvx >/dev/null 2>&1; then
-        uvx --quiet rich --print "[yellow]Creating project[/yellow]: $project_name"
-        uvx --quiet rich --print "[blue]Location[/blue]: $project_dir"
-        uvx --quiet rich --print "[blue]Python[/blue]: $python_version"
-    else
-        echo "Creating project: $project_name"
-        echo "Location: $project_dir"
-        echo "Python: $python_version"
-    fi
-
-    # Create project directory
-    mkdir -p "$project_dir"
-
-    # Create virtualenv with uv
-    uv venv --python "$python_version" "$venv_dir"
-
-    # Generate .envrc for direnv auto-activation
-    echo 'source .venv/bin/activate' > "${project_dir}/.envrc"
-
-    # Allow direnv for this project
-    if command -v direnv >/dev/null 2>&1; then
-        direnv allow "$project_dir"
-    fi
-
-    if command -v uvx >/dev/null 2>&1; then
-        uvx --quiet rich --print "[green]Project created[/green]: $project_name"
-        uvx --quiet rich --print "[green]Virtualenv created[/green]: $venv_dir"
-        uvx --quiet rich --print "[green].envrc generated[/green] (direnv will auto-activate)"
-    else
-        echo "Project created: $project_name"
-        echo "Virtualenv created: $venv_dir"
-        echo ".envrc generated (direnv will auto-activate)"
-    fi
-
-    # Change to project and activate
-    cd "$project_dir" || return 1
-    source "$venv_dir/bin/activate"
-
-    if command -v uvx >/dev/null 2>&1; then
-        uvx --quiet rich --print "[green]Activated[/green]: $project_name"
-    else
-        echo "Activated: $project_name"
+    if (( attach )); then
+        workon "$name"
     fi
 }
 
-# Bash completion for mkproject
 _mkproject_completions() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev="${COMP_WORDS[COMP_CWORD - 1]}"
 
-    case $COMP_CWORD in
-        1)
-            # First arg: no completion (new project name)
-            COMPREPLY=()
+    case "$prev" in
+        --machine | --host)
+            mapfile -t COMPREPLY < <(
+                compgen -W "$(projects machines 2>/dev/null | awk '{print $1}')" -- "$cur"
+            )
+            return
             ;;
-        2)
-            # Second arg: python versions
-            local pythons="3 3.10 3.11 3.12 3.13"
-            if command -v pyenv >/dev/null 2>&1; then
-                pythons="$pythons $(pyenv versions --bare 2>/dev/null | grep -E '^[0-9]' | tr '\n' ' ')"
-            fi
-            COMPREPLY=($(compgen -W "$pythons" -- "$cur"))
-            ;;
-        3)
-            # Third arg: base directories
-            local dirs="${HOME}/Projects ${HOME}/Work"
-            COMPREPLY=($(compgen -W "$dirs" -- "$cur"))
+        --python)
+            mapfile -t COMPREPLY < <(compgen -W "3 3.11 3.12 3.13 3.14" -- "$cur")
+            return
             ;;
     esac
+
+    if [[ "$cur" == -* ]]; then
+        mapfile -t COMPREPLY < <(
+            compgen -W "--machine --host --path --work --session --tmux --no-tmux --python --no-attach --dry-run --help" -- "$cur"
+        )
+    fi
 }
 
 complete -F _mkproject_completions mkproject

@@ -62,6 +62,12 @@ $ just --justfile=./home/justfile update-readme-docs
 
 ## Project Shell
 
+> **Superseded.** `project-shell` does the same job as `workon` (see
+> [Project Registry](#project-registry)) and `tmux-go` (see [Shell Functions](#shell-functions)),
+> but keyed off its own `PROJECT_REMOTE_*` variables in each project's `.envrc` rather than a
+> central registry. Nothing sources or calls it. Prefer `workon`, which reads
+> `~/Projects/projects.toml` and needs no per-project setup.
+
 `project-shell` uses per-project direnv config to attach to the right tmux
 session locally or over Mosh:
 
@@ -374,7 +380,8 @@ Standalone executables in `home/bin/` (symlinked onto `$PATH` as `~/bin`).
 | ------ | ----------- |
 | `tmux-host` | Print the pane's remote host when it is running ssh, else the local short hostname. Used by the status bar |
 | `tmux-remote-ls` | List tmux sessions across every Mac at once |
-| `tmux-remote-hosts` | Add, remove, and list the Macs in `hosts.toml` |
+| `projects` | Manage the [project registry](#project-registry), including the machine list |
+| `tmux-remote-hosts` | Legacy: edit `hosts.toml`. Superseded by `projects machines` |
 
 `tmux-remote-ls` is roughly `ssh <host> tmux ls` for each machine, but parsed: sessions are
 sorted and annotated with attached/detached state, window count, and path.
@@ -409,55 +416,301 @@ distinguishes "no sessions anywhere" from "never got an answer".
 
 ### Machine List
 
-The Macs live in `home/.config/tmux/hosts.toml` (symlinked to `~/.config/tmux/hosts.toml`),
-not in any script — adding a machine means editing config, and the list travels with the
-dotfiles to every Mac.
-
-`tmux-remote-hosts` edits it for you, keeping the entries sorted and the alias table in step
-with the host list:
-
-```shell
-tmux-remote-hosts                                  # list what is configured
-tmux-remote-hosts add mac-test-2026                # add a machine
-tmux-remote-hosts add mac-test-2026 --alias Mac-Test-2026   # ...with its own hostname
-tmux-remote-hosts add mac-test-2026 --check        # only add if it answers over ssh
-tmux-remote-hosts remove mac-test-2026             # remove it, and its alias
-```
-
-Hand-editing the file is still fine — the command uses a format-preserving TOML writer, so
-comments and layout survive a round trip either way.
+The Macs live in the `[machines]` table of the project registry, `~/Projects/projects.toml`
+— see [Project Registry](#project-registry) below. Every machine gets a short key you type
+(`studio`) and an ssh name that has to resolve (`mac-studio-2023`):
 
 ```toml
-hosts = [
-    "mac-mini-pro-2023",
-    "mac-studio-2023",
-    "mba-2025",
-]
+[machines.studio]
+host = "mac-studio-2023"
 
-# ssh name -> that machine's own `hostname`, where the two differ
-[aliases]
-mba-2025 = "MacBook-Air-2025"
+[machines.air]
+host = "mba-2025"
+hostname = "MacBook-Air-2025"   # only when it differs from the ssh name
 ```
 
+`hostname` exists because the machine you are sitting at has to be recognized so it is
+skipped rather than dialed. The Air answers to `mba-2025` over ssh but reports
+`MacBook-Air-2025` as its own hostname, and without the mapping it would try to reach its
+own address.
+
 Names must be resolvable by ssh — Tailscale MagicDNS or a `Host` entry in `~/.ssh/config`.
+The short key works anywhere a host does, so `tmux-remote-ls --host studio` and
+`cmux-tmux-sync --host studio` both do what you would expect.
 
-`aliases` exists because the machine you are sitting at has to be recognized so it is skipped
-rather than dialed. The Air answers to `mba-2025` over ssh but reports `MacBook-Air-2025` as
-its own hostname, and without the mapping it would try to reach its own address.
+`projects machines` edits the table for you, keeping entries sorted:
 
-It lives under `~/.config/tmux/` rather than `~/.config/cmux/` because that second directory
-belongs to the cmux app itself — it holds `cmux.json` and `settings.json`, so it cannot be
-symlinked into this repo.
+```shell
+projects machines                                     # list what is configured
+projects machines add test --host mac-test-2026       # add a machine
+projects machines add test --host mac-test-2026 --hostname Mac-Test-2026
+projects machines add test --host mac-test-2026 --check   # only add if ssh answers
+projects machines remove test                         # refuses while projects point at it
+```
 
-`$TMUX_REMOTE_HOSTS` (space separated) overrides the file for a single run, and `--host`
+Hand-editing is still fine — the command uses a format-preserving TOML writer, so comments
+and layout survive a round trip either way.
+
+`$TMUX_REMOTE_HOSTS` (space separated) overrides the table for a single run, and `--host`
 overrides both:
 
 ```shell
 TMUX_REMOTE_HOSTS="mac-studio-2023" tmux-remote-ls
 ```
 
-Both `tmux-remote-ls` and `cmux-tmux-sync` read the same list. With no config file and no
-`--host`, they report what to fix rather than falling back to a built-in list.
+`tmux-remote-ls`, `cmux-tmux-sync`, and `cmux-doctor` all read the same table. With nothing
+configured and no `--host`, they report what to fix rather than falling back to a built-in
+list.
+
+#### Migrating from `hosts.toml`
+
+The list used to live in `~/.config/cmux-tmux/hosts.toml` as a flat `hosts = [...]` array
+with a separate `[aliases]` table. `projects init` imports it:
+
+```shell
+projects init          # reads hosts.toml, writes ~/Projects/projects.toml
+projects machines      # rename the keys by hand if you want shorter ones
+projects import -n     # then import the projects themselves
+```
+
+`hosts.toml` is still read on any machine whose registry has no `[machines]` table, so the
+two can coexist while the dotfiles roll out. Once the registry takes over, `tmux-remote-hosts`
+refuses to edit `hosts.toml` rather than writing to a file nothing reads.
+
+## Project Registry
+
+`~/Projects/projects.toml` records which machine each project lives on, where it lives there,
+and which tmux session holds it. `workon` finds projects by scanning `~/Projects` and `~/Work`,
+which structurally cannot see a checkout that lives on another Mac; the registry can.
+
+```toml
+[machines.studio]
+host = "mac-studio-2023"
+
+[machines.mini]
+host = "mac-mini-pro-2023"
+
+[defaults]
+tmux = true
+home_dir = "~/Projects"
+work_dir = "~/Work"
+# where auto-registered projects land, based on which root the path is under
+home_machine = "mini"
+work_machine = "studio"
+
+[projects.django-news]
+machine = "studio"
+path = "~/Work/django-news"
+
+[projects.notes]
+machine = "mini"
+path = "~/Projects/notes"
+# tmux_session defaults to the project key ("notes"), override only if needed
+
+[projects.pghub]
+machine = "mini"
+path = "~/Projects/pghub"
+tmux_path = "~/Projects/pghub/pghub-git"   # optional: where the work happens
+tmux_session = "pghub-git"
+```
+
+`path` is the project directory; `tmux_path` is the checkout inside it that the tmux session
+actually runs in. Both are separate facts because they differ constantly — the project is
+`~/Projects/pghub` but the session lives in `~/Projects/pghub/pghub-git`. `tmux_path` is
+entirely optional and is written only when the two differ, so a project whose work happens at
+its own root carries no `tmux_path` at all. `workon` lands in `tmux_path` when it is
+set, and in `path` otherwise.
+
+Set `$PROJECTS_TOML` to point somewhere else for a single run.
+
+The registry model is defined with pydantic in `home/bin/_projects.py`. `_cmux.py` stays on
+plain dataclasses on purpose: every `cmux-*` and `tmux-remote-*` script imports it, and none of
+them should have to grow a dependency to do so. Only `projects` declares pydantic.
+
+### workon and mkproject
+
+Registry-aware companions to `workon` and `mkproject`, defined in `home/.workon.bash`.
+They are shell functions rather than scripts because the local case has to change the calling
+shell's directory and environment.
+
+| Command | Description |
+| ------- | ----------- |
+| `workon <project>` | Open a project wherever it lives |
+| `workon --local[=<p>]` | Force a local cd + virtualenv activation |
+| `workon --remote[=<p>]` | Force a mosh to its registered machine |
+| `workon --host=<m> <p>` | Open it on that machine instead, just this once |
+| `mkproject <name>` | Create, register, and open a new project |
+
+There is one `workon` and one `mkproject` — no separate remote command to reach for.
+`--auto` is the default and is what plain `workon <project>` does: consult the registry,
+then cd locally or mosh out.
+
+A project that is *not* in the registry falls back to the original directory scan of
+`~/Projects`, `~/Work`, and `~/.virtualenvs`, so nothing that worked before the registry
+existed has stopped working.
+
+Local opens are a cd plus virtualenv activation — what `workon` has always done. Add
+`--tmux` (or export `WORKON_TMUX=1`) to attach a session locally too; remote opens always
+attach one, since that is the point of reaching over. A project with `tmux = false` in the
+registry stays a plain cd either way.
+
+A project that lives here is a cd plus a venv activation, or a hand-off to `tmux-go` when
+`--tmux` is in play. A project on another Mac moshes over and attaches its tmux session
+there, falling back to ssh when mosh is missing.
+
+```shell
+workon notes         # local: cd + activate (add --tmux to attach a session)
+workon django-news     # remote: mosh mac-studio-2023, attach the django-news session
+workon                 # no argument: list what is registered
+```
+
+Names are matched loosely: a project registered as `thumb.im` also answers to `thumb-im`,
+the slug tmux actually shows you.
+
+`mkproject` creates the directory, a `uv` venv, and an `.envrc`, registers the project, and
+opens it. Creation always happens here, even when the project is registered to another
+machine: `~/Projects` and `~/Work` are Syncthing folders, so the directory and its `.envrc`
+travel on their own. The venv does not travel — `.venv/` is in `.stignore` — and does not
+need to: the generated `.envrc` is `layout uv`, so direnv builds a native one the first time
+you enter the directory over there. `--machine` says which machine *owns* the project, which
+is what `workon` routes on; it is not where creation runs.
+
+```shell
+mkproject scratch                 # ~/Projects/scratch on home_machine
+mkproject client-site --work      # ~/Work/client-site on work_machine
+mkproject api --machine studio --python 3.13
+mkproject api --session api-git   # name the tmux session something else
+mkproject notes --no-tmux         # plain cd + activate, never a session
+mkproject api --no-attach         # create and register, don't open
+```
+
+The generated `.envrc` is `layout uv` plus `use tmux <session>`, so the project picks up the
+[direnv auto-attach](#direnv-auto-attach) machinery and settles on the same session name the
+registry uses. (The pre-registry `mkproject` wrote a bare `source .venv/bin/activate`, which
+bypasses `layout uv` and never wires up tmux.)
+
+`--no-tmux` registers `tmux = false` **and** leaves `use tmux` out of the `.envrc` — the two
+have to agree, or direnv would autoattach a session the registry says the project does not
+want. The session name is slugified the same way everywhere, so `mkproject thumb.im` writes
+`use tmux thumb-im` rather than a name tmux would reject.
+
+### Managing the registry
+
+| Command | Description |
+| ------- | ----------- |
+| `projects` / `projects list` | List project names, one per line; `--long`/`-l` groups by machine |
+| `projects add NAME` | Register a project |
+| `projects set NAME` | Change one project's details in place |
+| `projects remove NAME` | Unregister a project; the directory is untouched |
+| `projects create NAME` | Create the directory, venv, and `.envrc`, then register |
+| `projects import` | Import `~/Projects` and `~/Work`, deciding machines from evidence |
+| `projects resolve NAME` | Show machine, path, session, and the command to get there |
+| `projects machines` | Add, remove, and list machines |
+| `projects init` | Create the registry, importing `hosts.toml` if present |
+| `projects edit` | Open the registry in `$EDITOR` |
+
+`projects set` is the one to reach for after an import guessed wrong. `add --force` rewrites
+the whole entry from its arguments, so anything you do not repeat is dropped; `set` touches
+only the fields you name:
+
+```shell
+projects set pghub --machine studio            # move it to another Mac
+projects set pghub --session pghub-git         # pin the tmux session name
+projects set pghub --tmux-path ~/Projects/pghub/pghub-git   # where the session runs
+projects set notes --no-tmux                   # plain cd, never a session
+projects set notes --clear tmux --clear session  # back to the defaults
+```
+
+`--clear` unsets `tmux`, `tmux_path`, `session`, or `description`, and is repeatable.
+`machine` and `path` are not clearable — an entry without them cannot be resolved, so change
+them rather than emptying them. Paths are stored as `~/...` however you type them, so they
+mean the same thing on every Mac.
+
+### Importing an existing setup
+
+`projects import` brings `~/Projects` and `~/Work` in wholesale. The interesting part is how
+it picks a machine, because the roots are Syncthing-mirrored — all three Macs hold
+substantially the same ~250 directories, so a directory's *presence* proves nothing about
+where you actually work on it.
+
+So the import ranks evidence instead of guessing:
+
+| Reason | Signal | Rank |
+| ------ | ------ | ---- |
+| `session` | a tmux session for it is running there, with a client attached | strongest |
+| `session-idle` | ...running there, but detached | |
+| `workspace` | the cmux session dump pins it to that machine | |
+| `default` | `home_machine` / `work_machine`, by which root it sits under | weakest |
+
+Every directory under both roots is registered, keyed by its own name. A session then
+*enriches* the entry it belongs to rather than replacing it: `path` stays the project
+directory you imported, and the session contributes `tmux_path` and `tmux_session`.
+
+```
+agents  ->  studio:~/Projects/agents
+              +tmux_path=~/Projects/agents/toggl-agent-git
+              +tmux_session=toggl-agent-git          (session)
+```
+
+That matters because the folder default alone would point at `~/Projects/agents` and start a
+*second* tmux session next to the one already running. The enriched entry attaches the one
+that is actually there.
+
+```shell
+projects import --dry-run        # show each assignment and the reason for it
+projects import                  # apply; only ever adds
+projects import --sessions-only  # register just the evidence-backed projects
+projects import --no-sessions    # skip the ssh probe entirely (offline)
+projects import --force          # re-assign entries whose evidence has since changed
+```
+
+`--force` is how a folder-default guess gets promoted once a session exists to prove it: it
+compares machine, path, *and* session name, so an entry pointing at the project root moves to
+the checkout the session is really in.
+
+#### Names that exist under both roots
+
+Seven directories here share a name between `~/Projects` and `~/Work` (`revsys-office`,
+`revsys.com`, `westerveltco-cms`, ...). Both get registered: the `~/Work` copy takes a `work-`
+prefix, so `~/Projects/revsys-office` is `revsys-office` and `~/Work/revsys-office` is
+`work-revsys-office`. Only the colliding names are renamed — the other 29 `~/Work` projects
+keep the plain name you would actually type.
+
+The prefix is applied everywhere a name is derived, so a tmux session running under
+`~/Work/revsys-office` enriches `work-revsys-office` rather than quietly landing on its
+`~/Projects` namesake.
+
+One collision the prefix cannot fix is still reported rather than silently merged: a session
+outside both roots is keyed by its session name and can shadow a real directory — `dotfiles`
+runs in `~/.homesick/repos/dotfiles` while `~/Projects/dotfiles` also exists.
+
+`projects scan` is a deprecated alias that forwards here.
+
+`projects list` is bare by default — one name per line, nothing to strip — so it pipes
+straight into `grep`, `fzf`, and `xargs`. With 253 projects registered, the grouped view is
+the exception rather than the rule:
+
+```shell
+projects list                      # 253 bare names
+projects list -m studio            # just the ones on the Studio
+projects list | fzf | xargs workon  # pick one and open it
+projects list --long               # grouped by machine, with paths and sessions
+```
+
+`projects resolve --shell` is the interface `workon` consumes; `--json` is the same data
+for anything else:
+
+```shell
+$ projects resolve django-news
+django-news  (remote via mac-studio-2023)
+  machine  studio
+  path     ~/Work/django-news
+  session  django-news
+  command  mosh mac-studio-2023 -- bash -lc 'cd "$HOME"/Work/django-news; tmux new-session -A -s django-news -c "$HOME"/Work/django-news'
+```
+
+The `~` in a remote path is deliberately left unexpanded: it has to expand against the remote
+home directory, not this machine's.
 
 ### Key Bindings
 

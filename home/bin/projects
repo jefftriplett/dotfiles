@@ -1,0 +1,1334 @@
+#!/usr/bin/env -S uv run --script
+# /// script
+# requires-python = ">=3.12"
+# dependencies = [
+#     "pydantic",
+#     "rich",
+#     "tomlkit",
+#     "typer",
+# ]
+# ///
+"""Manage the project registry in ~/Projects/projects.toml.
+
+The registry records which machine each project lives on, where it lives there,
+and which tmux session holds it. `workon` and `mkproject` read it to decide
+whether to cd locally or mosh somewhere else; the cmux-*/tmux-remote-* scripts
+read its [machines] table for the machine list.
+
+Editing the file by hand stays fine -- this saves the round trip, keeps entries
+sorted, and knows the home/work machine split so `scan` can register 200
+existing directories without you naming a machine 200 times.
+
+tomlkit rather than tomli-w: the file carries comments explaining what each
+table is for, and a plain TOML writer would drop them on the first edit.
+"""
+
+import json
+import os
+import shlex
+import subprocess
+from concurrent.futures import ThreadPoolExecutor
+from pathlib import Path
+from typing import Annotated, Optional
+
+import typer
+from pydantic import BaseModel
+from rich.console import Console
+from rich.markup import escape
+from rich.theme import Theme
+
+from _cmux import (
+    HOSTS_TOML,
+    Workspace,
+    _registry_machines,
+    default_dump_path,
+    load_dump,
+    local_hostnames,
+    registry_toml,
+    remote_tmux_sessions,
+    session_slug,
+    tmux_sessions,
+)
+from _projects import Machine, Project, Registry, registry_path
+
+# Styles are named for what they mean, not what colour they are, so the reason
+# an assignment was made reads as a colour at a glance: strong evidence is
+# green, the folder-default fallback is dim.
+THEME = Theme(
+    {
+        "add": "bold green",
+        "update": "bold yellow",
+        "would": "bold cyan",
+        "reason.session": "green",
+        "reason.session-idle": "dark_sea_green4",
+        "reason.workspace": "cyan",
+        "reason.default": "dim",
+        "machine": "magenta",
+        "path": "blue",
+        "extra": "dim cyan",
+        "name": "bold",
+        "warn": "yellow",
+        "error": "bold red",
+        "muted": "dim",
+    }
+)
+
+# highlight=False: rich's auto-highlighter colours numbers and path-ish strings
+# on its own, which fights the explicit styles below and makes the output look
+# arbitrary. Every colour here is deliberate.
+console = Console(theme=THEME, highlight=False)
+err_console = Console(theme=THEME, highlight=False, stderr=True)
+
+
+def out(message: str = "") -> None:
+    """Human-facing output. Never used for anything a script parses.
+
+    soft_wrap: a long project path is far more readable running off the edge
+    (and reflowed by the terminal, or piped to less -S) than hard-wrapped mid
+    path onto a second line with no indent.
+    """
+    console.print(message, soft_wrap=True)
+
+
+def warn(message: str) -> None:
+    # markup=False: these take plain sentences, and a literal "[defaults]" in
+    # one was being parsed as a style tag and swallowed.
+    # soft_wrap: several of these end in a path, which was being broken across
+    # two lines mid-path and made unselectable.
+    err_console.print(message, style="warn", markup=False, soft_wrap=True)
+
+
+def fail(message: str) -> None:
+    err_console.print(message, style="error", markup=False, soft_wrap=True)
+
+
+def styled_path(path: str) -> str:
+    # Escaped because a directory name may legitimately contain "[", which rich
+    # would otherwise try to parse as a style tag and swallow.
+    return f"[path]{escape(path)}[/path]"
+
+
+def styled_name(name: str) -> str:
+    return f"[name]{escape(name)}[/name]"
+
+
+app = typer.Typer(
+    help="Track which machine each project lives on (~/Projects/projects.toml)",
+    no_args_is_help=False,
+)
+machines_app = typer.Typer(help="Add, remove, and list machines")
+app.add_typer(machines_app, name="machines")
+
+
+def load() -> Registry:
+    return Registry.load(registry_path())
+
+
+def require_project(registry: Registry, name: str) -> Project:
+    project = registry.project(name)
+    if project is None:
+        fail(f"No project named {name!r} in {registry.path}")
+        err_console.print(
+            "Register it with: [name]projects add "
+            f"{escape(shlex.quote(name))}[/name]",
+            soft_wrap=True,
+        )
+        raise typer.Exit(code=1)
+    return project
+
+
+@app.callback(invoke_without_command=True)
+def default(ctx: typer.Context) -> None:
+    if ctx.invoked_subcommand is None:
+        show()
+
+
+@app.command("list")
+def show(
+    machine: Annotated[
+        Optional[str], typer.Option("--machine", "-m", help="Only projects on this machine")
+    ] = None,
+    long: Annotated[
+        bool,
+        typer.Option("--long", "-l", help="Group by machine and show paths and sessions"),
+    ] = False,
+    names_only: Annotated[
+        bool,
+        typer.Option(
+            "--names-only",
+            "-q",
+            hidden=True,
+            help="Deprecated: bare names are the default; kept so old invocations work",
+        ),
+    ] = False,
+) -> None:
+    """List registered project names, one per line.
+
+    Bare by default so the output pipes into grep, fzf, and xargs without
+    anything to strip first -- with 253 projects, the grouped view is the
+    exception, not the rule. `--long` brings back machines, paths, and sessions.
+    """
+    registry = load()
+    if not registry.projects:
+        # Guidance goes to stderr, so `projects list | wc -l` on an empty
+        # registry counts zero rather than three lines of prose.
+        warn(f"No projects registered in {registry.path}")
+        err_console.print(
+            "Add one with [name]projects add NAME[/name], or import your existing "
+            "directories with [name]projects import --dry-run[/name].",
+            soft_wrap=True,
+        )
+        return
+
+    # An explicit --names-only still means bare, even alongside --long, so a
+    # script that passes it keeps working exactly as it did.
+    if names_only:
+        long = False
+
+    wanted = registry.machine(machine) if machine else None
+    if machine and wanted is None:
+        fail(f"Unknown machine: {machine}")
+        raise typer.Exit(code=1)
+
+    if not long:
+        # Builtin print, not the rich console: this is the piping path, and it
+        # also feeds bash completion in ~/.workon.bash.
+        for key in sorted(registry.projects):
+            project = registry.projects[key]
+            if wanted and registry.machine(project.machine) != wanted:
+                continue
+            print(key)
+        return
+
+    grouped: dict[str, list[Project]] = {}
+    for key in sorted(registry.projects):
+        project = registry.projects[key]
+        resolved = registry.machine(project.machine)
+        if wanted and resolved != wanted:
+            continue
+        grouped.setdefault(project.machine or "(unset)", []).append(project)
+
+    for machine_key in sorted(grouped):
+        resolved = registry.machine(machine_key)
+        mark = " [muted](this machine)[/muted]" if resolved and resolved.is_local else ""
+        count = len(grouped[machine_key])
+        out(f"[machine]{escape(machine_key)}[/machine]{mark} [muted]({count})[/muted]")
+        for project in grouped[machine_key]:
+            session = project.session_name
+            suffix = f" [extra]\\[{escape(session)}][/extra]" if session != project.key else ""
+            nested = (
+                f" [muted]->[/muted] {styled_path(project.tmux_path)}"
+                if project.tmux_path
+                else ""
+            )
+            out(f"  {styled_name(project.key)}{suffix}  {styled_path(project.path)}{nested}")
+
+
+@app.command()
+def add(
+    name: Annotated[str, typer.Argument(help="Project name (also the default tmux session)")],
+    machine: Annotated[
+        Optional[str],
+        typer.Option("--machine", "-m", help="Machine key; inferred from --path if omitted"),
+    ] = None,
+    path: Annotated[
+        Optional[str],
+        typer.Option("--path", "-p", help="Directory on that machine; defaults to <home_dir>/<name>"),
+    ] = None,
+    work: Annotated[
+        bool, typer.Option("--work", "-w", help="Default the path under work_dir, not home_dir")
+    ] = False,
+    session: Annotated[
+        Optional[str], typer.Option("--session", "-s", help="tmux session name; defaults to NAME")
+    ] = None,
+    tmux: Annotated[
+        Optional[bool], typer.Option("--tmux/--no-tmux", help="Override the default tmux setting for this project")
+    ] = None,
+    description: Annotated[Optional[str], typer.Option("--description", "-d")] = None,
+    force: Annotated[
+        bool, typer.Option("--force", "-f", help="Overwrite an existing entry")
+    ] = False,
+) -> None:
+    """Register a project."""
+    registry = load()
+
+    if name in registry.projects and not force:
+        fail(f"{name} is already registered (pass --force to overwrite)")
+        raise typer.Exit(code=1)
+
+    # Tildified so an absolute path typed here means the same thing on every
+    # Mac, which is what the registry stores everywhere else.
+    resolved_path = tildify(path) if path else f"{registry.default_dir(work=work)}/{name}"
+    machine_key = machine or registry.machine_for_path(resolved_path)
+    if machine_key is None:
+        local = registry.local_machine()
+        machine_key = local.key if local else None
+    if machine_key is None:
+        fail(
+            "Could not work out which machine this project is on. Pass --machine, "
+            "or set home_machine/work_machine under [defaults]."
+        )
+        raise typer.Exit(code=1)
+
+    if registry.machine(machine_key) is None:
+        fail(f"Unknown machine: {machine_key}")
+        fail("Add it with: projects machines add " + shlex.quote(machine_key))
+        raise typer.Exit(code=1)
+
+    registry.projects[name] = Project(
+        key=name,
+        machine=registry.machine(machine_key).key,
+        path=resolved_path,
+        tmux=tmux,
+        session=session,
+        description=description,
+    )
+    registry.save()
+    out(f"Registered {name} -> {machine_key}:{resolved_path}")
+
+
+# Fields `projects set --clear` can unset. `machine` and `path` are absent on
+# purpose: an entry without them cannot be resolved, so there is nothing useful
+# to clear them to -- change them instead.
+CLEARABLE = ("tmux", "tmux_path", "session", "description")
+
+
+@app.command("set")
+def set_(
+    name: Annotated[str, typer.Argument(help="Project to edit")],
+    machine: Annotated[
+        Optional[str], typer.Option("--machine", "-m", help="Move it to this machine")
+    ] = None,
+    path: Annotated[
+        Optional[str], typer.Option("--path", "-p", help="Project directory on that machine")
+    ] = None,
+    tmux_path: Annotated[
+        Optional[str],
+        typer.Option("--tmux-path", help="Checkout inside it the session runs in"),
+    ] = None,
+    session: Annotated[
+        Optional[str], typer.Option("--session", "-s", help="tmux session name")
+    ] = None,
+    tmux: Annotated[
+        Optional[bool],
+        typer.Option("--tmux/--no-tmux", help="Override the default tmux setting for this project"),
+    ] = None,
+    description: Annotated[Optional[str], typer.Option("--description", "-d")] = None,
+    clear: Annotated[
+        Optional[list[str]],
+        typer.Option("--clear", help=f"Unset a field: {', '.join(CLEARABLE)} (repeatable)"),
+    ] = None,
+) -> None:
+    """Change one project's details in place.
+
+    `add --force` rewrites the whole entry from its arguments, so anything you
+    do not repeat is dropped. This edits only the fields you name, which is
+    what you want for the common case of correcting a machine or pinning a
+    session on an entry the import guessed at.
+    """
+    registry = load()
+    project = require_project(registry, name)
+
+    for field in clear or []:
+        if field not in CLEARABLE:
+            fail(f"Cannot clear {field!r}; try one of: {', '.join(CLEARABLE)}")
+            raise typer.Exit(code=1)
+
+    updates: dict[str, object] = {}
+
+    if machine is not None:
+        target = registry.machine(machine)
+        if target is None:
+            fail(f"Unknown machine: {machine}")
+            fail("Add it with: projects machines add " + shlex.quote(machine))
+            raise typer.Exit(code=1)
+        updates["machine"] = target.key
+    if path is not None:
+        updates["path"] = tildify(path)
+    if tmux_path is not None:
+        updates["tmux_path"] = tildify(tmux_path)
+    if session is not None:
+        updates["session"] = session
+    if tmux is not None:
+        updates["tmux"] = tmux
+    if description is not None:
+        updates["description"] = description
+
+    # Clears run last so `--session foo --clear session` is an unset rather
+    # than depending on which one the parser happened to see first.
+    for field in clear or []:
+        updates[field] = None
+
+    if not updates:
+        fail(f"Nothing to change. Pass an option, or see: projects resolve {project.key}")
+        raise typer.Exit(code=1)
+
+    changed = [
+        f"{field}={value!r}" for field, value in updates.items() if getattr(project, field) != value
+    ]
+    if not changed:
+        out(f"{project.key} already matches; nothing written")
+        return
+
+    registry.projects[project.key] = project.model_copy(update=updates)
+    registry.save()
+    out(f"Updated {project.key}: {', '.join(changed)}")
+
+
+@app.command("remove")
+def remove(
+    name: Annotated[str, typer.Argument(help="Project to unregister")],
+) -> None:
+    """Unregister a project. The directory itself is untouched."""
+    registry = load()
+    project = require_project(registry, name)
+    del registry.projects[project.key]
+    registry.save()
+    out(f"Removed {project.key} from {registry.path}")
+
+
+# How a candidate's machine was decided, best evidence first. The import keeps
+# the highest-ranked candidate per project, so a live session always beats the
+# folder default no matter what order the machines answered in.
+REASON_RANK = {
+    "session": 0,      # a tmux session for it is running on that machine
+    "session-idle": 1,  # ...running, but with no client attached
+    "workspace": 2,    # the cmux session dump pins it to that machine
+    "default": 3,      # home_machine / work_machine, by which root it is under
+}
+
+
+class Candidate(BaseModel):
+    """One proposed registry entry, plus how its machine was decided."""
+
+    name: str
+    machine: str
+    path: str
+    reason: str
+    session: str | None = None
+    tmux_path: str | None = None
+
+    @property
+    def rank(self) -> int:
+        return REASON_RANK[self.reason]
+
+
+# Prefix for a ~/Work project whose name is also taken under ~/Projects. Only
+# the colliding names are renamed -- 7 of 36 here -- so the other Work projects
+# keep the plain name you would actually type.
+WORK_PREFIX = "work-"
+
+
+def work_collisions(registry: Registry) -> set[str]:
+    """Names that exist under both roots, and so need disambiguating."""
+    def names(root_dir: str) -> set[str]:
+        root = Path(root_dir).expanduser()
+        if not root.is_dir():
+            return set()
+        return {
+            entry.name
+            for entry in root.iterdir()
+            if entry.is_dir() and not entry.name.startswith(".")
+        }
+
+    if Path(registry.home_dir).expanduser() == Path(registry.work_dir).expanduser():
+        return set()
+    return names(registry.home_dir) & names(registry.work_dir)
+
+
+def project_key(registry: Registry, *, root_dir: str, name: str, collisions: set[str]) -> str:
+    """The registry key for a directory, disambiguating Work against Projects.
+
+    Applied everywhere a project name is derived -- directory listings, tmux
+    session paths, cmux dump paths -- so a session under ~/Work/revsys-office
+    enriches the `work-revsys-office` entry rather than quietly landing on the
+    ~/Projects one of the same name.
+    """
+    same_root = Path(root_dir).expanduser() == Path(registry.work_dir).expanduser()
+    if same_root and name in collisions:
+        return f"{WORK_PREFIX}{name}"
+    return name
+
+
+def tildify(path: str) -> str:
+    """Rewrite this machine's home prefix back to "~".
+
+    Stored paths use "~" so they mean the right thing on whichever machine the
+    project is on; tmux reports absolute ones. Every Mac here is the same user,
+    so the local home is the right prefix to strip.
+    """
+    home = str(Path.home())
+    if path == home:
+        return "~"
+    if path.startswith(home + os.sep):
+        return "~/" + path[len(home) + 1:]
+    return path
+
+
+def project_under_root(path: str, root: str) -> str | None:
+    """The top-level directory name under `root`, or None if not under it.
+
+    Matched on the root's basename rather than the full path because a session
+    path comes from a remote host whose home directory we have not resolved.
+
+    Sessions live in nested checkouts -- ~/Projects/django-news.com/
+    django-news.com-git -- so the project is the first component under the
+    root, not the directory the session is actually sitting in.
+    """
+    marker = os.sep + Path(root).name.strip(os.sep) + os.sep
+    index = path.find(marker)
+    if index == -1:
+        return None
+    remainder = path[index + len(marker):]
+    return remainder.split(os.sep, 1)[0] or None
+
+
+def candidates_from_sessions(
+    registry: Registry, *, machine: Machine, sessions: list, collisions: set[str]
+) -> list[Candidate]:
+    """Turn one machine's running tmux sessions into candidates.
+
+    `path` stays the project directory under the root -- the thing you asked to
+    import -- and the session's own directory goes to `tmux_path` when the two
+    differ. So a session in ~/Projects/django-news.com/django-news.com-git
+    enriches the django-news.com entry rather than overwriting its identity.
+    The session name is kept too, so attaching finds the running session rather
+    than starting a second one beside it under a slugified name.
+    """
+    found = []
+    for session in sessions:
+        reason = "session" if session.is_attached else "session-idle"
+        session_path = tildify(session.path)
+
+        name = None
+        project_path = None
+        for root in (registry.home_dir, registry.work_dir):
+            name = project_under_root(session.path, root)
+            if name:
+                project_path = f"{root}/{name}"
+                name = project_key(
+                    registry, root_dir=root, name=name, collisions=collisions
+                )
+                break
+
+        if not name:
+            # A session outside both roots (e.g. ~/.homesick/repos/dotfiles) is
+            # still real work; register it under its own name rather than
+            # dropping it, since that is a project you clearly use. There is no
+            # project directory to point at, so the session path is the path.
+            name = session.name
+            project_path = session_path
+
+        found.append(
+            Candidate(
+                name=name,
+                machine=machine.key,
+                path=project_path,
+                reason=reason,
+                session=session.name,
+                tmux_path=session_path if session_path != project_path else None,
+            )
+        )
+    return found
+
+
+def hint_key(name: str) -> str:
+    """Normalize a name so a workspace title matches the directory it refers to.
+
+    cmux workspaces are titled after the checkout ("djangotv-com-git") while the
+    directory is the project ("djangotv.com"). Slugifying and dropping a
+    trailing "-git" brings both to "djangotv-com".
+    """
+    key = session_slug(name)
+    return key[:-4] if key.endswith("-git") else key
+
+
+def candidates_from_dump(
+    registry: Registry, *, collisions: set[str]
+) -> tuple[list[Candidate], dict[str, str]]:
+    """Machine assignments recorded in the cmux session dump.
+
+    Returns full candidates plus machine-only hints. The split exists because a
+    remote workspace's `cwd` in the dump is deliberately the *local* home
+    directory -- create_workspace sets it that way so the pane does not trigger
+    a local autoattach before the mosh command runs -- so for those entries the
+    dump knows the machine but nothing usable about the path. Taking `cwd`
+    literally there registered projects pointing at "~".
+    """
+    path = default_dump_path()
+    if not path.is_file():
+        return [], {}
+    try:
+        entries = load_dump(path)
+    except (OSError, ValueError):
+        return [], {}
+
+    found: list[Candidate] = []
+    hints: dict[str, str] = {}
+    for entry in entries:
+        workspace = Workspace.from_dump(entry)
+        if not workspace.host:
+            continue
+        machine = registry.machine(workspace.host)
+        if machine is None:
+            continue
+
+        name = None
+        project_path = None
+        for root in (registry.home_dir, registry.work_dir):
+            name = project_under_root(workspace.cwd, root)
+            if name:
+                project_path = f"{root}/{name}"
+                name = project_key(
+                    registry, root_dir=root, name=name, collisions=collisions
+                )
+                break
+
+        if name:
+            workspace_path = tildify(workspace.cwd)
+            found.append(
+                Candidate(
+                    name=name,
+                    machine=machine.key,
+                    path=project_path,
+                    reason="workspace",
+                    session=workspace.session_name,
+                    tmux_path=(
+                        workspace_path if workspace_path != project_path else None
+                    ),
+                )
+            )
+        else:
+            # No usable path: keep the machine as a hint, to be applied to a
+            # directory candidate of the same project further down.
+            hints[hint_key(workspace.base_title)] = machine.key
+    return found, hints
+
+
+def candidates_from_dirs(registry: Registry, *, collisions: set[str]) -> list[Candidate]:
+    """Every directory under home_dir and work_dir, at the folder default.
+
+    Both roots are covered in full. A ~/Work project whose name is also taken
+    under ~/Projects gets the "work-" prefix, so it is registered alongside its
+    namesake instead of one of them losing -- 7 of 36 Work directories here
+    collided, and previously they were dropped.
+
+    Listed locally only. The roots are mirrored across the Macs, so each one
+    holds substantially the same directories -- listing all three would produce
+    the same names three times and say nothing about where the work happens.
+    That is exactly why these rank last.
+    """
+    found = []
+    for root_dir in (registry.home_dir, registry.work_dir):
+        root = Path(root_dir).expanduser()
+        if not root.is_dir():
+            warn(f"{root_dir} does not exist; nothing to import from it")
+            continue
+
+        machine_key = registry.machine_for_path(root_dir)
+        if machine_key is not None and registry.machine(machine_key) is None:
+            warn(
+                f"{root_dir} is assigned to unknown machine {machine_key!r}; "
+                f"falling back to this machine"
+            )
+            machine_key = None
+
+        if machine_key is None:
+            # Previously a silent `continue`, which discarded every directory
+            # under the root and printed nothing at all -- the registry came
+            # out holding only the session-backed projects and the import
+            # looked like it had simply not run. Fall back to the local
+            # machine and say so, so an empty [defaults] is visible rather
+            # than invisible.
+            local = registry.local_machine()
+            if local is None:
+                fail(
+                    f"Cannot place {root_dir}: no home_machine/work_machine in "
+                    f"[defaults], and this machine is not in [machines]."
+                )
+                continue
+            setting = "work_machine" if root_dir == registry.work_dir else "home_machine"
+            warn(
+                f"No [defaults] {setting} for {root_dir}; using this machine "
+                f"({local.key}). Set {setting} to change that."
+            )
+            machine_key = local.key
+
+        for entry in sorted(root.iterdir()):
+            if not entry.is_dir() or entry.name.startswith("."):
+                continue
+            found.append(
+                Candidate(
+                    name=project_key(
+                        registry, root_dir=root_dir, name=entry.name, collisions=collisions
+                    ),
+                    machine=registry.machine(machine_key).key,
+                    path=f"{root_dir}/{entry.name}",
+                    reason="default",
+                )
+            )
+    return found
+
+
+def probe_sessions(machine: Machine, *, timeout: int):
+    try:
+        if machine.is_local:
+            return machine, tmux_sessions(), None
+        return machine, remote_tmux_sessions(machine.host, timeout=timeout), None
+    except subprocess.TimeoutExpired:
+        return machine, [], f"timed out after {timeout * 4}s"
+    except (RuntimeError, OSError) as exc:
+        return machine, [], str(exc)
+
+
+@app.command("import")
+def import_projects(
+    dry_run: Annotated[
+        bool, typer.Option("--dry-run", "-n", help="Show what would be registered")
+    ] = False,
+    machine: Annotated[
+        Optional[list[str]],
+        typer.Option("--machine", "-m", help="Only probe these machines (repeatable)"),
+    ] = None,
+    no_sessions: Annotated[
+        bool, typer.Option("--no-sessions", help="Skip the tmux probe; use folder defaults only")
+    ] = False,
+    sessions_only: Annotated[
+        bool,
+        typer.Option("--sessions-only", help="Register only projects with real evidence"),
+    ] = False,
+    timeout: Annotated[
+        int, typer.Option("--timeout", "-t", help="ssh connect timeout in seconds")
+    ] = 5,
+    force: Annotated[
+        bool, typer.Option("--force", "-f", help="Also re-assign projects already registered")
+    ] = False,
+) -> None:
+    """Import ~/Projects and ~/Work into the registry.
+
+    The machine is decided by evidence rather than guessed. A running tmux
+    session is the strongest signal -- it is where you are actually doing the
+    work -- followed by a host pinned in the cmux session dump, and only then
+    by the home_machine / work_machine default for whichever root the directory
+    sits under.
+
+    That ordering matters here because the roots are mirrored across the Macs,
+    so nearly every directory exists on all of them and its mere presence says
+    nothing. `--dry-run` prints the reason for each assignment, so you can see
+    which ones are real and which are the fallback.
+
+    Only ever adds, so re-running after cloning a repo picks up just the new
+    one. `--force` also re-assigns projects that are already registered, which
+    is how you promote a folder-default guess once a session exists to prove it.
+    """
+    registry = load()
+    if not registry.machines:
+        fail("No machines configured; run `projects init` first.")
+        raise typer.Exit(code=1)
+
+    targets = list(registry.machines.values())
+    if machine:
+        targets = []
+        for name in machine:
+            found = registry.machine(name)
+            if found is None:
+                fail(f"Unknown machine: {name}")
+                raise typer.Exit(code=1)
+            targets.append(found)
+
+    candidates: list[Candidate] = []
+    hints: dict[str, str] = {}
+    # Worked out once, from the local listings, and threaded through every
+    # candidate source so a session under ~/Work lands on the same key the
+    # directory listing produced for it.
+    collisions = work_collisions(registry)
+    if collisions:
+        out(
+            f"[muted]{len(collisions)} name(s) exist under both roots; the "
+            f"~/Work copy is keyed[/muted] [name]{WORK_PREFIX}<name>[/name]"
+        )
+
+    if not no_sessions:
+        out(f"[muted]Probing {len(targets)} machine(s) for tmux sessions...[/muted]")
+        # Concurrent so one unreachable Mac costs its own timeout rather than
+        # delaying every machine queued behind it.
+        with ThreadPoolExecutor(max_workers=len(targets)) as pool:
+            probes = list(pool.map(lambda m: probe_sessions(m, timeout=timeout), targets))
+        for found_machine, sessions, error in probes:
+            if error:
+                fail(f"  {found_machine.key}: error: {error}")
+                continue
+            style = "reason.session" if sessions else "muted"
+            out(
+                f"  [machine]{escape(found_machine.key)}[/machine]: "
+                f"[{style}]{len(sessions)} session(s)[/{style}]"
+            )
+            candidates += candidates_from_sessions(
+                registry, machine=found_machine, sessions=sessions, collisions=collisions
+            )
+        dump_candidates, hints = candidates_from_dump(registry, collisions=collisions)
+        candidates += dump_candidates
+
+    if not sessions_only:
+        candidates += candidates_from_dirs(registry, collisions=collisions)
+
+    # Keep the best-ranked candidate per project. Sorting by rank and letting
+    # setdefault win means a live session always displaces the folder default,
+    # whatever order the probes came back in.
+    best: dict[str, Candidate] = {}
+    for candidate in sorted(candidates, key=lambda item: (item.rank, item.machine)):
+        best.setdefault(candidate.name, candidate)
+
+    # A session outside home_dir/work_dir is keyed by its session name, which
+    # can collide with a real directory of that name -- the "dotfiles" session
+    # runs in ~/.homesick/repos/dotfiles while ~/Projects/dotfiles also exists.
+    # The session still wins, being the stronger evidence, but a silent merge
+    # of two unrelated directories is worth saying out loud.
+    collisions = []
+    for candidate in candidates:
+        if candidate.reason != "default":
+            continue
+        winner = best.get(candidate.name)
+        if winner is None or winner is candidate or winner.path == candidate.path:
+            continue
+        # Nested checkouts (project/project-git) are the same project, not a
+        # collision; only an entirely different tree counts.
+        if winner.path.startswith(candidate.path + os.sep):
+            continue
+        collisions.append((candidate.name, candidate.path, winner.path))
+
+    # Apply the machine-only hints from the dump: a directory that fell back to
+    # the folder default, but which cmux pins to a machine, takes the machine
+    # and keeps its own path.
+    for name, candidate in best.items():
+        if candidate.reason != "default":
+            continue
+        hinted = hints.get(hint_key(name))
+        if hinted and hinted != candidate.machine:
+            candidate.machine = hinted
+            candidate.reason = "workspace"
+
+    added = 0
+    updated = 0
+    skipped = 0
+    evidence = 0
+
+    for name in sorted(best):
+        candidate = best[name]
+        existing = registry.projects.get(name)
+
+        candidate_session = (
+            candidate.session
+            if candidate.session and candidate.session != session_slug(name)
+            else None
+        )
+
+        if existing is not None:
+            if not force:
+                skipped += 1
+                continue
+            # Compare the whole entry, not just the machine: a project first
+            # imported from the folder default points at the project root,
+            # while a session proves the nested checkout it actually runs in.
+            # Machine-only comparison left those stale paths in place.
+            changes = []
+            if existing.machine != candidate.machine:
+                changes.append(f"{existing.machine} -> {candidate.machine}")
+            if existing.path != candidate.path:
+                changes.append(f"path {existing.path} -> {candidate.path}")
+            if existing.tmux_path != candidate.tmux_path:
+                changes.append(
+                    f"tmux_path {existing.tmux_path or '-'} -> {candidate.tmux_path or '-'}"
+                )
+            if existing.session != candidate_session:
+                changes.append(f"session {existing.session or '-'} -> {candidate_session or '-'}")
+            if not changes:
+                skipped += 1
+                continue
+            note = f" ({'; '.join(changes)}; {candidate.reason})"
+        else:
+            note = f" ({candidate.reason})"
+
+        verb = "update" if existing is not None else "add"
+        if candidate.reason != "default":
+            evidence += 1
+
+        # Show the enrichment inline: the entry is the project directory, and
+        # what the session added to it is the interesting part.
+        extra = ""
+        if candidate.tmux_path:
+            extra += f" [extra]+tmux_path={escape(candidate.tmux_path)}[/extra]"
+        if candidate_session:
+            extra += f" [extra]+tmux_session={escape(candidate_session)}[/extra]"
+
+        label = "would" if dry_run else verb
+        out(
+            f"[{label}]{label:<6}[/{label}] {styled_name(name)} [muted]->[/muted] "
+            f"[machine]{escape(candidate.machine)}[/machine]:"
+            f"{styled_path(candidate.path)}{extra}"
+            f" [reason.{candidate.reason}]{note}[/reason.{candidate.reason}]"
+        )
+
+        if not dry_run:
+            # candidate_session is pinned only when it differs from what the
+            # key would slug to; otherwise the entry carries redundant noise.
+            registry.projects[name] = Project(
+                key=name,
+                machine=candidate.machine,
+                path=candidate.path,
+                tmux_path=candidate.tmux_path,
+                session=candidate_session,
+            )
+        if existing is not None:
+            updated += 1
+        else:
+            added += 1
+
+    if collisions:
+        out("\n[warn]Name collisions (the session won; rename by hand if wrong):[/warn]")
+        for name, dropped, kept in collisions:
+            out(
+                f"  {styled_name(name)}: kept {styled_path(kept)}, "
+                f"[muted]dropped[/muted] {styled_path(dropped)}"
+            )
+
+    total = added + updated
+    if not total:
+        out(f"\n[muted]Nothing to import ({skipped} already registered)[/muted]")
+        return
+
+    summary = (
+        f"[name]{total} project(s)[/name]: [add]{added} new[/add], "
+        f"[update]{updated} re-assigned[/update], [muted]{skipped} unchanged[/muted]. "
+        f"[reason.session]{evidence} backed by a session or workspace[/reason.session], "
+        f"[reason.default]{total - evidence} by the folder default[/reason.default]."
+    )
+    if dry_run:
+        out(f"\n{summary}")
+        out("[muted]Re-run without --dry-run to apply.[/muted]")
+        return
+
+    registry.save()
+    out(f"\n{summary}")
+    out(f"[add]Wrote[/add] {styled_path(str(registry.path))}")
+
+
+@app.command(hidden=True)
+def scan(
+    ctx: typer.Context,
+    dry_run: Annotated[bool, typer.Option("--dry-run", "-n")] = False,
+) -> None:
+    """Deprecated alias for `projects import`."""
+    fail("`projects scan` is now `projects import`; running that.")
+    import_projects(dry_run=dry_run)
+
+
+@app.command()
+def resolve(
+    name: Annotated[str, typer.Argument(help="Project to look up")],
+    machine: Annotated[
+        Optional[str],
+        typer.Option(
+            "--machine",
+            "-m",
+            "--host",
+            help="Resolve as if the project lived on this machine (key or ssh name)",
+        ),
+    ] = None,
+    as_shell: Annotated[
+        bool, typer.Option("--shell", help="Emit `eval`-able assignments for workon")
+    ] = False,
+    as_json: Annotated[bool, typer.Option("--json", help="Emit JSON")] = False,
+) -> None:
+    """Print how to reach a project: machine, path, session, and command.
+
+    --shell is the interface ~/.workon.bash consumes. Every value is
+    shell-quoted here rather than in bash, so a path with a space in it
+    survives the eval.
+
+    --machine answers "what if this project were over there?" without touching
+    the registry -- it is what `workon --host=...` is built on.
+    """
+    registry = load()
+    project = require_project(registry, name)
+
+    if machine:
+        target = registry.machine(machine)
+        if target is None:
+            fail(f"Unknown machine: {machine}")
+            raise typer.Exit(code=1)
+        # A copy, so the override never reaches the registry file: this is a
+        # one-off "open it over there", not a re-assignment. Use
+        # `projects add --force --machine` to make that stick.
+        project = project.model_copy(update={"machine": target.key})
+
+    plan = registry.plan(project)
+
+    if as_json:
+        # Builtin print, not the rich console: JSON is parsed by other tools
+        # and must not pick up wrapping or escape codes.
+        print(
+            json.dumps(
+                {
+                    "name": plan.project.key,
+                    "machine": plan.machine.key if plan.machine else None,
+                    "host": plan.machine.host if plan.machine else None,
+                    "local": plan.local,
+                    "path": plan.path,
+                    "project_path": plan.project_path,
+                    "tmux_path": plan.project.tmux_path,
+                    "session": plan.session,
+                    "tmux": plan.tmux,
+                    "argv": plan.argv,
+                },
+                indent=2,
+            )
+        )
+        return
+
+    if as_shell:
+        emit = [
+            ("WORKON_RESOLVED_NAME", plan.project.key),
+            ("WORKON_RESOLVED_KIND", "local" if plan.local else "remote"),
+            ("WORKON_RESOLVED_MACHINE", plan.machine.key if plan.machine else ""),
+            ("WORKON_RESOLVED_HOST", plan.machine.host if plan.machine else ""),
+            # Expanded only for local use; the remote argv keeps its own "~"
+            # so it expands against the remote home directory instead.
+            # PATH is where to land -- tmux_path when the project has one.
+            ("WORKON_RESOLVED_PATH", str(Path(plan.path).expanduser()) if plan.local else plan.path),
+            (
+                "WORKON_RESOLVED_PROJECT_PATH",
+                str(Path(plan.project_path).expanduser()) if plan.local else plan.project_path,
+            ),
+            ("WORKON_RESOLVED_SESSION", plan.session),
+            ("WORKON_RESOLVED_TMUX", "1" if plan.tmux else ""),
+        ]
+        # Deliberately builtin print, not the rich console: this output is
+        # eval'd by ~/.workon.bash, and rich would wrap the long argv
+        # line at the terminal width and corrupt the command.
+        for key, value in emit:
+            print(f"{key}={shlex.quote(value)}")
+        print(f"WORKON_RESOLVED_ARGV=({shlex.join(plan.argv)})" if plan.argv else "WORKON_RESOLVED_ARGV=()")
+        return
+
+    where = "local" if plan.local else f"remote via {plan.machine.host}"
+    out(f"{plan.project.key}  ({where})")
+    out(f"  machine    {plan.machine.key if plan.machine else '(unset)'}")
+    out(f"  path       {plan.project_path}")
+    if plan.nested:
+        out(f"  tmux_path  {plan.path}")
+    out(f"  session    {plan.session}{'' if plan.tmux else '  (tmux disabled)'}")
+    if plan.argv:
+        out(f"  command    {shlex.join(plan.argv)}")
+
+
+def envrc_contents(name: str, *, tmux: bool = True) -> str:
+    """The .envrc a new project gets.
+
+    `layout uv` is the layout defined in ~/.config/direnv/direnvrc -- it creates
+    .venv on demand and watches pyproject.toml, which a bare
+    `source .venv/bin/activate` (what mkproject writes) does not.
+
+    `use tmux` exports TMUX_AUTOATTACH so ~/.bash_tmux and cmux settle on the
+    same session name this registry entry uses. It is omitted for a --no-tmux
+    project, which would otherwise get an .envrc that autoattaches a session
+    the registry says it does not want.
+
+    No `--machine`: the directory is created on the machine that owns the
+    project, so this .envrc is only ever evaluated there, and naming the
+    machine would make ~/.bash_tmux mosh from that machine to itself. Routing
+    across machines is workon's job, and it reads the registry.
+    """
+    if not tmux:
+        return "layout uv\n"
+    return f"layout uv\nuse tmux {shlex.quote(name)}\n"
+
+
+def create_script(path: str, *, name: str, python: str, tmux: bool = True) -> str:
+    """Shell that creates the project directory, its venv, and its .envrc."""
+    from _projects import remote_path_expr
+
+    # Written with "$HOME"/... rather than an expanded path so the script reads
+    # the same as the argv `resolve` emits, and stays copy-pasteable anywhere.
+    path_expr = remote_path_expr(path)
+    envrc = envrc_contents(name, tmux=tmux)
+    return "\n".join(
+        [
+            "set -e",
+            f"mkdir -p {path_expr}",
+            f"cd {path_expr}",
+            # Guard each step so re-running on a half-made project finishes it
+            # rather than clobbering a venv or an .envrc you have since edited.
+            f"[ -d .venv ] || uv venv --python {shlex.quote(python)} .venv",
+            f"[ -f .envrc ] || printf %s {shlex.quote(envrc)} > .envrc",
+            "command -v direnv >/dev/null 2>&1 && direnv allow . || true",
+            f"echo created {path_expr}",
+        ]
+    )
+
+
+@app.command()
+def create(
+    name: Annotated[str, typer.Argument(help="Project to create and register")],
+    machine: Annotated[
+        Optional[str],
+        typer.Option("--machine", "-m", help="Machine key; inferred from --path if omitted"),
+    ] = None,
+    path: Annotated[
+        Optional[str], typer.Option("--path", "-p", help="Directory; defaults to <home_dir>/<name>")
+    ] = None,
+    work: Annotated[
+        bool, typer.Option("--work", "-w", help="Create under work_dir, not home_dir")
+    ] = False,
+    session: Annotated[
+        Optional[str], typer.Option("--session", "-s", help="tmux session name; defaults to NAME")
+    ] = None,
+    tmux: Annotated[
+        Optional[bool],
+        typer.Option("--tmux/--no-tmux", help="Override the default tmux setting for this project"),
+    ] = None,
+    python: Annotated[str, typer.Option("--python", help="Python version for uv venv")] = "3",
+    dry_run: Annotated[
+        bool, typer.Option("--dry-run", "-n", help="Print the commands without running them")
+    ] = False,
+) -> None:
+    """Create a project directory with a venv and .envrc, then register it.
+
+    Always creates here, even when the project is registered to another
+    machine: ~/Projects and ~/Work are Syncthing folders, so the directory and
+    its .envrc arrive on their own. The venv is not synced (.venv/ is in
+    .stignore) and does not need to be -- the generated .envrc is `layout uv`,
+    so direnv builds a native one the first time you enter the directory over
+    there. --machine says which machine *owns* the project, which is what
+    workon reads to route; it is not where creation runs.
+    """
+    registry = load()
+
+    resolved_path = tildify(path) if path else f"{registry.default_dir(work=work)}/{name}"
+    machine_key = machine or registry.machine_for_path(resolved_path)
+    if machine_key is None:
+        local = registry.local_machine()
+        machine_key = local.key if local else None
+
+    target = registry.machine(machine_key) if machine_key else None
+    if target is None:
+        fail(
+            f"Unknown or unset machine ({machine_key!r}). Pass --machine, or set "
+            "home_machine/work_machine under [defaults]."
+        )
+        raise typer.Exit(code=1)
+
+    if name in registry.projects:
+        fail(f"{name} is already registered; remove it first or pick another name")
+        raise typer.Exit(code=1)
+
+    # The .envrc follows the setting the project will actually resolve with, so
+    # --no-tmux does not leave a `use tmux` line behind that autoattaches a
+    # session the registry says this project does not want.
+    want_tmux = registry.tmux_default if tmux is None else tmux
+    session_name = session or session_slug(name)
+    script = create_script(
+        resolved_path, name=session_name, python=python, tmux=want_tmux
+    )
+    argv = ["bash", "-lc", script]
+
+    if dry_run:
+        out(shlex.join(argv))
+        out(f"# then register {name} -> {target.key}:{resolved_path}")
+        return
+
+    out(f"Creating {resolved_path} (owned by {target.key})")
+    result = subprocess.run(argv)
+    if result.returncode != 0:
+        fail(f"Creation failed; not registering {name}")
+        raise typer.Exit(code=result.returncode)
+
+    registry.projects[name] = Project(
+        key=name, machine=target.key, path=resolved_path, tmux=tmux, session=session
+    )
+    registry.save()
+    out(f"Registered {name} -> {target.key}:{resolved_path}")
+
+
+@app.command()
+def edit() -> None:
+    """Open the registry in $EDITOR."""
+    registry = load()
+    if not registry.path.is_file():
+        fail(f"No registry at {registry.path} (run `projects init` first)")
+        raise typer.Exit(code=1)
+
+    editor = os.environ.get("EDITOR") or os.environ.get("VISUAL")
+    if not editor:
+        fail("Set $EDITOR (or $VISUAL) to open the registry")
+        raise typer.Exit(code=1)
+    subprocess.run([*shlex.split(editor), str(registry.path)], check=True)
+
+
+@app.command()
+def init(
+    force: Annotated[
+        bool, typer.Option("--force", "-f", help="Rewrite an existing registry's tables")
+    ] = False,
+) -> None:
+    """Create the registry, importing machines from hosts.toml if it exists.
+
+    Safe to run once and then forget: it refuses to touch an existing file
+    unless you pass --force, and --force still only rewrites the [machines] and
+    [defaults] tables it manages.
+    """
+    registry = load()
+    if registry.path.is_file() and registry.machines and not force:
+        fail(f"{registry.path} already has machines (pass --force to re-import)")
+        raise typer.Exit(code=1)
+
+    imported = 0
+    if HOSTS_TOML.is_file():
+        # Read hosts.toml directly rather than through default_hosts(): that
+        # now prefers the registry, which is exactly what we are building.
+        import tomllib
+
+        data = tomllib.loads(HOSTS_TOML.read_text())
+        aliases = data.get("aliases", {})
+        for host in data.get("hosts", []):
+            # Short key from the ssh name: "mac-mini-pro-2023" -> "mini" is
+            # nicer to type, but guessing it wrong is worse than being literal,
+            # so the key is the first dotted component and you rename by hand.
+            key = str(host).split(".")[0]
+            registry.machines[key] = Machine(
+                key=key, host=str(host), hostname=aliases.get(host)
+            )
+            imported += 1
+
+    if not registry.machines:
+        hostname = sorted(local_hostnames())[0]
+        registry.machines[hostname] = Machine(key=hostname, host=hostname)
+        out(f"No hosts.toml found; seeded [machines] with this machine ({hostname}).")
+
+    local = registry.local_machine()
+    registry.defaults.setdefault("tmux", True)
+    registry.defaults.setdefault("home_dir", registry.home_dir)
+    registry.defaults.setdefault("work_dir", registry.work_dir)
+    if local:
+        registry.defaults.setdefault("home_machine", local.key)
+        registry.defaults.setdefault("work_machine", local.key)
+
+    registry.save()
+    if imported:
+        out(f"Imported {imported} machines from {HOSTS_TOML}")
+    out(f"Wrote {registry.path}")
+    out("Next: rename the machine keys if you want shorter ones, check")
+    out("home_machine/work_machine under [defaults], then `projects scan --dry-run`.")
+
+
+@machines_app.callback(invoke_without_command=True)
+def machines_default(ctx: typer.Context) -> None:
+    if ctx.invoked_subcommand is None:
+        machines_list()
+
+
+@machines_app.command("list")
+def machines_list() -> None:
+    """List the configured machines."""
+    registry = load()
+    if not registry.machines:
+        out(f"No machines configured in {registry.path}")
+        return
+    for key in sorted(registry.machines):
+        machine = registry.machines[key]
+        marks = []
+        if machine.is_local:
+            marks.append("this machine")
+        if machine.hostname:
+            marks.append(f"hostname {machine.hostname}")
+        count = sum(
+            1
+            for project in registry.projects.values()
+            if registry.machine(project.machine) == machine
+        )
+        marks.append(f"{count} project{'' if count == 1 else 's'}")
+        out(f"{key}  ({machine.host})  [{', '.join(marks)}]")
+
+
+@machines_app.command("add")
+def machines_add(
+    key: Annotated[str, typer.Argument(help="Short name you will type, e.g. studio")],
+    host: Annotated[
+        Optional[str], typer.Option("--host", help="ssh name; defaults to the key")
+    ] = None,
+    hostname: Annotated[
+        Optional[str],
+        typer.Option("--hostname", help="That machine's own `hostname`, when it differs"),
+    ] = None,
+    check: Annotated[
+        bool, typer.Option("--check", help="Verify the host answers over ssh first")
+    ] = False,
+) -> None:
+    """Add a machine."""
+    registry = load()
+    if key in registry.machines:
+        fail(f"{key} is already configured")
+        raise typer.Exit(code=1)
+
+    machine = Machine(key=key, host=host or key, hostname=hostname)
+
+    if check and not reachable(machine.host):
+        fail(
+            f"{machine.host} did not answer over ssh; not added (drop --check to add anyway)"
+        )
+        raise typer.Exit(code=1)
+
+    registry.machines[key] = machine
+    registry.save()
+    note = f" (hostname {hostname})" if hostname else ""
+    out(f"Added {key} -> {machine.host}{note}")
+
+    # The ssh name and the machine's own hostname differing is exactly what
+    # `hostname` is for; without it this machine is never recognized as local
+    # and gets dialed over the network from itself.
+    if not hostname and not machine.is_local:
+        warn(
+            f"If {machine.host} reports a different hostname to itself, re-add it "
+            f"with --hostname so this machine is skipped when you run there."
+        )
+
+
+@machines_app.command("remove")
+def machines_remove(
+    key: Annotated[str, typer.Argument(help="Machine to remove")],
+) -> None:
+    """Remove a machine. Refuses while projects still point at it."""
+    registry = load()
+    if key not in registry.machines:
+        fail(f"{key} is not configured")
+        raise typer.Exit(code=1)
+
+    holders = [
+        project.key
+        for project in registry.projects.values()
+        if project.machine == key
+    ]
+    if holders:
+        fail(
+            f"{key} still holds {len(holders)} project(s): {', '.join(sorted(holders)[:5])}"
+            + (" ..." if len(holders) > 5 else "")
+        )
+        fail("Move or remove them first.")
+        raise typer.Exit(code=1)
+
+    del registry.machines[key]
+    registry.save()
+    out(f"Removed {key} from {registry.path}")
+
+
+def reachable(host: str) -> bool:
+    result = subprocess.run(
+        ["ssh", "-o", "BatchMode=yes", "-o", "ConnectTimeout=5", host, "true"],
+        capture_output=True,
+        timeout=30,
+    )
+    return result.returncode == 0
+
+
+if __name__ == "__main__":
+    app()

@@ -38,7 +38,7 @@ if command -v pyenv > /dev/null; then
     eval "$(pyenv init - --no-rehash)";
 fi
 
-# workon/mkproject bash functions (replaces pyenv-virtualenvwrapper)
+# workon/mkproject: one command each, registry-aware (~/Projects/projects.toml)
 if [[ -f "${HOME}/.workon.bash" ]]; then
     # shellcheck source=/dev/null
     source "${HOME}/.workon.bash"

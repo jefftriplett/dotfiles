@@ -55,6 +55,18 @@ def strip_mosh_prefix(title: str) -> str:
     return title
 
 
+def session_slug(name: str) -> str:
+    """Make `name` usable as a tmux session name.
+
+    tmux session names may not contain ":" or "."; spaces are legal but a
+    nuisance to type at `tmux attach -t`. This is the single definition --
+    _projects.py, __tmux_session_name in ~/.bash_tmux, and use_tmux in
+    ~/.config/direnv/direnvrc all have to agree with it, or the same project
+    resolves to two different sessions depending on which one you went through.
+    """
+    return name.replace(":", "-").replace(".", "-").replace(" ", "-")
+
+
 def default_dump_path() -> Path:
     """Prefer the TOML dump; fall back to JSON only if the TOML is absent."""
     return DEFAULT_TOML if DEFAULT_TOML.is_file() else DEFAULT_JSON
@@ -112,7 +124,38 @@ def local_hostnames() -> set[str]:
 
 # Machine list lives in config, not code, so adding a Mac does not mean
 # editing a script. Kept alongside the session dump in CONFIG_DIR.
+#
+# hosts.toml is now the fallback: the machine list moved into the [machines]
+# table of the project registry (~/Projects/projects.toml) so a machine is
+# named in one place rather than two. hosts.toml is still read when the
+# registry has no [machines] table, which keeps every cmux-*/tmux-remote-*
+# script working on a Mac the registry has not reached yet.
 HOSTS_TOML = CONFIG_DIR / "hosts.toml"
+
+
+def registry_toml() -> Path:
+    """Path to the project registry. Mirrors _projects.registry_path().
+
+    Duplicated rather than imported: _projects imports this module, so reaching
+    the other way would be a cycle. It is one path and two env lookups.
+    """
+    override = os.environ.get("PROJECTS_TOML", "").strip()
+    if override:
+        return Path(override).expanduser()
+    return Path.home() / "Projects" / "projects.toml"
+
+
+def _registry_machines() -> dict:
+    """The [machines] table from the registry, or {} if there isn't one."""
+    path = registry_toml()
+    if not path.is_file():
+        return {}
+    try:
+        return tomllib.loads(path.read_text()).get("machines", {})
+    except (tomllib.TOMLDecodeError, OSError):
+        # A registry mid-edit should not take down `tmux-remote-ls`; fall
+        # through to hosts.toml and let the `projects` CLI report the error.
+        return {}
 
 # Legacy locations, from before these files were consolidated under
 # CONFIG_DIR. migrate_legacy_config() relocates any that still exist so the
@@ -179,26 +222,53 @@ def default_hosts() -> list[str]:
     if override:
         return shlex.split(override)
 
+    machines = _registry_machines()
+    if machines:
+        return sorted(
+            entry.get("host", key) for key, entry in machines.items()
+        )
+
     hosts = _load_hosts().get("hosts", [])
     if not hosts:
         raise RuntimeError(
-            f"No hosts configured. Add a `hosts = [...]` list to {HOSTS_TOML}, "
-            f"or pass --host explicitly."
+            f"No hosts configured. Add a [machines] table to {registry_toml()} "
+            f"(see `projects machines add`), or pass --host explicitly."
         )
     return hosts
 
 
 def host_aliases() -> dict[str, str]:
     """ssh name -> that machine's own hostname, where the two differ."""
+    machines = _registry_machines()
+    if machines:
+        return {
+            entry.get("host", key): entry["hostname"]
+            for key, entry in machines.items()
+            if entry.get("hostname")
+        }
     return _load_hosts().get("aliases", {})
+
+
+def resolve_host(name: str) -> str:
+    """Turn a registry machine key into its ssh name; pass anything else through.
+
+    Lets `--host mini` work the same as `--host mac-mini-pro-2023`, so the short
+    names used in projects.toml are usable everywhere a host is accepted.
+    """
+    machines = _registry_machines()
+    entry = machines.get(name)
+    if entry:
+        return entry.get("host", name)
+    return name
 
 
 def is_local_host(host: str) -> bool:
     """True when `host` names the machine we are running on."""
-    names = {host.lower()}
+    host = resolve_host(host)
+    names = {host.lower(), host.split(".")[0].lower()}
     alias = host_aliases().get(host)
     if alias:
-        names.add(alias.lower())
+        names |= {alias.lower(), alias.split(".")[0].lower()}
     return bool(names & local_hostnames())
 
 
@@ -286,7 +356,7 @@ class Workspace:
         # __tmux_session_name in ~/.bash_tmux.
         if self.session:
             return self.session
-        return self.base_title.replace(":", "-").replace(".", "-").replace(" ", "-")
+        return session_slug(self.base_title)
 
     @property
     def is_remote(self) -> bool:

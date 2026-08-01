@@ -1,5 +1,12 @@
 # ----------------------------------------------------------------
 # direnvrc - virtualenv auto-activation for direnv
+#
+# DEAD CODE. direnv reads $XDG_CONFIG_HOME/direnv/direnvrc (i.e.
+# ~/.config/direnv/direnvrc, which this repo also ships) and only falls back to
+# ~/.direnvrc when that file is absent. It is not, so nothing below ever runs.
+#
+# The live equivalents are `layout_uv` and `use_tmux` in
+# home/.config/direnv/direnvrc. Edit that file, not this one.
 # ----------------------------------------------------------------
 
 # Auto-detect and activate virtualenv based on project structure

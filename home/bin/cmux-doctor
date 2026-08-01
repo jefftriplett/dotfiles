@@ -31,10 +31,12 @@ from _cmux import (
     CONFIG_DIR,
     DEFAULT_TOML,
     HOSTS_TOML,
+    _registry_machines,
     default_dump_path,
     host_aliases,
     is_local_host,
     local_hostnames,
+    registry_toml,
     remote_tmux_sessions,
     tmux_sessions,
 )
@@ -179,24 +181,35 @@ def probe_host(host: str, *, timeout: int) -> HostProbe:
 def check_hosts(skip_probe: bool, *, timeout: int) -> None:
     section("Hosts")
 
-    if not HOSTS_TOML.is_file():
-        warn(str(HOSTS_TOML), detail="not found -- run tmux-remote-hosts add")
+    # Report against whichever file is actually in force. The registry's
+    # [machines] table supersedes hosts.toml, and a doctor that checked the
+    # dead file would give a clean bill of health to the wrong config.
+    registry = registry_toml()
+    machines = _registry_machines()
+    source = registry if machines else HOSTS_TOML
+
+    if not source.is_file():
+        warn(str(source), detail="not found -- run `projects init`")
         return
 
-    try:
-        import tomllib
+    if machines:
+        hosts = sorted(entry.get("host", key) for key, entry in machines.items())
+    else:
+        try:
+            import tomllib
 
-        data = tomllib.loads(HOSTS_TOML.read_text())
-    except (OSError, tomllib.TOMLDecodeError) as exc:
-        fail(str(HOSTS_TOML), detail=f"unreadable/unparseable: {exc}")
-        return
+            data = tomllib.loads(HOSTS_TOML.read_text())
+        except (OSError, tomllib.TOMLDecodeError) as exc:
+            fail(str(HOSTS_TOML), detail=f"unreadable/unparseable: {exc}")
+            return
+        hosts = data.get("hosts", [])
 
-    hosts = data.get("hosts", [])
     aliases = host_aliases()
     if not hosts:
-        warn(str(HOSTS_TOML), detail="no hosts listed -- add some with tmux-remote-hosts add")
+        warn(str(source), detail="no hosts listed -- add some with `projects machines add`")
         return
-    ok(str(HOSTS_TOML), detail=f"{len(hosts)} host(s), {len(aliases)} alias(es)")
+    label = "[machines]" if machines else "hosts.toml (legacy)"
+    ok(f"{source} {label}", detail=f"{len(hosts)} host(s), {len(aliases)} alias(es)")
 
     # This machine must recognize itself, or it would try to mosh into itself.
     this = socket.gethostname()

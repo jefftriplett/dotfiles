@@ -25,9 +25,16 @@ EOF
 project_shell_session_name() {
     local name="${1:-${PROJECT_TMUX_SESSION:-$(basename "$PWD")}}"
 
+    # "." is replaced, not kept: tmux session names may not contain it, and
+    # keeping it here made this the odd one out -- a project named "thumb.im"
+    # resolved to "thumb.im" through project-shell but "thumb-im" through
+    # `use tmux`, __tmux_session_name, and _cmux.py, so the two commands
+    # attached two different sessions. Keep in sync with session_slug in
+    # ~/bin/_cmux.py.
     name="${name//:/-}"
+    name="${name//./-}"
     name="${name// /-}"
-    printf '%s' "$name" | tr -c 'A-Za-z0-9_.-' '-'
+    printf '%s' "$name" | tr -c 'A-Za-z0-9_-' '-'
 }
 
 project_shell_short_host() {

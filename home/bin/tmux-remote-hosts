@@ -6,11 +6,20 @@
 #     "typer",
 # ]
 # ///
-"""Manage the machine list that tmux-remote-ls and cmux-tmux-sync read.
+"""Manage the legacy machine list in ~/.config/cmux-tmux/hosts.toml.
 
-The list lives in ~/.config/cmux-tmux/hosts.toml. Editing it by hand is still fine
--- this just saves the round trip, and keeps the entries sorted and the alias
-table in step with the host list.
+Superseded by `projects machines`. The machine list moved into the [machines]
+table of the project registry (~/Projects/projects.toml), so a machine is named
+once instead of twice, and machines carry the short keys that projects refer to.
+_cmux.py reads hosts.toml only when the registry has no [machines] table.
+
+Kept for the machines that have not been migrated yet: run `projects init` to
+import this file, then use `projects machines add|remove|list`. This command
+warns and exits when the registry has taken over, so an edit here cannot
+silently land in a file nothing reads.
+
+Editing hosts.toml by hand is still fine -- this just saves the round trip, and
+keeps the entries sorted and the alias table in step with the host list.
 
 tomlkit rather than tomli-w: the config carries comments explaining what the
 aliases are for, and a plain TOML writer would silently drop them on the first
@@ -26,12 +35,26 @@ from typing import Annotated, Optional
 import tomlkit
 import typer
 
-from _cmux import HOSTS_TOML, is_local_host, write_atomic
+from _cmux import HOSTS_TOML, _registry_machines, is_local_host, registry_toml, write_atomic
 
 app = typer.Typer(
-    help="Add, remove, and list the Macs in ~/.config/cmux-tmux/hosts.toml",
+    help="Legacy: manage hosts.toml. Superseded by `projects machines`.",
     no_args_is_help=False,
 )
+
+
+def warn_if_superseded() -> None:
+    """Refuse to edit hosts.toml once the registry owns the machine list.
+
+    Silently writing to a file no longer read is the worst outcome here: the
+    edit looks like it worked and nothing changes. Listing is still allowed --
+    it is how you check what is left to migrate.
+    """
+    if not _registry_machines():
+        return
+    print(f"{registry_toml()} already defines [machines]; hosts.toml is no longer read.")
+    print("Use `projects machines add|remove|list` instead.")
+    raise typer.Exit(code=1)
 
 NEW_FILE_HEADER = """\
 # Machines that run tmux, read by tmux-remote-ls and cmux-tmux-sync.
@@ -88,6 +111,10 @@ def default(ctx: typer.Context) -> None:
 @app.command("list")
 def show() -> None:
     """List the configured hosts."""
+    if _registry_machines():
+        print(f"Machines now live in {registry_toml()}; run `projects machines`.")
+        print("(hosts.toml is read only when that file has no [machines] table.)\n")
+
     doc = load_doc()
     names = host_names(doc)
     if not names:
@@ -120,6 +147,7 @@ def add(
     ] = False,
 ) -> None:
     """Add a machine to the list."""
+    warn_if_superseded()
     doc = load_doc()
     names = host_names(doc)
 
@@ -158,6 +186,7 @@ def remove(
     host: Annotated[str, typer.Argument(help="ssh name of the machine to remove")],
 ) -> None:
     """Remove a machine from the list."""
+    warn_if_superseded()
     doc = load_doc()
     names = host_names(doc)
 
