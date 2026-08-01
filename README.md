@@ -528,6 +528,17 @@ workon django-news     # remote: mosh mac-studio-2023, attach (its entry sets tm
 workon                 # no argument: list what is registered
 ```
 
+Tab completion reads a cache at `~/.cache/workon/names` rather than calling `projects` on
+every keypress. `projects` is a `uv run` script and costs ~300ms to start — fine when you
+typed it, an eternity to sit through on a TAB. The cache rebuilds when the registry,
+`~/Projects`, `~/Work`, or `~/.virtualenvs` is newer than it, which is four `[[ -nt ]]`
+builtins and no subprocess in the common case. That takes a TAB from **580ms to
+unmeasurable**, and a new project still shows up the moment it exists, whether it arrived
+through `projects add` or a bare `mkdir`.
+
+`workon-refresh` rebuilds it by hand, for warming the cache from a profile or when you
+want to be sure.
+
 Names are matched loosely: a project registered as `thumb.im` also answers to `thumb-im`,
 the slug tmux actually shows you.
 

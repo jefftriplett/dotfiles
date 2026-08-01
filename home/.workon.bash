@@ -302,9 +302,11 @@ _workon_activate() {
     echo "No virtualenv found for: ${name}"
 }
 
+WORKON_CACHE="${XDG_CACHE_HOME:-${HOME}/.cache}/workon/names"
+
 # Registered projects first, then any unregistered directory, so completion
 # covers everything workon can actually open.
-_workon_list_projects() {
+_workon_build_list() {
     {
         projects list 2>/dev/null
 
@@ -328,6 +330,59 @@ _workon_list_projects() {
             done
         fi
     } | sort -u
+}
+
+# True when anything that feeds the list is newer than the cache.
+#
+# `-nt` is a bash builtin, so this is four stat calls and no forks -- the whole
+# point is that the common case never pays for a subprocess. Directory mtimes
+# cover projects appearing and disappearing, since adding or removing an entry
+# touches the containing directory; the registry's own mtime covers everything
+# `projects add`, `set`, `remove`, and `import` do.
+_workon_cache_stale() {
+    [[ -f "$WORKON_CACHE" ]] || return 0
+
+    local source
+    for source in "${PROJECTS_TOML:-${HOME}/Projects/projects.toml}" \
+        "${WORKON_PROJECT_DIRS[@]}" "${HOME}/.virtualenvs"; do
+        [[ -e "$source" && "$source" -nt "$WORKON_CACHE" ]] && return 0
+    done
+    return 1
+}
+
+# The completion path. `projects list` is a uv script and costs ~300ms to
+# start, which is an eternity to sit through on a TAB press -- and the two
+# directory scans behind it walk ~250 entries. Cached, a TAB is four stats and
+# a read.
+#
+# Deliberately not a background refresh: a stale-but-instant list that silently
+# repairs itself later is worse than one you can reason about. This rebuilds
+# only when something actually changed, and then it is correct immediately.
+_workon_list_projects() {
+    if _workon_cache_stale; then
+        mkdir -p "${WORKON_CACHE%/*}"
+        # Written via a temp file and moved into place, so a TAB pressed while
+        # the rebuild is running reads either the old list or the new one,
+        # never a half-written one.
+        local tmp="${WORKON_CACHE}.$$"
+        if _workon_build_list > "$tmp" 2>/dev/null; then
+            mv -f "$tmp" "$WORKON_CACHE"
+        else
+            rm -f "$tmp"
+        fi
+    fi
+
+    [[ -f "$WORKON_CACHE" ]] || return 0
+    printf '%s\n' "$(<"$WORKON_CACHE")"
+}
+
+# For when you know the list changed and do not want to wait for a stat to
+# notice -- or to warm the cache from a shell profile or a cron job.
+workon-refresh() {
+    rm -f "$WORKON_CACHE"
+    _workon_list_projects >/dev/null
+    printf 'workon: cached %s names in %s\n' \
+        "$(grep -c . "$WORKON_CACHE" 2>/dev/null || echo 0)" "$WORKON_CACHE"
 }
 
 _workon_completions() {
