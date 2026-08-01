@@ -15,9 +15,10 @@ and which tmux session holds it. `workon` and `mkproject` read it to decide
 whether to cd locally or mosh somewhere else; the cmux-*/tmux-remote-* scripts
 read its [machines] table for the machine list.
 
-Editing the file by hand stays fine -- this saves the round trip, keeps entries
-sorted, and knows the home/work machine split so `scan` can register 200
-existing directories without you naming a machine 200 times.
+Editing the file by hand stays fine -- this saves the round trip, keeps
+entries sorted, and can import a few hundred existing directories in one go.
+It records a machine only where there is evidence for one; a project without
+one opens wherever you are.
 
 tomlkit rather than tomli-w: the file carries comments explaining what each
 table is for, and a plain TOML writer would drop them on the first edit.
@@ -53,7 +54,7 @@ from _projects import Machine, Project, Registry, registry_path
 
 # Styles are named for what they mean, not what colour they are, so the reason
 # an assignment was made reads as a colour at a glance: strong evidence is
-# green, the folder-default fallback is dim.
+# green, an entry with no machine behind it is dim.
 THEME = Theme(
     {
         "add": "bold green",
@@ -259,38 +260,37 @@ def add(
     # Tildified so an absolute path typed here means the same thing on every
     # Mac, which is what the registry stores everywhere else.
     resolved_path = tildify(path) if path else f"{registry.default_dir(work=work)}/{name}"
-    machine_key = machine or registry.machine_for_path(resolved_path)
-    if machine_key is None:
-        local = registry.local_machine()
-        machine_key = local.key if local else None
-    if machine_key is None:
-        fail(
-            "Could not work out which machine this project is on. Pass --machine, "
-            "or set home_machine/work_machine under [defaults]."
-        )
-        raise typer.Exit(code=1)
 
-    if registry.machine(machine_key) is None:
-        fail(f"Unknown machine: {machine_key}")
-        fail("Add it with: projects machines add " + shlex.quote(machine_key))
+    # No machine unless you name one. Guessing an owner from which root the
+    # path sits under is guessing from a Syncthing mirror -- every Mac holds
+    # the directory, so its location says nothing about where the work happens.
+    # An entry with no machine resolves as "here", which is both true and
+    # useful; a wrong machine sends you across the network for nothing.
+    target = registry.machine(machine) if machine else None
+    if machine and target is None:
+        fail(f"Unknown machine: {machine}")
+        fail("Add it with: projects machines add " + shlex.quote(machine))
         raise typer.Exit(code=1)
 
     registry.projects[name] = Project(
         key=name,
-        machine=registry.machine(machine_key).key,
+        machine=target.key if target else None,
         path=resolved_path,
         tmux=tmux,
         session=session,
         description=description,
     )
     registry.save()
-    out(f"Registered {name} -> {machine_key}:{resolved_path}")
+    where = f"{target.key}:" if target else ""
+    out(f"Registered {name} -> {where}{resolved_path}")
 
 
-# Fields `projects set --clear` can unset. `machine` and `path` are absent on
-# purpose: an entry without them cannot be resolved, so there is nothing useful
-# to clear them to -- change them instead.
-CLEARABLE = ("tmux", "tmux_path", "session", "description")
+# Fields `projects set --clear` can unset. `machine` is here because unowned is
+# a real state and the common one -- clearing it hands the project back to
+# "wherever you are", which is how you undo a machine that a session justified
+# once and no longer does. `path` is absent: an entry without one cannot be
+# resolved at all, so there is nothing useful to clear it to.
+CLEARABLE = ("machine", "tmux", "tmux_path", "session", "description")
 
 
 @app.command("set")
@@ -389,12 +389,12 @@ def remove(
 
 # How a candidate's machine was decided, best evidence first. The import keeps
 # the highest-ranked candidate per project, so a live session always beats the
-# folder default no matter what order the machines answered in.
+# machine-less entry no matter what order the machines answered in.
 REASON_RANK = {
     "session": 0,      # a tmux session for it is running on that machine
     "session-idle": 1,  # ...running, but with no client attached
     "workspace": 2,    # the cmux session dump pins it to that machine
-    "default": 3,      # home_machine / work_machine, by which root it is under
+    "default": 3,      # the directory exists under a root; no machine claimed
 }
 
 
@@ -402,7 +402,7 @@ class Candidate(BaseModel):
     """One proposed registry entry, plus how its machine was decided."""
 
     name: str
-    machine: str
+    machine: str | None
     path: str
     reason: str
     session: str | None = None
@@ -606,7 +606,7 @@ def candidates_from_dump(
 
 
 def candidates_from_dirs(registry: Registry, *, collisions: set[str]) -> list[Candidate]:
-    """Every directory under home_dir and work_dir, at the folder default.
+    """Every directory under home_dir and work_dir, with no machine claimed.
 
     Both roots are covered in full. A ~/Work project whose name is also taken
     under ~/Projects gets the "work-" prefix, so it is registered alongside its
@@ -625,35 +625,6 @@ def candidates_from_dirs(registry: Registry, *, collisions: set[str]) -> list[Ca
             warn(f"{root_dir} does not exist; nothing to import from it")
             continue
 
-        machine_key = registry.machine_for_path(root_dir)
-        if machine_key is not None and registry.machine(machine_key) is None:
-            warn(
-                f"{root_dir} is assigned to unknown machine {machine_key!r}; "
-                f"falling back to this machine"
-            )
-            machine_key = None
-
-        if machine_key is None:
-            # Previously a silent `continue`, which discarded every directory
-            # under the root and printed nothing at all -- the registry came
-            # out holding only the session-backed projects and the import
-            # looked like it had simply not run. Fall back to the local
-            # machine and say so, so an empty [defaults] is visible rather
-            # than invisible.
-            local = registry.local_machine()
-            if local is None:
-                fail(
-                    f"Cannot place {root_dir}: no home_machine/work_machine in "
-                    f"[defaults], and this machine is not in [machines]."
-                )
-                continue
-            setting = "work_machine" if root_dir == registry.work_dir else "home_machine"
-            warn(
-                f"No [defaults] {setting} for {root_dir}; using this machine "
-                f"({local.key}). Set {setting} to change that."
-            )
-            machine_key = local.key
-
         for entry in sorted(root.iterdir()):
             if not entry.is_dir() or entry.name.startswith("."):
                 continue
@@ -662,7 +633,15 @@ def candidates_from_dirs(registry: Registry, *, collisions: set[str]) -> list[Ca
                     name=project_key(
                         registry, root_dir=root_dir, name=entry.name, collisions=collisions
                     ),
-                    machine=registry.machine(machine_key).key,
+                    # No machine. These directories are known only to exist,
+                    # and they exist on every Mac -- that is what Syncthing
+                    # does. Writing home_machine/work_machine here would turn
+                    # "no evidence" into 250 assertions about where the work
+                    # happens, most of them wrong, and each one a mosh across
+                    # the network to open a directory that was already here.
+                    # Left unset, the entry opens wherever you are, and the
+                    # first real session promotes it (see --force).
+                    machine=None,
                     path=f"{root_dir}/{entry.name}",
                     reason="default",
                 )
@@ -691,7 +670,7 @@ def import_projects(
         typer.Option("--machine", "-m", help="Only probe these machines (repeatable)"),
     ] = None,
     no_sessions: Annotated[
-        bool, typer.Option("--no-sessions", help="Skip the tmux probe; use folder defaults only")
+        bool, typer.Option("--no-sessions", help="Skip the tmux probe; register directories only")
     ] = False,
     sessions_only: Annotated[
         bool,
@@ -706,16 +685,16 @@ def import_projects(
 ) -> None:
     """Import ~/Projects and ~/Work into the registry.
 
-    The machine is decided by evidence rather than guessed. A running tmux
-    session is the strongest signal -- it is where you are actually doing the
-    work -- followed by a host pinned in the cmux session dump, and only then
-    by the home_machine / work_machine default for whichever root the directory
-    sits under.
+    The machine comes from evidence or not at all. A running tmux session is
+    the strongest signal -- it is where you are actually doing the work --
+    followed by a host pinned in the cmux session dump. A directory with
+    neither is registered with no machine, which means "wherever you are".
 
-    That ordering matters here because the roots are mirrored across the Macs,
-    so nearly every directory exists on all of them and its mere presence says
-    nothing. `--dry-run` prints the reason for each assignment, so you can see
-    which ones are real and which are the fallback.
+    Nothing is guessed from which root a directory sits under, because the
+    roots are mirrored across the Macs: nearly every directory exists on all of
+    them, so its presence is not evidence of anything. `--dry-run` prints the
+    reason for each assignment, so you can see which entries are backed by a
+    session and which are just a directory that exists.
 
     Only ever adds, so re-running after cloning a repo picks up just the new
     one. `--force` also re-assigns projects that are already registered, which
@@ -773,10 +752,10 @@ def import_projects(
         candidates += candidates_from_dirs(registry, collisions=collisions)
 
     # Keep the best-ranked candidate per project. Sorting by rank and letting
-    # setdefault win means a live session always displaces the folder default,
+    # setdefault win means a live session always displaces the bare directory,
     # whatever order the probes came back in.
     best: dict[str, Candidate] = {}
-    for candidate in sorted(candidates, key=lambda item: (item.rank, item.machine)):
+    for candidate in sorted(candidates, key=lambda item: (item.rank, item.machine or "")):
         best.setdefault(candidate.name, candidate)
 
     # A session outside home_dir/work_dir is keyed by its session name, which
@@ -797,9 +776,9 @@ def import_projects(
             continue
         collisions.append((candidate.name, candidate.path, winner.path))
 
-    # Apply the machine-only hints from the dump: a directory that fell back to
-    # the folder default, but which cmux pins to a machine, takes the machine
-    # and keeps its own path.
+    # Apply the machine-only hints from the dump: an entry that came out with
+    # no machine, but which cmux pins to one, takes that machine and keeps its
+    # own path.
     for name, candidate in best.items():
         if candidate.reason != "default":
             continue
@@ -827,13 +806,27 @@ def import_projects(
             if not force:
                 skipped += 1
                 continue
+            # --force promotes evidence; it does not erase it. A "default"
+            # candidate knows only that a directory exists, so it has nothing
+            # to teach an entry that is already registered -- and letting it
+            # write would strip the machine, tmux_path, and tmux_session that
+            # a session put there. That is a live hazard now that a bare
+            # directory carries no machine at all: one `import --force` run
+            # while a Mac happened to be asleep (or with --no-sessions) would
+            # quietly unclaim every project on it. Removing a machine on
+            # purpose is what `projects set --clear machine` is for.
+            if candidate.reason == "default":
+                skipped += 1
+                continue
             # Compare the whole entry, not just the machine: a project first
-            # imported from the folder default points at the project root,
+            # imported as a bare directory points at the project root,
             # while a session proves the nested checkout it actually runs in.
             # Machine-only comparison left those stale paths in place.
             changes = []
             if existing.machine != candidate.machine:
-                changes.append(f"{existing.machine} -> {candidate.machine}")
+                changes.append(
+                    f"machine {existing.machine or 'unset'} -> {candidate.machine or 'unset'}"
+                )
             if existing.path != candidate.path:
                 changes.append(f"path {existing.path} -> {candidate.path}")
             if existing.tmux_path != candidate.tmux_path:
@@ -861,11 +854,15 @@ def import_projects(
         if candidate_session:
             extra += f" [extra]+tmux_session={escape(candidate_session)}[/extra]"
 
+        # A machine-less entry prints as a bare path: there is no "mini:" to
+        # show, and inventing one for the display would misrepresent the file.
+        where = (
+            f"[machine]{escape(candidate.machine)}[/machine]:" if candidate.machine else ""
+        )
         label = "would" if dry_run else verb
         out(
             f"[{label}]{label:<6}[/{label}] {styled_name(name)} [muted]->[/muted] "
-            f"[machine]{escape(candidate.machine)}[/machine]:"
-            f"{styled_path(candidate.path)}{extra}"
+            f"{where}{styled_path(candidate.path)}{extra}"
             f" [reason.{candidate.reason}]{note}[/reason.{candidate.reason}]"
         )
 
@@ -901,7 +898,7 @@ def import_projects(
         f"[name]{total} project(s)[/name]: [add]{added} new[/add], "
         f"[update]{updated} re-assigned[/update], [muted]{skipped} unchanged[/muted]. "
         f"[reason.session]{evidence} backed by a session or workspace[/reason.session], "
-        f"[reason.default]{total - evidence} by the folder default[/reason.default]."
+        f"[reason.default]{total - evidence} with no machine[/reason.default]."
     )
     if dry_run:
         out(f"\n{summary}")
@@ -1099,23 +1096,21 @@ def create(
     its .envrc arrive on their own. The venv is not synced (.venv/ is in
     .stignore) and does not need to be -- the generated .envrc is `layout uv`,
     so direnv builds a native one the first time you enter the directory over
-    there. --machine says which machine *owns* the project, which is what
-    workon reads to route; it is not where creation runs.
+    there.
+
+    No machine is recorded unless you pass --machine. A new project has no
+    history to say where it is worked on, and the directory will exist on every
+    Mac within the minute, so naming an owner would be inventing a fact. An
+    entry with no machine opens wherever you are.
     """
     registry = load()
 
     resolved_path = tildify(path) if path else f"{registry.default_dir(work=work)}/{name}"
-    machine_key = machine or registry.machine_for_path(resolved_path)
-    if machine_key is None:
-        local = registry.local_machine()
-        machine_key = local.key if local else None
 
-    target = registry.machine(machine_key) if machine_key else None
-    if target is None:
-        fail(
-            f"Unknown or unset machine ({machine_key!r}). Pass --machine, or set "
-            "home_machine/work_machine under [defaults]."
-        )
+    target = registry.machine(machine) if machine else None
+    if machine and target is None:
+        fail(f"Unknown machine: {machine}")
+        fail("Add it with: projects machines add " + shlex.quote(machine))
         raise typer.Exit(code=1)
 
     if name in registry.projects:
@@ -1132,22 +1127,28 @@ def create(
     )
     argv = ["bash", "-lc", script]
 
+    where = f"{target.key}:" if target else ""
+
     if dry_run:
         out(shlex.join(argv))
-        out(f"# then register {name} -> {target.key}:{resolved_path}")
+        out(f"# then register {name} -> {where}{resolved_path}")
         return
 
-    out(f"Creating {resolved_path} (owned by {target.key})")
+    out(f"Creating {resolved_path}")
     result = subprocess.run(argv)
     if result.returncode != 0:
         fail(f"Creation failed; not registering {name}")
         raise typer.Exit(code=result.returncode)
 
     registry.projects[name] = Project(
-        key=name, machine=target.key, path=resolved_path, tmux=tmux, session=session
+        key=name,
+        machine=target.key if target else None,
+        path=resolved_path,
+        tmux=tmux,
+        session=session,
     )
     registry.save()
-    out(f"Registered {name} -> {target.key}:{resolved_path}")
+    out(f"Registered {name} -> {where}{resolved_path}")
 
 
 @app.command()
@@ -1205,20 +1206,19 @@ def init(
         registry.machines[hostname] = Machine(key=hostname, host=hostname)
         out(f"No hosts.toml found; seeded [machines] with this machine ({hostname}).")
 
-    local = registry.local_machine()
-    registry.defaults.setdefault("tmux", True)
+    # tmux off: a project gets a session when it says so. No home_machine or
+    # work_machine -- nothing guesses an owner from a path any more, so writing
+    # them would put a setting in the file that does nothing.
+    registry.defaults.setdefault("tmux", False)
     registry.defaults.setdefault("home_dir", registry.home_dir)
     registry.defaults.setdefault("work_dir", registry.work_dir)
-    if local:
-        registry.defaults.setdefault("home_machine", local.key)
-        registry.defaults.setdefault("work_machine", local.key)
 
     registry.save()
     if imported:
         out(f"Imported {imported} machines from {HOSTS_TOML}")
     out(f"Wrote {registry.path}")
-    out("Next: rename the machine keys if you want shorter ones, check")
-    out("home_machine/work_machine under [defaults], then `projects scan --dry-run`.")
+    out("Next: rename the machine keys if you want shorter ones, then")
+    out("`projects import --dry-run`.")
 
 
 @machines_app.callback(invoke_without_command=True)

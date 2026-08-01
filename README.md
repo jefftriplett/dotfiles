@@ -491,25 +491,25 @@ host = "mac-studio-2023"
 host = "mac-mini-pro-2023"
 
 [defaults]
-tmux = true
+tmux = false          # a project gets a session when it asks for one
 home_dir = "~/Projects"
 work_dir = "~/Work"
-# where auto-registered projects land, based on which root the path is under
-home_machine = "mini"
-work_machine = "studio"
-
-[projects.django-news]
-machine = "studio"
-path = "~/Work/django-news"
 
 [projects.notes]
-machine = "mini"
 path = "~/Projects/notes"
-# tmux_session defaults to the project key ("notes"), override only if needed
+# no machine: opens wherever you are, which is true of any synced directory
+# nothing has claimed
+
+[projects.django-news]
+machine = "studio"    # claimed: a session for it runs on the Studio
+path = "~/Work/django-news"
+tmux = true
+tmux_session = "django-news"
 
 [projects.pghub]
 machine = "mini"
 path = "~/Projects/pghub"
+tmux = true
 tmux_path = "~/Projects/pghub/pghub-git"   # optional: where the work happens
 tmux_session = "pghub-git"
 ```
@@ -520,6 +520,12 @@ actually runs in. Both are separate facts because they differ constantly — the
 entirely optional and is written only when the two differ, so a project whose work happens at
 its own root carries no `tmux_path` at all. `workon` lands in `tmux_path` when it is
 set, and in `path` otherwise.
+
+`machine` is optional too, and most entries do without it. A project names a machine when
+something proved one — a session running there — and otherwise carries none, which resolves
+as "wherever you are". That is the honest answer for a Syncthing-mirrored directory: it
+exists on all three Macs, so its location says nothing about where the work happens, and a
+guessed owner would send you across the network to open something already in front of you.
 
 Set `$PROJECTS_TOML` to point somewhere else for a single run.
 
@@ -549,18 +555,16 @@ A project that is *not* in the registry falls back to the original directory sca
 `~/Projects`, `~/Work`, and `~/.virtualenvs`, so nothing that worked before the registry
 existed has stopped working.
 
-Local opens are a cd plus virtualenv activation — what `workon` has always done. Add
-`--tmux` (or export `WORKON_TMUX=1`) to attach a session locally too; remote opens always
-attach one, since that is the point of reaching over. A project with `tmux = false` in the
-registry stays a plain cd either way.
-
-A project that lives here is a cd plus a venv activation, or a hand-off to `tmux-go` when
-`--tmux` is in play. A project on another Mac moshes over and attaches its tmux session
-there, falling back to ssh when mosh is missing.
+Opening a project is a cd plus a virtualenv activation. No tmux session is involved unless
+something asks for one — `tmux = true` on the entry, `--tmux` on the command, or
+`WORKON_TMUX=1` in the environment. A project gets a session because it said so, not
+because it failed to say otherwise, and that holds for remote opens too: reaching another
+Mac without `tmux = true` gets you a login shell in the right directory.
 
 ```shell
-workon notes         # local: cd + activate (add --tmux to attach a session)
-workon django-news     # remote: mosh mac-studio-2023, attach the django-news session
+workon notes           # cd + activate, wherever it lives
+workon notes --tmux    # ...and attach a session after all
+workon django-news     # remote: mosh mac-studio-2023, attach (its entry sets tmux = true)
 workon                 # no argument: list what is registered
 ```
 
@@ -572,27 +576,30 @@ opens it. Creation always happens here, even when the project is registered to a
 machine: `~/Projects` and `~/Work` are Syncthing folders, so the directory and its `.envrc`
 travel on their own. The venv does not travel — `.venv/` is in `.stignore` — and does not
 need to: the generated `.envrc` is `layout uv`, so direnv builds a native one the first time
-you enter the directory over there. `--machine` says which machine *owns* the project, which
-is what `workon` routes on; it is not where creation runs.
+you enter the directory over there.
+
+No machine is recorded unless you pass `--machine`. A brand-new project has no history
+saying where it is worked on, and the directory will exist on every Mac within the minute,
+so naming an owner would be inventing a fact.
 
 ```shell
-mkproject scratch                 # ~/Projects/scratch on home_machine
-mkproject client-site --work      # ~/Work/client-site on work_machine
+mkproject scratch                 # ~/Projects/scratch, no machine, no session
+mkproject client-site --work      # ~/Work/client-site
 mkproject api --machine studio --python 3.13
+mkproject api --tmux              # wire it up for tmux from the start
 mkproject api --session api-git   # name the tmux session something else
-mkproject notes --no-tmux         # plain cd + activate, never a session
 mkproject api --no-attach         # create and register, don't open
 ```
 
-The generated `.envrc` is `layout uv` plus `use tmux <session>`, so the project picks up the
-[direnv auto-attach](#direnv-auto-attach) machinery and settles on the same session name the
-registry uses. (The pre-registry `mkproject` wrote a bare `source .venv/bin/activate`, which
-bypasses `layout uv` and never wires up tmux.)
+The generated `.envrc` is `layout uv`, plus `use tmux <session>` when the project is a tmux
+one, so it picks up the [direnv auto-attach](#direnv-auto-attach) machinery and settles on
+the same session name the registry uses. (The pre-registry `mkproject` wrote a bare
+`source .venv/bin/activate`, which bypasses `layout uv` and never wires up tmux.)
 
-`--no-tmux` registers `tmux = false` **and** leaves `use tmux` out of the `.envrc` — the two
-have to agree, or direnv would autoattach a session the registry says the project does not
-want. The session name is slugified the same way everywhere, so `mkproject thumb.im` writes
-`use tmux thumb-im` rather than a name tmux would reject.
+The two halves have to agree: `--tmux` writes `tmux = true` **and** the `use tmux` line,
+and without it neither is written. An `.envrc` that autoattaches a session the registry
+disclaims would fight itself. The session name is slugified the same way everywhere, so
+`mkproject thumb.im --tmux` writes `use tmux thumb-im` rather than a name tmux would reject.
 
 ### Managing the registry
 
@@ -609,22 +616,26 @@ want. The session name is slugified the same way everywhere, so `mkproject thumb
 | `projects init` | Create the registry, importing `hosts.toml` if present |
 | `projects edit` | Open the registry in `$EDITOR` |
 
-`projects set` is the one to reach for after an import guessed wrong. `add --force` rewrites
-the whole entry from its arguments, so anything you do not repeat is dropped; `set` touches
-only the fields you name:
+`projects set` is the one to reach for when an entry needs a fact it does not have — which,
+after an import, is most of the interesting ones. `add --force` rewrites the whole entry
+from its arguments, so anything you do not repeat is dropped; `set` touches only the fields
+you name:
 
 ```shell
-projects set pghub --machine studio            # move it to another Mac
+projects set pghub --tmux                      # this one wants a session
+projects set pghub --machine studio            # ...and it lives on the Studio
 projects set pghub --session pghub-git         # pin the tmux session name
 projects set pghub --tmux-path ~/Projects/pghub/pghub-git   # where the session runs
-projects set notes --no-tmux                   # plain cd, never a session
-projects set notes --clear tmux --clear session  # back to the defaults
+projects set pghub --clear tmux --clear session   # back to the defaults
 ```
 
-`--clear` unsets `tmux`, `tmux_path`, `session`, or `description`, and is repeatable.
-`machine` and `path` are not clearable — an entry without them cannot be resolved, so change
-them rather than emptying them. Paths are stored as `~/...` however you type them, so they
-mean the same thing on every Mac.
+`--clear` unsets `machine`, `tmux`, `tmux_path`, `session`, or `description`, and is
+repeatable. `projects set pghub --clear machine` hands a project back to "wherever you are",
+which is how you undo a machine that a session justified once and no longer does. Clearing
+`tmux` is not the same as `--no-tmux`: the field is a tri-state, and absent means *follow
+`[defaults]`* while `false` pins it off regardless of what the default becomes. Only `path`
+cannot be cleared — an entry without one cannot be resolved. Paths are stored as `~/...`
+however you type them, so they mean the same thing on every Mac.
 
 ### Importing an existing setup
 
@@ -633,18 +644,23 @@ it picks a machine, because the roots are Syncthing-mirrored — all three Macs 
 substantially the same ~250 directories, so a directory's *presence* proves nothing about
 where you actually work on it.
 
-So the import ranks evidence instead of guessing:
+So the import records a machine from evidence, or records none at all:
 
-| Reason | Signal | Rank |
-| ------ | ------ | ---- |
-| `session` | a tmux session for it is running there, with a client attached | strongest |
-| `session-idle` | ...running there, but detached | |
-| `workspace` | the cmux session dump pins it to that machine | |
-| `default` | `home_machine` / `work_machine`, by which root it sits under | weakest |
+| Reason | Signal | Machine |
+| ------ | ------ | ------- |
+| `session` | a tmux session for it is running there, with a client attached | that machine |
+| `session-idle` | ...running there, but detached | that machine |
+| `workspace` | the cmux session dump pins it to that machine | that machine |
+| `default` | the directory exists under a root, and nothing else is known | none |
 
-Every directory under both roots is registered, keyed by its own name. A session then
-*enriches* the entry it belongs to rather than replacing it: `path` stays the project
-directory you imported, and the session contributes `tmux_path` and `tmux_session`.
+Every directory under both roots is registered, keyed by its own name. Most come out as two
+lines — a name and a path — because a directory that exists on all three Macs is not evidence
+of anything, and an entry with no machine opens wherever you are. Of ~250 directories here,
+the handful with a live session are the only ones that name one.
+
+A session then *enriches* the entry it belongs to rather than replacing it: `path` stays the
+project directory you imported, and the session contributes the machine, `tmux_path`, and
+`tmux_session`.
 
 ```
 agents  ->  studio:~/Projects/agents
@@ -652,9 +668,9 @@ agents  ->  studio:~/Projects/agents
               +tmux_session=toggl-agent-git          (session)
 ```
 
-That matters because the folder default alone would point at `~/Projects/agents` and start a
-*second* tmux session next to the one already running. The enriched entry attaches the one
-that is actually there.
+That matters because the bare directory entry alone would point at `~/Projects/agents` and
+start a *second* tmux session next to the one already running. The enriched entry attaches
+the one that is actually there.
 
 ```shell
 projects import --dry-run        # show each assignment and the reason for it
@@ -664,9 +680,14 @@ projects import --no-sessions    # skip the ssh probe entirely (offline)
 projects import --force          # re-assign entries whose evidence has since changed
 ```
 
-`--force` is how a folder-default guess gets promoted once a session exists to prove it: it
-compares machine, path, *and* session name, so an entry pointing at the project root moves to
-the checkout the session is really in.
+`--force` is how a machine-less entry gets promoted once a session exists to prove where it
+belongs: it compares machine, path, *and* session name, so an entry pointing at the project
+root moves to the checkout the session is really in.
+
+It only ever promotes. A directory with no evidence behind it never rewrites an entry that
+already exists, so running `--force` with `--no-sessions`, or while a Mac happens to be
+asleep and unreachable, cannot strip the machine and session off everything that Mac owns.
+Removing a machine on purpose is `projects set NAME --clear machine`.
 
 #### Names that exist under both roots
 

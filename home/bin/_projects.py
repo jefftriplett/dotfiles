@@ -43,15 +43,20 @@ NEW_FILE_HEADER = """\
 #                   only when it differs from the ssh name -- without it, the
 #                   machine does not recognize itself and tries to mosh home.
 #
-# [defaults]        `tmux` toggles attaching a tmux session; `home_machine` and
-#                   `work_machine` decide where auto-registered projects land,
-#                   based on whether the path is under `home_dir` or `work_dir`.
+# [defaults]        `tmux` toggles attaching a tmux session, and is off unless
+#                   set -- a project gets one because it asked, not because it
+#                   did not object. `home_dir` and `work_dir` are the roots new
+#                   projects land under, which `--work` picks between. Nothing
+#                   here names a machine: an owner is recorded from evidence or
+#                   not at all.
 #
-# [projects.<key>]  `machine` names a [machines] key, `path` is the project
-#                   directory on that machine. All optional: `tmux_path` is the
-#                   checkout inside it the session actually runs in,
-#                   `tmux_session` the session name (defaults to the key), and
-#                   `tmux` overrides the [defaults] setting.
+# [projects.<key>]  `path` is the project directory. Everything else is
+#                   optional: `machine` names a [machines] key, and leaving it
+#                   out means the project is wherever you are -- which is the
+#                   honest answer for a Syncthing-mirrored directory nobody has
+#                   said otherwise about. `tmux_path` is the checkout inside it
+#                   the session actually runs in, `tmux_session` the session
+#                   name (defaults to the key), and `tmux` overrides [defaults].
 """
 
 
@@ -300,25 +305,20 @@ class Registry(BaseModel):
 
     @property
     def tmux_default(self) -> bool:
-        return bool(self.defaults.get("tmux", True))
+        """Whether a project with no `tmux` of its own gets a session.
 
-    def machine_for_path(self, path: str) -> str | None:
-        """Which machine a path implies, per the home_dir/work_dir split.
-
-        This is what makes `mkproject foo --work` enough: the directory
-        it lands in decides the machine, so the common case needs no --machine.
+        False: a project gets a tmux session because it says so, not because
+        it failed to say otherwise. Opening a project is a cd and an activate
+        until something asks for more -- `tmux = true` on the entry, `--tmux`
+        on the command, or `tmux = true` under [defaults] to flip it globally.
         """
-        normalized = str(Path(path).expanduser())
-        for base, key in (
-            (self.work_dir, self.defaults.get("work_machine")),
-            (self.home_dir, self.defaults.get("home_machine")),
-        ):
-            if not key:
-                continue
-            root = str(Path(base).expanduser())
-            if normalized == root or normalized.startswith(root + os.sep):
-                return key
-        return None
+        return bool(self.defaults.get("tmux", False))
+
+    # There is deliberately no machine_for_path(). A path under work_dir used
+    # to imply work_machine, which read as a rule and behaved as a guess: the
+    # roots are Syncthing-mirrored, so the same directory sits under the same
+    # root on every Mac and implies nothing about where it is worked on. A
+    # project names its machine or has none, and having none means "here".
 
     def default_dir(self, *, work: bool) -> str:
         return self.work_dir if work else self.home_dir

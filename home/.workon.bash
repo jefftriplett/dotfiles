@@ -129,7 +129,16 @@ workon() {
             ;;
         remote)
             if [[ "$WORKON_RESOLVED_KIND" != "remote" ]]; then
-                echo "workon: $WORKON_RESOLVED_NAME is registered to this machine (${WORKON_RESOLVED_MACHINE})." >&2
+                # Two different situations, and the fix differs: a project
+                # claimed by this machine, versus one that claims none and so
+                # opens wherever you are. Reporting the second as "registered
+                # to this machine ()" was both confusing and untrue.
+                if [[ -n "$WORKON_RESOLVED_MACHINE" ]]; then
+                    echo "workon: $WORKON_RESOLVED_NAME is registered to this machine (${WORKON_RESOLVED_MACHINE})." >&2
+                else
+                    echo "workon: $WORKON_RESOLVED_NAME has no machine, so it opens wherever you are." >&2
+                    echo "Give it one with: projects set $(printf '%q' "$WORKON_RESOLVED_NAME") --machine <machine>" >&2
+                fi
                 echo "Use --host=<machine> to open it somewhere else." >&2
                 return 1
             fi
@@ -368,8 +377,9 @@ Creates the directory, a uv venv, and an .envrc (layout uv + use tmux) here,
 registers it in ~/Projects/projects.toml, then opens it with workon. Syncthing
 carries the directory to the other Macs; --machine only says which one owns it.
 
---work puts it under work_dir and on work_machine; otherwise home_dir and
-home_machine apply. --machine/--host and --path override both.
+--work puts it under work_dir instead of home_dir; --path overrides both. No
+machine is recorded unless you pass --machine, and a project without one opens
+wherever you are.
 
 --no-tmux registers the project with tmux off and leaves `use tmux` out of the
 .envrc, so it is a plain cd + activate everywhere. --session names the session
