@@ -20,7 +20,10 @@ fi
 # CMUX fix: ensure cmux's bootstrap runs before starship initializes,
 # otherwise starship's prompt clobbers cmux's shell integration.
 if command -v starship > /dev/null; then
-    if [[ -n "$CMUX_SHELL_INTEGRATION" ]]; then
+    # $- test mirrors .bash_profile: a non-interactive shell inherits
+    # CMUX_SHELL_INTEGRATION but never loads cmux's shell integration, so
+    # $PROMPT_COMMAND names a _cmux_prompt_command that does not exist here.
+    if [[ -n "$CMUX_SHELL_INTEGRATION" && $- == *i* ]]; then
         # Execute cmux's bootstrap NOW instead of waiting for first prompt
         eval "$PROMPT_COMMAND"
         # cmux has settled — now init starship on top

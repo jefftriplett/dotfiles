@@ -352,7 +352,7 @@ mac-studio-2023:
   default  [detached, 1 window]  /Users/jefftriplett/Vaults/default
 ```
 
-Hosts come from [`~/.config/tmux/hosts.toml`](#machine-list) and can be overridden per-run
+Hosts come from the `[machines]` table of [`~/Projects/projects.toml`](#machine-list) and can be overridden per-run
 with `--host` or by setting `$TMUX_REMOTE_HOSTS`. The same list drives `cmux-tmux-sync --all`.
 Whichever machine you are sitting at is skipped rather than dialed over ssh; `--include-local`
 adds it back, querying tmux directly instead of over the network. Hosts are queried
