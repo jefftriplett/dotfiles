@@ -40,6 +40,13 @@ workon() {
                 _workon_list_projects
                 return 0
                 ;;
+            -s | --sessions)
+                # Everything after this is for `projects sessions` (-m, -a,
+                # --names), so hand the rest of the argv over untouched.
+                shift
+                projects sessions "$@"
+                return $?
+                ;;
             --auto)     mode="auto" ;;
             --auto=*)   mode="auto";   name="${1#*=}" ;;
             --local)    mode="local" ;;
@@ -163,6 +170,10 @@ Usage: workon [--auto|--local|--remote] [--host=MACHINE] [--tmux] <project>
   workon --remote=pghub       force a mosh to its registered machine
   workon --host=studio pghub  open it on the Studio instead, just this once
   workon --list               list registered projects
+  workon --sessions           show live tmux sessions on every Mac
+
+--sessions passes its remaining arguments to `projects sessions`, so
+`workon -s -a` is attached sessions only and `workon -s -m studio` is one Mac.
 
 Local opens cd and activate the virtualenv. Add --tmux (or export WORKON_TMUX=1)
 to attach a tmux session locally too; remote opens always attach one.
@@ -339,7 +350,7 @@ _workon_completions() {
             ;;
         -*)
             mapfile -t COMPREPLY < <(
-                compgen -W "--auto --local --remote --host --tmux --no-tmux --list --help" -- "$cur"
+                compgen -W "--auto --local --remote --host --tmux --no-tmux --list --sessions --help" -- "$cur"
             )
             return
             ;;

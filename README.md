@@ -379,7 +379,7 @@ Standalone executables in `home/bin/` (symlinked onto `$PATH` as `~/bin`).
 | Script | Description |
 | ------ | ----------- |
 | `tmux-host` | Print the pane's remote host when it is running ssh, else the local short hostname. Used by the status bar |
-| `tmux-remote-ls` | List tmux sessions across every Mac at once |
+| `tmux-remote-ls` | List tmux sessions across every Mac at once (see also `workon --sessions`) |
 | `projects` | Manage the [project registry](#project-registry), including the machine list |
 | `tmux-remote-hosts` | Legacy: edit `hosts.toml`. Superseded by `projects machines` |
 
@@ -545,6 +545,7 @@ shell's directory and environment.
 | `workon --local[=<p>]` | Force a local cd + virtualenv activation |
 | `workon --remote[=<p>]` | Force a mosh to its registered machine |
 | `workon --host=<m> <p>` | Open it on that machine instead, just this once |
+| `workon --sessions` | Show the tmux sessions live on every Mac, and what opens each |
 | `mkproject <name>` | Create, register, and open a new project |
 
 There is one `workon` and one `mkproject` — no separate remote command to reach for.
@@ -570,6 +571,48 @@ workon                 # no argument: list what is registered
 
 Names are matched loosely: a project registered as `thumb.im` also answers to `thumb-im`,
 the slug tmux actually shows you.
+
+### Seeing what is running
+
+`workon --sessions` (`-s`) probes every Mac at once and shows what is live, with the command
+that gets you back into each one:
+
+```shell
+$ workon --sessions
+mini (mac-mini-pro-2023)
+  django-news-com                        attached 1w   workon django-news.com
+  djangoconus-automation-git             attached 1w   workon djangoconus-automation
+  dotfiles                               detached 1w   workon dotfiles
+studio (mac-studio-2023)
+  toggl-agent-git                        attached 1w   workon agents
+
+12 session(s)
+```
+
+The right-hand column is the point. Session names and project keys drift apart constantly —
+the session is `django-news-com`, the thing you type is `workon django-news.com`; the session
+is `toggl-agent-git`, the project is `agents` — so the listing tells you what to type rather
+than leaving you to work it out. A session matches its project by path first (including a
+checkout nested inside the project directory, which is the usual case) and by name second,
+because a path is where the session actually is while a name is a label.
+
+A session with no registered project behind it is called out rather than hidden — it is real
+work the registry does not know about, and usually wants a `projects add`.
+
+Remaining arguments pass through to `projects sessions`:
+
+```shell
+workon -s -a                  # only sessions with a client attached
+workon -s -m studio           # one Mac
+workon -s --names | fzf | xargs workon   # pick a live session and open it
+```
+
+`--names` prints bare project names for piping, and lists only registered ones — a name
+`workon` cannot open is worse than absent. Unreachable Macs report to stderr, so a sleeping
+machine stays visible without corrupting a pipe.
+
+This overlaps [`tmux-remote-ls`](#scripts) on purpose: that answers "what is running
+where", this answers "what do I type to get back into it".
 
 `mkproject` creates the directory, a `uv` venv, and an `.envrc`, registers the project, and
 opens it. Creation always happens here, even when the project is registered to another
@@ -612,6 +655,7 @@ disclaims would fight itself. The session name is slugified the same way everywh
 | `projects create NAME` | Create the directory, venv, and `.envrc`, then register |
 | `projects import` | Import `~/Projects` and `~/Work`, deciding machines from evidence |
 | `projects resolve NAME` | Show machine, path, session, and the command to get there |
+| `projects sessions` | Show live tmux sessions on every Mac, mapped to project names |
 | `projects machines` | Add, remove, and list machines |
 | `projects init` | Create the registry, importing `hosts.toml` if present |
 | `projects edit` | Open the registry in `$EDITOR` |

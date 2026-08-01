@@ -41,11 +41,9 @@ from rich.theme import Theme
 from _cmux import (
     HOSTS_TOML,
     Workspace,
-    _registry_machines,
     default_dump_path,
     load_dump,
     local_hostnames,
-    registry_toml,
     remote_tmux_sessions,
     session_slug,
     tmux_sessions,
@@ -1017,6 +1015,157 @@ def resolve(
     out(f"  session    {plan.session}{'' if plan.tmux else '  (tmux disabled)'}")
     if plan.argv:
         out(f"  command    {shlex.join(plan.argv)}")
+
+
+def project_for_session(registry: Registry, *, machine_key: str, path: str, name: str):
+    """The registered project a running session belongs to, if any.
+
+    Path first, name second, and in that order deliberately: the path is where
+    the session actually is, while its name is a label that drifts. A session
+    called "foundation-git" running in ~/Work/resolution-processing-foundation
+    belongs to that project no matter what tmux calls it.
+    """
+    tilde = tildify(path)
+    nested = None
+    for project in registry.projects.values():
+        if project.machine not in (None, machine_key):
+            continue
+        if tilde in (project.path, project.tmux_path):
+            return project
+        # A session usually runs in a checkout *inside* the project directory
+        # -- ~/Projects/agents/toggl-agent-git belongs to `agents` -- and most
+        # entries carry no tmux_path to match exactly against, because one is
+        # written only where the import happened to see a session already
+        # running. Keep the deepest containing project, so a checkout nested
+        # under two registered directories picks the closer one.
+        if project.path and tilde.startswith(project.path.rstrip("/") + "/"):
+            if nested is None or len(project.path) > len(nested.path):
+                nested = project
+    if nested is not None:
+        return nested
+
+    # Then by name, which covers a session outside both roots (the dotfiles
+    # session in ~/.homesick/repos) that was imported under its own key.
+    found = registry.project(name)
+    if found is not None and found.machine in (None, machine_key):
+        return found
+    return None
+
+
+@app.command()
+def sessions(
+    machine: Annotated[
+        Optional[list[str]],
+        typer.Option("--machine", "-m", help="Only probe these machines (repeatable)"),
+    ] = None,
+    attached: Annotated[
+        bool, typer.Option("--attached", "-a", help="Only sessions with a client attached")
+    ] = False,
+    names: Annotated[
+        bool,
+        typer.Option("--names", "-q", help="Bare project names, one per line, for piping"),
+    ] = False,
+    timeout: Annotated[
+        int, typer.Option("--timeout", "-t", help="ssh connect timeout in seconds")
+    ] = 5,
+) -> None:
+    """Show the tmux sessions running on every Mac, and what to type to reach one.
+
+    `tmux-remote-ls` answers "what is running where". This answers "what do I
+    type to get back into it", which is a different question once session names
+    and project keys have drifted apart -- the session is `django-news-com`,
+    the thing you type is `workon django-news.com`.
+
+    A session with no registered project is called out rather than hidden: it
+    is real work the registry does not know about, and usually wants a
+    `projects add`.
+    """
+    registry = load()
+    if not registry.machines:
+        fail("No machines configured; run `projects init` first.")
+        raise typer.Exit(code=1)
+
+    targets = list(registry.machines.values())
+    if machine:
+        targets = []
+        for wanted in machine:
+            found = registry.machine(wanted)
+            if found is None:
+                fail(f"Unknown machine: {wanted}")
+                raise typer.Exit(code=1)
+            targets.append(found)
+
+    # Concurrent, so one sleeping Mac costs its own timeout rather than
+    # delaying every machine queued behind it.
+    with ThreadPoolExecutor(max_workers=len(targets)) as pool:
+        probes = list(pool.map(lambda m: probe_sessions(m, timeout=timeout), targets))
+
+    total = 0
+    unregistered = 0
+    for found_machine, found_sessions, error in sorted(probes, key=lambda p: p[0].key):
+        if error:
+            # stderr, so --names stays pipeable while unreachable Macs stay
+            # visible: a machine that timed out has no sessions to report, and
+            # silently showing none would read as "nothing running there".
+            fail(f"{found_machine.key}: {error}")
+            continue
+
+        listed = [s for s in found_sessions if s.is_attached or not attached]
+        if not listed:
+            continue
+        total += len(listed)
+
+        if not names:
+            local_mark = " [muted](this machine)[/muted]" if found_machine.is_local else ""
+            out(
+                f"[machine]{escape(found_machine.key)}[/machine] "
+                f"[muted]({escape(found_machine.host)})[/muted]{local_mark}"
+            )
+
+        for session in sorted(listed, key=lambda s: s.name):
+            project = project_for_session(
+                registry,
+                machine_key=found_machine.key,
+                path=session.path,
+                name=session.name,
+            )
+            if names:
+                # Only registered projects: the point of --names is to pipe
+                # into workon, and a name it cannot open is worse than absent.
+                if project is not None:
+                    print(project.key)
+                continue
+
+            state = "attached" if session.is_attached else "detached"
+            state_style = "reason.session" if session.is_attached else "muted"
+            windows = f"{session.windows}w" if session.windows else ""
+            if project is not None:
+                reach = f"[name]workon {escape(project.key)}[/name]"
+            else:
+                unregistered += 1
+                reach = (
+                    f"{styled_path(tildify(session.path))} "
+                    f"[warn](not registered)[/warn]"
+                )
+            out(
+                f"  {escape(session.name):<38} "
+                f"[{state_style}]{state:<8}[/{state_style}] "
+                f"{windows:<4} {reach}"
+            )
+
+    if names:
+        return
+
+    if not total:
+        out("[muted]No tmux sessions running anywhere.[/muted]")
+        return
+    summary = f"\n[name]{total} session(s)[/name]"
+    if unregistered:
+        summary += (
+            f", [warn]{unregistered} with no registered project[/warn] "
+            f"[muted](projects add <name> to fix)[/muted]"
+        )
+    out(summary)
 
 
 def envrc_contents(name: str, *, tmux: bool = True) -> str:
