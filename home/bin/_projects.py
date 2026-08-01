@@ -105,13 +105,15 @@ class Project(BaseModel):
 
     @property
     def workdir(self) -> str:
-        """Where to actually land.
+        """Where to actually land: `tmux_path` when set, otherwise `path`.
 
-        `path` identifies the project; `tmux_path` is the checkout inside it
-        the work happens in. They are separate fields because the two differ
-        constantly -- the project is ~/Projects/django-news.com but the session
-        runs in ~/Projects/django-news.com/django-news.com-git -- and
-        collapsing them would lose whichever one you did not keep.
+        `tmux_path` is an override for the uncommon case, not a second address
+        every project carries -- 8 of 250 entries here have one (3%). It earns
+        its place because when the two do differ, the difference matters: the
+        project is ~/Projects/agents but the session runs in
+        ~/Projects/agents/toggl-agent-git, and landing at the root would start
+        a second session next to the one already there. The rest of the time
+        the default is simply right and the field stays absent.
         """
         return self.tmux_path or self.path
 

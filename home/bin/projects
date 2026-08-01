@@ -869,21 +869,28 @@ def import_projects(
             # candidate_session is pinned only when it differs from what the
             # key would slug to; otherwise the entry carries redundant noise.
             #
-            # tmux and description are carried over from the existing entry
-            # rather than rebuilt: a session probe knows where a project runs,
-            # and nothing whatever about whether you wanted a session for it or
-            # what you wrote in its description. Constructing a fresh Project
-            # from the candidate alone silently reset both, so `import --force`
-            # quietly turned tmux off on exactly the projects that had proved
-            # they use it. Enrich, don't replace -- the same rule that already
-            # governs `path` here.
+            # `description` is carried over untouched: nothing out here knows
+            # what you wrote in it. `tmux` is carried over when it is set, and
+            # only filled in when it is not -- a running session is the
+            # strongest evidence a project wants one, so a session-backed
+            # candidate turns an unset field on. An explicit true or false is
+            # never overridden; deciding which projects get a session is yours,
+            # and this only answers for the entries that never said.
+            #
+            # Rebuilding both from the candidate is what `import --force` used
+            # to do, which silently turned tmux off on exactly the projects
+            # that had proved they use it.
+            tmux = existing.tmux if existing else None
+            if tmux is None and candidate.reason in ("session", "session-idle"):
+                tmux = True
+
             registry.projects[name] = Project(
                 key=name,
                 machine=candidate.machine,
                 path=candidate.path,
                 tmux_path=candidate.tmux_path,
                 session=candidate_session,
-                tmux=existing.tmux if existing else None,
+                tmux=tmux,
                 description=existing.description if existing else None,
             )
         if existing is not None:
