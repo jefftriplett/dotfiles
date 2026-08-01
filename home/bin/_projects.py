@@ -24,7 +24,7 @@ from pathlib import Path
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from _cmux import local_hostnames, session_slug
+from _cmux import local_hostnames, session_slug, tmux_attach_command
 
 # The registry lives with the projects it tracks rather than in
 # ~/.config/cmux-tmux/, so it is findable from a shell sitting in ~/Projects.
@@ -353,14 +353,9 @@ class Registry(BaseModel):
         self, machine: Machine, *, path: str, session: str, tmux: bool
     ) -> list[str]:
         path_expr = remote_path_expr(path) if path else '"$HOME"'
-        if tmux:
-            attach = f"tmux new-session -A -s {shlex.quote(session)} -c {path_expr}"
-            # cd first so a freshly created session lands in the right place
-            # even if tmux's -c is bypassed; ";" not "&&" so attaching to an
-            # existing session still works when the directory is missing.
-            command = f"cd {path_expr}; {attach}"
-        else:
-            command = f"cd {path_expr}; exec bash -l"
+        # Shared with cmux via _cmux.py, so the session workon opens and the
+        # one cmux restores are the same session, built the same way.
+        command = tmux_attach_command(session, path_expr, tmux=tmux)
 
         # bash -lc on both paths: the login profile is what puts Homebrew's
         # tmux on PATH, and mosh-server execs the command directly rather than

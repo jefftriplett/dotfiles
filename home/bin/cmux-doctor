@@ -35,10 +35,8 @@ from _cmux import (
     default_dump_path,
     host_aliases,
     is_local_host,
-    local_hostnames,
     registry_toml,
     remote_tmux_sessions,
-    tmux_sessions,
 )
 
 # ---- output helpers ---------------------------------------------------------

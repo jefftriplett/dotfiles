@@ -67,6 +67,28 @@ def session_slug(name: str) -> str:
     return name.replace(":", "-").replace(".", "-").replace(" ", "-")
 
 
+def tmux_attach_command(session: str, path: str, *, tmux: bool = True) -> str:
+    """The shell command that lands you in `path`, in a tmux session or not.
+
+    The single definition of "open this project here". Every caller wraps it
+    differently -- cmux needs a command string for a pane, workon needs an argv
+    to exec, one goes through `sh -c` and the other `bash -lc` -- but the thing
+    being wrapped has to be identical, or the same project opens two different
+    ways depending on which door you came through. That drift is exactly what
+    this is here to prevent.
+
+    `path` arrives already quoted (or as a "$HOME"/... expression that has to
+    expand on the far side), so it is interpolated rather than re-quoted.
+
+    cd first, so a freshly created session lands in the right place even when
+    tmux's -c is bypassed; ";" and not "&&", so attaching to an existing
+    session still works when the directory is missing on the other machine.
+    """
+    if not tmux:
+        return f"cd {path}; exec bash -l"
+    return f"cd {path}; tmux new-session -A -s {shlex.quote(session)} -c {path}"
+
+
 def default_dump_path() -> Path:
     """Prefer the TOML dump; fall back to JSON only if the TOML is absent."""
     return DEFAULT_TOML if DEFAULT_TOML.is_file() else DEFAULT_JSON
@@ -369,13 +391,9 @@ class Workspace:
 
     def command(self) -> str | None:
         cwd = shlex.quote(self.cwd)
-        tmux_command = (
-            f"tmux new-session -A -s {shlex.quote(self.session_name)} -c {cwd}"
-        )
-        # cd first so a freshly created session lands in cwd even if tmux's
-        # -c is bypassed; ";" (not "&&") so attaching to an existing session
-        # still works when the directory is missing on the remote
-        shell_command = f"cd {cwd}; {tmux_command}"
+        # Shared with workon via _projects.py, so a pane cmux restores and a
+        # project workon opens land identically. See tmux_attach_command.
+        shell_command = tmux_attach_command(self.session_name, cwd)
 
         if self.is_remote:
             require("mosh", reason=f"needed to reach {self.host}")

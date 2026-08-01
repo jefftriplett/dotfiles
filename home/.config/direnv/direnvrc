@@ -85,11 +85,13 @@ use_tmux() {
     done
 
     name="${name:-$(basename "$PWD")}"
-    # tmux session names may not contain ":" or ".". Keep the replacement
-    # set in sync with __tmux_session_name in ~/.bash_tmux.
-    name="${name//:/-}"
-    name="${name//./-}"
-    name="${name// /-}"
+    # Shared with ~/.bash_tmux rather than re-derived here, so a project cannot
+    # resolve to one session through direnv and another through tmux-go.
+    if [[ -r "${HOME}/.tmux_session_name.bash" ]]; then
+        # shellcheck source=/dev/null
+        source "${HOME}/.tmux_session_name.bash"
+        name="$(tmux_session_slug "$name")"
+    fi
 
     export TMUX_AUTOATTACH="$name"
 

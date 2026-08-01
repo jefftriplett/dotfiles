@@ -60,48 +60,6 @@ $ just --justfile=./home/justfile update
 $ just --justfile=./home/justfile update-readme-docs
 ```
 
-## Project Shell
-
-> **Superseded.** `project-shell` does the same job as `workon` (see
-> [Project Registry](#project-registry)) and `tmux-go` (see [Shell Functions](#shell-functions)),
-> but keyed off its own `PROJECT_REMOTE_*` variables in each project's `.envrc` rather than a
-> central registry. Nothing sources or calls it. Prefer `workon`, which reads
-> `~/Projects/projects.toml` and needs no per-project setup.
-
-`project-shell` uses per-project direnv config to attach to the right tmux
-session locally or over Mosh:
-
-```shell
-$ project-shell
-```
-
-Example work-project `.envrc`:
-
-```shell
-export PROJECT_REMOTE_HOST=mac-studio
-export PROJECT_REMOTE_NAME=mac-studio
-export PROJECT_TMUX_SESSION=my-work-project
-export PROJECT_REMOTE_MODE=auto
-```
-
-Example personal-project `.envrc`:
-
-```shell
-export PROJECT_REMOTE_HOST=mac-mini
-export PROJECT_REMOTE_NAME=mac-mini
-export PROJECT_TMUX_SESSION=my-home-project
-export PROJECT_REMOTE_MODE=auto
-```
-
-Run `direnv allow` after creating or changing a project `.envrc`. Set
-`PROJECT_REMOTE_CONNECT_TIMEOUT` to override the default five-second SSH
-connection timeout used by Mosh startup.
-
-Modes are `auto`, `remote`, `local`, and `off`. `auto` uses Mosh when
-`PROJECT_REMOTE_HOST` is set, avoids connecting to the current machine, and
-falls back to local tmux if no remote is configured. Failed remote attempts ask
-whether to use local tmux, retry, or abort.
-
 ## Justfile Usage
 
 <!-- [[[cog
@@ -381,7 +339,6 @@ Standalone executables in `home/bin/` (symlinked onto `$PATH` as `~/bin`).
 | `tmux-host` | Print the pane's remote host when it is running ssh, else the local short hostname. Used by the status bar |
 | `tmux-remote-ls` | List tmux sessions across every Mac at once (see also `workon --sessions`) |
 | `projects` | Manage the [project registry](#project-registry), including the machine list |
-| `tmux-remote-hosts` | Legacy: edit `hosts.toml`. Superseded by `projects machines` |
 
 `tmux-remote-ls` is roughly `ssh <host> tmux ls` for each machine, but parsed: sessions are
 sorted and annotated with attached/detached state, window count, and path.
@@ -474,8 +431,9 @@ projects import -n     # then import the projects themselves
 ```
 
 `hosts.toml` is still read on any machine whose registry has no `[machines]` table, so the
-two can coexist while the dotfiles roll out. Once the registry takes over, `tmux-remote-hosts`
-refuses to edit `hosts.toml` rather than writing to a file nothing reads.
+two can coexist while the dotfiles roll out. There is no longer a command to edit `hosts.toml`
+— `projects machines` is the one way in, and the fallback exists only so a machine that has
+not been migrated yet keeps working.
 
 ## Project Registry
 

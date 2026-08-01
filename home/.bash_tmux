@@ -1,14 +1,20 @@
 # shellcheck shell=bash
 
+# shellcheck source=.tmux_session_name.bash
+[[ -r "${HOME}/.tmux_session_name.bash" ]] &&
+    source "${HOME}/.tmux_session_name.bash"
+
 __tmux_session_name() {
-    # tmux session names may not contain ":" or ".". Keep the replacement
-    # set in sync with Workspace.session_name in ~/bin/_cmux.py.
     local name="${1:-${TMUX_AUTOATTACH:-$(basename "$PWD")}}"
 
-    name="${name//:/-}"
-    name="${name//./-}"
-    name="${name// /-}"
-    printf '%s' "$name"
+    # Falls back to the identity if the shared file is missing, so a
+    # half-symlinked checkout degrades to "session name is the directory
+    # name" rather than to an unbound-command error at every prompt.
+    if declare -F tmux_session_slug >/dev/null; then
+        tmux_session_slug "$name"
+    else
+        printf '%s' "$name"
+    fi
 }
 
 __tmux_set_title() {
@@ -57,26 +63,35 @@ __tmux_remote_attach_argv() {
     fi
 }
 
-__tmux_attach() {
+# Sets __tmux_argv to the full local command that opens session `$2` on host
+# `$1` ("" for here). The one place the bash side decides what "attach" means,
+# so tmux-go, tmux-new, and the direnv autoattach cannot drift apart -- the
+# last two used to build this inline and separately.
+#
+# -c is passed only when a path is known: `new-session -c ""` is an error, and
+# omitting it lets tmux use the current directory, which is what you want when
+# nothing has said otherwise.
+__tmux_attach_argv() {
     local host="$1"
     local name="$2"
     local path
     path="$(__tmux_target_path)"
 
-    if [[ -n "$host" ]]; then
-        if [[ -n "$path" ]]; then
-            __tmux_remote_attach_argv "$host" new-session -A -s "$name" -c "$path"
-        else
-            __tmux_remote_attach_argv "$host" new-session -A -s "$name"
-        fi
-        "${__tmux_argv[@]}"
-    else
-        if [[ -n "$path" ]]; then
-            tmux new-session -A -s "$name" -c "$path"
-        else
-            tmux new-session -A -s "$name"
-        fi
+    local session_args=(new-session -A -s "$name")
+    if [[ -n "$path" ]]; then
+        session_args+=(-c "$path")
     fi
+
+    if [[ -n "$host" ]]; then
+        __tmux_remote_attach_argv "$host" "${session_args[@]}"
+    else
+        __tmux_argv=(direnv exec / env tmux "${session_args[@]}")
+    fi
+}
+
+__tmux_attach() {
+    __tmux_attach_argv "$1" "$2"
+    "${__tmux_argv[@]}"
 }
 
 tmux() {
@@ -185,7 +200,6 @@ tmux-kill() {
 __tmux_autoattach() {
     local host
     local name
-    local path
 
     [[ $- == *i* ]] || return 0
     [[ -z "$TMUX" ]] || return 0
@@ -198,24 +212,17 @@ __tmux_autoattach() {
 
     name="$(__tmux_session_name "$TMUX_AUTOATTACH")"
     host="$(__tmux_target_host)"
-    path="$(__tmux_target_path)"
 
     if [[ -n "$host" ]]; then
         __tmux_set_title "${host}:${name}"
-        if [[ -n "$path" ]]; then
-            __tmux_remote_attach_argv "$host" new-session -A -s "$name" -c "$path"
-        else
-            __tmux_remote_attach_argv "$host" new-session -A -s "$name"
-        fi
-        exec "${__tmux_argv[@]}"
     else
         __tmux_set_title "$name"
-        if [[ -n "$path" ]]; then
-            exec direnv exec / env tmux new-session -A -s "$name" -c "$path"
-        else
-            exec direnv exec / env tmux new-session -A -s "$name"
-        fi
     fi
+
+    # exec, unlike tmux-go: this replaces the shell that was starting up, so
+    # detaching the session leaves you with no leftover bash underneath it.
+    __tmux_attach_argv "$host" "$name"
+    exec "${__tmux_argv[@]}"
 }
 
 __tmux_sessions() {
