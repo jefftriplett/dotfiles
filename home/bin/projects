@@ -868,12 +868,23 @@ def import_projects(
         if not dry_run:
             # candidate_session is pinned only when it differs from what the
             # key would slug to; otherwise the entry carries redundant noise.
+            #
+            # tmux and description are carried over from the existing entry
+            # rather than rebuilt: a session probe knows where a project runs,
+            # and nothing whatever about whether you wanted a session for it or
+            # what you wrote in its description. Constructing a fresh Project
+            # from the candidate alone silently reset both, so `import --force`
+            # quietly turned tmux off on exactly the projects that had proved
+            # they use it. Enrich, don't replace -- the same rule that already
+            # governs `path` here.
             registry.projects[name] = Project(
                 key=name,
                 machine=candidate.machine,
                 path=candidate.path,
                 tmux_path=candidate.tmux_path,
                 session=candidate_session,
+                tmux=existing.tmux if existing else None,
+                description=existing.description if existing else None,
             )
         if existing is not None:
             updated += 1
