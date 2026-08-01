@@ -171,9 +171,11 @@ Usage: workon [--auto|--local|--remote] [--host=MACHINE] [--tmux] <project>
   workon --host=studio pghub  open it on the Studio instead, just this once
   workon --list               list registered projects
   workon --sessions           show live tmux sessions on every Mac
+  workon -s --kill notes      kill a session, by project key or session name
 
 --sessions passes its remaining arguments to `projects sessions`, so
 `workon -s -a` is attached sessions only and `workon -s -m studio` is one Mac.
+--kill asks before it kills; add -y to skip that.
 
 Local opens cd and activate the virtualenv. Add --tmux (or export WORKON_TMUX=1)
 to attach a tmux session locally too; remote opens always attach one.

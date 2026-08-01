@@ -523,6 +523,36 @@ def remote_tmux_sessions(host: str, *, timeout: int = 5) -> list[TmuxSession]:
     return parse_sessions(result.stdout)
 
 
+def kill_tmux_session(name: str, *, host: str | None = None, timeout: int = 5) -> None:
+    """Kill one tmux session, here or on `host`. Raises RuntimeError on failure.
+
+    Mirrors the session readers above: the same ssh shape, the same bash -lc so
+    the login profile puts Homebrew's tmux on PATH, and the same treatment of a
+    dead server. "-t=name" rather than "-t name" because tmux's target syntax
+    matches a bare -t as a prefix -- `-t agents` would happily kill
+    "agents-scratch" if "agents" itself had already gone away, which is not a
+    thing to discover after the fact.
+    """
+    tmux_command = ["tmux", "kill-session", f"-t={name}"]
+    if host is None:
+        argv = tmux_command
+        run_timeout = None
+    else:
+        argv = [
+            "ssh",
+            "-o", "BatchMode=yes",
+            "-o", f"ConnectTimeout={timeout}",
+            host,
+            f"bash -lc {shlex.quote(shlex.join(tmux_command))}",
+        ]
+        run_timeout = timeout * 4
+
+    result = subprocess.run(argv, capture_output=True, text=True, timeout=run_timeout)
+    if result.returncode != 0:
+        message = result.stderr.strip() or f"exited {result.returncode}"
+        raise RuntimeError(message)
+
+
 def workspace_action(ref: str, action: str, *extra: str) -> None:
     cmux("workspace-action", "--action", action, "--workspace", ref, *extra)
 

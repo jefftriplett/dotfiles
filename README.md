@@ -546,6 +546,7 @@ shell's directory and environment.
 | `workon --remote[=<p>]` | Force a mosh to its registered machine |
 | `workon --host=<m> <p>` | Open it on that machine instead, just this once |
 | `workon --sessions` | Show the tmux sessions live on every Mac, and what opens each |
+| `workon -s --kill <p>` | Kill a session by project key or session name |
 | `mkproject <name>` | Create, register, and open a new project |
 
 There is one `workon` and one `mkproject` — no separate remote command to reach for.
@@ -605,11 +606,31 @@ Remaining arguments pass through to `projects sessions`:
 workon -s -a                  # only sessions with a client attached
 workon -s -m studio           # one Mac
 workon -s --names | fzf | xargs workon   # pick a live session and open it
+workon -s --kill agents       # kill that session, wherever it is running
+workon -s --kill agents --yes # ...without the confirmation
 ```
 
 `--names` prints bare project names for piping, and lists only registered ones — a name
 `workon` cannot open is worse than absent. Unreachable Macs report to stderr, so a sleeping
 machine stays visible without corrupting a pipe.
+
+`--kill` (`-k`) takes either spelling the listing shows — the tmux session name or the
+project key — so the thing you kill is the thing you would have typed `workon` for, without
+looking up its real session name first. `--kill django-news.com` finds the `django-news-com`
+session, since both sides are slugified.
+
+It prints what it is about to destroy and asks first; `--yes` (`-y`) skips the prompt. Two
+refusals are deliberate: a name matching sessions on more than one Mac is reported rather
+than resolved, because guessing which copy you meant is not a guess worth making with
+someone's running work, and a Mac that failed to answer is reported too, since the session
+you are looking for might be on exactly that one.
+
+```shell
+$ workon -s --kill agents
+Kill toggl-agent-git on studio (mac-studio-2023)?
+  3 window(s), detached, in ~/Projects/agents/toggl-agent-git
+Everything running in it goes away [y/N]:
+```
 
 This overlaps [`tmux-remote-ls`](#scripts) on purpose: that answers "what is running
 where", this answers "what do I type to get back into it".

@@ -42,6 +42,7 @@ from _cmux import (
     HOSTS_TOML,
     Workspace,
     default_dump_path,
+    kill_tmux_session,
     load_dump,
     local_hostnames,
     remote_tmux_sessions,
@@ -1052,6 +1053,93 @@ def project_for_session(registry: Registry, *, machine_key: str, path: str, name
     return None
 
 
+def kill_sessions(registry: Registry, probes, *, wanted: str, yes: bool, timeout: int) -> None:
+    """Kill the session `wanted` names, wherever the probe just found it.
+
+    Matched against the same two spellings the listing shows: the tmux session
+    name, and the key of the project it belongs to. Slugified on both sides, so
+    `--kill django-news.com` finds the "django-news-com" session that tmux
+    would never have accepted that name for.
+    """
+    slug = session_slug(wanted)
+    found = []
+    for found_machine, found_sessions, error in sorted(probes, key=lambda p: p[0].key):
+        if error:
+            # Reported, not swallowed: the session being looked for might be on
+            # exactly the Mac that did not answer, and "no such session" would
+            # be the wrong conclusion to draw from that.
+            fail(f"{found_machine.key}: {error}")
+            continue
+        for session in found_sessions:
+            project = project_for_session(
+                registry,
+                machine_key=found_machine.key,
+                path=session.path,
+                name=session.name,
+            )
+            if wanted in (session.name, project.key if project else None) or slug in (
+                session_slug(session.name),
+                session_slug(project.key) if project else None,
+            ):
+                found.append((found_machine, session, project))
+
+    if not found:
+        fail(f"No running session matches {wanted!r}.")
+        err_console.print(
+            "See what is live with: [name]projects sessions[/name]", soft_wrap=True
+        )
+        raise typer.Exit(code=1)
+
+    # More than one match is ambiguous rather than an invitation to kill them
+    # all: the same project key can have a session on two Macs, and guessing
+    # which one you meant is not a guess worth making with someone's work.
+    if len(found) > 1:
+        fail(f"{wanted!r} matches {len(found)} running sessions:")
+        for found_machine, session, _ in found:
+            fail(f"  {found_machine.key}: {session.name}")
+        # --machine only helps when the matches are actually on different Macs.
+        # Two sessions in one project directory on one machine need the session
+        # name, and telling you otherwise would send you round in a circle.
+        if len({found_machine.key for found_machine, _, _ in found}) > 1:
+            fail("Narrow it with --machine, or name the exact session.")
+        else:
+            fail("Name the exact session to pick one.")
+        raise typer.Exit(code=1)
+
+    target_machine, session, project = found[0]
+    where = f"{target_machine.key} ({target_machine.host})"
+    label = f"{session.name} on {where}"
+    if project is not None and project.key != session.name:
+        label += f" -- the {project.key} project"
+
+    # Killing the session you are sitting in works, and throws you back to a
+    # bare shell mid-sentence. Worth one line of warning before the prompt.
+    inside = target_machine.is_local and os.environ.get("TMUX")
+    if inside:
+        warn("This is the machine you are on, and you are inside tmux right now.")
+
+    if not yes:
+        windows = f"{session.windows} window(s), " if session.windows else ""
+        state = "attached" if session.is_attached else "detached"
+        out(f"Kill [name]{escape(session.name)}[/name] on [machine]{escape(where)}[/machine]?")
+        out(f"  {windows}{state}, in {styled_path(tildify(session.path))}")
+        if not typer.confirm("Everything running in it goes away"):
+            out("[muted]Left alone.[/muted]")
+            raise typer.Exit(code=1)
+
+    try:
+        kill_tmux_session(
+            session.name,
+            host=None if target_machine.is_local else target_machine.host,
+            timeout=timeout,
+        )
+    except (RuntimeError, OSError, subprocess.TimeoutExpired) as exc:
+        fail(f"Could not kill {label}: {exc}")
+        raise typer.Exit(code=1)
+
+    out(f"Killed [name]{escape(session.name)}[/name] on [machine]{escape(where)}[/machine]")
+
+
 @app.command()
 def sessions(
     machine: Annotated[
@@ -1064,6 +1152,13 @@ def sessions(
     names: Annotated[
         bool,
         typer.Option("--names", "-q", help="Bare project names, one per line, for piping"),
+    ] = False,
+    kill: Annotated[
+        Optional[str],
+        typer.Option("--kill", "-k", help="Kill this session (session name or project key)"),
+    ] = None,
+    yes: Annotated[
+        bool, typer.Option("--yes", "-y", help="Kill without asking first")
     ] = False,
     timeout: Annotated[
         int, typer.Option("--timeout", "-t", help="ssh connect timeout in seconds")
@@ -1079,6 +1174,10 @@ def sessions(
     A session with no registered project is called out rather than hidden: it
     is real work the registry does not know about, and usually wants a
     `projects add`.
+
+    `--kill` takes either spelling too, for the same reason: the session you
+    want gone is the one you would have typed `workon` for, and having to look
+    up its real tmux name first would defeat the point of the listing.
     """
     registry = load()
     if not registry.machines:
@@ -1099,6 +1198,10 @@ def sessions(
     # delaying every machine queued behind it.
     with ThreadPoolExecutor(max_workers=len(targets)) as pool:
         probes = list(pool.map(lambda m: probe_sessions(m, timeout=timeout), targets))
+
+    if kill is not None:
+        kill_sessions(registry, probes, wanted=kill, yes=yes, timeout=timeout)
+        return
 
     total = 0
     unregistered = 0
