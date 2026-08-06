@@ -37,11 +37,16 @@ from typing import Annotated, Optional
 import typer
 
 from _cmux import (
+    Group,
     Workspace,
+    cmux_groups,
     cmux_workspaces,
+    create_group,
     create_workspace,
     default_dump_path,
     load_dump,
+    load_groups,
+    title_ref_map,
 )
 
 
@@ -76,6 +81,33 @@ def main(
             details.append(f"tmux:{ws.session_name}")
         suffix = f" ({', '.join(details)})" if details else ""
         print(f"create {ws.display_title} -> {ref}{suffix}")
+
+    restore_groups(source)
+
+
+def restore_groups(source: Path) -> None:
+    """Recreate sidebar groups from the dump, skipping any that already exist.
+
+    Runs after the workspaces are created so members resolve to their new
+    refs. Group membership is keyed by title, so a group whose members were
+    all skipped (already present) still forms correctly.
+    """
+    groups = [Group.from_dump(g) for g in load_groups(source)]
+    if not groups:
+        return
+
+    existing = {g.name for g in cmux_groups()}
+    refs_by_title = title_ref_map()
+
+    for group in groups:
+        if group.name in existing:
+            print(f"skip   group {group.name!r} (already exists)")
+            continue
+        ref = create_group(group, refs_by_title=refs_by_title)
+        if ref is None:
+            print(f"skip   group {group.name!r} (no members resolved)")
+            continue
+        print(f"group  {group.name!r} -> {ref} ({len(group.members)} members)")
 
 
 if __name__ == "__main__":

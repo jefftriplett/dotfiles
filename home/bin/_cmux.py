@@ -109,6 +109,21 @@ def load_dump(path: Path) -> list[dict]:
     return data
 
 
+def load_groups(path: Path) -> list[dict]:
+    """Read the `groups` section of a dump, or [] when absent.
+
+    A bare-list dump (the old workspaces-only format) has no groups, so this
+    returns [] and restore just skips group reconstruction.
+    """
+    if path.suffix == ".json":
+        data = json.loads(path.read_text())
+    else:
+        data = tomllib.loads(path.read_text())
+    if isinstance(data, dict):
+        return data.get("groups", [])
+    return []
+
+
 def write_atomic(path: Path, *, content: str) -> None:
     """Replace a file's contents in one step.
 
@@ -122,8 +137,14 @@ def write_atomic(path: Path, *, content: str) -> None:
     os.replace(tmp, path)
 
 
-def save_dump(path: Path, *, workspaces: list["Workspace"], use_toml: bool = True) -> None:
-    """Write a dump file. The counterpart to load_dump()."""
+def save_dump(
+    path: Path,
+    *,
+    workspaces: list["Workspace"],
+    groups: list["Group"] | None = None,
+    use_toml: bool = True,
+) -> None:
+    """Write a dump file. The counterpart to load_dump()/load_groups()."""
     # Imported here, not at module scope: only cmux-dump-save declares
     # tomli-w in its uv header, and a top-level import would break every
     # other script that imports this module.
@@ -131,8 +152,10 @@ def save_dump(path: Path, *, workspaces: list["Workspace"], use_toml: bool = Tru
 
     if use_toml:
         # TOML has no null; drop empty/default fields instead
-        cleaned = [ws.to_dict(compact=True) for ws in workspaces]
-        content = tomli_w.dumps({"workspaces": cleaned})
+        document: dict = {"workspaces": [ws.to_dict(compact=True) for ws in workspaces]}
+        if groups:
+            document["groups"] = [g.to_dict(compact=True) for g in groups]
+        content = tomli_w.dumps(document)
     else:
         content = json.dumps([ws.to_dict() for ws in workspaces], indent=2) + "\n"
 
@@ -414,6 +437,48 @@ class Workspace:
         return None
 
 
+@dataclass
+class Group:
+    """A cmux sidebar group, keyed by workspace *titles* rather than refs.
+
+    cmux identifies group members by ref (workspace:N), but refs are assigned
+    fresh every time a workspace is created, so they mean nothing across a
+    dump/restore. Titles are the dump's stable key everywhere else, so groups
+    use them too: save resolves refs -> titles, restore resolves titles ->
+    the newly created refs.
+    """
+
+    name: str
+    anchor: str          # title of the anchor (owner) workspace
+    members: list[str]   # member workspace titles, anchor included
+    pinned: bool = False
+    collapsed: bool = False
+    color: str | None = None
+    icon: str | None = None
+
+    @classmethod
+    def from_dump(cls, data: dict) -> "Group":
+        return cls(
+            name=data["name"],
+            anchor=data["anchor"],
+            members=list(data.get("members", [])),
+            pinned=data.get("pinned", False),
+            collapsed=data.get("collapsed", False),
+            color=data.get("color"),
+            icon=data.get("icon"),
+        )
+
+    def to_dict(self, *, compact: bool = False) -> dict:
+        data = asdict(self)
+        if compact:
+            return {
+                key: value
+                for key, value in data.items()
+                if value is not None and value is not False
+            }
+        return data
+
+
 # Fields requested from `tmux list-sessions -F`, in the order parse_sessions
 # expects them. Shared so local and remote callers stay in lockstep.
 #
@@ -492,6 +557,111 @@ def cmux(*args: str) -> str:
 def cmux_workspaces() -> list[Workspace]:
     entries = json.loads(cmux("workspace", "list", "--json"))["workspaces"]
     return [Workspace.from_cmux(entry) for entry in entries]
+
+
+def _ref_title_map() -> dict[str, str]:
+    """ref (workspace:N) -> base title, for joining group members to titles."""
+    entries = json.loads(cmux("workspace", "list", "--json"))["workspaces"]
+    return {entry["ref"]: strip_mosh_prefix(entry["title"]) for entry in entries}
+
+
+def title_ref_map() -> dict[str, str]:
+    """Base title -> ref, for turning dumped group members back into refs.
+
+    Titles are not guaranteed unique; the last workspace with a given title
+    wins. Callers that create the workspaces first (restore) then read this map
+    get the freshly created refs.
+    """
+    return {title: ref for ref, title in _ref_title_map().items()}
+
+
+def cmux_groups() -> list[Group]:
+    """Current sidebar groups, with members expressed as titles."""
+    ref_title = _ref_title_map()
+    groups = json.loads(cmux("workspace-group", "list", "--json"))["groups"]
+    result = []
+    for g in groups:
+        members = [
+            ref_title[r] for r in g.get("member_workspace_refs", []) if r in ref_title
+        ]
+        anchor_ref = g.get("anchor_workspace_ref")
+        anchor = ref_title.get(anchor_ref, members[0] if members else "")
+        result.append(
+            Group(
+                name=g["name"],
+                anchor=anchor,
+                members=members,
+                pinned=g.get("is_pinned", False),
+                collapsed=g.get("is_collapsed", False),
+                color=g.get("custom_color"),
+                icon=g.get("icon_symbol"),
+            )
+        )
+    return result
+
+
+def _group_raw(group_ref: str) -> dict:
+    groups = json.loads(cmux("workspace-group", "list", "--json"))["groups"]
+    for g in groups:
+        if g["ref"] == group_ref:
+            return g
+    return {}
+
+
+def create_group(group: Group, *, refs_by_title: dict[str, str]) -> str | None:
+    """Recreate a group from a dump. Returns its ref, or None if unbuildable.
+
+    Members whose titles no longer resolve to a workspace are skipped; a group
+    with no resolvable members is not created at all.
+
+    `cmux workspace-group create` always spawns a fresh anchor workspace (its
+    header) titled after the group, in addition to the members passed via
+    --from. The original anchor in a dump is a real workspace, though, so we
+    re-anchor the group onto it and close *only that one* auto-created header --
+    identified as the group's anchor ref right after creation, never by
+    guessing from the member list, so a real member can't be closed by mistake.
+    Closing happens only after set-anchor, since closing a group's current
+    anchor would dissolve the whole group.
+    """
+    member_refs = [
+        refs_by_title[title] for title in group.members if title in refs_by_title
+    ]
+    if not member_refs:
+        return None
+
+    output = cmux(
+        "workspace-group", "create",
+        "--name", group.name,
+        "--from", ",".join(member_refs),
+    )
+    ref = output.split()[-1]
+    if not ref.startswith("workspace_group:"):
+        raise RuntimeError(
+            f"Unexpected cmux output creating group {group.name!r}: {output!r}"
+        )
+
+    # The header cmux just created is now the group's anchor; it is a stray
+    # only when it isn't one of the workspaces we asked to include.
+    auto_anchor = _group_raw(ref).get("anchor_workspace_ref")
+    stray = auto_anchor if auto_anchor and auto_anchor not in member_refs else None
+
+    anchor_ref = refs_by_title.get(group.anchor)
+    if anchor_ref and anchor_ref in member_refs:
+        cmux("workspace-group", "set-anchor", "--group", ref, "--workspace", anchor_ref)
+        if stray:  # safe now that the real anchor owns the group
+            cmux("workspace", "close", "--workspace", stray)
+    # else: no dumped anchor resolved; keep cmux's header rather than risk
+    # dissolving the group by closing the only anchor it has.
+
+    if group.color:
+        cmux("workspace-group", "set-color", ref, "--hex", group.color)
+    if group.icon:
+        cmux("workspace-group", "set-icon", ref, "--symbol", group.icon)
+    if group.collapsed:
+        cmux("workspace-group", "collapse", ref)
+    if group.pinned:
+        cmux("workspace-group", "pin", ref)
+    return ref
 
 
 def tmux_sessions() -> list[TmuxSession]:

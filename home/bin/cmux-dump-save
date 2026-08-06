@@ -24,7 +24,7 @@ from typing import Annotated, Optional
 
 import typer
 
-from _cmux import DEFAULT_TOML, Workspace, load_dump, save_dump
+from _cmux import DEFAULT_TOML, Workspace, cmux_groups, load_dump, save_dump
 
 DEFAULT_OUTPUT = DEFAULT_TOML
 
@@ -75,10 +75,12 @@ def main(
     kept = [ws for ws in previous.values() if ws.annotated]
     workspaces.extend(kept)
 
-    save_dump(output, workspaces=workspaces)
+    groups = cmux_groups()
+    save_dump(output, workspaces=workspaces, groups=groups)
 
     note = f" (kept {len(kept)} closed annotated)" if kept else ""
-    print(f"Saved {len(workspaces)} workspaces to {output}{note}")
+    gnote = f", {len(groups)} groups" if groups else ""
+    print(f"Saved {len(workspaces)} workspaces{gnote} to {output}{note}")
 
 
 if __name__ == "__main__":
