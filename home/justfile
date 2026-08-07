@@ -79,11 +79,12 @@ alias lock := freeze
 @install:
     homesick symlink
 
-# run shellcheck on bash configuration files
+# run shellcheck on bash configuration and shell script files
 [group("utils")]
 @lint:
     #!/usr/bin/env sh
     find "{{ DOTFILES_DIR }}/home" -maxdepth 1 -name '.bash_*' ! -name '*.orig' -exec shellcheck --exclude=SC1090,SC1091 {} \;
+    cd "{{ DOTFILES_DIR }}" && git ls-files '*.sh' | xargs shellcheck --exclude=SC1090,SC1091
 
 # run validation checks
 [group("utils")]

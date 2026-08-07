@@ -65,7 +65,7 @@ MAIN_ID=$(get_id_by_origin "(0,0)")
 LEFT_ID=$(get_id_by_origin "(-1920,0)")
 
 # Top displays (73") - get both IDs
-TOP_IDS=($(get_displays_by_type "73 inch"))
+mapfile -t TOP_IDS < <(get_displays_by_type "73 inch")
 
 if [[ ${#TOP_IDS[@]} -ne 2 ]]; then
     echo "Error: expected 2x 73\" displays, found ${#TOP_IDS[@]}" >&2

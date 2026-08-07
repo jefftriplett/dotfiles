@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 cp ~/.stignore /Users/jefftriplett/.virtualenvs/2023.djangocon.us/src/.stignore
 cp ~/.stignore /Users/jefftriplett/.virtualenvs/2024.djangocon.us/src/.stignore
 cp ~/.stignore /Users/jefftriplett/.virtualenvs/aider-chat/src/.stignore
