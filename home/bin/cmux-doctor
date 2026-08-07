@@ -17,12 +17,16 @@ Exit status is non-zero when any required check fails, so it doubles as a
 preflight in scripts.
 """
 
+import json
+import os
 import shutil
 import socket
+import stat
 import subprocess
 import sys
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Annotated
 
 import typer
@@ -133,6 +137,88 @@ def check_tools() -> None:
             fail(f"{tool.name:<6}", detail=f"missing -- {tool.reason}")
         else:
             warn(f"{tool.name:<6}", detail=f"missing -- {tool.reason}")
+
+
+# ---- socket checks ----------------------------------------------------------
+
+
+CMUX_STATE_DIR = Path.home() / ".local" / "state" / "cmux"
+LAST_SOCKET_PATH = CMUX_STATE_DIR / "last-socket-path"
+DEFAULT_SOCKET_PATH = CMUX_STATE_DIR / "cmux.sock"
+CMUX_JSON = Path.home() / ".config" / "cmux" / "cmux.json"
+OPEN_SOCKET_HINT = (
+    'set automation.socketControlMode to "allowAll" in '
+    f"{CMUX_JSON}, then run `cmux reload-config`"
+)
+
+
+def active_socket_path() -> Path:
+    """Best available path to the socket the CLI will use."""
+    override = os.environ.get("CMUX_SOCKET_PATH", "").strip()
+    if override:
+        return Path(override).expanduser()
+    try:
+        recorded = LAST_SOCKET_PATH.read_text().strip()
+    except OSError:
+        recorded = ""
+    return Path(recorded).expanduser() if recorded else DEFAULT_SOCKET_PATH
+
+
+def check_socket() -> None:
+    section("Socket")
+
+    path = active_socket_path()
+    try:
+        mode = path.stat().st_mode
+    except OSError as exc:
+        fail(str(path), detail=f"socket unavailable: {exc}")
+    else:
+        if stat.S_ISSOCK(mode):
+            ok(str(path), detail="Unix socket")
+        else:
+            fail(str(path), detail="exists but is not a Unix socket")
+
+    try:
+        result = subprocess.run(
+            ["cmux", "capabilities"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        fail("socket connection", detail=str(exc))
+        return
+    if result.returncode != 0:
+        reason = result.stderr.strip() or result.stdout.strip() or "cmux capabilities failed"
+        detail = f"{reason}; to permit background jobs, {OPEN_SOCKET_HINT}"
+        fail("socket connection", detail=detail)
+        return
+
+    try:
+        access_mode = json.loads(result.stdout)["access_mode"]
+    except (json.JSONDecodeError, KeyError, TypeError) as exc:
+        fail("socket status", detail=f"could not read cmux capabilities: {exc}")
+        return
+
+    if access_mode == "cmuxOnly":
+        warn(
+            "socket access",
+            detail=(
+                f"cmuxOnly -- background jobs cannot connect; {OPEN_SOCKET_HINT}"
+            ),
+        )
+    elif access_mode == "off":
+        fail(
+            "socket access",
+            detail=(
+                "off -- enable automation.socketControlMode in cmux.json, "
+                "then run `cmux reload-config`"
+            ),
+        )
+    elif access_mode == "password":
+        ok("socket access", detail="password (external clients require authentication)")
+    else:
+        ok("socket access", detail=str(access_mode))
 
 
 # ---- config checks ----------------------------------------------------------
@@ -257,6 +343,7 @@ def main(
     ] = 5,
 ) -> None:
     check_tools()
+    check_socket()
     check_config()
     check_hosts(skip_probe=skip_hosts, timeout=timeout)
 
