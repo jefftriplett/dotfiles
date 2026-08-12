@@ -214,7 +214,7 @@ Available recipes:
     [utils]
     fmt                # format and overwrite justfile
     freeze             # update lockfiles without installing dependencies [alias: lock]
-    lint               # run shellcheck on bash configuration files
+    lint               # run shellcheck on bash configuration and shell script files
     test               # run validation checks
     update-brewfile    # update Brewfile from cog template
     update-readme-docs # update README.md docs using cog
@@ -346,22 +346,30 @@ sorted and annotated with attached/detached state, window count, and path.
 ```console
 $ tmux-remote-ls
 mac-mini-pro-2023:
-  ags  [attached, 1 window]  /Users/jefftriplett/Projects/ags
-  thumb-im  [attached, 1 window]  /Users/jefftriplett/Projects/thumb.im/thumb.im-git
+  ags  [attached, 1 window]  (unknown)
+  thumb-im  [attached, 1 window]  (unknown)
 mac-studio-2023:
-  default  [detached, 1 window]  /Users/jefftriplett/Vaults/default
+  default  [detached, 1 window]  (unknown)
 ```
 
 Hosts come from the `[machines]` table of [`~/Projects/projects.toml`](#machine-list) and can be overridden per-run
 with `--host` or by setting `$TMUX_REMOTE_HOSTS`. The same list drives `cmux-tmux-sync --all`.
-Whichever machine you are sitting at is skipped rather than dialed over ssh; `--include-local`
+Whichever machine you are sitting at is skipped rather than dialed; `--include-local`
 adds it back, querying tmux directly instead of over the network. Hosts are queried
 concurrently, so one unreachable machine costs only its own timeout.
 
-Remote hosts use `ssh` rather than mosh (this is a one-shot non-interactive command, matching
-`tmux-ls` and `tmux-kill`) with `BatchMode=yes`, so a host that would prompt fails fast
-instead of hanging. The exit status is 1 when any host could not be reached, which
-distinguishes "no sessions anywhere" from "never got an answer".
+Each remote host is queried through cmux's `remote.tmux.sessions` rpc first — one Unix-socket
+round trip to the local cmux app, no `ssh` process of our own — falling back to `ssh` when that
+fails (cmux not running, host unreachable, or the "Remote tmux" beta setting off for this
+account). The `ssh` fallback is a one-shot non-interactive command, matching `tmux-ls` and
+`tmux-kill`, with `BatchMode=yes` so a host that would prompt fails fast instead of hanging.
+The exit status is 1 when any host could not be reached, which distinguishes "no sessions
+anywhere" from "never got an answer".
+
+The rpc path does not report a session's working directory, so its path column prints
+`(unknown)`; a session answered by the `ssh` fallback shows the real path instead.
+`cmux-doctor` has a "Remote tmux rpc" check that rechecks this gap on every run, in case a
+future cmux update fills it in.
 
 | Option | Description |
 | ------ | ----------- |
@@ -369,7 +377,7 @@ distinguishes "no sessions anywhere" from "never got an answer".
 | `--timeout`, `-t` | ssh connect timeout in seconds (default 5) |
 | `--include-local` | Also list this machine, run locally rather than over ssh |
 | `--sessions-only`, `-s` | Print bare `host:session` lines with no headers, for piping |
-| `--json` | Emit JSON instead of text |
+| `--json` | Emit JSON instead of text; adds `source` (`local`/`rpc`/`ssh`) and `rpc_fallback_reason` per host |
 
 ### Machine List
 
