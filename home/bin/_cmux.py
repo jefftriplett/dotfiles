@@ -711,6 +711,50 @@ def remote_tmux_sessions(host: str, *, timeout: int = 5) -> list[TmuxSession]:
     return parse_sessions(result.stdout)
 
 
+def remote_tmux_sessions_via_rpc(host: str, *, timeout: int = 10) -> list[TmuxSession] | None:
+    """Sessions on `host`, via cmux's `remote.tmux.sessions` rpc. None on any
+    failure -- cmux missing, host unreachable, the remote-tmux beta flag off
+    for this account -- so callers fall back to the ssh path in
+    remote_tmux_sessions() without having to inspect why.
+
+    No `path` (cwd) in the result: the rpc method does not report a session's
+    working directory the way `tmux list-sessions -F` does. Fine for
+    tmux-remote-ls's read-only listing; cmux-tmux-sync needs the real cwd to
+    open a workspace in the right place, so it keeps using
+    remote_tmux_sessions()'s ssh path instead of this one.
+    """
+    try:
+        result = subprocess.run(
+            ["cmux", "rpc", "remote.tmux.sessions", json.dumps({"host": host})],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except (FileNotFoundError, subprocess.TimeoutExpired):
+        return None
+    if result.returncode != 0:
+        return None
+    try:
+        data = json.loads(result.stdout)
+    except json.JSONDecodeError:
+        return None
+
+    sessions = []
+    for entry in data.get("sessions", []):
+        try:
+            sessions.append(
+                TmuxSession(
+                    name=entry["name"],
+                    attached=1 if entry.get("attached") else 0,
+                    path="",
+                    windows=entry.get("windows", 0),
+                )
+            )
+        except KeyError:
+            continue
+    return sessions
+
+
 def kill_tmux_session(name: str, *, host: str | None = None, timeout: int = 5) -> None:
     """Kill one tmux session, here or on `host`. Raises RuntimeError on failure.
 

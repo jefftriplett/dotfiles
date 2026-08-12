@@ -23,9 +23,17 @@ anyway; it is then queried by running tmux directly, never over the network.
 Hosts come from ~/.config/cmux-tmux/hosts.toml (edit it when a machine joins or
 leaves), or from --host / $TMUX_REMOTE_HOSTS.
 
-Remote hosts are queried with ssh, not mosh: this is a one-shot non-interactive
-command, matching what tmux-ls and tmux-kill already do. BatchMode means an
-unreachable or auth-prompting host fails fast instead of hanging the whole run.
+Remote hosts are queried through cmux's `remote.tmux.sessions` rpc first --
+one Unix-socket round trip to the local cmux app, no ssh process of our own --
+falling back to ssh when that fails (cmux not running, host unreachable, or
+the remote-tmux beta flag off for this account). The ssh fallback is a
+one-shot non-interactive command, matching what tmux-ls and tmux-kill already
+do. BatchMode means an unreachable or auth-prompting host fails fast instead
+of hanging the whole run.
+
+Sessions from the rpc path carry no cwd (cmux does not report one), so their
+path column prints as "(unknown)"; sessions from the ssh fallback show the
+real path.
 """
 
 import json
@@ -41,6 +49,7 @@ from _cmux import (
     TmuxSession,
     is_local_host,
     remote_tmux_sessions,
+    remote_tmux_sessions_via_rpc,
     tmux_sessions,
 )
 
@@ -56,11 +65,12 @@ def query(host: str, *, timeout: int) -> HostResult:
     try:
         # tmux_sessions() runs tmux here rather than over ssh, so
         # --include-local works on a machine with no ssh server.
-        sessions = (
-            tmux_sessions()
-            if is_local_host(host)
-            else remote_tmux_sessions(host, timeout=timeout)
-        )
+        if is_local_host(host):
+            sessions = tmux_sessions()
+        else:
+            sessions = remote_tmux_sessions_via_rpc(host, timeout=timeout)
+            if sessions is None:
+                sessions = remote_tmux_sessions(host, timeout=timeout)
     except subprocess.TimeoutExpired:
         return HostResult(host, [], error=f"timed out after {timeout * 4}s")
     except (RuntimeError, OSError) as exc:
@@ -90,7 +100,8 @@ def report(results: list[HostResult], *, sessions_only: bool) -> int:
         for session in result.sessions:
             state = "attached" if session.is_attached else "detached"
             windows = f"{session.windows} window{'' if session.windows == 1 else 's'}"
-            print(f"  {session.name}  [{state}, {windows}]  {session.path}")
+            path = session.path or "(unknown)"
+            print(f"  {session.name}  [{state}, {windows}]  {path}")
 
     return failures
 
