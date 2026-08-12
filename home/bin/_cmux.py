@@ -711,11 +711,16 @@ def remote_tmux_sessions(host: str, *, timeout: int = 5) -> list[TmuxSession]:
     return parse_sessions(result.stdout)
 
 
-def remote_tmux_sessions_via_rpc(host: str, *, timeout: int = 10) -> list[TmuxSession] | None:
-    """Sessions on `host`, via cmux's `remote.tmux.sessions` rpc. None on any
-    failure -- cmux missing, host unreachable, the remote-tmux beta flag off
-    for this account -- so callers fall back to the ssh path in
-    remote_tmux_sessions() without having to inspect why.
+def remote_tmux_sessions_via_rpc(
+    host: str, *, timeout: int = 10
+) -> tuple[list[TmuxSession] | None, str | None]:
+    """Sessions on `host`, via cmux's `remote.tmux.sessions` rpc.
+
+    Returns (sessions, None) on success, or (None, reason) on any failure --
+    cmux missing, host unreachable, the remote-tmux beta flag off for this
+    account. Callers fall back to the ssh path in remote_tmux_sessions() on
+    None; `reason` is carried along only for callers that want to report why
+    (e.g. tmux-remote-ls's --json output), not for control flow.
 
     No `path` (cwd) in the result: the rpc method does not report a session's
     working directory the way `tmux list-sessions -F` does. Fine for
@@ -730,14 +735,17 @@ def remote_tmux_sessions_via_rpc(host: str, *, timeout: int = 10) -> list[TmuxSe
             text=True,
             timeout=timeout,
         )
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        return None
+    except FileNotFoundError:
+        return None, "cmux not found on PATH"
+    except subprocess.TimeoutExpired:
+        return None, f"rpc timed out after {timeout}s"
     if result.returncode != 0:
-        return None
+        reason = result.stderr.strip() or f"cmux rpc exited {result.returncode}"
+        return None, reason
     try:
         data = json.loads(result.stdout)
     except json.JSONDecodeError:
-        return None
+        return None, "cmux rpc returned invalid JSON"
 
     sessions = []
     for entry in data.get("sessions", []):
@@ -752,7 +760,7 @@ def remote_tmux_sessions_via_rpc(host: str, *, timeout: int = 10) -> list[TmuxSe
             )
         except KeyError:
             continue
-    return sessions
+    return sessions, None
 
 
 def kill_tmux_session(name: str, *, host: str | None = None, timeout: int = 5) -> None:

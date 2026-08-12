@@ -34,6 +34,10 @@ of hanging the whole run.
 Sessions from the rpc path carry no cwd (cmux does not report one), so their
 path column prints as "(unknown)"; sessions from the ssh fallback show the
 real path.
+
+--json adds "source" ("local", "rpc", or "ssh") and "rpc_fallback_reason" per
+host, so a scripted caller can tell which path actually answered without
+guessing from the path column. Text/--sessions-only output stays unchanged.
 """
 
 import json
@@ -59,23 +63,46 @@ class HostResult:
     host: str
     sessions: list[TmuxSession]
     error: str | None = None
+    # "local", "rpc", or "ssh" -- which path actually produced `sessions`.
+    source: str = "ssh"
+    # Why the rpc path was skipped in favor of ssh, or None when rpc worked
+    # (or wasn't attempted, e.g. the local/--include-local path).
+    rpc_fallback_reason: str | None = None
 
 
 def query(host: str, *, timeout: int) -> HostResult:
+    # Set before the ssh call (which may itself raise), so a failure there
+    # still reports why rpc was skipped in the first place, not just that
+    # ssh also failed.
+    source, rpc_fallback_reason = "local", None
     try:
         # tmux_sessions() runs tmux here rather than over ssh, so
         # --include-local works on a machine with no ssh server.
         if is_local_host(host):
             sessions = tmux_sessions()
         else:
-            sessions = remote_tmux_sessions_via_rpc(host, timeout=timeout)
+            sessions, rpc_fallback_reason = remote_tmux_sessions_via_rpc(host, timeout=timeout)
             if sessions is None:
+                source = "ssh"
                 sessions = remote_tmux_sessions(host, timeout=timeout)
+            else:
+                source = "rpc"
     except subprocess.TimeoutExpired:
-        return HostResult(host, [], error=f"timed out after {timeout * 4}s")
+        return HostResult(
+            host, [], error=f"timed out after {timeout * 4}s",
+            source=source, rpc_fallback_reason=rpc_fallback_reason,
+        )
     except (RuntimeError, OSError) as exc:
-        return HostResult(host, [], error=str(exc))
-    return HostResult(host, sorted(sessions, key=lambda session: session.name))
+        return HostResult(
+            host, [], error=str(exc),
+            source=source, rpc_fallback_reason=rpc_fallback_reason,
+        )
+    return HostResult(
+        host,
+        sorted(sessions, key=lambda session: session.name),
+        source=source,
+        rpc_fallback_reason=rpc_fallback_reason,
+    )
 
 
 def report(results: list[HostResult], *, sessions_only: bool) -> int:
@@ -144,6 +171,8 @@ def main(
                     {
                         "host": result.host,
                         "error": result.error,
+                        "source": result.source,
+                        "rpc_fallback_reason": result.rpc_fallback_reason,
                         "sessions": [
                             {
                                 "name": session.name,

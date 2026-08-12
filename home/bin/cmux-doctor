@@ -37,10 +37,12 @@ from _cmux import (
     HOSTS_TOML,
     _registry_machines,
     default_dump_path,
+    default_hosts,
     host_aliases,
     is_local_host,
     registry_toml,
     remote_tmux_sessions,
+    remote_tmux_sessions_via_rpc,
 )
 
 # ---- output helpers ---------------------------------------------------------
@@ -329,6 +331,71 @@ def check_hosts(skip_probe: bool, *, timeout: int) -> None:
             ok(f"{r.host:<20}", detail=f"reachable, {r.sessions} tmux {noun}")
 
 
+# ---- remote tmux rpc checks --------------------------------------------------
+
+
+def check_remote_tmux_rpc(skip_probe: bool, *, timeout: int) -> None:
+    """Recheck whether cmux's remote.tmux rpc has grown a source of cwd.
+
+    remote_tmux_sessions_via_rpc() never fills in `path`: remote.tmux.sessions
+    doesn't report a session's cwd, and remote.tmux.window -- which might --
+    currently fails with method_not_found despite being listed in
+    `cmux capabilities`. cmux-tmux-sync stays on its ssh path (which does
+    report cwd) until one of those changes.
+
+    This section exists to make that easy to notice: run `cmux-doctor` again
+    after a cmux update and see whether either line now reports something
+    other than "as before".
+    """
+    section("Remote tmux rpc")
+
+    if skip_probe:
+        warn("remote.tmux rpc", detail="skipped (--skip-hosts)")
+        return
+
+    try:
+        hosts = default_hosts()
+    except RuntimeError as exc:
+        warn("remote.tmux rpc", detail=f"no hosts to probe: {exc}")
+        return
+    remotes = [h for h in hosts if not is_local_host(h)]
+    if not remotes:
+        warn("remote.tmux rpc", detail="no remote hosts configured to probe")
+        return
+    host = remotes[0]
+
+    sessions, reason = remote_tmux_sessions_via_rpc(host, timeout=timeout)
+    if sessions is None:
+        warn(f"remote.tmux.sessions ({host})", detail=f"unavailable -- {reason}")
+        return
+    noun = "session" if len(sessions) == 1 else "sessions"
+    ok(f"remote.tmux.sessions ({host})", detail=f"{len(sessions)} {noun}, no cwd (as before)")
+
+    params = {"host": host, "session": sessions[0].name if sessions else "", "window": 0}
+    try:
+        result = subprocess.run(
+            ["cmux", "rpc", "remote.tmux.window", json.dumps(params)],
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+        )
+    except (OSError, subprocess.SubprocessError) as exc:
+        warn("remote.tmux.window", detail=str(exc))
+        return
+
+    if result.returncode == 0:
+        ok(
+            "remote.tmux.window",
+            detail="now responds -- update remote_tmux_sessions_via_rpc() to use it for cwd",
+        )
+    else:
+        detail = result.stderr.strip() or f"exited {result.returncode}"
+        if "method_not_found" in detail:
+            warn("remote.tmux.window", detail="still method_not_found (as before)")
+        else:
+            warn("remote.tmux.window", detail=detail)
+
+
 # ---- entrypoint -------------------------------------------------------------
 
 
@@ -346,6 +413,7 @@ def main(
     check_socket()
     check_config()
     check_hosts(skip_probe=skip_hosts, timeout=timeout)
+    check_remote_tmux_rpc(skip_probe=skip_hosts, timeout=timeout)
 
     section("Summary")
     print(
