@@ -110,3 +110,7 @@ Mini (obsidian-cli). Both taps were restored. Neither formula is in core.
 - Mini: `docker` and `docker-compose` formulae removed.
 - OrbStack ships docker, docker-compose, buildx, and kubectl on all three
   Macs, linked in `/usr/local/bin`.
+
+### asdf
+
+- Mini: `asdf` formula removed. mise is the version manager everywhere.
