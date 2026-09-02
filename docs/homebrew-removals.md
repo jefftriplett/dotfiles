@@ -78,4 +78,5 @@ Still installed, only missing from the dump: espanso, apg, bun, tandem.
   `hellothisisflo/the-tap`, `hynek/tap`, `manaflow-ai/cmux`, `oktadev/tap`,
   `steipete/tap`
 - Mini: `asmvik/formulae`, `buo/cask-upgrade`, `cmacrae/formulae`,
-  `hynek/tap`, `oktadev/tap`, `tw93/tap`, `yakitrak/yakitrak`
+  `hynek/tap`, `oktadev/tap`, `tw93/tap`. The `yakitrak/yakitrak` tap was
+  restored: obsidian-cli still comes from it.
