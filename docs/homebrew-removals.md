@@ -97,7 +97,8 @@ Still installed, only missing from the dump: espanso, apg, bun, tandem.
 - Mini: `espanso`.
 - Emptied taps untapped: jzaleski, rosszurowski, deemkeen, dicklesworthstone,
   runanywhereai, 2389-research, stripe, federico-terzi.
-- Kept: `moshi-hook`, `ccmux`, `bird`, `remindctl`, `xurl`, `obsidian-cli`.
+- Mini, later: `obsidian-cli` and the yakitrak tap. Obsidian ships its own CLI.
+- Kept: `moshi-hook`, `ccmux`, `bird`, `remindctl`, `xurl`.
 
 Caution: `brew untap` can succeed while a formula from the tap is still
 installed. It did so for steipete/tap on the Air (bird) and yakitrak on the

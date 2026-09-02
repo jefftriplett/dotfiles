@@ -2,7 +2,6 @@ tap "rjyo/moshi"
 tap "skzv/tap"
 tap "steipete/tap"
 tap "xdevplatform/tap"
-tap "yakitrak/yakitrak"
 # Run your GitHub Actions locally
 brew "act"
 # General-purpose data compression with high compression ratio
