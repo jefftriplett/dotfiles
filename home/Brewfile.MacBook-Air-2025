@@ -540,4 +540,5 @@ mas "Parachute", id: 6748614170
 mas "Xcode", id: 497799835
 go "cmd/go"
 go "cmd/gofmt"
-npm "@anthropic-ai/claude-code"
+npm "@github/copilot"
+npm "corepack"
