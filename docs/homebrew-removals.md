@@ -114,3 +114,10 @@ Mini (obsidian-cli). Both taps were restored. Neither formula is in core.
 ### asdf
 
 - Mini: `asdf` formula removed. mise is the version manager everywhere.
+
+### cmux cask and node@22
+
+- Mini: the `cmux` cask record was removed from the Caskroom. The app in
+  /Applications stays, installed the same way as on the Air and the Studio,
+  and it updates itself.
+- Studio: `node@22` removed. Nothing depended on it. `node` stays.

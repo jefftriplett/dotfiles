@@ -257,8 +257,6 @@ brew "nghttp2"
 brew "nginx"
 # Install NodeJS versions
 brew "node-build"
-# Open-source, cross-platform JavaScript runtime environment
-brew "node@22"
 # Node.js version manager
 brew "nodenv"
 # Modern shell for the GitHub era

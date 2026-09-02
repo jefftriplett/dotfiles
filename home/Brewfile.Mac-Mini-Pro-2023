@@ -414,8 +414,6 @@ cask "claude"
 cask "cleanmymac"
 # Clipboard extension app
 cask "clipy"
-# Ghostty-based terminal with vertical tabs and notifications for AI coding agents
-cask "cmux"
 # API documentation browser and code snippet manager
 cask "dash"
 # Voice and text chat software
