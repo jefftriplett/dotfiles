@@ -410,8 +410,6 @@ cask "bunch"
 cask "caldigit-docking-utility"
 # Anthropic's official Claude AI desktop app
 cask "claude"
-# Tool to remove unnecessary files and folders from disk
-cask "cleanmymac"
 # Clipboard extension app
 cask "clipy"
 # API documentation browser and code snippet manager
@@ -479,8 +477,6 @@ cask "monitorcontrol"
 cask "netspot"
 # Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
-# Interact with Ollama models
-cask "ollamac"
 # Retro video game emulation
 cask "openemu"
 # Replacement for Docker Desktop
@@ -489,8 +485,6 @@ cask "orbstack"
 cask "orchard"
 # Utility to uninstall apps and remove leftover files from old/uninstalled apps
 cask "pearcleaner"
-# Browser for ambitious developers
-cask "polypane"
 # Collaboration platform for API development
 cask "postman"
 # IDE for professional Python development

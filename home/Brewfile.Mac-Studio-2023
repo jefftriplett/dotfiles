@@ -1,6 +1,5 @@
 tap "darrylmorley/whatcable"
 tap "homebrew/command-not-found"
-tap "nikitabobko/tap"
 tap "rjyo/moshi"
 tap "skzv/tap"
 # Run your GitHub Actions locally
@@ -423,7 +422,6 @@ brew "skzv/tap/ccmux", trusted: true
 cask "1password-cli"
 # Control every piece of your controller
 cask "8bitdo-ultimate-software"
-cask "aerospace"
 # AirPods companion app
 cask "airbuddy"
 # Watch local content on Apple TV and Chromecast
@@ -442,8 +440,6 @@ cask "applite"
 cask "aws-vault-binary"
 # Tool to flash OS images to SD cards & USB drives
 cask "balenaetcher"
-# Menu bar icon organiser
-cask "bartender"
 # Compact TeX distribution as alternative to the full TeX Live / MacTeX
 cask "basictex"
 # Open source, extensible AI agent that goes beyond code suggestions

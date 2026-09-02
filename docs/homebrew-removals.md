@@ -121,3 +121,12 @@ Mini (obsidian-cli). Both taps were restored. Neither formula is in core.
   /Applications stays, installed the same way as on the Air and the Studio,
   and it updates itself.
 - Studio: `node@22` removed. Nothing depended on it. `node` stays.
+
+### CleanMyMac, Aerospace, Bartender, Polypane, Ollamac
+
+- Air and Mini: `cleanmymac` cask removed with its launch agents. The Mini
+  copy was version 4 and its app folder was already gone.
+- Studio: `aerospace` cask and the `nikitabobko/tap` removed. `bartender`
+  cask record removed; the Bartender 4 app folder was already gone.
+- Mini: `polypane` and `ollamac` casks removed. The Ollamac app folder was
+  already gone.

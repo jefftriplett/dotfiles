@@ -403,8 +403,6 @@ cask "balenaetcher"
 cask "caldigit-docking-utility"
 # E-books management software
 cask "calibre"
-# Tool to remove unnecessary files and folders from disk
-cask "cleanmymac"
 # Clipboard extension app
 cask "clipy"
 # Semantic code analysis engine
@@ -540,5 +538,4 @@ mas "Parachute", id: 6748614170
 mas "Xcode", id: 497799835
 go "cmd/go"
 go "cmd/gofmt"
-npm "@github/copilot"
-npm "corepack"
+npm "@anthropic-ai/claude-code"
