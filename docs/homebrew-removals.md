@@ -10,7 +10,6 @@ Compared against the previous committed Brewfile, comments ignored.
 - `sdl2` -> `sdl2-compat` (all three Macs)
 - `nikitabobko/tap/aerospace` -> `aerospace` (Studio; cask moved to core)
 - `oktadeveloper/tap` -> `oktadev/tap` (Studio, Mini)
-- `jordanbaird-ice` -> `jordanbaird-ice@beta` (Mini)
 
 ### MacBook-Air-2025
 
@@ -23,7 +22,9 @@ Compared against the previous committed Brewfile, comments ignored.
 - brew `steipete/tap/poltergeist`
 - cask `applepi-baker`
 - cask `bunch`
+- cask `jordanbaird-ice@beta` (uninstalled by hand)
 - cask `sublime-merge`
+- cask `timemachineeditor` (uninstalled by hand)
 - cask `xbar`
 
 ### Mac-Studio-2023
@@ -49,4 +50,7 @@ Compared against the previous committed Brewfile, comments ignored.
 - brew `jzaleski/jzaleski/apg`
 - brew `oven-sh/bun/bun`
 - brew `rosszurowski/tap/tandem`
+- cask `jordanbaird-ice` and `jordanbaird-ice@beta` (uninstalled by hand)
+- cask `timemachineeditor` (uninstalled by hand)
+- cask `vibetunnel` (uninstalled by hand)
 - tap `koekeishiya/formulae`

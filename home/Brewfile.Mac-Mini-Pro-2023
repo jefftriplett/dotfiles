@@ -478,8 +478,6 @@ cask "hyper"
 cask "iterm2"
 # Automatically ejects external drives
 cask "jettison"
-# Menu bar manager
-cask "jordanbaird-ice@beta"
 # Blocks all Keyboard and TouchBar input
 cask "keyboardcleantool"
 # Open-source keystroke visualiser
@@ -550,14 +548,10 @@ cask "thaw"
 cask "thetimemachinemechanic"
 # Flexible level editor
 cask "tiled"
-# Utility to change the default backup interval of Time Machine
-cask "timemachineeditor"
 # Git client focusing on power and productivity
 cask "tower"
 # AI image upscaler
 cask "upscayl"
-# Turn any browser into your terminal
-cask "vibetunnel"
 # Open-source code editor
 cask "visual-studio-code"
 # Web browser with built-in email client focusing on customization and control
@@ -613,11 +607,8 @@ mas "ToothFairy", id: 1191449274
 mas "Ulysses", id: 1225570693
 mas "Webcam Settings Control", id: 1172053162
 mas "Xcode", id: 497799835
-go "github.com/Hyaxia/blogwatcher/cmd/blogwatcher"
-go "cmd/go"
-go "cmd/gofmt"
-cargo "pdf-inspector"
-npm "@firecrawl/anydoc"
-npm "agent-browser"
-npm "clawpatch"
-npm "corepack"
+go "github.com/arsham/figurine"
+go "github.com/cortesi/modd/cmd/modd"
+cargo "mdbook"
+uv "llm"
+npm "iterm2-tab-set"
