@@ -103,3 +103,10 @@ Still installed, only missing from the dump: espanso, apg, bun, tandem.
 Caution: `brew untap` can succeed while a formula from the tap is still
 installed. It did so for steipete/tap on the Air (bird) and yakitrak on the
 Mini (obsidian-cli). Both taps were restored. Neither formula is in core.
+
+### Docker
+
+- Studio: `docker-desktop` cask and `docker-compose` formula removed.
+- Mini: `docker` and `docker-compose` formulae removed.
+- OrbStack ships docker, docker-compose, buildx, and kubectl on all three
+  Macs, linked in `/usr/local/bin`.

@@ -81,8 +81,6 @@ brew "direnv"
 brew "displayplacer"
 # Synchronize your DNS to multiple providers from a simple DSL
 brew "dnscontrol"
-# Isolated development environments using Docker
-brew "docker-compose"
 # Tool for managing dock items
 brew "dockutil"
 # Command-line tool for DigitalOcean
@@ -468,8 +466,6 @@ cask "deskpad"
 cask "discord"
 # Display calibration and characterization powered by ArgyllCMS
 cask "displaycal"
-# App to build and share containerised applications and microservices
-cask "docker-desktop"
 # Emulator to play GameCube and Wii games
 cask "dolphin"
 # Elgato FACECAM configuration tool

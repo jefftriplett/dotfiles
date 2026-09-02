@@ -74,10 +74,6 @@ brew "dark-mode"
 brew "deno"
 # Load/unload environment variables based on $PWD
 brew "direnv"
-# Pack, ship and run any application as a lightweight container
-brew "docker"
-# Isolated development environments using Docker
-brew "docker-compose"
 # Tool for managing dock items
 brew "dockutil"
 # Command-line tool for DigitalOcean
