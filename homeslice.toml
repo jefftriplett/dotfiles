@@ -1,6 +1,5 @@
 links = [
     "home/.actrc",
-    "home/.asdf",
     "home/.bash_aliases",
     "home/.bash_exports",
     "home/.bash_functions",
