@@ -1,7 +1,4 @@
-tap "federico-terzi/espanso"
-tap "jzaleski/jzaleski"
 tap "rjyo/moshi"
-tap "rosszurowski/tap"
 tap "skzv/tap"
 tap "steipete/tap"
 tap "xdevplatform/tap"

@@ -88,3 +88,17 @@ Still installed, only missing from the dump: espanso, apg, bun, tandem.
 - Old mise bun versions pruned. One version remains per Mac.
 - `gogcli` and the `openclaw/tap` removed on the Air and the Studio. It was
   replaced by `gws` (googleworkspace-cli). The Mini never had it.
+
+### Tap formulae removed
+
+- All three Macs: `apg`, `tandem`.
+- Air: `diffwatch`, `ru`, `poltergeist`, `rcli`.
+- Studio: `jeff` (2389-research), `stripe`, `espanso`.
+- Mini: `espanso`.
+- Emptied taps untapped: jzaleski, rosszurowski, deemkeen, dicklesworthstone,
+  runanywhereai, 2389-research, stripe, federico-terzi.
+- Kept: `moshi-hook`, `ccmux`, `bird`, `remindctl`, `xurl`, `obsidian-cli`.
+
+Caution: `brew untap` can succeed while a formula from the tap is still
+installed. It did so for steipete/tap on the Air (bird) and yakitrak on the
+Mini (obsidian-cli). Both taps were restored. Neither formula is in core.
