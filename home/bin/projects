@@ -28,7 +28,9 @@ import json
 import os
 import shlex
 import subprocess
+import tomllib
 from concurrent.futures import ThreadPoolExecutor
+from functools import wraps
 from pathlib import Path
 from typing import Annotated, Optional
 
@@ -49,7 +51,14 @@ from _cmux import (
     session_slug,
     tmux_sessions,
 )
-from _projects import Machine, Project, Registry, registry_path
+from _projects import (
+    Machine,
+    Project,
+    Registry,
+    registry_lock,
+    registry_path,
+    validate_path,
+)
 
 # Styles are named for what they mean, not what colour they are, so the reason
 # an assignment was made reads as a colour at a glance: strong evidence is
@@ -121,10 +130,66 @@ app.add_typer(machines_app, name="machines")
 
 
 def load() -> Registry:
-    return Registry.load(registry_path())
+    try:
+        return Registry.load(registry_path())
+    except (OSError, ValueError, tomllib.TOMLDecodeError) as exc:
+        fail(f"Could not load project registry: {exc}")
+        raise typer.Exit(code=2)
 
 
-def require_project(registry: Registry, name: str) -> Project:
+def mutates_registry(command):
+    """Hold one interprocess lock across each mutating command."""
+    @wraps(command)
+    def locked(*args, **kwargs):
+        try:
+            path = registry_path()
+        except ValueError as exc:
+            fail(str(exc))
+            raise typer.Exit(code=2)
+        with registry_lock(path):
+            return command(*args, **kwargs)
+
+    return locked
+
+
+def mutation_path(value: str, *, field: str) -> str:
+    value = tildify(value)
+    try:
+        return validate_path(value, field=field)
+    except ValueError as exc:
+        fail(str(exc))
+        raise typer.Exit(code=2)
+
+
+def ensure_session_slug_available(
+    registry: Registry,
+    project: Project,
+    *,
+    projects: dict[str, Project] | None = None,
+) -> None:
+    slug = session_slug(project.session_name)
+    conflicts = [
+        found
+        for found in registry.projects_for_session_slug(slug, projects=projects)
+        if found.key != project.key
+    ]
+    if not conflicts:
+        return
+    names = ", ".join(sorted(found.key for found in conflicts))
+    fail(
+        f"tmux session slug {slug!r} for {project.key!r} "
+        f"collides with: {names}"
+    )
+    fail("Choose a different project name or pass a unique --session.")
+    raise typer.Exit(code=1)
+
+
+def require_project(
+    registry: Registry,
+    name: str,
+    *,
+    not_found_code: int = 1,
+) -> Project:
     project = registry.project(name)
     if project is None:
         fail(f"No project named {name!r} in {registry.path}")
@@ -133,7 +198,7 @@ def require_project(registry: Registry, name: str) -> Project:
             f"{escape(shlex.quote(name))}[/name]",
             soft_wrap=True,
         )
-        raise typer.Exit(code=1)
+        raise typer.Exit(code=not_found_code)
     return project
 
 
@@ -225,6 +290,7 @@ def show(
 
 
 @app.command()
+@mutates_registry
 def add(
     name: Annotated[str, typer.Argument(help="Project name (also the default tmux session)")],
     machine: Annotated[
@@ -258,7 +324,10 @@ def add(
 
     # Tildified so an absolute path typed here means the same thing on every
     # Mac, which is what the registry stores everywhere else.
-    resolved_path = tildify(path) if path else f"{registry.default_dir(work=work)}/{name}"
+    resolved_path = mutation_path(
+        path if path else f"{registry.default_dir(work=work)}/{name}",
+        field="project path",
+    )
 
     # No machine unless you name one. Guessing an owner from which root the
     # path sits under is guessing from a Syncthing mirror -- every Mac holds
@@ -271,7 +340,7 @@ def add(
         fail("Add it with: projects machines add " + shlex.quote(machine))
         raise typer.Exit(code=1)
 
-    registry.projects[name] = Project(
+    project = Project(
         key=name,
         machine=target.key if target else None,
         path=resolved_path,
@@ -279,6 +348,8 @@ def add(
         session=session,
         description=description,
     )
+    ensure_session_slug_available(registry, project)
+    registry.projects[name] = project
     registry.save()
     where = f"{target.key}:" if target else ""
     out(f"Registered {name} -> {where}{resolved_path}")
@@ -293,6 +364,7 @@ CLEARABLE = ("machine", "tmux", "tmux_path", "session", "description")
 
 
 @app.command("set")
+@mutates_registry
 def set_(
     name: Annotated[str, typer.Argument(help="Project to edit")],
     machine: Annotated[
@@ -343,9 +415,9 @@ def set_(
             raise typer.Exit(code=1)
         updates["machine"] = target.key
     if path is not None:
-        updates["path"] = tildify(path)
+        updates["path"] = mutation_path(path, field="project path")
     if tmux_path is not None:
-        updates["tmux_path"] = tildify(tmux_path)
+        updates["tmux_path"] = mutation_path(tmux_path, field="project tmux_path")
     if session is not None:
         updates["session"] = session
     if tmux is not None:
@@ -369,12 +441,15 @@ def set_(
         out(f"{project.key} already matches; nothing written")
         return
 
-    registry.projects[project.key] = project.model_copy(update=updates)
+    updated = Project.model_validate({**project.model_dump(), **updates})
+    ensure_session_slug_available(registry, updated)
+    registry.projects[project.key] = updated
     registry.save()
     out(f"Updated {project.key}: {', '.join(changed)}")
 
 
 @app.command("remove")
+@mutates_registry
 def remove(
     name: Annotated[str, typer.Argument(help="Project to unregister")],
 ) -> None:
@@ -410,6 +485,35 @@ class Candidate(BaseModel):
     @property
     def rank(self) -> int:
         return REASON_RANK[self.reason]
+
+
+def reject_conflicting_evidence(candidates: list[Candidate]) -> None:
+    """Reject equal-best evidence that points one project at multiple Macs."""
+    by_name: dict[str, list[Candidate]] = {}
+    for candidate in candidates:
+        by_name.setdefault(candidate.name, []).append(candidate)
+
+    conflicts = []
+    for name, found in by_name.items():
+        best_rank = min(candidate.rank for candidate in found)
+        strongest = [candidate for candidate in found if candidate.rank == best_rank]
+        machines = {candidate.machine for candidate in strongest if candidate.machine}
+        if len(machines) > 1:
+            details = ", ".join(
+                sorted(
+                    f"{candidate.machine}:{candidate.path} ({candidate.reason})"
+                    for candidate in strongest
+                    if candidate.machine
+                )
+            )
+            conflicts.append(f"{name}: {details}")
+
+    if conflicts:
+        fail("Conflicting equal-rank import evidence:")
+        for conflict in conflicts:
+            fail(f"  {conflict}")
+        fail("Narrow the import with --machine or resolve the duplicate evidence.")
+        raise typer.Exit(code=1)
 
 
 # Prefix for a ~/Work project whose name is also taken under ~/Projects. Only
@@ -544,7 +648,7 @@ def hint_key(name: str) -> str:
 
 def candidates_from_dump(
     registry: Registry, *, collisions: set[str]
-) -> tuple[list[Candidate], dict[str, str]]:
+) -> tuple[list[Candidate], dict[str, set[str]]]:
     """Machine assignments recorded in the cmux session dump.
 
     Returns full candidates plus machine-only hints. The split exists because a
@@ -563,7 +667,7 @@ def candidates_from_dump(
         return [], {}
 
     found: list[Candidate] = []
-    hints: dict[str, str] = {}
+    hints: dict[str, set[str]] = {}
     for entry in entries:
         workspace = Workspace.from_dump(entry)
         if not workspace.host:
@@ -600,7 +704,7 @@ def candidates_from_dump(
         else:
             # No usable path: keep the machine as a hint, to be applied to a
             # directory candidate of the same project further down.
-            hints[hint_key(workspace.base_title)] = machine.key
+            hints.setdefault(hint_key(workspace.base_title), set()).add(machine.key)
     return found, hints
 
 
@@ -660,6 +764,7 @@ def probe_sessions(machine: Machine, *, timeout: int):
 
 
 @app.command("import")
+@mutates_registry
 def import_projects(
     dry_run: Annotated[
         bool, typer.Option("--dry-run", "-n", help="Show what would be registered")
@@ -715,7 +820,7 @@ def import_projects(
             targets.append(found)
 
     candidates: list[Candidate] = []
-    hints: dict[str, str] = {}
+    hints: dict[str, set[str]] = {}
     # Worked out once, from the local listings, and threaded through every
     # candidate source so a session under ~/Work lands on the same key the
     # directory listing produced for it.
@@ -750,6 +855,20 @@ def import_projects(
     if not sessions_only:
         candidates += candidates_from_dirs(registry, collisions=collisions)
 
+    reject_conflicting_evidence(candidates)
+    for candidate in candidates:
+        if candidate.reason == "workspace" and candidate.machine:
+            hints.setdefault(hint_key(candidate.name), set()).add(candidate.machine)
+    conflicting_hints = {
+        name: machines for name, machines in hints.items() if len(machines) > 1
+    }
+    if conflicting_hints:
+        fail("Conflicting equal-rank workspace hints:")
+        for name, machines in sorted(conflicting_hints.items()):
+            fail(f"  {name}: {', '.join(sorted(machines))}")
+        fail("Narrow the import with --machine or fix the cmux dump.")
+        raise typer.Exit(code=1)
+
     # Keep the best-ranked candidate per project. Sorting by rank and letting
     # setdefault win means a live session always displaces the bare directory,
     # whatever order the probes came back in.
@@ -781,10 +900,43 @@ def import_projects(
     for name, candidate in best.items():
         if candidate.reason != "default":
             continue
-        hinted = hints.get(hint_key(name))
-        if hinted and hinted != candidate.machine:
-            candidate.machine = hinted
+        hinted = hints.get(hint_key(name), set())
+        if hinted:
+            candidate.machine = next(iter(hinted))
             candidate.reason = "workspace"
+
+    planned_projects = dict(registry.projects)
+    proposals: dict[str, Project] = {}
+    for name, candidate in best.items():
+        existing = registry.projects.get(name)
+        if existing is not None and (not force or candidate.reason == "default"):
+            continue
+        candidate_session = (
+            candidate.session
+            if candidate.session and candidate.session != session_slug(name)
+            else None
+        )
+        candidate_tmux = existing.tmux if existing else None
+        if candidate_tmux is None and candidate.reason in ("session", "session-idle"):
+            candidate_tmux = True
+        proposal = Project(
+            key=name,
+            machine=candidate.machine,
+            path=candidate.path,
+            tmux_path=candidate.tmux_path,
+            session=candidate_session,
+            tmux=candidate_tmux,
+            description=existing.description if existing else None,
+        )
+        planned_projects[name] = proposal
+        proposals[name] = proposal
+
+    for proposal in proposals.values():
+        ensure_session_slug_available(
+            registry,
+            proposal,
+            projects=planned_projects,
+        )
 
     added = 0
     updated = 0
@@ -880,19 +1032,7 @@ def import_projects(
             # Rebuilding both from the candidate is what `import --force` used
             # to do, which silently turned tmux off on exactly the projects
             # that had proved they use it.
-            tmux = existing.tmux if existing else None
-            if tmux is None and candidate.reason in ("session", "session-idle"):
-                tmux = True
-
-            registry.projects[name] = Project(
-                key=name,
-                machine=candidate.machine,
-                path=candidate.path,
-                tmux_path=candidate.tmux_path,
-                session=candidate_session,
-                tmux=tmux,
-                description=existing.description if existing else None,
-            )
+            registry.projects[name] = proposals[name]
         if existing is not None:
             updated += 1
         else:
@@ -964,7 +1104,7 @@ def resolve(
     the registry -- it is what `workon --host=...` is built on.
     """
     registry = load()
-    project = require_project(registry, name)
+    project = require_project(registry, name, not_found_code=3)
 
     if machine:
         target = registry.machine(machine)
@@ -1080,7 +1220,7 @@ def kill_sessions(registry: Registry, probes, *, wanted: str, yes: bool, timeout
     would never have accepted that name for.
     """
     slug = session_slug(wanted)
-    found = []
+    matches = []
     for found_machine, found_sessions, error in sorted(probes, key=lambda p: p[0].key):
         if error:
             # Reported, not swallowed: the session being looked for might be on
@@ -1095,11 +1235,28 @@ def kill_sessions(registry: Registry, probes, *, wanted: str, yes: bool, timeout
                 path=session.path,
                 name=session.name,
             )
-            if wanted in (session.name, project.key if project else None) or slug in (
+            exact_session = wanted == session.name
+            if exact_session or wanted == (project.key if project else None) or slug in (
                 session_slug(session.name),
                 session_slug(project.key) if project else None,
             ):
-                found.append((found_machine, session, project))
+                matches.append((found_machine, session, project, exact_session))
+
+    exact = [match for match in matches if match[3]]
+    if exact:
+        found = [(machine, session, project) for machine, session, project, _ in exact]
+    else:
+        colliding = registry.projects_for_session_slug(slug)
+        if len(colliding) > 1:
+            fail(
+                f"{wanted!r} maps to the shared tmux slug {slug!r} for "
+                f"{len(colliding)} projects:"
+            )
+            for project in sorted(colliding, key=lambda item: item.key):
+                fail(f"  {project.key}")
+            fail("Name the exact running tmux session instead.")
+            raise typer.Exit(code=1)
+        found = [(machine, session, project) for machine, session, project, _ in matches]
 
     if not found:
         fail(f"No running session matches {wanted!r}.")
@@ -1335,6 +1492,7 @@ def create_script(path: str, *, name: str, python: str, tmux: bool = True) -> st
 
 
 @app.command()
+@mutates_registry
 def create(
     name: Annotated[str, typer.Argument(help="Project to create and register")],
     machine: Annotated[
@@ -1375,7 +1533,10 @@ def create(
     """
     registry = load()
 
-    resolved_path = tildify(path) if path else f"{registry.default_dir(work=work)}/{name}"
+    resolved_path = mutation_path(
+        path if path else f"{registry.default_dir(work=work)}/{name}",
+        field="project path",
+    )
 
     target = registry.machine(machine) if machine else None
     if machine and target is None:
@@ -1392,6 +1553,14 @@ def create(
     # session the registry says this project does not want.
     want_tmux = registry.tmux_default if tmux is None else tmux
     session_name = session or session_slug(name)
+    project = Project(
+        key=name,
+        machine=target.key if target else None,
+        path=resolved_path,
+        tmux=tmux,
+        session=session,
+    )
+    ensure_session_slug_available(registry, project)
     script = create_script(
         resolved_path, name=session_name, python=python, tmux=want_tmux
     )
@@ -1410,13 +1579,7 @@ def create(
         fail(f"Creation failed; not registering {name}")
         raise typer.Exit(code=result.returncode)
 
-    registry.projects[name] = Project(
-        key=name,
-        machine=target.key if target else None,
-        path=resolved_path,
-        tmux=tmux,
-        session=session,
-    )
+    registry.projects[name] = project
     registry.save()
     out(f"Registered {name} -> {where}{resolved_path}")
 
@@ -1437,6 +1600,7 @@ def edit() -> None:
 
 
 @app.command()
+@mutates_registry
 def init(
     force: Annotated[
         bool, typer.Option("--force", "-f", help="Rewrite an existing registry's tables")
@@ -1454,6 +1618,7 @@ def init(
         raise typer.Exit(code=1)
 
     imported = 0
+    rebuilt: dict[str, Machine] = {}
     if HOSTS_TOML.is_file():
         # Read hosts.toml directly rather than through default_hosts(): that
         # now prefers the registry, which is exactly what we are building.
@@ -1466,15 +1631,38 @@ def init(
             # nicer to type, but guessing it wrong is worse than being literal,
             # so the key is the first dotted component and you rename by hand.
             key = str(host).split(".")[0]
-            registry.machines[key] = Machine(
+            rebuilt[key] = Machine(
                 key=key, host=str(host), hostname=aliases.get(host)
             )
             imported += 1
 
-    if not registry.machines:
+    if not rebuilt:
         hostname = sorted(local_hostnames())[0]
-        registry.machines[hostname] = Machine(key=hostname, host=hostname)
+        rebuilt[hostname] = Machine(key=hostname, host=hostname)
         out(f"No hosts.toml found; seeded [machines] with this machine ({hostname}).")
+
+    old_machines = dict(registry.machines)
+    registry.machines = rebuilt
+
+    remapped = []
+    cleared = []
+    if force:
+        by_host: dict[str, list[Machine]] = {}
+        for machine in rebuilt.values():
+            by_host.setdefault(machine.host.lower(), []).append(machine)
+        for key, project in list(registry.projects.items()):
+            if project.machine is None or project.machine in rebuilt:
+                continue
+            old_machine = old_machines.get(project.machine)
+            matches = by_host.get(old_machine.host.lower(), []) if old_machine else []
+            new_machine = matches[0].key if len(matches) == 1 else None
+            registry.projects[key] = Project.model_validate(
+                {**project.model_dump(), "machine": new_machine}
+            )
+            if new_machine:
+                remapped.append(f"{key}: {project.machine} -> {new_machine}")
+            else:
+                cleared.append(f"{key}: {project.machine}")
 
     # tmux off: a project gets a session when it says so. No home_machine or
     # work_machine -- nothing guesses an owner from a path any more, so writing
@@ -1486,6 +1674,14 @@ def init(
     registry.save()
     if imported:
         out(f"Imported {imported} machines from {HOSTS_TOML}")
+    if remapped:
+        out(f"Remapped {len(remapped)} project machine reference(s).")
+    if cleared:
+        warn(
+            f"Cleared removed machine references from {len(cleared)} project(s): "
+            + ", ".join(cleared[:5])
+            + (" ..." if len(cleared) > 5 else "")
+        )
     out(f"Wrote {registry.path}")
     out("Next: rename the machine keys if you want shorter ones, then")
     out("`projects import --dry-run`.")
@@ -1521,6 +1717,7 @@ def machines_list() -> None:
 
 
 @machines_app.command("add")
+@mutates_registry
 def machines_add(
     key: Annotated[str, typer.Argument(help="Short name you will type, e.g. studio")],
     host: Annotated[
@@ -1564,6 +1761,7 @@ def machines_add(
 
 
 @machines_app.command("remove")
+@mutates_registry
 def machines_remove(
     key: Annotated[str, typer.Argument(help="Machine to remove")],
 ) -> None:

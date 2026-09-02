@@ -20,9 +20,12 @@ import os
 import shlex
 import shutil
 import tomllib
+from contextlib import contextmanager
 from pathlib import Path
+from typing import Iterator
 
-from pydantic import BaseModel, ConfigDict, Field
+import fcntl
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from _cmux import local_hostnames, session_slug, tmux_attach_command
 
@@ -62,7 +65,32 @@ NEW_FILE_HEADER = """\
 
 def registry_path() -> Path:
     override = os.environ.get("PROJECTS_TOML", "").strip()
-    return Path(override).expanduser() if override else DEFAULT_REGISTRY
+    if not override:
+        return DEFAULT_REGISTRY
+    validate_path(override, field="PROJECTS_TOML")
+    return Path(override).expanduser()
+
+
+def validate_path(value: str, *, field: str) -> str:
+    """Require portable registry paths, not cwd-relative surprises."""
+    if not isinstance(value, str) or not value.strip():
+        raise ValueError(f"{field} must not be empty")
+    if value.startswith("~/") or Path(value).is_absolute():
+        return value
+    raise ValueError(f"{field} must be absolute or start with '~/' (got {value!r})")
+
+
+@contextmanager
+def registry_lock(path: Path) -> Iterator[None]:
+    """Serialize a complete registry load-modify-save transaction."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    lock_path = path.with_name(f".{path.name}.lock")
+    with lock_path.open("a+", encoding="utf-8") as lock:
+        fcntl.flock(lock.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(lock.fileno(), fcntl.LOCK_UN)
 
 
 class Machine(BaseModel):
@@ -102,6 +130,18 @@ class Project(BaseModel):
     session: str | None = None
     tmux_path: str | None = None
     description: str | None = None
+
+    @field_validator("path")
+    @classmethod
+    def validate_project_path(cls, value: str) -> str:
+        return validate_path(value, field="project path")
+
+    @field_validator("tmux_path")
+    @classmethod
+    def validate_project_tmux_path(cls, value: str | None) -> str | None:
+        if value is None:
+            return None
+        return validate_path(value, field="project tmux_path")
 
     @property
     def workdir(self) -> str:
@@ -215,10 +255,23 @@ class Registry(BaseModel):
             )
             for key, value in data.get("projects", {}).items()
         }
+        defaults = data.get("defaults", {})
+        for field in ("home_dir", "work_dir"):
+            if field in defaults:
+                validate_path(defaults[field], field=f"defaults.{field}")
+        unknown_machines = sorted(
+            f"{project.key} -> {project.machine}"
+            for project in projects.values()
+            if project.machine is not None and project.machine not in machines
+        )
+        if unknown_machines:
+            raise ValueError(
+                "projects reference unknown machines: " + ", ".join(unknown_machines)
+            )
         return cls(
             path=path,
             machines=machines,
-            defaults=data.get("defaults", {}),
+            defaults=defaults,
             projects=projects,
         )
 
@@ -237,32 +290,62 @@ class Registry(BaseModel):
         else:
             doc = tomlkit.parse(NEW_FILE_HEADER)
 
+        existing_machines = doc.get("machines")
         machines = tomlkit.table(is_super_table=True)
         for key in sorted(self.machines):
             machine = self.machines[key]
-            entry = tomlkit.table()
-            entry["host"] = machine.host
-            if machine.hostname:
-                entry["hostname"] = machine.hostname
+            old_entry = (
+                existing_machines.get(key)
+                if existing_machines is not None and hasattr(existing_machines, "get")
+                else None
+            )
+            entry = old_entry if hasattr(old_entry, "get") else tomlkit.table()
+            self._update_toml_table(entry, {"host": machine.host, "hostname": machine.hostname})
             machines[key] = entry
         doc["machines"] = machines
 
         if self.defaults:
-            defaults = tomlkit.table()
-            for key in sorted(self.defaults):
-                defaults[key] = self.defaults[key]
+            old_defaults = doc.get("defaults")
+            defaults = old_defaults if hasattr(old_defaults, "get") else tomlkit.table()
+            self._update_toml_table(
+                defaults,
+                {key: self.defaults[key] for key in sorted(self.defaults)},
+            )
             doc["defaults"] = defaults
 
+        existing_projects = doc.get("projects")
         projects = tomlkit.table(is_super_table=True)
         for key in sorted(self.projects):
-            entry = tomlkit.table()
-            for field_name, value in self.projects[key].to_dict().items():
-                entry[field_name] = value
+            old_entry = (
+                existing_projects.get(key)
+                if existing_projects is not None and hasattr(existing_projects, "get")
+                else None
+            )
+            entry = old_entry if hasattr(old_entry, "get") else tomlkit.table()
+            self._update_toml_table(entry, self.projects[key].to_dict())
             projects[key] = entry
         doc["projects"] = projects
 
         self.path.parent.mkdir(parents=True, exist_ok=True)
         write_atomic(self.path, content=tomlkit.dumps(doc))
+
+    @staticmethod
+    def _update_toml_table(table, values: dict) -> None:
+        """Update managed values while retaining comments on surviving keys."""
+        values = {key: value for key, value in values.items() if value is not None}
+        managed = set(table.keys())
+        for key in managed - set(values):
+            del table[key]
+        for key, value in values.items():
+            old = table.get(key)
+            trivia = getattr(old, "trivia", None)
+            table[key] = value
+            new = table.get(key)
+            if trivia is not None and hasattr(new, "trivia"):
+                new.trivia.indent = trivia.indent
+                new.trivia.comment_ws = trivia.comment_ws
+                new.trivia.comment = trivia.comment
+                new.trivia.trail = trivia.trail
 
     # -- lookup ----------------------------------------------------------
 
@@ -288,6 +371,19 @@ class Registry(BaseModel):
             if session_slug(project.key) == slug or project.session_name == name:
                 return project
         return None
+
+    def projects_for_session_slug(
+        self,
+        slug: str,
+        *,
+        projects: dict[str, Project] | None = None,
+    ) -> list[Project]:
+        source = projects if projects is not None else self.projects
+        return [
+            project
+            for project in source.values()
+            if session_slug(project.session_name) == slug
+        ]
 
     def local_machine(self) -> Machine | None:
         for machine in self.machines.values():
@@ -330,8 +426,10 @@ class Registry(BaseModel):
     def plan(self, project: Project) -> Plan:
         """Work out how to reach `project` and build the command that does it."""
         machine = self.machine(project.machine)
-        # An unknown or unset machine means "here". Better than refusing: a
-        # registry entry that predates a machine rename should still open.
+        if project.machine is not None and machine is None:
+            raise ValueError(
+                f"project {project.key!r} references unknown machine {project.machine!r}"
+            )
         local = machine is None or machine.is_local
         tmux = self.tmux_default if project.tmux is None else project.tmux
         session = project.session_name

@@ -13,6 +13,7 @@ import shlex
 import shutil
 import socket
 import subprocess
+import tempfile
 import tomllib
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -81,12 +82,13 @@ def tmux_attach_command(session: str, path: str, *, tmux: bool = True) -> str:
     expand on the far side), so it is interpolated rather than re-quoted.
 
     cd first, so a freshly created session lands in the right place even when
-    tmux's -c is bypassed; ";" and not "&&", so attaching to an existing
-    session still works when the directory is missing on the other machine.
+    tmux's -c is bypassed. Missing directories are fatal: attaching an existing
+    session from the wrong directory is less safe than reporting stale
+    registry data.
     """
     if not tmux:
-        return f"cd {path}; exec bash -l"
-    return f"cd {path}; tmux new-session -A -s {shlex.quote(session)} -c {path}"
+        return f"cd {path} && exec bash -l"
+    return f"cd {path} && tmux new-session -A -s {shlex.quote(session)} -c {path}"
 
 
 def default_dump_path() -> Path:
@@ -129,12 +131,26 @@ def write_atomic(path: Path, *, content: str) -> None:
 
     These files hold hand-edited data that cannot be recovered from cmux or
     from tmux, so a half-written file after an interrupt is worse than no
-    write at all. os.replace is atomic within a filesystem and still works
-    when the tmp file lands on a different one.
+    write at all. The unique temporary file is created beside the destination,
+    so os.replace is atomic and concurrent writers never share a temp name.
     """
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    tmp.write_text(content)
-    os.replace(tmp, path)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    mode = path.stat().st_mode & 0o777 if path.exists() else 0o600
+    fd, tmp_name = tempfile.mkstemp(
+        dir=path.parent,
+        prefix=f".{path.name}.",
+        suffix=".tmp",
+    )
+    tmp = Path(tmp_name)
+    try:
+        os.fchmod(fd, mode)
+        with os.fdopen(fd, "w", encoding="utf-8") as stream:
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(tmp, path)
+    finally:
+        tmp.unlink(missing_ok=True)
 
 
 def save_dump(

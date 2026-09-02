@@ -99,8 +99,26 @@ workon() {
         resolve_args+=("--host" "$host")
     fi
 
-    local resolved
-    if ! resolved="$(projects resolve "${resolve_args[@]}" 2>/dev/null)"; then
+    local resolved resolve_status
+    if resolved="$(projects resolve "${resolve_args[@]}" 2>&1)"; then
+        resolve_status=0
+    else
+        resolve_status=$?
+    fi
+    if (( resolve_status != 0 )); then
+        # Exit 3 is the resolver's explicit not-found contract. Parser errors,
+        # invalid registry data, and a missing `projects` executable must stay
+        # visible rather than silently falling back to a similarly named local
+        # directory.
+        if (( resolve_status != 3 )); then
+            if [[ -n "$resolved" ]]; then
+                printf '%s\n' "$resolved" >&2
+            else
+                echo "workon: project registry resolution failed" >&2
+            fi
+            return "$resolve_status"
+        fi
+
         # Not in the registry. --remote and --host have nothing to work from,
         # so they are an error rather than a silent local open.
         if [[ "$mode" == "remote" || -n "$host" ]]; then

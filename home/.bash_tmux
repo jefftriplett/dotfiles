@@ -45,6 +45,24 @@ __tmux_remote_tmux_command() {
     printf 'bash -lc %q' "$(__tmux_remote_tmux_string "$@")"
 }
 
+__tmux_remote_path_expr() {
+    local path="$1"
+    local quoted remote_home
+    # This is emitted for the remote login shell, not expanded locally.
+    # shellcheck disable=SC2016
+    remote_home='"$HOME"'
+
+    if [[ "$path" == "~" ]]; then
+        printf '%s' "$remote_home"
+    elif [[ "${path:0:1}" == "~" && "${path:1:1}" == "/" ]]; then
+        printf -v quoted '%q' "${path:2}"
+        printf '%s/%s' "$remote_home" "$quoted"
+    else
+        printf -v quoted '%q' "$path"
+        printf '%s' "$quoted"
+    fi
+}
+
 # Sets __tmux_argv to the local command that attaches the remote session.
 # Interactive attaches use mosh when available (matching cmux-dump-restore),
 # falling back to ssh. mosh passes the command to mosh-server as a clean
@@ -52,9 +70,14 @@ __tmux_remote_tmux_command() {
 # extra %q layer.
 __tmux_remote_attach_argv() {
     local host="$1"
-    shift
-    local tmux_string
+    local path="$2"
+    shift 2
+    local path_expr tmux_string
     tmux_string="$(__tmux_remote_tmux_string "$@")"
+    if [[ -n "$path" ]]; then
+        path_expr="$(__tmux_remote_path_expr "$path")"
+        tmux_string="cd ${path_expr} && ${tmux_string}"
+    fi
 
     if command -v mosh >/dev/null 2>&1; then
         __tmux_argv=(direnv exec / env mosh "$host" -- bash -lc "$tmux_string")
@@ -83,14 +106,18 @@ __tmux_attach_argv() {
     fi
 
     if [[ -n "$host" ]]; then
-        __tmux_remote_attach_argv "$host" "${session_args[@]}"
+        __tmux_remote_attach_argv "$host" "$path" "${session_args[@]}"
     else
+        if [[ -n "$path" && ! -d "$path" ]]; then
+            printf 'tmux: project directory does not exist: %s\n' "$path" >&2
+            return 1
+        fi
         __tmux_argv=(direnv exec / env tmux "${session_args[@]}")
     fi
 }
 
 __tmux_attach() {
-    __tmux_attach_argv "$1" "$2"
+    __tmux_attach_argv "$1" "$2" || return
     "${__tmux_argv[@]}"
 }
 
@@ -116,8 +143,10 @@ tmux-new() {
 tmux-go() {
     local host
     local name
+    local path
     name="$(__tmux_session_name "$1")"
     host="$(__tmux_target_host)"
+    path="$(__tmux_target_path)"
 
     if [[ -n "$host" ]]; then
         __tmux_set_title "${host}:${name}"
@@ -127,11 +156,20 @@ tmux-go() {
 
     __tmux_set_title "$name"
 
+    if [[ -n "$path" && ! -d "$path" ]]; then
+        printf 'tmux-go: project directory does not exist: %s\n' "$path" >&2
+        return 1
+    fi
+
     if [[ -n "$TMUX" ]]; then
-        tmux has-session -t "$name" 2>/dev/null || tmux new-session -d -s "$name"
+        local new_args=(new-session -d -s "$name")
+        if [[ -n "$path" ]]; then
+            new_args+=(-c "$path")
+        fi
+        tmux has-session -t "$name" 2>/dev/null || tmux "${new_args[@]}"
         tmux switch-client -t "$name"
     else
-        tmux new-session -A -s "$name"
+        __tmux_attach "" "$name"
     fi
 }
 
@@ -221,7 +259,7 @@ __tmux_autoattach() {
 
     # exec, unlike tmux-go: this replaces the shell that was starting up, so
     # detaching the session leaves you with no leftover bash underneath it.
-    __tmux_attach_argv "$host" "$name"
+    __tmux_attach_argv "$host" "$name" || return
     exec "${__tmux_argv[@]}"
 }
 
