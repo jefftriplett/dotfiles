@@ -80,3 +80,11 @@ Still installed, only missing from the dump: espanso, apg, bun, tandem.
 - Mini: `asmvik/formulae`, `buo/cask-upgrade`, `cmacrae/formulae`,
   `hynek/tap`, `oktadev/tap`, `tw93/tap`. The `yakitrak/yakitrak` tap was
   restored: obsidian-cli still comes from it.
+
+### Bun and gogcli
+
+- Homebrew `bun` and the `oven-sh/bun` tap removed on all three Macs. Bun now
+  comes from mise only (`bun = ['latest']` in mise config).
+- Old mise bun versions pruned. One version remains per Mac.
+- `gogcli` and the `openclaw/tap` removed on the Air and the Studio. It was
+  replaced by `gws` (googleworkspace-cli). The Mini never had it.

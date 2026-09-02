@@ -1,11 +1,11 @@
 tap "federico-terzi/espanso"
 tap "jzaleski/jzaleski"
-tap "oven-sh/bun"
 tap "rjyo/moshi"
 tap "rosszurowski/tap"
 tap "skzv/tap"
 tap "steipete/tap"
 tap "xdevplatform/tap"
+tap "yakitrak/yakitrak"
 # Run your GitHub Actions locally
 brew "act"
 # General-purpose data compression with high compression ratio
@@ -388,7 +388,6 @@ brew "skzv/tap/ccmux", trusted: true
 brew "steipete/tap/bird"
 # Fast CLI for Apple Reminders
 brew "steipete/tap/remindctl", trusted: true
-brew "yakitrak/yakitrak/obsidian-cli"
 # Command-line interface for 1Password
 cask "1password-cli"
 # Firmware updater for 8BitDo controllers
