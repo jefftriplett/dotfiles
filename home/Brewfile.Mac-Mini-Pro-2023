@@ -1,18 +1,11 @@
-tap "asmvik/formulae", "https://github.com/asmvik/homebrew-formulae.git"
-tap "buo/cask-upgrade"
-tap "cmacrae/formulae"
 tap "federico-terzi/espanso"
-tap "hynek/tap"
 tap "jzaleski/jzaleski"
-tap "oktadev/tap", "https://github.com/oktadev/homebrew-tap.git"
 tap "oven-sh/bun"
 tap "rjyo/moshi"
 tap "rosszurowski/tap"
 tap "skzv/tap"
 tap "steipete/tap"
-tap "tw93/tap"
 tap "xdevplatform/tap"
-tap "yakitrak/yakitrak"
 # Run your GitHub Actions locally
 brew "act"
 # General-purpose data compression with high compression ratio
@@ -395,6 +388,7 @@ brew "skzv/tap/ccmux", trusted: true
 brew "steipete/tap/bird"
 # Fast CLI for Apple Reminders
 brew "steipete/tap/remindctl", trusted: true
+brew "yakitrak/yakitrak/obsidian-cli"
 # Command-line interface for 1Password
 cask "1password-cli"
 # Firmware updater for 8BitDo controllers

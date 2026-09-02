@@ -1,4 +1,3 @@
-tap "buo/cask-upgrade"
 tap "darrylmorley/whatcable"
 tap "deemkeen/tap"
 tap "dicklesworthstone/tap"
