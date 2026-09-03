@@ -67,6 +67,7 @@ is set inside each app.
 | Slack | Set in the app |
 | Obsidian | Set per vault in the appearance settings |
 | Telegram | Set in the app |
+| Vivaldi | Set in the browser |
 
 ## Inspiration / Thank you!
 
