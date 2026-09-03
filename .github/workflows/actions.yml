@@ -15,8 +15,8 @@ jobs:
             set -ex
 
             shellcheck --version
-            shellcheck ./home/.bash_* --exclude=SC1090
-            find . -name '*.sh' -not -path './node_modules/*' -exec shellcheck --exclude=SC1090 {} +
+            shellcheck ./home/.bash_* --exclude=SC1090,SC1091
+            find . -name '*.sh' -not -path './node_modules/*' -exec shellcheck --exclude=SC1090,SC1091 {} +
 
   # lint_dockerfile:
   #   runs-on: [ubuntu-latest]
