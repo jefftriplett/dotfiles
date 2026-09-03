@@ -50,8 +50,6 @@ brew "cfn-lint"
 brew "chamber"
 # Testing and linting Helm charts
 brew "chart-testing"
-# Manage your dotfiles across multiple diverse machines, securely
-brew "chezmoi"
 # Control Google Chrome from the command-line
 brew "chrome-cli"
 # Official command-line tool for CircleCI
@@ -577,5 +575,4 @@ mas "Xcode", id: 497799835
 go "github.com/arsham/figurine"
 go "github.com/cortesi/modd/cmd/modd"
 cargo "mdbook"
-uv "llm"
 npm "iterm2-tab-set"

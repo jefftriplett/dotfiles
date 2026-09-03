@@ -58,3 +58,6 @@ fi
 
 # OpenClaw Completion
 source "/Users/jefftriplett/.openclaw/completions/openclaw.bash"
+
+# MiniMax Code CLI
+export PATH="/Users/jefftriplett/.minimax-code/bin:$PATH"
