@@ -51,8 +51,9 @@ The Reference section holds the full option lists for each tool.
 
 ## Theme
 
-[Dracula][dracula] everywhere it can be. Some of it lives in this repository,
-the rest is set inside each app.
+[Dracula][dracula] is the official theme across every machine. Any app that
+offers it gets it. Some of the configuration lives in this repository, the rest
+is set inside each app.
 
 | App | Where Dracula is configured |
 | --- | --------------------------- |
@@ -65,6 +66,7 @@ the rest is set inside each app.
 | cmux | Set in the app |
 | Slack | Set in the app |
 | Obsidian | Set per vault in the appearance settings |
+| Telegram | Set in the app |
 
 ## Inspiration / Thank you!
 
