@@ -34,7 +34,6 @@ The source lives at [jefftriplett/dotfiles](https://github.com/jefftriplett/dotf
 - `home/`: dotfiles (Brewfile, shell config, app config)
 - `home/bin/`: standalone scripts, symlinked onto `$PATH` as `~/bin`
 - `home/.justfiles/`: just submodules for task groups
-- `configs/`: editor/application configs (Sublime Text)
 - `scripts/`: README generation helpers
 
 - `docs/`: this manual, built with [Zensical](https://zensical.org/)

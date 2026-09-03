@@ -60,7 +60,6 @@ $ just update-docs   # regenerate the recipe list in docs/just.md
 - `home/`: dotfiles (Brewfile, shell config, app config)
 - `home/bin/`: standalone scripts, symlinked onto `$PATH` as `~/bin`
 - `home/.justfiles/`: just submodules for task groups
-- `configs/`: editor/application configs (Sublime Text)
 - `docs/`: the manual
 - `scripts/`: documentation generation helpers
 
