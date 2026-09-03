@@ -108,10 +108,9 @@ competes with uv.
 
 ## What you can delete
 
-| Path | Why it is still there |
-| ---- | --------------------- |
-| `~/.pyenv` | Interpreters from before uv. 8 to 16 GB per Mac. Nothing uses them |
-| `~/.virtualenvs/*` | Environments built on those interpreters. `workon` only reads this folder as a last resort |
+| Path | Status |
+| ---- | ------ |
+| `~/.pyenv` | Gone. Removed from all three Macs on 2026-09-03 after uv took over |
+| `~/.virtualenvs/` | Kept on purpose. An archive of older environments; `workon` still reads it as a last resort, and two Sublime projects point into it |
 
-Delete the first two when you want the disk back. `subl-projects doctor --fix`
-first, if any Sublime project still points into `~/.virtualenvs`.
+Leave `~/.virtualenvs/` alone. Nothing needs to be deleted here any more.
