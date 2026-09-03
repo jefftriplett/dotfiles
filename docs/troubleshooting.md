@@ -32,7 +32,6 @@ package is still installed.
 1. Confirm with `brew list --full-name --formula | grep <name>`.
 2. Put the line back in `home/Brewfile.<Hostname>` by hand.
 
-[Homebrew removals](homebrew-removals.md) records each case.
 
 ## Pages shows the README
 

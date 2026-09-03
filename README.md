@@ -52,7 +52,6 @@ Run `just docs-serve` to read it locally.
 | [Machine List](docs/machines.md) | The `[machines]` table and how hosts resolve |
 | [How workon resolves a project](docs/workon-process.md) | The decision process behind `workon` |
 | [cmux Workspaces](docs/cmux.md) | Keeping cmux workspaces and tmux sessions in sync |
-| [Homebrew removals](docs/homebrew-removals.md) | What dropped out of each Brewfile, and when |
 
 ```shell
 $ just docs-serve    # live preview at http://127.0.0.1:8000/

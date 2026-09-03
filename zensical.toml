@@ -19,10 +19,7 @@ nav = [
     { "Installation" = "installation.md" },
   ] },
   { "Daily work" = "workflows.md" },
-  { "Maintenance" = [
-    { "Maintenance" = "maintenance.md" },
-    { "Homebrew removals" = "homebrew-removals.md" },
-  ] },
+  { "Maintenance" = "maintenance.md" },
   { "Troubleshooting" = "troubleshooting.md" },
   { "Reference" = [
     { "Just Recipes" = "just.md" },

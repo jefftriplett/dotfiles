@@ -48,8 +48,7 @@ rarely: it rewrites the whole template from one machine's state.
     Homebrew 6 `brew bundle dump` can leave out formulae that come from
     third-party taps. A formula such as `oven-sh/bun/bun` disappears from the
     file while it stays installed. Before you treat a missing line as a
-    removal, check `brew list --full-name --formula`. The log of what dropped
-    out, and why, is in [Homebrew removals](homebrew-removals.md).
+    removal, check `brew list --full-name --formula`.
 
 ## Lint
 
