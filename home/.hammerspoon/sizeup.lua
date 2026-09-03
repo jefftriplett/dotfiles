@@ -322,3 +322,5 @@ function sizeup.gutter()
     y = pm.y / 2
   }
 end
+
+return sizeup
