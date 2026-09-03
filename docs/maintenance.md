@@ -24,11 +24,10 @@ interpreters and runs `mise install`.
 
 ## Brewfiles
 
-There are three kinds of Brewfile in `home/`:
+There are two kinds of Brewfile in `home/`:
 
 | File | Purpose |
 | ---- | ------- |
-| `Brewfile.cog` | Template with cog blocks that dump the current Mac's taps, formulae, casks, and App Store apps |
 | `Brewfile` | The generic file `bootstrap` installs from on a fresh Mac |
 | `Brewfile.<Hostname>` | What one specific Mac has; one per machine |
 
@@ -40,9 +39,6 @@ the previous version, so review the change before you commit:
 just freeze
 git diff home/Brewfile.$(hostname -s)
 ```
-
-`just update-brewfile` regenerates `Brewfile.cog` from this Mac. Use it
-rarely: it rewrites the whole template from one machine's state.
 
 !!! warning "Dump omits tap formulae"
     Homebrew 6 `brew bundle dump` can leave out formulae that come from

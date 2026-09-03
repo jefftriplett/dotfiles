@@ -142,7 +142,6 @@ Available recipes:
     freeze             # update lockfiles without installing dependencies [alias: lock]
     lint               # run every lint hook in .pre-commit-config.yaml against the whole tree
     test               # run validation checks
-    update-brewfile    # update Brewfile from cog template
 ```
 
 <!-- [[[end]]] -->

@@ -54,7 +54,7 @@ flowchart TD
 | Concern | Owner | Where it is configured |
 | ------- | ----- | ---------------------- |
 | Getting files into `~` | [homesick](https://github.com/technicalpickles/homesick) | `homeslice.toml` lists the links; `.homesick_subdir` names folders whose children are linked one by one |
-| Packages and apps | Homebrew | `home/Brewfile.cog` is the template; `home/Brewfile.<Host>` is what each Mac actually has |
+| Packages and apps | Homebrew | `home/Brewfile` is the generic install list; `home/Brewfile.<Host>` is what each Mac actually has |
 | Tasks you run by hand | [just](https://github.com/casey/just) | `home/justfile` plus one module per topic in `home/.justfiles/` |
 | Language runtimes | [mise](https://mise.jdx.dev/) | `home/.config/mise/config.toml`; Python is disabled there on purpose |
 | Python interpreters and CLI tools | [uv](https://docs.astral.sh/uv/) | `home/.justfiles/python.justfile`; `uv python install --default` owns `python` on the PATH |

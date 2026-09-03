@@ -184,11 +184,6 @@ alias lock := freeze
 # Utilities
 # ----------------------------------------------------------------
 
-# update Brewfile from cog template
-[group("utils")]
-@update-brewfile:
-    cd "{{ DOTFILES_DIR }}/home" && uv run --with cogapp cog -Pr ./Brewfile.cog
-
 # regenerate the recipe list in docs/just.md using cog
 [group("docs")]
 @update-docs:

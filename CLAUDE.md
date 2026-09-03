@@ -3,7 +3,6 @@
 ## Build Commands
 - Format all justfiles: `just fmt`
 - Lint (prek runs `.pre-commit-config.yaml`; CI runs the same): `just lint`
-- Update Brewfile: `just update-brewfile`
 - Regenerate the recipe list in the manual: `just update-docs`
 - Preview the manual: `just docs-serve` (Zensical, config in `zensical.toml`, pages in `docs/`)
 
