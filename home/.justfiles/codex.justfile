@@ -33,7 +33,7 @@ package := "@openai/codex"
 # update Codex CLI to the latest version
 @upgrade:
     just --justfile {{ justfile }} version
-    bun install -g {{ package }}
+    bun install -g {{ package }}@latest
     just --justfile {{ justfile }} version
 
 # see Codex CLI usage

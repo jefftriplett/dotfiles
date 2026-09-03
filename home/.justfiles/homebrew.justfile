@@ -63,4 +63,4 @@ justfile := justfile_directory() + "/.justfiles/homebrew.justfile"
 
 # upgrade all outdated Homebrew packages
 @upgrade:
-    brew upgrade --yes || true
+    -brew upgrade --yes

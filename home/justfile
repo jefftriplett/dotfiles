@@ -76,6 +76,9 @@ alias lock := freeze
 # create symlinks for dotfiles using homesick
 [group("setup")]
 @install:
+    # Claude Code writes ~/.claude.json through its symlink and leaves temp
+    # files next to the target in home/; homesick would link every one of them.
+    rm -f "{{ DOTFILES_DIR }}"/home/.claude.json.tmp.*
     homesick symlink
 
 # run every lint hook in .pre-commit-config.yaml against the whole tree
@@ -107,14 +110,19 @@ alias lock := freeze
     -git -C "{{ DOTFILES_DIR }}" pull
 
     echo "==> Creating symlinks..."
-    homesick symlink
+    just install
 
     just homebrew::upgrade
     just homebrew::cleanup
     just mise::upgrade
     just python::upgrade
-    just python::uv-tool-upgrade
     just llm::upgrade
+
+    echo "==> Updating tmux plugins..."
+    -[ -x "$HOME/.tmux/plugins/tpm/bin/update_plugins" ] && "$HOME/.tmux/plugins/tpm/bin/update_plugins" all
+
+    echo "==> Refreezing the Brewfile..."
+    just freeze
 
 # upgrade all tools (uv pythons and mise packages)
 [group("maintenance")]

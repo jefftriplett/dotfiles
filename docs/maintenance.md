@@ -13,7 +13,7 @@ just update
 
 | Recipe | What it does |
 | ------ | ------------ |
-| `upgrade` | `git pull` the dotfiles, `homesick symlink`, then upgrade Homebrew, mise, the uv Pythons, the uv tools, and the AI CLIs |
+| `upgrade` | `git pull` the dotfiles, `homesick symlink`, then upgrade Homebrew, mise, the uv Pythons, the uv tools, the AI CLIs, and the tmux plugins; finally `just freeze` |
 | `restart` | restart every Homebrew service that is running |
 | `cleanup` | `brew cleanup`; `--days N` prunes the download cache older than N days |
 
@@ -33,7 +33,7 @@ There are three kinds of Brewfile in `home/`:
 | `Brewfile.<Hostname>` | What one specific Mac has; one per machine |
 
 `just freeze` (alias `just lock`) is the one to run after you install or
-remove something. It overwrites this Mac's file with a fresh dump. Git holds
+remove something; `just upgrade` also runs it at the end. It overwrites this Mac's file with a fresh dump. Git holds
 the previous version, so review the change before you commit:
 
 ```shell
@@ -102,7 +102,7 @@ by hand, so every Mac gets it.
 
 ## Languages
 
-`just mise::upgrade` runs `mise install` and `mise reshim`. The versions are
+`just mise::upgrade` runs `mise install`, then `mise prune` to drop versions the config no longer names, then `mise reshim`. The versions are
 in `home/.config/mise/config.toml`. Python is disabled in mise so it never
 competes with uv.
 

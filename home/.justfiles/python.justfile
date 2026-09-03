@@ -41,7 +41,7 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
 
 # update python versions using uv installer
 @uv-pip-upgrade *ARGS:
-    uv python --preview-features python-upgrade upgrade {{ ARGS }}
+    uv python upgrade {{ ARGS }}
 
 # uninstall python packages using uv pip installer
 @uv-pip-uninstall *ARGS:

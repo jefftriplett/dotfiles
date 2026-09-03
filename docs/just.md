@@ -96,7 +96,7 @@ Available recipes:
         xcode-upgrade              # upgrade Xcode command line tools by removing and reinstalling
     mise:
         bootstrap # bootstrap mise by installing configured language versions
-        upgrade   # install latest language versions and refresh shims
+        upgrade   # install latest language versions, drop the old ones, and refresh shims
     python:
         bootstrap                 # bootstrap python: uv-managed interpreters, `python` on PATH, and CLI tools
         upgrade                   # update python environment

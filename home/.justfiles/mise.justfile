@@ -27,7 +27,8 @@ justfile := justfile_directory() + "/.justfiles/mise.justfile"
     # mise current
     # mise list
 
-# install latest language versions and refresh shims
+# install latest language versions, drop the old ones, and refresh shims
 @upgrade:
     mise install
+    mise prune --yes
     mise reshim
