@@ -1,3 +1,6 @@
+// Shared Sublime Text preferences for every Mac. Merged 2026-09-03 from the
+// Air, Mini, and Studio copies: exclude lists are the union of all three,
+// per-machine values follow the majority.
 {
 	"auto_complete": false,
 	"auto_complete_commit_on_tab": false,
@@ -36,6 +39,7 @@
 		"*.tga",
 		"*.ttf",
 		"*.zip",
+		"_claude.xml",
 	],
 	"bold_folder_labels": true,
 	"caret_extra_bottom": 2,
@@ -51,31 +55,40 @@
 	"enable_readtime": true,
 	"enable_tab_scrolling": true,
 	"ensure_newline_at_eof_on_save": true,
-	"file_exclude_patterns": [
+	"file_exclude_patterns":
+	[
 		".DS_Store",
 		".aider.*",
 		".coverage",
-		".stignore"
+		".stignore",
 	],
 	"folder_exclude_patterns":
 	[
+		"*.egg-info",
+		".*_cache",
 		".*cache",
 		".aider*",
 		".cache",
+		".django_tailwind_cli",
 		".git",
 		".hg",
 		".pytest_cache",
 		".st*",
+		".stfolder",
 		".svn",
 		".SyncArchive",
 		".tox",
+		".Trash",
+		".Trash-*",
 		".venv",
 		"__pycache__",
 		"CVS",
-		"node_modules"
+		"dist",
+		"node_modules",
 	],
 	// "font_face": "Fira Code Retina",
 	// "font_face": "iA Writer Quattro",
+	// "font_face": "Monaspace Neon",
 	"font_face": "Menlo",
 	"font_options":
 	[
@@ -84,7 +97,9 @@
 	"font_size": 21,
 	"highlight_line": true,
 	"highlight_modified_tabs": true,
-	"ignored_packages": ["Vintage",
+	"ignored_packages":
+	[
+		"Vintage",
 	],
 	"indent_guide_options":
 	[
@@ -100,7 +115,7 @@
 		"node_modules",
 		"site-packages"
 	],
-	"index_files": true,
+	"index_files": false,
 	"index_workers": 2,
 	"line_numbers": true,
 	"line_padding_bottom": 0,
@@ -120,7 +135,6 @@
 		"side_bar_visible": false,
 		"status_bar_visible": true,
 	},
-	"node_path": "/usr/local/bin/node",
 	"pep8_ignore":
 	[
 		"E501",
@@ -152,11 +166,9 @@
 	"spell_check": false,
 	"sublimelinter": true,
 	"tab_size": 4,
-	// "theme": "Phoenix Dark.sublime-theme",
+	"theme": "Phoenix Dark.sublime-theme",
 	"translate_tabs_to_spaces": true,
 	"trim_automatic_white_space": true,
 	"trim_trailing_white_space_on_save": true,
 	"word_wrap": false,
-	/*"theme": "auto",*/
-	"theme": "auto",
 }
