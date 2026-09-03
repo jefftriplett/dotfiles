@@ -30,9 +30,6 @@ nav = [
     { "How workon resolves a project" = "workon-process.md" },
     { "cmux Workspaces" = "cmux.md" },
   ] },
-  { "Drafts" = [
-    { "Project registry post" = "projects-registry-post.md" },
-  ] },
 ]
 
 [project.theme]
