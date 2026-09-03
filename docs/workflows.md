@@ -20,7 +20,8 @@ Add `--local` or `--remote` to override the registry for one run. Details in
 
 The directory reaches the other Macs through Syncthing within a minute. The
 venv does not travel; direnv rebuilds it on first entry. Use `--no-attach` to
-create without opening.
+create without opening, `--dry-run` to see the commands without running them,
+and `--path DIR` for a location outside `~/Projects` and `~/Work`.
 
 ## See what is running everywhere
 

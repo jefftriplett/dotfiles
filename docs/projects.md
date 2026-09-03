@@ -63,16 +63,36 @@ shell's directory and environment.
 | Command | Description |
 | ------- | ----------- |
 | `workon <project>` | Open a project wherever it lives |
+| `workon --auto[=<p>]` | The default: consult the registry, then cd locally or mosh out |
 | `workon --local[=<p>]` | Force a local cd + virtualenv activation |
 | `workon --remote[=<p>]` | Force a mosh to its registered machine |
-| `workon --host=<m> <p>` | Open it on that machine instead, just this once |
-| `workon --sessions` | Show the tmux sessions live on every Mac, and what opens each |
+| `workon --host=<m> <p>` | Open it on that machine instead, just this once; `--machine` is the same flag |
+| `workon --tmux <p>` | Attach a tmux session for a local open too |
+| `workon --no-tmux <p>` | Plain cd + activate, even when `WORKON_TMUX=1` is set |
+| `workon --list` (`-l`) | Print every name completion knows, one per line |
+| `workon --sessions` (`-s`) | Show the tmux sessions live on every Mac, and what opens each |
 | `workon -s --kill <p>` | Kill a session by project key or session name |
+| `workon --help` (`-h`) | Usage |
+| `workon-refresh` | Rebuild the completion cache now |
 | `mkproject <name>` | Create, register, and open a new project |
 
 There is one `workon` and one `mkproject` — no separate remote command to reach for.
 `--auto` is the default and is what plain `workon <project>` does: consult the registry,
-then cd locally or mosh out.
+then cd locally or mosh out. `--local`, `--remote`, and `--auto` take the name either as
+`--local foo` or `--local=foo`; `--host` takes it as `--host studio` or `--host=studio`.
+Flags and the name can come in any order. A second bare argument, an unknown flag, or a
+`--host` with no machine after it is a usage error with exit code 2.
+
+Two environment variables shape it. `WORKON_TMUX=1` makes every local open attach a
+session, as if `--tmux` were passed; `--no-tmux` overrides it for one call.
+`WORKON_PROJECT_DIRS` is the list of roots the unregistered fallback and the completion
+cache scan, `~/Projects` and `~/Work` by default.
+
+`workon` trusts `projects resolve` and its exit code. Only exit code 3, the resolver's
+"not in the registry" answer, sends `workon` to the directory scan. Any other failure —
+a registry that does not parse, an entry that fails validation, a `projects` script that
+is missing from `$PATH` — is printed and `workon` stops with that exit code, rather than
+silently opening a same-named local directory that may not be the project you meant.
 
 A project that is *not* in the registry falls back to the original directory scan of
 `~/Projects`, `~/Work`, and `~/.virtualenvs`, so nothing that worked before the registry
@@ -184,8 +204,29 @@ mkproject client-site --work      # ~/Work/client-site
 mkproject api --machine studio --python 3.13
 mkproject api --tmux              # wire it up for tmux from the start
 mkproject api --session api-git   # name the tmux session something else
+mkproject api --path ~/Code/api   # somewhere other than home_dir or work_dir
 mkproject api --no-attach         # create and register, don't open
+mkproject api --dry-run           # print what would be created; nothing runs
 ```
+
+| Option | Description |
+| ------ | ----------- |
+| `--machine KEY`, `--host KEY` | Record an owner. `--host` is accepted for symmetry with `workon` and is passed on as `--machine` |
+| `--path DIR` | Create the project here instead of `<home_dir>/<name>` |
+| `--work` | Create under `work_dir` instead of `home_dir` |
+| `--session NAME` | tmux session name when the project key is not what tmux should show |
+| `--tmux` / `--no-tmux` | Register `tmux = true` and write `use tmux`, or pin `tmux = false` and leave it out |
+| `--python VERSION` | Python for the uv venv; default `3` |
+| `--no-attach` | Create and register, but do not `workon` it afterwards |
+| `--dry-run` (`-n`) | Print the commands `projects create` would run. Implies `--no-attach` |
+| `--help` (`-h`) | Usage |
+
+`mkproject` is a thin wrapper: the first bare word is the name, `--host` is rewritten
+to `--machine`, `--no-attach` and `--dry-run` are noted, and everything else goes to
+`projects create` untouched. So any option `projects create --help` lists works here, and
+an option it rejects is rejected there, with its error message. Tab completion offers the
+machine keys after `--machine` or `--host` and a short list of Python versions after
+`--python`.
 
 The generated `.envrc` is `layout uv`, plus `use tmux <session>` when the project is a tmux
 one, so it picks up the [direnv auto-attach](tmux.md#direnv-auto-attach) machinery and settles on

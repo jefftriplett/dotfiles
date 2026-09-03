@@ -7,11 +7,15 @@ out to be. This documents the decision process, not the CLI flags — see
 
 ## 1. Parse arguments
 
-`workon` reads its argv into three things: a `mode` (`auto`, `local`, or
-`remote`; default `auto`), an optional `name`, and an optional `host` override.
-`--list` and `--sessions` short-circuit immediately and don't go through
-resolution at all. No name means: print usage and the project list, then exit
-non-zero.
+`workon` reads its argv into four things: a `mode` (`auto`, `local`, or
+`remote`; default `auto`), an optional `name`, an optional `host` override
+(`--host` or its alias `--machine`, with or without `=`), and a `want_tmux`
+flag that starts from `$WORKON_TMUX` and is set by `--tmux` or cleared by
+`--no-tmux`. `--help`, `--list`, and `--sessions` short-circuit immediately
+and don't go through resolution at all; `--sessions` hands every argument
+after it to `projects sessions`. A second bare word, an unknown flag, or a
+`--host` with nothing after it is a usage error, exit code 2. No name means:
+print usage and the project list, then exit 1.
 
 ## 2. Resolve the name
 
@@ -21,11 +25,24 @@ prints a block of shell variable assignments, which `workon` captures and
 `eval`s into local variables (`WORKON_RESOLVED_NAME`, `_KIND`, `_MACHINE`,
 `_HOST`, `_PATH`, `_PROJECT_PATH`, `_SESSION`, `_TMUX`, `_ARGV`).
 
-**If the name isn't in the registry**, `projects resolve` fails and `workon`
-falls back to the pre-registry behavior (step 3a) — unless `--remote` or
-`--host` was explicitly requested, in which case it errors out: an
-unregistered project has no machine to reach remotely, so `workon` says so and
-suggests `projects add`.
+The resolver's exit code decides what happens next, and only one value means
+"not found":
+
+| `projects resolve` exit | What `workon` does |
+| ----------------------- | ------------------ |
+| 0 | `eval` the assignments and go to step 3b |
+| 3 | The name isn't in the registry: fall back to the directory scan (step 3a) |
+| anything else | Print the resolver's output and stop with that exit code |
+
+The third row is deliberate. A registry that fails to parse, an entry that
+fails validation, or a `projects` script missing from `$PATH` used to look
+exactly like "not registered" and fall through to a same-named directory under
+`~/Projects`. Now those errors stay visible.
+
+**If the name isn't in the registry** and `--remote` or `--host` was
+explicitly requested, `workon` errors out instead of scanning: an unregistered
+project has no machine to reach remotely, so `workon` says so and suggests
+`projects add`.
 
 ## 3. Open the project
 
@@ -89,7 +106,12 @@ Tab-completion for project names is served from a cache at
 cache (four `stat`s via bash's `-nt`, no subprocess in the common case). A
 full rebuild merges the registry (`projects list`), a scan of the project
 dirs, and a scan of `~/.virtualenvs`, deduped and sorted. `workon-refresh`
-forces this rebuild on demand.
+forces this rebuild on demand, and `workon --list` prints the same list.
+
+Completion is context-aware: after `--host` or `--machine` it offers machine
+keys from `projects machines`; on a partial `--local=`, `--remote=`, or
+`--auto=` it completes the name after the `=`; on a bare `-` it offers the
+flags.
 
 ## `mkproject`
 
@@ -97,3 +119,12 @@ forces this rebuild on demand.
 `projects create`, which also registers the project, then calls `workon
 <name>` to open it (unless `--no-attach`/`--dry-run`) — so a freshly created
 project goes through the exact same resolution and open logic as any other.
+
+The argument pass is minimal on purpose. The first bare word is the name.
+`--host KEY` (either spelling) is rewritten to `--machine KEY`, so the flag
+matches `workon`. `--no-attach` is consumed and never reaches `projects
+create`; `--dry-run`/`-n` is both consumed (no attach) and forwarded (print
+only). Every other argument, flag or not, is forwarded verbatim, which is why
+the option list in [Project Registry](projects.md#workon-and-mkproject) is
+really the option list of `projects create`. If `projects create` fails,
+`mkproject` returns its exit code and does not call `workon`.
