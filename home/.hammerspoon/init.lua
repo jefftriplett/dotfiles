@@ -208,7 +208,7 @@ hs.hotkey.bind(hyper, 'S', function()
 end)
 
 hs.hotkey.bind(hyper, 'T', function()
-    toggle_application('Telegram')
+    toggle_application('Telegram Desktop')
 end)
 
 hs.hotkey.bind(hyper, 'E', function()
