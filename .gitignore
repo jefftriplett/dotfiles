@@ -120,3 +120,6 @@ package.json
 # ~/.config/cmux-tmux/hosts.toml (managed by tmux-remote-hosts), not tracked.
 home/.config/tmux/hosts.toml
 home/.config/cmux-tmux/hosts.toml
+
+# Zensical build output
+site/

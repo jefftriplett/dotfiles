@@ -186,7 +186,19 @@ alias lock := freeze
 @update-brewfile:
     cd "{{ DOTFILES_DIR }}/home" && uv run --with cogapp cog -Pr ./Brewfile.cog
 
-# update README.md docs using cog
-[group("utils")]
-@update-readme-docs:
-    cd "{{ DOTFILES_DIR }}" && uv run --with cogapp cog -Pr ./README.md
+# regenerate the recipe list in docs/just.md using cog
+[group("docs")]
+@update-docs:
+    cd "{{ DOTFILES_DIR }}" && uv run --with cogapp cog -I . -Pr ./docs/just.md
+
+alias update-readme-docs := update-docs
+
+# build the manual into site/ with zensical
+[group("docs")]
+@docs-build:
+    cd "{{ DOTFILES_DIR }}" && uvx zensical build
+
+# serve the manual locally with live reload
+[group("docs")]
+@docs-serve:
+    cd "{{ DOTFILES_DIR }}" && uvx zensical serve
