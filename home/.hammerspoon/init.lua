@@ -7,6 +7,11 @@ local config = require('config')
 local log = require('logger')
 require('hs.ipc')
 
+-- config.debug turns on debug output from the logger
+if config.debug then
+    log.setLevel(log.LEVELS.DEBUG)
+end
+
 -- Enable Spotlight for better app name matching
 hs.application.enableSpotlightForNameSearches(true)
 require('keys')
@@ -186,11 +191,9 @@ hs.hotkey.bind(hyper, 'g', hs.grid.show)
 -- Display watcher status
 hs.hotkey.bind(hyper, '0', function()
     log.i('Watcher Status:')
-    log.i('  app_watcher:', app_watcher)
     log.i('  battery_watcher:', battery_watcher)
     log.i('  caffeinate_watcher:', caffeinate_watcher)
     log.i('  config_file_watcher:', config_file_watcher)
-    log.i('  screen_watcher:', screen_watcher)
     log.i('  usb_watcher:', usb_watcher)
     log.i('  wifi_watcher:', wifi_watcher)
 end)
@@ -236,7 +239,12 @@ hs.hotkey.bind(hyper, 'O', function()
 end)
 
 hs.hotkey.bind(hyper, '.', function()
-    hs.hints.windowHints(hs.window.focusedWindow():application():allWindows())
+    local win = hs.window.focusedWindow()
+    if not win then
+        hs.alert.show('No focused window')
+        return
+    end
+    hs.hints.windowHints(win:application():allWindows())
 end)
 
 hs.hotkey.bind(hyper, ',', function()

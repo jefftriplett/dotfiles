@@ -18,12 +18,12 @@ logger.config = {
 }
 
 -- Initialize the hs.logger
+-- hs.logger level names, indexed by our LEVELS values
+local HS_LEVELS = { 'debug', 'info', 'warning', 'error' }
+
 logger.init = function()
-    logger.hsLogger = hs.logger.new('hammerspoon', 'info')
-    -- Set history size if supported
-    if logger.hsLogger.setHistorySize then
-        logger.hsLogger:setHistorySize(logger.config.historySize)
-    end
+    logger.hsLogger = hs.logger.new('hammerspoon', HS_LEVELS[logger.config.level])
+    hs.logger.historySize(logger.config.historySize)
     return logger
 end
 
@@ -74,6 +74,8 @@ end
 -- Set the logging level
 logger.setLevel = function(level)
     logger.config.level = level
+    -- hs.logger filters on its own level, so keep it in step
+    logger.hsLogger.setLogLevel(HS_LEVELS[level])
     return logger
 end
 
@@ -86,9 +88,7 @@ end
 -- Set the history size
 logger.setHistorySize = function(size)
     logger.config.historySize = size
-    if logger.hsLogger.setHistorySize then
-        logger.hsLogger:setHistorySize(size)
-    end
+    hs.logger.historySize(size)
     return logger
 end
 

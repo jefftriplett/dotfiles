@@ -3,4 +3,3 @@
 ----------------------
 
 hyper = {"ctrl", "alt", "cmd"}
-meta = {"cmd", "shift"}

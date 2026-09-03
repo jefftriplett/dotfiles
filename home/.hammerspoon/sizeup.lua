@@ -109,6 +109,7 @@ sizeup.quarter_screen_partitions = {
 
 function sizeup.send_window_left()
   local s = sizeup.screen()
+  if not s then return end
   local ssp = sizeup.split_screen_partitions
   local g = sizeup.gutter()
   sizeup.set_frame("Left", {
@@ -121,6 +122,7 @@ end
 
 function sizeup.send_window_right()
   local s = sizeup.screen()
+  if not s then return end
   local ssp = sizeup.split_screen_partitions
   local g = sizeup.gutter()
   sizeup.set_frame("Right", {
@@ -133,6 +135,7 @@ end
 
 function sizeup.send_window_up()
   local s = sizeup.screen()
+  if not s then return end
   local ssp = sizeup.split_screen_partitions
   local g = sizeup.gutter()
   sizeup.set_frame("Up", {
@@ -145,6 +148,7 @@ end
 
 function sizeup.send_window_down()
   local s = sizeup.screen()
+  if not s then return end
   local ssp = sizeup.split_screen_partitions
   local g = sizeup.gutter()
   sizeup.set_frame("Down", {
@@ -157,6 +161,7 @@ end
 
 function sizeup.send_window_upper_left()
   local s = sizeup.screen()
+  if not s then return end
   local qsp = sizeup.quarter_screen_partitions
   local g = sizeup.gutter()
   sizeup.set_frame("Upper Left", {
@@ -169,6 +174,7 @@ end
 
 function sizeup.send_window_upper_right()
   local s = sizeup.screen()
+  if not s then return end
   local qsp = sizeup.quarter_screen_partitions
   local g = sizeup.gutter()
   sizeup.set_frame("Upper Right", {
@@ -181,6 +187,7 @@ end
 
 function sizeup.send_window_lower_left()
   local s = sizeup.screen()
+  if not s then return end
   local qsp = sizeup.quarter_screen_partitions
   local g = sizeup.gutter()
   sizeup.set_frame("Lower Left", {
@@ -193,6 +200,7 @@ end
 
 function sizeup.send_window_lower_right()
   local s = sizeup.screen()
+  if not s then return end
   local qsp = sizeup.quarter_screen_partitions
   local g = sizeup.gutter()
   sizeup.set_frame("Lower Right", {
@@ -204,23 +212,25 @@ function sizeup.send_window_lower_right()
 end
 
 function sizeup.send_window_prev_monitor()
+  local win = sizeup.win()
+  if not win then return end
   hs.alert.show("Prev Monitor")
-  local win = hs.window.focusedWindow()
-  local nextScreen = win:screen():previous()
-  win:moveToScreen(nextScreen)
+  -- built-in hs.window:moveToScreen keeps the relative size and position
+  win:moveToScreen(win:screen():previous(), false, true)
 end
 
 function sizeup.send_window_next_monitor()
+  local win = sizeup.win()
+  if not win then return end
   hs.alert.show("Next Monitor")
-  local win = hs.window.focusedWindow()
-  local nextScreen = win:screen():next()
-  win:moveToScreen(nextScreen)
+  win:moveToScreen(win:screen():next(), false, true)
 end
 
 -- snapback return the window to its last position. calling snapback twice returns the window to its original position.
 -- snapback holds state for each window, and will remember previous state even when focus is changed to another window.
 function sizeup.snapback()
   local win = sizeup.win()
+  if not win then return end
   local id = win:id()
   local state = win:frame()
   local prev_state = sizeup.snapback_window_state[id]
@@ -232,6 +242,7 @@ end
 
 function sizeup.maximize()
   local win = sizeup.win()
+  if not win then return end
   win:maximize()
 end
 
@@ -242,6 +253,7 @@ end
 --- Example: win:move_to_center_relative(w=0.5, h=0.5) -- window is now centered and is half the width and half the height of screen
 function sizeup.move_to_center_relative(unit)
   local screen = sizeup.screen()
+  if not screen then return end
   sizeup.set_frame("Center", {
     x = screen.x + (screen.w * ((1 - unit.w) / 2)),
     y = screen.y + (screen.h * ((1 - unit.h) / 2)),
@@ -256,6 +268,7 @@ end
 --- Example: win:move_to_center_relative(w=800, h=600) -- window is now centered and is 800px wide and 600px high
 function sizeup.move_to_center_absolute(unit)
   local s = sizeup.screen()
+  if not s then return end
   sizeup.set_frame("Center", {
     x = (s.w - unit.w) / 2,
     y = (s.h - unit.h) / 2,
@@ -273,7 +286,7 @@ end
 -- Initialize Snapback state
 sizeup.snapback_window_state = { }
 
--- return currently focused window
+-- return currently focused window, or nil when nothing has focus
 function sizeup.win()
   return hs.window.focusedWindow()
 end
@@ -281,13 +294,17 @@ end
 -- display title, save state and move win to unit
 function sizeup.set_frame(title, unit)
   local win = sizeup.win()
+  if not win then return end
   sizeup.snapback_window_state[win:id()] = win:frame()
   return win:setFrame(unit)
 end
 
--- screen is the available rect inside the screen edge margins
+-- screen is the available rect inside the screen edge margins, or nil
+-- when no window has focus
 function sizeup.screen()
-  local screen = sizeup.win():screen():frame()
+  local win = sizeup.win()
+  if not win then return nil end
+  local screen = win:screen():frame()
   local sem = sizeup.screen_edge_margins
   return {
     x = screen.x + sem.left,
@@ -304,20 +321,4 @@ function sizeup.gutter()
     x = pm.x / 2,
     y = pm.y / 2
   }
-end
-
---- hs.window:moveToScreen(screen)
---- Method
---- move window to the the given screen, keeping the relative proportion and position window to the original screen.
---- Example: win:moveToScreen(win:screen():next()) -- move window to next screen
-function hs.window:moveToScreen(nextScreen)
-  local currentFrame = self:frame()
-  local screenFrame = self:screen():frame()
-  local nextScreenFrame = nextScreen:frame()
-  self:setFrame({
-    x = ((((currentFrame.x - screenFrame.x) / screenFrame.w) * nextScreenFrame.w) + nextScreenFrame.x),
-    y = ((((currentFrame.y - screenFrame.y) / screenFrame.h) * nextScreenFrame.h) + nextScreenFrame.y),
-    h = ((currentFrame.h / screenFrame.h) * nextScreenFrame.h),
-    w = ((currentFrame.w / screenFrame.w) * nextScreenFrame.w)
-  })
 end

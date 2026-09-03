@@ -30,7 +30,6 @@ config.layouts = {
     vertical = {
         {"Ghostty", nil, "main", hs.layout.maximized, nil, nil},
         {"Slack", nil, "vertical", {x=0, y=0, w=1, h=0.5}, nil, nil},
-        {"Caprine", nil, "vertical", {x=0, y=0.5, w=1, h=0.5}, nil, nil},
         {"Messages", nil, "vertical", {x=0, y=0.5, w=1, h=0.5}, nil, nil},
         {"Telegram Desktop", nil, "vertical", {x=0, y=0.5, w=1, h=0.5}, nil, nil},
     },
