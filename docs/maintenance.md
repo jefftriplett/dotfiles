@@ -106,7 +106,7 @@ by hand, so every Mac gets it.
 in `home/.config/mise/config.toml`. Python is disabled in mise so it never
 competes with uv.
 
-## What you can delete
+## Leftovers from the Python migration
 
 | Path | Status |
 | ---- | ------ |
