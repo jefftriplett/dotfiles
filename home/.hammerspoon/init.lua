@@ -196,7 +196,7 @@ hs.hotkey.bind(hyper, '0', function()
 end)
 
 hs.hotkey.bind(hyper, 'I', function()
-    toggle_application('Ghostty')
+    toggle_application('cmux')
 end)
 
 hs.hotkey.bind(hyper, 'D', function()
@@ -208,7 +208,7 @@ hs.hotkey.bind(hyper, 'S', function()
 end)
 
 hs.hotkey.bind(hyper, 'T', function()
-    toggle_application('Telegram')
+    toggle_application('Telegram Desktop')
 end)
 
 hs.hotkey.bind(hyper, 'E', function()
