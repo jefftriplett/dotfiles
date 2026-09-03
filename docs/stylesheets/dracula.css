@@ -1,0 +1,102 @@
+/* Dracula color scheme for the manual. Palette: https://draculatheme.com/contribute */
+[data-md-color-scheme="dracula"] {
+  --md-hue: 231;
+
+  /* base */
+  --md-default-bg-color: #282a36;
+  --md-default-bg-color--light: #2c2e3b;
+  --md-default-bg-color--lighter: #313442;
+  --md-default-bg-color--lightest: #383b4a;
+  --md-default-fg-color: #f8f8f2;
+  --md-default-fg-color--light: #d8d8d2;
+  --md-default-fg-color--lighter: #a6a8b8;
+  --md-default-fg-color--lightest: #44475a;
+
+  /* header, tabs, sidebar accents */
+  --md-primary-fg-color: #21222c;
+  --md-primary-fg-color--light: #282a36;
+  --md-primary-fg-color--dark: #191a21;
+  --md-primary-bg-color: #f8f8f2;
+  --md-primary-bg-color--light: #d8d8d2;
+  --md-accent-fg-color: #bd93f9;
+  --md-accent-fg-color--transparent: rgba(189, 147, 249, 0.1);
+  --md-accent-bg-color: #282a36;
+  --md-accent-bg-color--light: #313442;
+
+  /* links and marks */
+  --md-typeset-color: #f8f8f2;
+  --md-typeset-a-color: #8be9fd;
+  --md-typeset-mark-color: rgba(241, 250, 140, 0.35);
+  --md-typeset-del-color: rgba(255, 85, 85, 0.35);
+  --md-typeset-ins-color: rgba(80, 250, 123, 0.35);
+  --md-typeset-kbd-color: #44475a;
+  --md-typeset-kbd-accent-color: #6272a4;
+  --md-typeset-kbd-border-color: #191a21;
+  --md-typeset-table-color: rgba(248, 248, 242, 0.12);
+  --md-typeset-table-color--light: rgba(248, 248, 242, 0.035);
+
+  /* code */
+  --md-code-bg-color: #21222c;
+  --md-code-fg-color: #f8f8f2;
+  --md-code-hl-color: #bd93f9;
+  --md-code-hl-color--light: rgba(189, 147, 249, 0.15);
+  --md-code-hl-number-color: #bd93f9;
+  --md-code-hl-special-color: #ff79c6;
+  --md-code-hl-function-color: #50fa7b;
+  --md-code-hl-constant-color: #bd93f9;
+  --md-code-hl-keyword-color: #ff79c6;
+  --md-code-hl-string-color: #f1fa8c;
+  --md-code-hl-name-color: #f8f8f2;
+  --md-code-hl-operator-color: #ff79c6;
+  --md-code-hl-punctuation-color: #f8f8f2;
+  --md-code-hl-comment-color: #6272a4;
+  --md-code-hl-generic-color: #8be9fd;
+  --md-code-hl-variable-color: #ffb86c;
+
+  /* admonitions, footer, shadows */
+  --md-admonition-fg-color: #f8f8f2;
+  --md-admonition-bg-color: #282a36;
+  --md-footer-bg-color: #21222c;
+  --md-footer-bg-color--dark: #191a21;
+  --md-footer-fg-color: #f8f8f2;
+  --md-footer-fg-color--light: #d8d8d2;
+  --md-footer-fg-color--lighter: #a6a8b8;
+  --md-shadow-z1: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.2), 0 0 0.0625rem rgba(0, 0, 0, 0.3);
+  --md-shadow-z2: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.35), 0 0 0.0625rem rgba(0, 0, 0, 0.4);
+  --md-shadow-z3: 0 0.25rem 0.625rem rgba(0, 0, 0, 0.5), 0 0 0.0625rem rgba(0, 0, 0, 0.55);
+
+  /* mermaid */
+  --md-mermaid-font-family: var(--md-text-font-family), sans-serif;
+  --md-mermaid-edge-color: #bd93f9;
+  --md-mermaid-node-bg-color: #44475a;
+  --md-mermaid-node-fg-color: #f8f8f2;
+  --md-mermaid-label-bg-color: #282a36;
+  --md-mermaid-label-fg-color: #f8f8f2;
+  --md-mermaid-sequence-actor-bg-color: #44475a;
+  --md-mermaid-sequence-actor-border-color: #bd93f9;
+  --md-mermaid-sequence-actor-fg-color: #f8f8f2;
+  --md-mermaid-sequence-actor-line-color: #6272a4;
+  --md-mermaid-sequence-box-bg-color: #313442;
+  --md-mermaid-sequence-box-fg-color: #f8f8f2;
+  --md-mermaid-sequence-label-bg-color: #bd93f9;
+  --md-mermaid-sequence-label-fg-color: #282a36;
+  --md-mermaid-sequence-message-fg-color: #f8f8f2;
+  --md-mermaid-sequence-message-line-color: #bd93f9;
+  --md-mermaid-sequence-note-bg-color: #f1fa8c;
+  --md-mermaid-sequence-note-fg-color: #282a36;
+  --md-mermaid-sequence-note-border-color: #6272a4;
+  --md-mermaid-sequence-number-bg-color: #bd93f9;
+  --md-mermaid-sequence-number-fg-color: #282a36;
+
+  color-scheme: dark;
+}
+
+/* Admonition accents in Dracula colors */
+[data-md-color-scheme="dracula"] .md-typeset .admonition.note,
+[data-md-color-scheme="dracula"] .md-typeset details.note { border-color: #8be9fd; }
+[data-md-color-scheme="dracula"] .md-typeset .admonition.tip,
+[data-md-color-scheme="dracula"] .md-typeset details.tip { border-color: #50fa7b; }
+[data-md-color-scheme="dracula"] .md-typeset .admonition.warning,
+[data-md-color-scheme="dracula"] .md-typeset details.warning { border-color: #ffb86c; }
+[data-md-color-scheme="dracula"] .md-typeset .admonition.danger,
+[data-md-color-scheme="dracula"] .md-typeset details.danger { border-color: #ff5555; }

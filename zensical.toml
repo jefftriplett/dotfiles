@@ -11,6 +11,10 @@ edit_uri = "edit/main/docs/"
 docs_dir = "docs"
 site_dir = "site"
 
+extra_css = [
+  "stylesheets/dracula.css",
+]
+
 nav = [
   { "Overview" = "index.md" },
   { "How the pieces fit together" = "overview.md" },
@@ -68,7 +72,7 @@ toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
 media = "(prefers-color-scheme: dark)"
-scheme = "slate"
+scheme = "dracula"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to system preference"
 

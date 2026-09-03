@@ -68,6 +68,7 @@ is set inside each app.
 | Obsidian | Set per vault in the appearance settings |
 | Telegram | Set in the app |
 | Vivaldi | Set in the browser |
+| This manual | `docs/stylesheets/dracula.css`, selected as the dark scheme in `zensical.toml` |
 
 ## Inspiration / Thank you!
 
