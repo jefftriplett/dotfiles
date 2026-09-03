@@ -596,21 +596,3 @@ mas "Recordia", id: 1529006487
 mas "The Unarchiver", id: 425424353
 mas "ToothFairy", id: 1191449274
 mas "Xcode", id: 497799835
-uv "aider-install"
-uv "batrachian-toad"
-uv "claude-code-transcripts"
-uv "cogapp"
-uv "em-keyboard"
-uv "files-to-claude-xml"
-uv "grip"
-uv "justpath"
-uv "llm"
-uv "prek"
-uv "pyright"
-uv "rich-cli"
-uv "rodney"
-uv "ruff"
-uv "ruff-lsp"
-uv "ttok"
-uv "yt-dlp[default]"
-npm "corepack"
