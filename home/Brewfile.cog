@@ -10,341 +10,554 @@
 # [[[cog
 # dump("brew bundle --taps dump --file=-")
 # ]]]
-tap "buo/cask-upgrade"
-tap "homebrew/bundle"
-tap "homebrew/cask-fonts"
-tap "homebrew/cask-versions"
-tap "homebrew/command-not-found"
-tap "homebrew/services"
-tap "homeport/tap"
+tap "darrylmorley/whatcable"
+tap "rjyo/moshi"
+tap "skzv/tap"
+tap "steipete/tap"
+tap "tw93/tap"
 # [[[end]]]
 
 
 # [[[cog
 # dump("brew bundle --brews dump --file=-")
 # ]]]
+# Run your GitHub Actions locally
 brew "act"
-brew "uv"
-brew "xz"
-brew "apg"
+# Download with resuming and segmented downloading
 brew "aria2"
-brew "autoconf"
-brew "automake"
-brew "coreutils"
-brew "libtool"
-brew "libyaml"
+# Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
+# Automatic configure script builder
+brew "autoconf"
+# Tool for generating GNU Standards-compliant Makefiles
+brew "automake"
+# General-purpose data compression with high compression ratio
+brew "xz"
+# Official Amazon AWS command-line interface
 brew "awscli"
+# Bourne-Again SHell, a UNIX command interpreter
 brew "bash"
+# Programmable completion for Bash 4.2+
+brew "bash-completion@2"
+# C library of Git core methods that is re-entrant and linkable
 brew "libgit2"
+# Clone of cat(1) with syntax highlighting and Git integration
 brew "bat"
+# Core application library for C
 brew "glib"
-brew "pkg-config"
+# Development kit for the Java programming language
 brew "openjdk"
+# Remove large files or passwords from Git history like git-filter-branch
 brew "bfg"
+# Get/set bluetooth power and discoverable state
 brew "blueutil"
+# Open-source, cross-platform JavaScript runtime environment
 brew "node"
+# Package manager for the web
 brew "bower"
+# Install RubyGems as Homebrew formulae
 brew "brew-gem"
-brew "bun"
+# Freely available high-quality data compressor
 brew "bzip2"
-brew "caddy", link: false
-brew "curl"
+# Powerful, enterprise-ready, open source web server with automatic HTTPS
+brew "caddy"
+# Helper program to build and install c-like libraries
 brew "cargo-c"
+# YAML Parser
+brew "libyaml"
+# Validate CloudFormation templates against the CloudFormation spec
 brew "cfn-lint"
+# CLI for managing secrets through AWS SSM Parameter Store
 brew "chamber"
+# Testing and linting Helm charts
 brew "chart-testing"
+# Control Google Chrome from the command-line
 brew "chrome-cli"
+# Official command-line tool for CircleCI
 brew "circleci"
+# Cloudflare Tunnel client (formerly Argo Tunnel)
 brew "cloudflared"
+# Cross-platform make
 brew "cmake"
-brew "php"
-brew "composer"
+# GNU File, Shell, and Text utilities
+brew "coreutils"
+# Get a file from an HTTP, HTTPS or FTP server
+brew "curl"
+# Control the macOS dark mode from the command-line
 brew "dark-mode"
+# Load/unload environment variables based on $PWD
 brew "direnv"
-brew "docker", link: false
-brew "docker-compose", link: false
-brew "docker-slim"
+# Tool for managing dock items
 brew "dockutil"
+# Command-line tool for DigitalOcean
 brew "doctl"
+# Disk Usage/Free Utility - a better 'df' alternative
 brew "duf"
+# Header files for the dynamic linker
 brew "dyld-headers"
+# Spellchecker wrapping library
 brew "enchant"
-brew "espanso"
-brew "exa"
-brew "sdl2"
-brew "xvid"
+# SDL2 compatibility layer that uses SDL3 behind the scenes
+brew "sdl2-compat"
+# Play, record, convert, and stream select audio and video codecs
 brew "ffmpeg"
-brew "qt"
+# All-in-one NES/Famicom Emulator
 brew "fceux"
+# Simple, fast and user-friendly alternative to find
 brew "fd"
+# High-performance, high-quality MPEG-4 video library
+brew "xvid"
+# Play, record, convert, and stream audio and video
 brew "ffmpeg@4"
+# Banner-like program prints strings as ASCII art
 brew "figlet"
+# User-friendly command-line shell for UNIX-like operating systems
 brew "fish"
+# Command-line tools for fly.io services
 brew "flyctl"
+# Command-line fuzzy finder written in Go
 brew "fzf"
+# Library for processing command-line flags
+brew "gflags"
+# GitHub command-line tool
 brew "gh"
+# International domain name library
 brew "libidn"
+# Remote repository management made easy
 brew "ghq"
+# Highest-quality GIF encoder based on pngquant
 brew "gifski"
+# Command-line utility for uploading Gists
 brew "gist"
+# Distributed revision control system
 brew "git"
+# Syntax-highlighting pager for git and diff output
 brew "git-delta"
-brew "git-flow"
+# Git extension for versioning large files
 brew "git-lfs"
+# Open GitHub webpages from a terminal
 brew "git-open"
+# Git extension to generate reports for standup meetings
 brew "git-standup"
+# Interactive command-line tool for using emoji in commit messages
 brew "gitmoji"
+# Render markdown on the CLI
 brew "glow"
+# X.509 and CMS library
 brew "libksba"
+# GNU Privacy Guard (OpenPGP)
 brew "gnupg"
+# Open source programming language to build simple/reliable/efficient software
 brew "go"
+# CLI for Drive, Gmail, Calendar, Sheets, Docs, Chat, Admin, and more
+brew "googleworkspace-cli"
+# Generic library support script
+brew "libtool"
+# Graph visualization software from AT&T and Bell Labs
 brew "graphviz"
+# Perceptual JPEG encoder
 brew "guetzli"
+# Tool for glamorous shell scripts
 brew "gum"
+# Smarter Dockerfile linter to validate best practices
 brew "hadolint"
+# Open-source video transcoder available for Linux, Mac, and Windows
+brew "handbrake"
+# Command-line interface for Hetzner Cloud
+brew "hcloud"
+# Kubernetes package manager
 brew "helm"
+# Agent multiplexer that lives in your terminal
+brew "herdr"
+# Improved top (interactive process viewer)
+brew "htop"
+# Apache HTTP server
 brew "httpd"
+# Add GitHub support to git on the command-line
 brew "hub"
+# Configurable static site generator
 brew "hugo"
+# Tools and libraries to manipulate images in select formats
 brew "imagemagick"
+# CLI wrapper for basic network utilities on macOS - ip command
 brew "iproute2mac"
+# Audio Connection Kit
 brew "jack"
+# Lightweight and flexible command-line JSON processor
 brew "jq"
+# Handy way to save and run project-specific commands
 brew "just"
-brew "kubernetes-cli", link: false
+# Kubernetes command-line interface
+brew "kubernetes-cli"
+# Simple terminal UI for git commands
 brew "lazygit"
+# Asynchronous event library
 brew "libev"
+# Low level NFC SDK and Programmers API
+brew "libnfc"
+# C websockets server library
+brew "libwebsockets"
+# GNOME XML library
 brew "libxml2"
+# XML security library
 brew "libxmlsec1"
-brew "llm"
+# Find what models run on your hardware
+brew "llmfit"
+# Count lines of code quickly
 brew "loc"
+# Rainbows and unicorns in your console!
 brew "lolcat"
+# Powerful, lightweight programming language
 brew "lua"
+# Swiss Army Knife for macOS
 brew "m-cli"
+# Utility for directing compilation
 brew "make"
+# Mac App Store command-line interface
 brew "mas"
+# Java-based project management
 brew "maven"
+# Fast and user friendly build system
 brew "meson"
+# Run a Kubernetes cluster locally
 brew "minikube"
+# Minify and secure Docker images
+brew "mintoolkit"
+# Polyglot runtime manager (asdf rust clone)
 brew "mise"
+# Matroska media files manipulation tools
 brew "mkvtoolnix"
+# Deep clean and optimize your Mac
+brew "mole"
+# Remote terminal application
 brew "mosh"
+# Multiple Repository management tool
 brew "mr"
-brew "zlib"
+# MySQL logical backup tool
 brew "mydumper"
-brew "nativefier"
+# HTTP/2 C Library
 brew "nghttp2"
+# HTTP(S) server and reverse proxy, and IMAP/POP3 proxy server
 brew "nginx"
+# Package compiler and linker metadata toolkit
+brew "pkgconf"
+# Install NodeJS versions
 brew "node-build"
+# Node.js version manager
 brew "nodenv"
+# Modern shell for the GitHub era
 brew "nushell"
+# Manage multiple Node.js versions
 brew "nvm"
-brew "oxipng"
-brew "pandoc"
-brew "pandoc-crossref"
-brew "parallel"
-brew "pastel"
-brew "pinentry-mac"
-brew "pip-completion"
-brew "pngpaste"
-brew "pnpm"
-brew "postgresql@14", restart_service: true
-brew "pre-commit"
-brew "prettier"
-brew "pup"
-brew "python-launcher"
-brew "ruby-build"
-brew "rbenv"
-brew "rclone"
-brew "redis"
-brew "rename"
+# Search tool like grep and The Silver Searcher
 brew "ripgrep"
+# AI coding agent, built for the terminal
+brew "opencode"
+# Multithreaded PNG optimizer written in Rust
+brew "oxipng"
+# Swiss-army knife of markup format conversion
+brew "pandoc"
+# Pandoc filter for numbering and cross-referencing
+brew "pandoc-crossref"
+# Shell command parallelization utility
+brew "parallel"
+# Command-line tool to generate, analyze, convert and manipulate colors
+brew "pastel"
+# Pinentry for GPG on Mac
+brew "pinentry-mac"
+# Bash completion for Pip
+brew "pip-completion"
+# Execute binaries from Python packages in isolated environments
+brew "pipx"
+# Paste PNG into files
+brew "pngpaste"
+# Fast, disk space efficient package manager
+brew "pnpm"
+# PDF rendering library (based on the xpdf-3.0 code base)
+brew "poppler"
+# Code formatter for JavaScript, CSS, JSON, GraphQL, Markdown, YAML
+brew "prettier"
+# Launch your Python interpreter the lazy/smart way
+brew "python-launcher"
+# Cross-platform application and UI framework
+brew "qt"
+# Install various Ruby versions and implementations
+brew "ruby-build"
+# Ruby version manager
+brew "rbenv"
+# Rsync for cloud storage
+brew "rclone"
+# Persistent key-value database, with built-in net interface
+brew "redis"
+# Perl-powered file rename script with many helpful built-ins
+brew "rename"
+# Edit files from an SSH session in TextMate
 brew "rmate"
+# Safe, concurrent, practical language
 brew "rust"
+# Security health metrics for Open Source
 brew "scorecard"
+# Display and control your Android device
 brew "scrcpy"
+# Generate ASCII art with terminal, shell, and OS info
 brew "screenfetch"
+# Intuitive find & replace CLI
 brew "sd"
+# SDL2 graphics drawing primitives and other support functions
 brew "sdl2_gfx"
+# Library for loading images as SDL surfaces and textures
 brew "sdl2_image"
+# Sample multi-channel audio mixer library
 brew "sdl2_mixer"
+# Small sample cross-platform networking library
 brew "sdl2_net"
+# Library for using TrueType fonts in SDL applications
 brew "sdl2_ttf"
+# Static analysis and lint tool, for (ba)sh scripts
 brew "shellcheck"
+# Autoformat shell script source code
 brew "shfmt"
+# Create beautiful image of your source code
 brew "silicon"
+# SMART hard drive monitoring
 brew "smartmontools"
+# Speex audio processing library
 brew "speexdsp"
+# Cross-shell prompt for astronauts
 brew "starship"
+# Tool to enforce Swift style and conventions
+brew "swiftlint"
+# Generate scripting interfaces to C/C++ code
 brew "swig"
-brew "syncthing", restart_service: true
-brew "tandem"
+# Open source continuous file synchronization application
+brew "syncthing", restart_service: :changed
+# Send macOS User Notifications from the command-line
 brew "terminal-notifier"
-brew "terraform"
+# Programmatically correct mistyped console commands
 brew "thefuck"
-brew "tldr"
+# Terminal multiplexer
 brew "tmux"
+# Anonymizing overlay network for TCP
 brew "tor"
+# Display directories as trees (with optional color/HTML output)
 brew "tree"
-brew "ttyd", args: ["HEAD"]
+# Command-line tool for sharing terminal over the web
+brew "ttyd"
+# Converts a ttyrec file into gif files
 brew "ttygif"
+# Markup-based typesetting system
+brew "typst"
+# File synchronization tool
 brew "unison"
+# Post-processing for scanned/photocopied books
+brew "unpaper"
+# Tool for writing command-line pipes with instant live preview
 brew "up"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
+# Syntax-aware linter for prose
 brew "vale"
+# Your CLI home video recorder
 brew "vhs"
+# Universal WebAssembly Runtime
+brew "wasmer"
+# Executes a program periodically, showing output fullscreen
 brew "watch"
+# Execute commands when watched files change
 brew "watchexec"
-brew "webkit2png"
+# Bundler for JavaScript and friends
 brew "webpack"
+# Internet file retriever
 brew "wget"
-brew "whalebrew"
+# Ad-hoc single-file webserver
 brew "woof"
+# HTTP benchmarking tool
+brew "wrk"
+# Generate your Xcode project from a spec file and your folder structure
+brew "xcodegen"
+# JavaScript package manager
 brew "yarn"
+# Blazing fast terminal file manager written in Rust, based on async I/O
+brew "yazi"
+# Tool for managing your YubiKey configuration
 brew "ykman"
-brew "youtube-dl"
-brew "homeport/tap/termshot"
+# Pluggable terminal workspace, with terminal multiplexer as the base feature
+brew "zellij"
+# Rust-first autonomous agent runtime
+brew "zeroclaw"
+# Programming language designed for robustness, optimality, and clarity
+brew "zig"
+# General-purpose lossless data-compression library
+brew "zlib"
+# Fast X CLI for tweeting, replying, and reading
+brew "steipete/tap/bird"
 # [[[end]]]
 
 
 # [[[cog
 # dump("brew bundle --casks dump --file=-")
 # ]]]
+# Command-line interface for 1Password
 cask "1password-cli"
-cask "8bitdo-firmware-updater"
+# Control every piece of your controller
 cask "8bitdo-ultimate-software"
+# AirPods companion app
+cask "airbuddy"
+# Watch local content on Apple TV and Chromecast
 cask "airflow"
+# Screen mirroring receiver
 cask "airserver"
+# Application launcher and productivity software
 cask "alfred"
+# Android SDK component
 cask "android-platform-tools"
+# Application uninstaller
 cask "appcleaner"
-cask "applepi-baker"
-cask "aws-vault"
+# Securely stores and accesses AWS credentials in a development environment
+cask "aws-vault-binary"
+# Tool to flash OS images to SD cards & USB drives
 cask "balenaetcher"
-cask "basictex"
-cask "bluestacks"
-cask "bunch"
+# Utility to disconnect all drives connected to a Caldigit dock
 cask "caldigit-docking-utility"
-cask "chicken"
-cask "chromedriver"
-cask "cleanmymac"
+# E-books management software
+cask "calibre"
+# Clipboard extension app
 cask "clipy"
+# Semantic code analysis engine
 cask "codeql"
-cask "controlplane"
-cask "cscreen"
+# Claude code parallelisation
+cask "conductor"
+# Brings the power of Copilot coding agent directly to your terminal
+cask "copilot-cli"
+# Multi-platform client-side cloud file encryption tool
+cask "cryptomator"
+# API documentation browser and code snippet manager
 cask "dash"
+# Voice and text chat software
 cask "discord"
-cask "displaycal"
+# Emulator to play GameCube and Wii games
 cask "dolphin"
+# Elgato video capture and streaming app
 cask "elgato-game-capture-hd"
-cask "enjoyable"
-cask "epoccam"
+# Video and audio player
+cask "elmedia-player"
+# Notification Center widget and menu bar application to monitor fans
 cask "fanny"
-cask "ferdi"
-cask "firefox"
-cask "flameshot"
+# Email client
+cask "fastmail"
+# UI toolkit for building applications for mobile, web and desktop
 cask "flutter"
 cask "font-awesome-terminal-fonts"
-cask "font-cascadia"
-cask "font-cascadia-pl"
 cask "font-comic-mono"
 cask "font-fira-code"
 cask "font-fontawesome"
 cask "font-hack-nerd-font"
 cask "font-ia-writer-mono"
 cask "font-ia-writer-quattro"
+cask "font-maple-mono"
+# Set of tools to manage resources and applications hosted on Google Cloud
+cask "gcloud-cli"
+# Terminal emulator that uses platform-native UI and GPU acceleration
+cask "ghostty"
+# GitHub notifications on your menu bar
 cask "gitify"
-cask "gitup"
+# Git interface focused on visual interaction
+cask "gitup-app"
+# Web browser
 cask "google-chrome"
-cask "google-cloud-sdk"
-cask "google-hangouts"
+# Desktop automation application
+cask "hammerspoon"
+# Open-source video transcoder
+cask "handbrake-app"
+# Laravel and PHP development environment manager
+cask "herd"
+# Terminal built on web technologies
 cask "hyper"
+# Terminal emulator as alternative to Apple's Terminal app
 cask "iterm2"
+# Automatically ejects external drives
 cask "jettison"
+cask "kakuku"
+# Blocks all Keyboard and TouchBar input
 cask "keyboardcleantool"
+# Open-source keystroke visualiser
 cask "keycastr"
-cask "kindle"
+# Speech recognition tool
 cask "macwhisper"
+# CSV editor
 cask "modern-csv"
+# Deep clean, analyze, and optimize app
+cask "mole-app"
+# Tool to control external monitor brightness & volume
 cask "monitorcontrol"
-cask "obs-virtualcam"
+# Open-source software for live streaming and screen recording
+cask "obs"
+# Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
+# AI coding agent desktop client
+cask "opencode-desktop"
+# Retro video game emulation
 cask "openemu"
+# Replacement for Docker Desktop
 cask "orbstack"
-cask "paw"
-cask "pennywise"
-cask "polypane"
+# Collaboration platform for API development
 cask "postman"
+# IDE for professional Python development
 cask "pycharm"
+# Companion app for Flipper Zero devices
 cask "qflipper"
+# HTTP client that helps testing and describing APIs
+cask "rapidapi"
+# Imaging utility to install operating systems to a microSD card
 cask "raspberry-pi-imager"
+# Store SSH keys in the Secure Enclave
 cask "secretive"
-cask "skype"
+# Team communication and collaboration software
+cask "slack"
+# Displays all open files and sockets in use by all running processes
 cask "sloth"
+# System monitor for the menu bar
 cask "stats"
+# Video game digital distribution service
 cask "steam"
-cask "streamlabs-obs"
-cask "sublime-merge"
+# All-in-one live streaming software
+cask "streamlabs"
+# Text editor for code, markup and prose
 cask "sublime-text"
+# Menu bar customization tool
 cask "swiftbar"
+# Enables you to control your computer with voice, eye tracking, or noises
 cask "talon"
+# Desktop client for Telegram messenger
+cask "telegram-desktop"
+# Menu bar manager
+cask "thaw"
+# Time Machine log viewer & status inspector
 cask "thetimemachinemechanic"
+# Flexible level editor
 cask "tiled"
-cask "timemachineeditor"
-cask "tweeten"
+# Git client focusing on power and productivity
+cask "tower"
+# Web browser with built-in email client focusing on customization and control
 cask "vivaldi"
-cask "xbar"
+# Multimedia player
+cask "vlc"
+cask "whatcable"
+# Full-featured companion app to the YubiKey
 cask "yubico-authenticator"
-cask "yubico-yubikey-manager"
-cask "yubico-yubikey-personalization-gui"
 # [[[end]]]
 
 
 # [[[cog
 # dump("brew bundle --mas dump --file=-")
 # ]]]
-mas "1Keyboard", id: 766939888
-mas "Airmail", id: 918858936
-mas "Annotate", id: 918207447
-mas "Bear", id: 1091189122
-mas "Bitwarden", id: 1352778147
-mas "Clean", id: 418412301
-mas "Craft", id: 1487937127
-mas "Directive", id: 1503550067
-mas "EasyRes", id: 688211836
-mas "Evernote", id: 406056744
-mas "Fantastical", id: 975937182
-mas "Front and Center", id: 1493996622
 mas "GarageBand", id: 682658836
 mas "Hand Mirror", id: 1502839586
 mas "iMovie", id: 408981434
 mas "Keynote", id: 409183694
-mas "Kiwi for Gmail", id: 986304488
 mas "Meeter", id: 1510445899
-mas "MenubarX", id: 1575588022
-mas "Mic Drop", id: 1489816366
-mas "Microsoft Remote Desktop", id: 1295203466
-mas "Mona", id: 1659154653
 mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
-mas "Pandan", id: 1569600264
-mas "Paprika Recipe Manager", id: 451907568
-mas "Pixelmator", id: 407963104
-mas "Pixelmator Pro", id: 1289583905
-mas "Play", id: 1596506190
-mas "Primitive", id: 1175103038
-mas "ReadKit", id: 1615798039
-mas "ReadKit", id: 588726889
-mas "Recordia", id: 1529006487
-mas "Signals", id: 1453293391
-mas "Skitch", id: 425955336
-mas "SnippetsLab", id: 1006087419
-mas "Tailscale", id: 1475387142
-mas "Textual IRC Client", id: 1262957439
-mas "The Unarchiver", id: 425424353
-mas "Toggl Track", id: 1291898086
-mas "ToothFairy", id: 1191449274
-mas "Ulysses", id: 1225570693
-mas "Webcam Settings Control", id: 1172053162
+mas "Parachute", id: 6748614170
 mas "Xcode", id: 497799835
 # [[[end]]]

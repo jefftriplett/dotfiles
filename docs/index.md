@@ -80,7 +80,7 @@ the rest is set inside each app.
 [alfred]: https://www.alfredapp.com/
 [cmux]: https://github.com/manaflow-ai/cmux
 [direnv]: https://direnv.net/
-[dracula]: https://draculatheme.com/iterm
+[dracula]: https://draculatheme.com/
 [hammerspoon]: http://www.hammerspoon.org/
 [homebrew]: http://brew.sh/
 [homesick]: https://github.com/technicalpickles/homesick

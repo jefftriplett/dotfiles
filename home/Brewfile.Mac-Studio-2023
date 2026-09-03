@@ -485,8 +485,6 @@ cask "github"
 cask "hammerspoon"
 # Terminal built on web technologies
 cask "hyper"
-# Terminal emulator as alternative to Apple's Terminal app
-cask "iterm2"
 # Automatically ejects external drives
 cask "jettison"
 # Spot and merge differences in text and image files or folders

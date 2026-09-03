@@ -56,19 +56,6 @@ fi
 
 ssh-add -k &> /dev/null
 
-###################
-# iTerm2 settings #
-###################
-
-function iterm2_print_user_vars {
-    iterm2_set_user_var badge "${USER_BADGE}"
-}
-
-## itermocil autocompletion
-# if command -v itermocil > /dev/null; then
-#     complete -W "$(itermocil --list)" itermocil
-# fi
-
 # turned off to avoid ".python-version" conflicts with UV
 if command -v mise > /dev/null 2>&1; then
     eval "$(mise activate bash)";

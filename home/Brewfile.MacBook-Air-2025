@@ -449,8 +449,6 @@ cask "handbrake-app"
 cask "herd"
 # Terminal built on web technologies
 cask "hyper"
-# Terminal emulator as alternative to Apple's Terminal app
-cask "iterm2"
 # Automatically ejects external drives
 cask "jettison"
 cask "kakuku"
