@@ -13,18 +13,25 @@ site_dir = "site"
 
 nav = [
   { "Overview" = "index.md" },
-  { "Installation" = "installation.md" },
-  { "Just Recipes" = "just.md" },
-  { "Hammerspoon" = "hammerspoon.md" },
-  { "tmux" = "tmux.md" },
-  { "Projects" = [
+  { "How the pieces fit together" = "overview.md" },
+  { "Setup" = [
+    { "Setting up a Mac" = "setup.md" },
+    { "Installation" = "installation.md" },
+  ] },
+  { "Daily work" = "workflows.md" },
+  { "Maintenance" = [
+    { "Maintenance" = "maintenance.md" },
+    { "Homebrew removals" = "homebrew-removals.md" },
+  ] },
+  { "Troubleshooting" = "troubleshooting.md" },
+  { "Reference" = [
+    { "Just Recipes" = "just.md" },
+    { "Hammerspoon" = "hammerspoon.md" },
+    { "tmux" = "tmux.md" },
     { "Project Registry" = "projects.md" },
     { "Machine List" = "machines.md" },
     { "How workon resolves a project" = "workon-process.md" },
-  ] },
-  { "cmux Workspaces" = "cmux.md" },
-  { "Maintenance" = [
-    { "Homebrew removals" = "homebrew-removals.md" },
+    { "cmux Workspaces" = "cmux.md" },
   ] },
   { "Drafts" = [
     { "Project registry post" = "projects-registry-post.md" },

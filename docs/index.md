@@ -8,6 +8,18 @@ the project registry that ties the three Macs together.
 
 The source lives at [jefftriplett/dotfiles](https://github.com/jefftriplett/dotfiles).
 
+## Start here
+
+| Page | Read it when |
+| ---- | ------------ |
+| [How the pieces fit together](overview.md) | You want to know which tool owns what |
+| [Setting up a Mac](setup.md) | A fresh machine needs the whole setup |
+| [Daily work](workflows.md) | You want the command for a task: open, start, list, or kill a project |
+| [Maintenance](maintenance.md) | It is time to update, freeze a Brewfile, or lint |
+| [Troubleshooting](troubleshooting.md) | Something answers wrong, or not at all |
+
+The Reference section holds the full option lists for each tool.
+
 ## Key Tools
 
 ### CLI

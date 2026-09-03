@@ -39,6 +39,11 @@ Run `just docs-serve` to read it locally.
 | Page | What it covers |
 | ---- | -------------- |
 | [Overview](docs/index.md) | Key tools, repository layout, inspiration |
+| [How the pieces fit together](docs/overview.md) | Which tool owns what, and how a shell, a project, and the Macs connect |
+| [Setting up a Mac](docs/setup.md) | The full walk-through for a fresh machine |
+| [Daily work](docs/workflows.md) | Task recipes: open, start, list, and kill projects; windows; reloads |
+| [Maintenance](docs/maintenance.md) | The update cycle, Brewfiles, lint, the manual, Python and mise upkeep |
+| [Troubleshooting](docs/troubleshooting.md) | Symptoms, causes, and fixes |
 | [Installation](docs/installation.md) | Install steps and the everyday `just` workflow |
 | [Just Recipes](docs/just.md) | Every recipe, generated from the justfiles |
 | [Hammerspoon](docs/hammerspoon.md) | Window management, display grid, and application hotkeys |
