@@ -105,25 +105,6 @@ Available recipes:
         uv-python-reinstall *ARGS # reinstall python versions using uv installer
         uv-tool-install *ARGS     # install common python CLI tools using uv installer
         uv-tool-upgrade           # upgrade common python CLI tools using uv installer
-    virtualenv:
-        scan    # scan virtualenvs and display their python versions
-        upgrade # upgrade pip in all virtualenvs
-        workon  # list all virtualenvs with their python and pip versions
-    virtualenvwrapper:
-        get_env_details  # virtualenvwrapper hook for getting environment details
-        initialize       # virtualenvwrapper hook for environment initialization
-        postactivate     # virtualenvwrapper hook that runs after environment activation
-        postdeactivate   # virtualenvwrapper hook that runs after environment deactivation
-        postmkproject    # virtualenvwrapper hook that runs after creating a project
-        postmkvirtualenv # virtualenvwrapper hook that runs after creating a virtualenv
-        postrmproject    # virtualenvwrapper hook that runs after removing a project
-        postrmvirtualenv # virtualenvwrapper hook that runs after removing a virtualenv
-        preactivate      # virtualenvwrapper hook that runs before environment activation
-        predeactivate    # virtualenvwrapper hook that runs before environment deactivation
-        premkproject     # virtualenvwrapper hook that runs before creating a project
-        premkvirtualenv  # virtualenvwrapper hook that runs before creating a virtualenv
-        prermproject     # virtualenvwrapper hook that runs before removing a project
-        prermvirtualenv  # virtualenvwrapper hook that runs before removing a virtualenv
 
     [database]
     postgresql-upgrade # upgrade PostgreSQL to latest version and migrate databases

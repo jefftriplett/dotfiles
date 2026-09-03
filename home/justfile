@@ -14,8 +14,6 @@ mod homebrew '.justfiles/homebrew.justfile'
 mod macos '.justfiles/macos.justfile'
 mod mise '.justfiles/mise.justfile'
 mod python '.justfiles/python.justfile'
-mod virtualenv '.justfiles/virtualenv.justfile'
-mod virtualenvwrapper '.justfiles/virtualenvwrapper.justfile'
 
 HOST := `hostname -s`
 RICH_THEME := "dracula"
@@ -64,8 +62,6 @@ alias lock := freeze
     just macos fmt
     just mise fmt
     just python fmt
-    just virtualenv fmt
-    just virtualenvwrapper fmt
 
 # update lockfiles without installing dependencies
 [group("utils")]

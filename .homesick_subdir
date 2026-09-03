@@ -1,5 +1,4 @@
 .config
 .sshrc.d
-.virtualenvs
 .zsh
 Library/Application Support

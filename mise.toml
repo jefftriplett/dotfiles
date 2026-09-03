@@ -101,19 +101,6 @@ dotfiles.default_mode = "symlink"
 "~/.config/yabai" = {}
 "~/.config/zed" = {}
 
-# --- .virtualenvs (immediate children, mirroring homesick) ---
-"~/.virtualenvs/get_env_details" = {}
-"~/.virtualenvs/initialize" = {}
-"~/.virtualenvs/postactivate" = {}
-"~/.virtualenvs/postdeactivate" = {}
-"~/.virtualenvs/postmkproject" = {}
-"~/.virtualenvs/postmkvirtualenv" = {}
-"~/.virtualenvs/postrmvirtualenv" = {}
-"~/.virtualenvs/preactivate" = {}
-"~/.virtualenvs/predeactivate" = {}
-"~/.virtualenvs/premkproject" = {}
-"~/.virtualenvs/premkvirtualenv" = {}
-"~/.virtualenvs/prermvirtualenv" = {}
 # (postrmproject/prermproject omitted: dangling homesick links, source gone)
 
 # --- Library/Application Support (immediate children, mirroring homesick) ---
