@@ -24,6 +24,7 @@ tap "homeport/tap"
 # dump("brew bundle --brews dump --file=-")
 # ]]]
 brew "act"
+brew "uv"
 brew "xz"
 brew "apg"
 brew "aria2"

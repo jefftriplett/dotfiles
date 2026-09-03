@@ -335,6 +335,8 @@ brew "unison"
 brew "unpaper"
 # Tool for writing command-line pipes with instant live preview
 brew "up"
+# Extremely fast Python package installer and resolver, written in Rust
+brew "uv"
 # Syntax-aware linter for prose
 brew "vale"
 # Your CLI home video recorder
