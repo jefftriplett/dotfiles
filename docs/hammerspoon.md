@@ -54,7 +54,7 @@ Press <kbd>hyper</kbd> + <kbd>r</kbd> to reload the configuration.
 | cmux          | <kbd>hyper</kbd> + <kbd>i</kbd> |
 | Discord       | <kbd>hyper</kbd> + <kbd>d</kbd> |
 | Slack         | <kbd>hyper</kbd> + <kbd>s</kbd> |
-| Telegram Desktop | <kbd>hyper</kbd> + <kbd>t</kbd> |
+| Telegram      | <kbd>hyper</kbd> + <kbd>t</kbd> |
 | Sublime Text  | <kbd>hyper</kbd> + <kbd>e</kbd> |
 | Tower         | <kbd>hyper</kbd> + <kbd>w</kbd> |
 | Zed           | <kbd>hyper</kbd> + <kbd>x</kbd> |
