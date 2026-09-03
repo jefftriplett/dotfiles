@@ -74,7 +74,7 @@ sublime_user := env_var("HOME") + "/Library/Application Support/Sublime Text/Pac
 sublime_repo := justfile_directory() + "/.config/sublime-text"
 
 # link the Sublime Text settings from the dotfiles into the Packages/User folder
-@sublime-link:
+sublime-link:
     #!/usr/bin/env bash
     set -euo pipefail
     mkdir -p "{{ sublime_user }}"
@@ -91,7 +91,7 @@ sublime_repo := justfile_directory() + "/.config/sublime-text"
     done
 
 # show how the local Sublime Text settings differ from the dotfiles
-@sublime-diff:
+sublime-diff:
     #!/usr/bin/env bash
     for name in "Preferences.sublime-settings" "Package Control.sublime-settings"; do
         echo "== ${name}"
