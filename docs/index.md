@@ -63,7 +63,7 @@ is set inside each app.
 | Sublime Text | `home/.config/sublime-text/`, color scheme and Package Control entry |
 | Zed | `home/.config/zed/themes/dracula.json`; select it in the Zed theme setting |
 | Alfred | Theme imported into Alfred preferences |
-| cmux | Set in the app |
+| cmux | Set in the app, from the [cmux Dracula theme](https://cmuxthemes.com/themes/dracula/) |
 | Slack | Set in the app |
 | Obsidian | Set per vault in the appearance settings |
 | Telegram | Set in the app |
