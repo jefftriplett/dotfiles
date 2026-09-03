@@ -1,0 +1,6 @@
+// Per-machine overrides for the Mini, merged over Preferences.sublime-settings
+// by `just macos::sublime-link`. Keys here win.
+{
+	"font_face": "iA Writer Quattro",
+	"font_size": 16,
+}

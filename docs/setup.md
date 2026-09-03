@@ -147,6 +147,11 @@ The preferences and the Package Control package list live in
 overwrites a real file that is already there; `just macos::sublime-diff`
 shows what differs, so you can merge by hand and rerun the link.
 
+For a machine that needs different values, add
+`Preferences.<Hostname>.sublime-settings` next to the shared file with only
+the keys that differ, such as a font size. The recipe then writes a generated
+preferences file for that machine instead of a link, with the overlay applied.
+
 ## Verify
 
 ```shell

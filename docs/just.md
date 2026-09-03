@@ -87,7 +87,7 @@ Available recipes:
     macos:
         duti-setup                 # set default applications for file types using duti
         sublime-diff               # show how the local Sublime Text settings differ from the dotfiles
-        sublime-link               # link the Sublime Text settings from the dotfiles into the Packages/User folder
+        sublime-link               # link the Sublime Text settings into Packages/User; a Preferences.<Host> overlay is merged in
         timemachine-boost          # boost Time Machine backup speed by increasing IO priority
         timemachine-boost-complete # restore normal IO priority after Time Machine backup completes
         timemachine-delete +ARGS   # delete specific Time Machine backups
