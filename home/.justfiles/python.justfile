@@ -18,15 +18,11 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
     just --justfile {{ justfile }} --fmt
 
 # bootstrap python: uv-managed interpreters, `python` on PATH, and CLI tools
-@bootstrap:
-    just --justfile {{ justfile }} uv-python-install
+@bootstrap: uv-python-install && uv-tool-install
     uv python install --default 3.14
-    just --justfile {{ justfile }} uv-tool-install
 
-# update python environment
-@upgrade:
-    just --justfile {{ justfile }} uv-pip-upgrade
-    just --justfile {{ justfile }} uv-tool-upgrade
+# update python environment: interpreters in place, then the CLI tools
+@upgrade: uv-pip-upgrade uv-tool-upgrade
 
 # ----------------------------------------------------------------
 # UV recipes - https://docs.astral.sh/uv/
@@ -58,8 +54,7 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
     -uv python install {{ ARGS }} 3.10
 
 # reinstall python versions using uv installer
-@uv-python-reinstall *ARGS:
-    just --justfile {{ justfile }} uv-python-install --reinstall {{ ARGS }}
+@uv-python-reinstall *ARGS: (uv-python-install "--reinstall" ARGS)
 
 # install common python CLI tools using uv installer
 @uv-tool-install *ARGS:
@@ -80,5 +75,4 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
     -uv tool install --python 3.12 yt-dlp[default] {{ ARGS }}
 
 # upgrade common python CLI tools using uv installer
-@uv-tool-upgrade:
-    just --justfile {{ justfile }} uv-tool-install --upgrade
+@uv-tool-upgrade: (uv-tool-install "--upgrade")

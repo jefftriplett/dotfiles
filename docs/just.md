@@ -99,7 +99,7 @@ Available recipes:
         upgrade   # install latest language versions, drop the old ones, and refresh shims
     python:
         bootstrap                 # bootstrap python: uv-managed interpreters, `python` on PATH, and CLI tools
-        upgrade                   # update python environment
+        upgrade                   # update python environment: interpreters in place, then the CLI tools
         uv-pip-install *ARGS      # install python packages using uv pip installer
         uv-pip-uninstall *ARGS    # uninstall python packages using uv pip installer
         uv-pip-upgrade *ARGS      # update python versions using uv installer
