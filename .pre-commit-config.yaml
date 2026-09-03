@@ -1,5 +1,5 @@
-# Run with prek: `just prek-install` once, then every commit runs these.
-# `just prek` runs them against the whole tree.
+# Lint hooks, run by prek: `just lint` locally and the CI workflow on push.
+# Optional: `uvx prek install` makes them run on every commit as well.
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0

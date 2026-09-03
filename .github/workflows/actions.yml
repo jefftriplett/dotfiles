@@ -3,31 +3,16 @@ name: CI
 on: [push]
 
 jobs:
-  lint_shellscripts:
-    runs-on: [ubuntu-latest]
-    container:
-      image: koalaman/shellcheck-alpine:latest
-      options: --entrypoint /bin/sh
+  lint:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - run: |
-            #!/usr/bin/env sh
-            set -ex
+      - uses: actions/checkout@v4
 
-            shellcheck --version
-            shellcheck ./home/.bash_* --exclude=SC1090,SC1091
-            find . -name '*.sh' -not -path './node_modules/*' -exec shellcheck --exclude=SC1090,SC1091 {} +
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
 
-  # lint_dockerfile:
-  #   runs-on: [ubuntu-latest]
-  #   container:
-  #     image: hadolint/hadolint:latest-debian
-  #     options: --entrypoint /bin/sh
-  #   steps:
-  #     - uses: actions/checkout@v1
-  #     - run: |
-  #           #!/usr/bin/env sh
-  #           set -ex
+      - uses: extractions/setup-just@v3
 
-  #           hadolint --version
-  #           hadolint Dockerfile
+      - name: Run the lint hooks
+        run: uv run --with prek prek run --all-files --show-diff-on-failure

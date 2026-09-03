@@ -73,28 +73,15 @@ alias lock := freeze
 @install:
     homesick symlink
 
-# run shellcheck on bash configuration and shell script files
+# run every lint hook in .pre-commit-config.yaml against the whole tree
 [group("utils")]
 @lint:
-    #!/usr/bin/env sh
-    find "{{ DOTFILES_DIR }}/home" -maxdepth 1 -name '.bash_*' ! -name '*.orig' -exec shellcheck --exclude=SC1090,SC1091 {} \;
-    cd "{{ DOTFILES_DIR }}" && git ls-files '*.sh' | xargs shellcheck --exclude=SC1090,SC1091
-
-# run every pre-commit hook against the whole tree
-[group("utils")]
-@prek:
-    cd "{{ DOTFILES_DIR }}" && prek run --all-files
-
-# install the pre-commit hooks into .git/hooks with prek
-[group("utils")]
-@prek-install:
-    cd "{{ DOTFILES_DIR }}" && prek install
+    cd "{{ DOTFILES_DIR }}" && uv run --with prek prek run --all-files
 
 # run validation checks
 [group("utils")]
 @test:
     just lint
-    just prek
 
 # list outdated packages from Homebrew and pip
 [group("maintenance")]
