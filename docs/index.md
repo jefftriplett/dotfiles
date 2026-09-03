@@ -63,12 +63,18 @@ is set inside each app.
 | Sublime Text | `home/.config/sublime-text/`, color scheme and Package Control entry |
 | Zed | `home/.config/zed/themes/dracula.json`; select it in the Zed theme setting |
 | Alfred | Theme imported into Alfred preferences |
-| cmux | Set in the app, from the [cmux Dracula theme](https://cmuxthemes.com/themes/dracula/) |
+| cmux | Inherits `theme = dracula` from the Ghostty config; `cmux themes list` should name that file as its source |
 | Slack | Set in the app |
 | Obsidian | Set per vault in the appearance settings |
 | Telegram | Set in the app |
 | Vivaldi | Set in the browser |
 | This manual | `docs/stylesheets/dracula.css`, selected as the dark scheme in `zensical.toml` |
+
+cmux is built on Ghostty and reads `~/.config/ghostty/config`, so the one `theme = dracula`
+line covers both terminals. `cmux themes set` writes an override into cmux's own
+Application Support folder that shadows that line on one Mac; `cmux themes clear` removes
+it. The [cmux Dracula theme](https://cmuxthemes.com/themes/dracula/) page shows the same
+`cmux themes set --dark "Dracula"` command, which is not needed here.
 
 ## Inspiration / Thank you!
 
