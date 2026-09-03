@@ -572,7 +572,3 @@ mas "ToothFairy", id: 1191449274
 mas "Ulysses", id: 1225570693
 mas "Webcam Settings Control", id: 1172053162
 mas "Xcode", id: 497799835
-go "github.com/arsham/figurine"
-go "github.com/cortesi/modd/cmd/modd"
-cargo "mdbook"
-npm "iterm2-tab-set"
