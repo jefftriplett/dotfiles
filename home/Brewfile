@@ -156,10 +156,6 @@ brew "postgresql@14", restart_service: true
 brew "pre-commit"
 brew "prettier"
 brew "pup"
-brew "pyenv", args: ["HEAD"]
-brew "pyenv-ccache"
-brew "pyenv-pip-migrate"
-brew "pyenv-virtualenvwrapper"
 brew "python-launcher"
 brew "rbenv"
 brew "rclone"

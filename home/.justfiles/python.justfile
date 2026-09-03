@@ -17,29 +17,16 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
 @fmt:
     just --justfile {{ justfile }} --fmt
 
-# bootstrap python environment with essential packages
+# bootstrap python: uv-managed interpreters, `python` on PATH, and CLI tools
 @bootstrap:
-    PIP_REQUIRE_VIRTUALENV=false python -m pip install \
-            --disable-pip-version-check \
-            --no-compile \
-            --upgrade \
-        pip uv
-
-    python -m uv pip install \
-            --system \
-            --upgrade \
-        virtualenv \
-        virtualenvwrapper \
-        wheel
-
-# list outdated Python packages
-@outdated:
-    PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
+    just --justfile {{ justfile }} uv-python-install
+    uv python install --default 3.14
+    just --justfile {{ justfile }} uv-tool-install
 
 # update python environment
 @upgrade:
-    just --justfile {{ justfile }} bootstrap
     just --justfile {{ justfile }} uv-pip-upgrade
+    just --justfile {{ justfile }} uv-tool-upgrade
 
 # ----------------------------------------------------------------
 # UV recipes - https://docs.astral.sh/uv/
@@ -47,7 +34,7 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
 
 # install python packages using uv pip installer
 @uv-pip-install *ARGS:
-    python -m uv pip install \
+    uv pip install \
         --system \
         --upgrade \
         {{ ARGS }}
@@ -58,7 +45,7 @@ justfile := justfile_directory() + "/.justfiles/python.justfile"
 
 # uninstall python packages using uv pip installer
 @uv-pip-uninstall *ARGS:
-    python -m uv pip uninstall \
+    uv pip uninstall \
         --system \
         {{ ARGS }}
 

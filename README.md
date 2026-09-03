@@ -8,7 +8,7 @@ Run `just docs-serve` to read it locally.
 ## Key Tools
 
 - [Homebrew][homebrew] for packages, [Homesick][homesick] for the symlinks, [Just](https://github.com/casey/just) for the tasks
-- [direnv][direnv] and [Starship][starship] in the shell; [uv][uv] and [pyenv][pyenv] for Python
+- [direnv][direnv] and [Starship][starship] in the shell; [uv][uv] for Python
 - [Hammerspoon][hammerspoon] for windows and hotkeys, [Alfred][alfred] for everything else
 - tmux and [cmux][cmux] for sessions, with a project registry that spans three Macs
 
@@ -78,6 +78,5 @@ Here are a few ways to keep up with me online. If you have a question about this
 [hammerspoon]: http://www.hammerspoon.org/
 [homebrew]: http://brew.sh/
 [homesick]: https://github.com/technicalpickles/homesick
-[pyenv]: https://github.com/yyuu/pyenv
 [starship]: https://starship.rs/
 [uv]: https://github.com/astral-sh/uv

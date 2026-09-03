@@ -82,15 +82,6 @@ export PIP_RESPECT_VIRTUALENV="true"
 
 PATH="${PATH}:${HOME}/.local/bin"
 
-###########################
-# python / pyenv settings #
-###########################
-
-# export PYENV_ROOT="${HOME}/.pyenv"
-# export PYENV_VIRTUALENVWRAPPER_PREFER_PYVENV="true"
-
-# PATH="${PATH}:${PYENV_ROOT}/bin"
-
 #######
 # bun #
 #######

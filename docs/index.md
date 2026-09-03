@@ -26,7 +26,6 @@ The source lives at [jefftriplett/dotfiles](https://github.com/jefftriplett/dotf
 ### Python Environment
 
 - [pip][pip]: PyPA recommended tool for installing Python packages
-- [pyenv][pyenv]: Simple Python version management
 - [uv][uv]: Fast Python package installer and resolver, written in Rust
 
 ## Repository Layout
@@ -61,6 +60,5 @@ The source lives at [jefftriplett/dotfiles](https://github.com/jefftriplett/dotf
 [homebrew]: http://brew.sh/
 [homesick]: https://github.com/technicalpickles/homesick
 [pip]: https://pip.pypa.io/en/latest/
-[pyenv]: https://github.com/yyuu/pyenv
 [starship]: https://starship.rs/
 [uv]: https://github.com/astral-sh/uv

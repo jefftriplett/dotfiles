@@ -13,7 +13,6 @@ mod llm '.justfiles/llm.justfile'
 mod homebrew '.justfiles/homebrew.justfile'
 mod macos '.justfiles/macos.justfile'
 mod mise '.justfiles/mise.justfile'
-mod pyenv '.justfiles/pyenv.justfile'
 mod python '.justfiles/python.justfile'
 mod virtualenv '.justfiles/virtualenv.justfile'
 mod virtualenvwrapper '.justfiles/virtualenvwrapper.justfile'
@@ -64,7 +63,6 @@ alias lock := freeze
     just homebrew fmt
     just macos fmt
     just mise fmt
-    just pyenv fmt
     just python fmt
     just virtualenv fmt
     just virtualenvwrapper fmt
@@ -95,7 +93,6 @@ alias lock := freeze
 [group("maintenance")]
 @outdated:
     just homebrew::outdated
-    PIP_REQUIRE_VIRTUALENV=false python -m pip list --outdated
 
 # update project to run at its current version
 [group("maintenance")]
@@ -117,14 +114,13 @@ alias lock := freeze
     just homebrew::cleanup
     just mise::upgrade
     just python::upgrade
-    just pyenv::upgrade
     just python::uv-tool-upgrade
     just llm::upgrade
 
-# upgrade all tools (pyenv and mise packages)
+# upgrade all tools (uv pythons and mise packages)
 [group("maintenance")]
 @upgrade-all:
-    just pyenv::upgrade-all
+    just python::uv-python-install
     just mise::upgrade
 
 # ----------------------------------------------------------------

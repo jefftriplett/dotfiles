@@ -29,15 +29,6 @@ if command -v starship > /dev/null; then
     eval "$(starship init bash)"
 fi
 
-###########################
-# Python / pyenv settings #
-###########################
-
-if command -v pyenv > /dev/null; then
-    eval "$(pyenv init --path --no-rehash)";
-    eval "$(pyenv init - --no-rehash)";
-fi
-
 # workon/mkproject: one command each, registry-aware (~/Projects/projects.toml)
 if [[ -f "${HOME}/.workon.bash" ]]; then
     # shellcheck source=/dev/null

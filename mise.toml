@@ -62,7 +62,7 @@ dotfiles.default_mode = "symlink"
 #     immediate children as whole symlinks, NOT recurse to leaves).
 #     symlink-each was wrong here: it descended into ~/.config/iterm2/
 #     sockets/secrets (a live socket) and refused to overwrite it.
-#     .pyenv/.sshrc.d/.zsh omitted: empty in the castle, nothing to link. ---
+#     .sshrc.d/.zsh omitted: empty in the castle, nothing to link. ---
 # --- .config (immediate children, mirroring homesick) ---
 "~/.config/aerospace" = {}
 "~/.config/atuin" = {}

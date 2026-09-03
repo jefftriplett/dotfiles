@@ -95,12 +95,8 @@ Available recipes:
     mise:
         bootstrap # bootstrap mise by installing configured language versions
         upgrade   # install latest language versions and refresh shims
-    pyenv:
-        upgrade +ARGS="--skip-existing"     # upgrade all python versions managed by pyenv
-        upgrade-all +ARGS="--skip-existing" # install or upgrade all python versions managed by pyenv
     python:
-        bootstrap                 # bootstrap python environment with essential packages
-        outdated                  # list outdated Python packages
+        bootstrap                 # bootstrap python: uv-managed interpreters, `python` on PATH, and CLI tools
         upgrade                   # update python environment
         uv-pip-install *ARGS      # install python packages using uv pip installer
         uv-pip-uninstall *ARGS    # uninstall python packages using uv pip installer
@@ -142,7 +138,7 @@ Available recipes:
     outdated           # list outdated packages from Homebrew and pip
     update             # update project to run at its current version
     upgrade            # update and upgrade Homebrew packages
-    upgrade-all        # upgrade all tools (pyenv and mise packages)
+    upgrade-all        # upgrade all tools (uv pythons and mise packages)
 
     [services]
     restart            # restart Homebrew services

@@ -261,12 +261,6 @@ brew "pnpm"
 brew "poppler"
 # Code formatter for JavaScript, CSS, JSON, GraphQL, Markdown, YAML
 brew "prettier"
-# Python version management
-brew "pyenv"
-# Make Python build faster, using the leverage of `ccache`
-brew "pyenv-ccache"
-# Alternative to pyenv for managing virtualenvs
-brew "pyenv-virtualenvwrapper"
 # Launch your Python interpreter the lazy/smart way
 brew "python-launcher"
 # Cross-platform application and UI framework

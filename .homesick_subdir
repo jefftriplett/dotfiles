@@ -1,5 +1,4 @@
 .config
-.pyenv
 .sshrc.d
 .virtualenvs
 .zsh

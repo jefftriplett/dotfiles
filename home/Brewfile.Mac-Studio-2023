@@ -294,14 +294,6 @@ brew "postgresql@14"
 brew "pre-commit"
 # Code formatter for JavaScript, CSS, JSON, GraphQL, Markdown, YAML
 brew "prettier"
-# Python version management
-brew "pyenv"
-# Make Python build faster, using the leverage of `ccache`
-brew "pyenv-ccache"
-# Migrate pip packages from one Python version to another
-brew "pyenv-pip-migrate"
-# Alternative to pyenv for managing virtualenvs
-brew "pyenv-virtualenvwrapper"
 # Launch your Python interpreter the lazy/smart way
 brew "python-launcher"
 # Cross-platform application and UI framework

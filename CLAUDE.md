@@ -24,5 +24,5 @@
 - Format: `{emoji_short_code} {commit_message}`
 
 ## Tools Used
-- Package management: Homebrew, uv, pyenv
+- Package management: Homebrew, uv
 - Automation: Just (command runner), homesick (dotfiles)
