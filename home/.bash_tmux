@@ -1,6 +1,6 @@
 # shellcheck shell=bash
 
-# shellcheck source=.tmux_session_name.bash
+# shellcheck source=/dev/null
 [[ -r "${HOME}/.tmux_session_name.bash" ]] &&
     source "${HOME}/.tmux_session_name.bash"
 

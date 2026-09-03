@@ -2,6 +2,7 @@
 
 ## Build Commands
 - Format all justfiles: `just fmt`
+- Pre-commit hooks (prek, config in `.pre-commit-config.yaml`): `just prek-install` once, `just prek` to run on the whole tree
 - Update Brewfile: `just update-brewfile`
 - Regenerate the recipe list in the manual: `just update-docs`
 - Preview the manual: `just docs-serve` (Zensical, config in `zensical.toml`, pages in `docs/`)

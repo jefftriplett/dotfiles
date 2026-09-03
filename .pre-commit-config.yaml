@@ -1,0 +1,41 @@
+# Run with prek: `just prek-install` once, then every commit runs these.
+# `just prek` runs them against the whole tree.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.bak$
+      - id: end-of-file-fixer
+        exclude: \.bak$
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: check-toml
+      - id: check-json
+      - id: check-executables-have-shebangs
+      - id: check-shebang-scripts-are-executable
+
+  - repo: https://github.com/shellcheck-py/shellcheck-py
+    rev: v0.11.0.1
+    hooks:
+      - id: shellcheck
+        args: ["--exclude=SC1090,SC1091"]
+        # Bash config files have no extension, so match them by name too.
+        types: [text]
+        files: ^(home/\.bash_.*|home/\.workon\.bash|.*\.sh)$
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.4
+    hooks:
+      - id: ruff-check
+        # The uv inline scripts in home/bin have no .py extension.
+        types: [text]
+        files: ^(home/bin/(cmux-.*|tmux-remote-ls|projects|subl-projects|git-jeff|_.*\.py)|scripts/.*\.py)$
+
+  - repo: local
+    hooks:
+      - id: just-fmt-check
+        name: just --fmt --check
+        entry: bash -c 'for f in "$@"; do just --unstable --fmt --check --justfile "$f" || exit 1; done' --
+        language: system
+        files: (^|/)(justfile|.*\.justfile)$

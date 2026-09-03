@@ -1,0 +1,7 @@
+# Repo-level ruff config so the pre-commit hook does not inherit the global
+# ruleset. Matches the PEP8 guidance in CLAUDE.md.
+line-length = 119
+
+[lint]
+select = ["E", "F"]
+ignore = ["E501"]

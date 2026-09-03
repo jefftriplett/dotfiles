@@ -139,6 +139,8 @@ Available recipes:
     fmt                # format and overwrite justfile
     freeze             # update lockfiles without installing dependencies [alias: lock]
     lint               # run shellcheck on bash configuration and shell script files
+    prek               # run every pre-commit hook against the whole tree
+    prek-install       # install the pre-commit hooks into .git/hooks with prek
     test               # run validation checks
     update-brewfile    # update Brewfile from cog template
 ```
