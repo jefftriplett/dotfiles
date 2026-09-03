@@ -12,9 +12,9 @@ set +m
 export OLLAMA_HOST=0.0.0.0:11434
 export OLLAMA_ORIGINS="*"
 
-if [[ -r "${HOME}/.bash_tmux" ]]; then
+if [[ -r "${HOME}/.bashrc.d/20-tmux.bash" ]]; then
     # shellcheck source=/dev/null
-    source "${HOME}/.bash_tmux"
+    source "${HOME}/.bashrc.d/20-tmux.bash"
 fi
 
 # CMUX fix: ensure cmux's bootstrap runs before starship initializes,

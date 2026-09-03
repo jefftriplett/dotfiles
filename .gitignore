@@ -31,7 +31,7 @@ node_modules/
 *.orig
 *.system-ca-bundle
 *.user-ca-bundle
-.bash_secrets
+45-secrets.bash
 .secrets
 .ssh/
 apps/*-x64/*

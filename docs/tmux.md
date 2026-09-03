@@ -1,6 +1,6 @@
 # tmux
 
-Session management and key bindings are defined in `home/.tmux.conf` and `home/.bash_tmux`.
+Session management and key bindings are defined in `home/.tmux.conf` and `home/.bashrc.d/20-tmux.bash`.
 
 ## Shell Aliases
 
@@ -22,7 +22,7 @@ want completion.
 
 ## Shell Functions
 
-Defined in `home/.bash_tmux`. All of them respect `TMUX_AUTOATTACH_MACHINE`, so they act on
+Defined in `home/.bashrc.d/20-tmux.bash`. All of them respect `TMUX_AUTOATTACH_MACHINE`, so they act on
 the remote host's tmux when one is set (see [Remote Sessions](#remote-sessions)).
 
 | Function | Description |
@@ -148,7 +148,7 @@ Set `NO_TMUX_AUTOATTACH=1` to skip auto-attach for a shell session.
 
 ## Environment Variables
 
-These variables are exported by `use tmux` in `.envrc` and read by the shell functions in `home/.bash_tmux`. They can also be set manually without direnv.
+These variables are exported by `use tmux` in `.envrc` and read by the shell functions in `home/.bashrc.d/20-tmux.bash`. They can also be set manually without direnv.
 
 | Variable | Description |
 | -------- | ----------- |

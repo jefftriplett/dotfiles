@@ -28,7 +28,7 @@ counts as covering the "thumb-im" session and isn't created twice.
 
 Sessions are attached by name (`tmux new-session -A -s <name>`) rather than by
 cwd. That matters: a project .envrc running `use tmux` exports TMUX_AUTOATTACH,
-which outranks the directory basename in ~/.bash_tmux, so a cwd-derived attach
+which outranks the directory basename in ~/.bashrc.d/20-tmux.bash, so a cwd-derived attach
 inside e.g. writing-bot/writing-bot-git lands on the "writing-bot" session
 instead of "writing-bot-git".
 

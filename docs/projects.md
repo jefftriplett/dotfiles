@@ -56,7 +56,7 @@ them should have to grow a dependency to do so. Only `projects` declares pydanti
 
 ## workon and mkproject
 
-Registry-aware companions to `workon` and `mkproject`, defined in `home/.workon.bash`.
+Registry-aware companions to `workon` and `mkproject`, defined in `home/.bashrc.d/60-workon.bash`.
 They are shell functions rather than scripts because the local case has to change the calling
 shell's directory and environment.
 

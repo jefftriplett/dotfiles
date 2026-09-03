@@ -1,6 +1,6 @@
 # How `workon` resolves and opens a project
 
-`workon` (defined in `home/.workon.bash`) takes a project name and figures out
+`workon` (defined in `home/.bashrc.d/60-workon.bash`) takes a project name and figures out
 where that project lives, then opens it the right way for wherever that turns
 out to be. This documents the decision process, not the CLI flags — see
 `workon --help` for those.

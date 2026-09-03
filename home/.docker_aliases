@@ -1,2 +1,0 @@
-alias tldr='docker run --rm -it -v ~/.tldr/:/root/.tldr/ nutellinoit/tldr'
-alias markdownlint='docker run --rm -it -v "$(pwd):/app" mmphego/markdownlint'

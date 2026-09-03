@@ -11,7 +11,7 @@ Roughly `ssh <host> tmux ls` for each machine, but parsed: sessions are sorted,
 annotated with attached/detached and window count, and grouped under their
 host.
 
-`tmux-ls` in ~/.bash_tmux shows one host at a time, and only the host that
+`tmux-ls` in ~/.bashrc.d/20-tmux.bash shows one host at a time, and only the host that
 direnv happens to have exported. This asks every machine at once, so a session
 left running on the Studio is visible from the Air without guessing where it
 went.

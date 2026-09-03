@@ -1,12 +1,12 @@
 """Shared model for the project registry in ~/Projects/projects.toml.
 
 Used by the `projects` CLI and, through it, by the `workon` and `mkproject`
-shell functions in ~/.workon.bash.
+shell functions in ~/.bashrc.d/60-workon.bash.
 
 The registry answers one question: given a project name, which machine is it
 on, where does it live there, and what tmux session holds it. That was
 previously spread across a project's .envrc (`use tmux NAME --machine X`), the
-cmux session dump, and the directory scan in ~/.workon.bash, so the same fact
+cmux session dump, and the directory scan in ~/.bashrc.d/60-workon.bash, so the same fact
 had to be written three times and could disagree with itself.
 
 Not a standalone script: the uv scripts in this directory import it, and find
@@ -161,7 +161,7 @@ class Project(BaseModel):
     def session_name(self) -> str:
         # An explicit session is used verbatim; a key-derived one is slugified,
         # because tmux session names may not contain ":" or ".". Shares
-        # session_slug with _cmux.py and ~/.bash_tmux so a project registered
+        # session_slug with _cmux.py and ~/.bashrc.d/20-tmux.bash so a project registered
         # as "thumb.im" resolves to the same "thumb-im" session everywhere.
         return self.session or session_slug(self.key)
 

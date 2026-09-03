@@ -61,7 +61,7 @@ def session_slug(name: str) -> str:
 
     tmux session names may not contain ":" or "."; spaces are legal but a
     nuisance to type at `tmux attach -t`. This is the single definition --
-    _projects.py, __tmux_session_name in ~/.bash_tmux, and use_tmux in
+    _projects.py, __tmux_session_name in ~/.bashrc.d/20-tmux.bash, and use_tmux in
     ~/.config/direnv/direnvrc all have to agree with it, or the same project
     resolves to two different sessions depending on which one you went through.
     """
@@ -414,7 +414,7 @@ class Workspace:
         # session names may not contain ":" or ".". Built from the base title
         # (not display_title), so the "[mosh] " label and its slugified form
         # never reach the remote tmux. Keep the replacement set in sync with
-        # __tmux_session_name in ~/.bash_tmux.
+        # __tmux_session_name in ~/.bashrc.d/20-tmux.bash.
         if self.session:
             return self.session
         return session_slug(self.base_title)

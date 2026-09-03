@@ -60,19 +60,22 @@ flowchart TD
 | Python interpreters and CLI tools | [uv](https://docs.astral.sh/uv/) | `home/.justfiles/python.justfile`; `uv python install --default` owns `python` on the PATH |
 | Per-directory environment | [direnv](https://direnv.net/) | `home/.config/direnv/direnvrc` defines `layout uv` and `use tmux` |
 | Prompt | [Starship](https://starship.rs/) | `home/.config/starship.toml` |
-| Terminal sessions | tmux | `home/.tmux.conf`; functions in `home/.bash_tmux` |
+| Terminal sessions | tmux | `home/.tmux.conf`; functions in `home/.bashrc.d/20-tmux.bash` |
 | Terminal windows | [cmux](https://github.com/manaflow-ai/cmux) | `home/bin/cmux-*` keep workspaces and sessions in step |
-| Where projects live | the project registry | `~/Projects/projects.toml`, edited by `projects`; opened by `workon` and `mkproject` in `home/.workon.bash` |
+| Where projects live | the project registry | `~/Projects/projects.toml`, edited by `projects`; opened by `workon` and `mkproject` in `home/.bashrc.d/60-workon.bash` |
 | Windows and app hotkeys | [Hammerspoon](https://www.hammerspoon.org/) | `home/.hammerspoon/` |
 | Lint | prek | `.pre-commit-config.yaml`, run by `just lint` and by CI |
 | This manual | Zensical | `zensical.toml` and `docs/`, published by the Docs workflow |
 
 ## How a shell starts
 
-1. `~/.bash_profile` sources the `.bash_*` files, then `.bash_osx` on macOS.
-2. `.bash_osx` sources `.workon.bash`, which defines `workon` and `mkproject`.
-3. `~/.bashrc` sources `.bash_tmux`, starts Starship, and installs the direnv hook.
-4. If `TMUX_AUTOATTACH` is set, `.bash_tmux` attaches the named session. A project's `.envrc` sets that variable through `use tmux`.
+1. `~/.bash_profile` sources every `~/.bashrc.d/*.bash` file in name order: exports, tmux, aliases, functions, secrets, the OS file, then workon.
+2. `50-osx.bash` and `50-linux.bash` each start with a `uname` check and return on the other OS.
+3. `60-workon.bash` defines `workon` and `mkproject`.
+4. `~/.bashrc` sources `20-tmux.bash`, starts Starship, and installs the direnv hook.
+5. If `TMUX_AUTOATTACH` is set, `20-tmux.bash` attaches the named session. A project's `.envrc` sets that variable through `use tmux`.
+
+To add shell config, drop a numbered `.bash` file into `home/.bashrc.d/`. Nothing else needs editing.
 
 The result: `cd` into a project, direnv activates its venv and, when the
 project asked for it, drops you into its tmux session.

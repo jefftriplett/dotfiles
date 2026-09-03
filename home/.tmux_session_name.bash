@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 #
 # One definition of "what tmux session name does this project get", for the
-# bash side of the toolchain. Sourced by ~/.bash_tmux and by use_tmux in
+# bash side of the toolchain. Sourced by ~/.bashrc.d/20-tmux.bash and by use_tmux in
 # ~/.config/direnv/direnvrc, which previously each carried their own copy with
 # a "keep in sync with" comment on top -- a comment is not a mechanism, and the
 # cost of drift is that the same project resolves to two different sessions

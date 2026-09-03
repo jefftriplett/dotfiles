@@ -1,7 +1,7 @@
 # workon - Open a project, wherever it lives
 #
 # Source this file in your .bashrc:
-#   source ~/.workon.bash
+#   source ~/.bashrc.d/60-workon.bash
 #
 # One command for local and remote. `workon <name>` consults the registry in
 # ~/Projects/projects.toml: a project on this Mac is a cd + virtualenv

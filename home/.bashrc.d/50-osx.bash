@@ -1,5 +1,8 @@
 # shellcheck shell=bash
 
+# macOS only
+[[ "$(uname)" == "Darwin" ]] || return 0
+
 ####################
 # bash completions #
 ####################
@@ -27,12 +30,6 @@ shopt -s histappend
 
 if command -v starship > /dev/null; then
     eval "$(starship init bash)"
-fi
-
-# workon/mkproject: one command each, registry-aware (~/Projects/projects.toml)
-if [[ -f "${HOME}/.workon.bash" ]]; then
-    # shellcheck source=/dev/null
-    source "${HOME}/.workon.bash"
 fi
 
 ###################

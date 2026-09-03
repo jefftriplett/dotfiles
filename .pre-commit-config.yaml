@@ -22,7 +22,7 @@ repos:
         args: ["--exclude=SC1090,SC1091"]
         # Bash config files have no extension, so match them by name too.
         types: [text]
-        files: ^(home/\.bash_.*|home/\.workon\.bash|.*\.sh)$
+        files: ^(home/\.bash_profile|home/\.bashrc|home/\.bashrc\.d/.*\.bash|.*\.sh)$
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.14.4

@@ -85,7 +85,7 @@ use_tmux() {
     done
 
     name="${name:-$(basename "$PWD")}"
-    # Shared with ~/.bash_tmux rather than re-derived here, so a project cannot
+    # Shared with ~/.bashrc.d/20-tmux.bash rather than re-derived here, so a project cannot
     # resolve to one session through direnv and another through tmux-go.
     if [[ -r "${HOME}/.tmux_session_name.bash" ]]; then
         # shellcheck source=/dev/null

@@ -257,7 +257,7 @@ def show(
 
     if not long:
         # Builtin print, not the rich console: this is the piping path, and it
-        # also feeds bash completion in ~/.workon.bash.
+        # also feeds bash completion in ~/.bashrc.d/60-workon.bash.
         for key in sorted(registry.projects):
             project = registry.projects[key]
             if wanted and registry.machine(project.machine) != wanted:
@@ -1096,7 +1096,7 @@ def resolve(
 ) -> None:
     """Print how to reach a project: machine, path, session, and command.
 
-    --shell is the interface ~/.workon.bash consumes. Every value is
+    --shell is the interface ~/.bashrc.d/60-workon.bash consumes. Every value is
     shell-quoted here rather than in bash, so a path with a space in it
     survives the eval.
 
@@ -1158,7 +1158,7 @@ def resolve(
             ("WORKON_RESOLVED_TMUX", "1" if plan.tmux else ""),
         ]
         # Deliberately builtin print, not the rich console: this output is
-        # eval'd by ~/.workon.bash, and rich would wrap the long argv
+        # eval'd by ~/.bashrc.d/60-workon.bash, and rich would wrap the long argv
         # line at the terminal width and corrupt the command.
         for key, value in emit:
             print(f"{key}={shlex.quote(value)}")
@@ -1453,14 +1453,14 @@ def envrc_contents(name: str, *, tmux: bool = True) -> str:
     .venv on demand and watches pyproject.toml, which a bare
     `source .venv/bin/activate` (what mkproject writes) does not.
 
-    `use tmux` exports TMUX_AUTOATTACH so ~/.bash_tmux and cmux settle on the
+    `use tmux` exports TMUX_AUTOATTACH so ~/.bashrc.d/20-tmux.bash and cmux settle on the
     same session name this registry entry uses. It is omitted for a --no-tmux
     project, which would otherwise get an .envrc that autoattaches a session
     the registry says it does not want.
 
     No `--machine`: the directory is created on the machine that owns the
     project, so this .envrc is only ever evaluated there, and naming the
-    machine would make ~/.bash_tmux mosh from that machine to itself. Routing
+    machine would make ~/.bashrc.d/20-tmux.bash mosh from that machine to itself. Routing
     across machines is workon's job, and it reads the registry.
     """
     if not tmux:
