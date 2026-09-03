@@ -29,7 +29,7 @@ the remote host's tmux when one is set (see [Remote Sessions](#remote-sessions))
 | -------- | ----------- |
 | `tmux` | Wrapper that runs tmux through `direnv exec /`, so the project `.envrc` does not leak into the server |
 | `tmux-new [name]` | Set the terminal title, then attach to or create the session (`new-session -A`) |
-| `tmux-go [name]` | Attach to a session; from inside tmux it uses `switch-client` instead of nesting |
+| `tmux-go [name]` | Attach to a session; from inside tmux it uses `switch-client` instead of nesting. Honors `TMUX_AUTOATTACH_PATH` for a new session |
 | `tmux-resume [name]` | Wrapper for `tmux-go` |
 | `tmux-attach [name]` | Wrapper for `tmux-go` |
 | `tmux-ls [--json]` | List sessions on the current machine |
@@ -56,7 +56,13 @@ Standalone executables in `home/bin/` (symlinked onto `$PATH` as `~/bin`).
 | ------ | ----------- |
 | `tmux-host` | Print the pane's remote host when it is running ssh, else the local short hostname. Used by the status bar |
 | `tmux-remote-ls` | List tmux sessions across every Mac at once (see also `workon --sessions`) |
+| `cmux-doctor` | Check tools, config, and host reachability; see [cmux Workspaces](cmux.md#doctor) |
 | `projects` | Manage the [project registry](projects.md), including the machine list |
+
+`tmux-host` takes no options. It asks tmux for the pane's current command; when that is
+`ssh` or `sshpass`, it reads the ssh argv from the process table, skips options and their
+values, and prints the destination with any `user@` stripped. Otherwise it prints
+`hostname -s`. `home/.tmux.conf` runs it for the right side of the status bar.
 
 `tmux-remote-ls` is roughly `ssh <host> tmux ls` for each machine, but parsed: sessions are
 sorted and annotated with attached/detached state, window count, and path.
@@ -70,8 +76,10 @@ mac-studio-2023:
   default  [detached, 1 window]  (unknown)
 ```
 
-Hosts come from the `[machines]` table of [`~/Projects/projects.toml`](machines.md) and can be overridden per-run
-with `--host` or by setting `$TMUX_REMOTE_HOSTS`. The same list drives `cmux-tmux-sync --all`.
+Hosts come from the `[machines]` table of [`~/Projects/projects.toml`](machines.md), falling
+back to `~/.config/cmux-tmux/hosts.toml` on a Mac the registry has not reached, and can be
+overridden per-run with `--host` or by setting `$TMUX_REMOTE_HOSTS` (space separated). The
+same list drives `cmux-tmux-sync --all` and `cmux-doctor`.
 Whichever machine you are sitting at is skipped rather than dialed; `--include-local`
 adds it back, querying tmux directly instead of over the network. Hosts are queried
 concurrently, so one unreachable machine costs only its own timeout.
@@ -141,10 +149,18 @@ Add `use tmux` to any project's `.envrc` to automatically attach to (or create) 
 use tmux                                          # session name defaults to the directory name
 use tmux myproject                                # explicit session name
 use tmux myproject --host myserver                # SSH to a remote host's tmux session
+use tmux myproject myserver                       # same: a second bare word is the machine
 use tmux myproject --host myserver --path /home/jeff/projects/myproject     # with a remote start path
+use tmux myproject --local                        # clear any machine set earlier in the line
 ```
 
-Set `NO_TMUX_AUTOATTACH=1` to skip auto-attach for a shell session.
+`--host`, `--machine`, and `--profile` are one option; `--path` and `--dir` are one option.
+Each takes `--opt value` or `--opt=value`. The session name is slugified by the same
+`tmux_session_slug` the shell functions use, so `use tmux thumb.im` and `tmux-go thumb.im`
+land in the same `thumb-im` session.
+
+Set `NO_TMUX_AUTOATTACH=1` to skip auto-attach for a shell session. Auto-attach also stays
+out of the way in a non-interactive shell, inside tmux, and when stdout is not a terminal.
 
 ## Environment Variables
 
@@ -155,7 +171,7 @@ These variables are exported by `use tmux` in `.envrc` and read by the shell fun
 | `TMUX_AUTOATTACH` | Session name to attach to or create on shell startup |
 | `TMUX_AUTOATTACH_MACHINE` | SSH hostname to route all tmux commands through |
 | `TMUX_AUTOATTACH_HOST` | Alias for `TMUX_AUTOATTACH_MACHINE` |
-| `TMUX_AUTOATTACH_PATH` | Working directory passed to `tmux new-session -c` (creation only, not re-attach) |
+| `TMUX_AUTOATTACH_PATH` | Working directory for the session. Locally it is passed to `tmux new-session -c` on creation, and `tmux-go` refuses when the directory is missing. Remotely the attach command does `cd` there first, so a stale path fails loudly instead of attaching in the wrong place. A leading `~` expands on the remote side |
 | `NO_TMUX_AUTOATTACH` | Set to `1` to disable auto-attach for a shell session |
 
 ## Remote Sessions

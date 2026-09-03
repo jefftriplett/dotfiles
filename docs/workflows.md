@@ -64,7 +64,7 @@ resolve.
 3. `cmux-tmux-watch` keeps doing this on a five-second interval.
 
 To save the current layout, `cmux-dump-save` writes
-`~/.config/cmux/session-dump.toml`; `cmux-dump-restore` rebuilds it, skipping
+`~/.config/cmux-tmux/session-dump.toml`; `cmux-dump-restore` rebuilds it, skipping
 workspaces that already exist. See [cmux Workspaces](cmux.md).
 
 ## Arrange windows
