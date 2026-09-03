@@ -65,3 +65,35 @@ justfile := justfile_directory() + "/.justfiles/macos.justfile"
     # 3D printing
     duti -s com.bambulab.bambu-studio .stl all
     duti -s com.bambulab.bambu-studio .3mf all
+
+# ----------------------------------------------------------------
+# Sublime Text
+# ----------------------------------------------------------------
+
+sublime_user := env_var("HOME") + "/Library/Application Support/Sublime Text/Packages/User"
+sublime_repo := justfile_directory() + "/.config/sublime-text"
+
+# link the Sublime Text settings from the dotfiles into the Packages/User folder
+@sublime-link:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p "{{ sublime_user }}"
+    for name in "Preferences.sublime-settings" "Package Control.sublime-settings"; do
+        src="{{ sublime_repo }}/${name}"
+        dst="{{ sublime_user }}/${name}"
+        if [[ -L "${dst}" ]]; then
+            ln -sfn "${src}" "${dst}"; echo "relinked ${name}"
+        elif [[ -e "${dst}" ]]; then
+            echo "kept local ${name}; compare with: diff \"${dst}\" \"${src}\""
+        else
+            ln -s "${src}" "${dst}"; echo "linked ${name}"
+        fi
+    done
+
+# show how the local Sublime Text settings differ from the dotfiles
+@sublime-diff:
+    #!/usr/bin/env bash
+    for name in "Preferences.sublime-settings" "Package Control.sublime-settings"; do
+        echo "== ${name}"
+        diff "{{ sublime_user }}/${name}" "{{ sublime_repo }}/${name}" && echo "identical"
+    done

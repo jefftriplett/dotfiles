@@ -64,6 +64,7 @@ flowchart TD
 | Terminal windows | [cmux](https://github.com/manaflow-ai/cmux) | `home/bin/cmux-*` keep workspaces and sessions in step |
 | Where projects live | the project registry | `~/Projects/projects.toml`, edited by `projects`; opened by `workon` and `mkproject` in `home/.bashrc.d/60-workon.bash` |
 | Windows and app hotkeys | [Hammerspoon](https://www.hammerspoon.org/) | `home/.hammerspoon/` |
+| Editor settings | Sublime Text | `home/.config/sublime-text/`, linked by `just macos::sublime-link` |
 | Lint | prek | `.pre-commit-config.yaml`, run by `just lint` and by CI |
 | This manual | Zensical | `zensical.toml` and `docs/`, published by the Docs workflow |
 
@@ -110,4 +111,4 @@ same question through its own rpc, and the scripts try that first.
   leftovers, see [Maintenance](maintenance.md).
 - No virtualenvwrapper. `~/.virtualenvs` still exists as an archive of old
   environments, and `workon` still looks there as a last resort.
-- No Sublime Text settings. The editor keeps its own.
+- Sublime Text settings are in `home/.config/sublime-text/` and linked by `just macos::sublime-link`, not by homesick, because the `Packages/User` folder also holds files the editor writes itself.

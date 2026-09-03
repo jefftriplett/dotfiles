@@ -1,0 +1,16 @@
+{
+	"bootstrapped": true,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"Dockerfile Syntax Highlighting",
+		"Dracula Color Scheme",
+		"Just",
+		"Package Control",
+		"SideBarEnhancements",
+		"Slugify",
+		"TOML",
+	],
+}

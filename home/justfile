@@ -38,9 +38,14 @@ alias lock := freeze
     echo "==> Creating symlinks..."
     homesick symlink
 
-    if [ -f "Brewfile" ] && [ "$(uname -s)" = "Darwin" ]; then \
-        echo "==> Installing Homebrew dependencies..."; \
-        brew bundle install; \
+    if [ "$(uname -s)" = "Darwin" ]; then \
+        if [ -f "Brewfile.{{ HOST }}" ]; then \
+            echo "==> Installing Homebrew dependencies from Brewfile.{{ HOST }}..."; \
+            brew bundle install --file="Brewfile.{{ HOST }}"; \
+        elif [ -f "Brewfile" ]; then \
+            echo "==> No Brewfile.{{ HOST }} yet; installing from the generic Brewfile..."; \
+            brew bundle install; \
+        fi; \
     fi
 
     just macos::xcode-bootstrap

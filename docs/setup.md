@@ -52,7 +52,7 @@ directory. The recipe does this, in order:
 | Step | What it runs | Result |
 | ---- | ------------ | ------ |
 | homesick | `gem install homesick`, `homesick symlink` | Links refreshed |
-| Homebrew | `brew bundle install` against `Brewfile` in `home/` | Formulae, casks, and App Store apps |
+| Homebrew | `brew bundle install` from `Brewfile.<Hostname>` when it exists, else the generic `Brewfile` | Formulae, casks, and App Store apps |
 | Xcode | `just macos::xcode-bootstrap` | Command line tools, if still missing |
 | mise | `mise install` for go, node, ruby, rust, then `mise reshim` | Language runtimes |
 | Python | `just python::bootstrap` | See below |
@@ -62,8 +62,9 @@ directory. The recipe does this, in order:
 `~/.local/bin`, and installs the CLI tools with `uv tool install`.
 
 !!! note
-    The generic `home/Brewfile` is a starting point. The per-host files,
-    `home/Brewfile.<Hostname>`, are what each Mac really has. Step 9 creates
+    The generic `home/Brewfile` is only the starting point for a Mac that has
+    no per-host file yet. The per-host files, `home/Brewfile.<Hostname>`, are
+    what each Mac really has, and `bootstrap` prefers them. Step 9 creates
     this Mac's own file.
 
 ## 5. Tailscale and ssh names
@@ -137,6 +138,14 @@ UUIDs to the console and copy them into `display_grid.lua`.
 
 `just macos::duti-setup` installs `duti` and sets the default app for a list
 of file types.
+
+## 12. Optional: Sublime Text settings
+
+The preferences and the Package Control package list live in
+`home/.config/sublime-text/`. `just macos::sublime-link` symlinks them into
+`~/Library/Application Support/Sublime Text/Packages/User/`. The recipe never
+overwrites a real file that is already there; `just macos::sublime-diff`
+shows what differs, so you can merge by hand and rerun the link.
 
 ## Verify
 

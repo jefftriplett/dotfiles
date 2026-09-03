@@ -113,3 +113,8 @@ PATH="${PATH}:/Applications/Obsidian.app/Contents/MacOS"
 ################
 
 export PATH
+
+# MiniMax Code CLI, only where it is installed
+if [[ -d "${HOME}/.minimax-code/bin" ]]; then
+    export PATH="${HOME}/.minimax-code/bin:${PATH}"
+fi
