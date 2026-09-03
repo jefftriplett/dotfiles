@@ -33,12 +33,12 @@ There are three kinds of Brewfile in `home/`:
 | `Brewfile.<Hostname>` | What one specific Mac has; one per machine |
 
 `just freeze` (alias `just lock`) is the one to run after you install or
-remove something. It moves this Mac's file to `.bak` and writes a fresh dump.
-Compare the two before you commit:
+remove something. It overwrites this Mac's file with a fresh dump. Git holds
+the previous version, so review the change before you commit:
 
 ```shell
 just freeze
-git diff --no-index home/Brewfile.$(hostname -s).bak home/Brewfile.$(hostname -s)
+git diff home/Brewfile.$(hostname -s)
 ```
 
 `just update-brewfile` regenerates `Brewfile.cog` from this Mac. Use it
@@ -112,7 +112,6 @@ competes with uv.
 | ---- | --------------------- |
 | `~/.pyenv` | Interpreters from before uv. 8 to 16 GB per Mac. Nothing uses them |
 | `~/.virtualenvs/*` | Environments built on those interpreters. `workon` only reads this folder as a last resort |
-| `home/Brewfile.*.bak` | The previous freeze, kept for diffing |
 
 Delete the first two when you want the disk back. `subl-projects doctor --fix`
 first, if any Sublime project still points into `~/.virtualenvs`.

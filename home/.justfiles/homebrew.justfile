@@ -25,8 +25,7 @@ justfile := justfile_directory() + "/.justfiles/homebrew.justfile"
 # freeze current Homebrew packages to Brewfile
 @freeze:
     cd "$HOME/.homesick/repos/dotfiles/home" && \
-        { [ -f "Brewfile.$HOST" ] && mv "Brewfile.$HOST" "Brewfile.$HOST.bak" || true; } && \
-        brew bundle dump --file="Brewfile.$HOST" --no-vscode
+        brew bundle dump --force --file="Brewfile.$HOST" --no-vscode
 
 # list outdated Homebrew packages
 @outdated:

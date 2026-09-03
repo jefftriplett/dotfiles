@@ -120,8 +120,7 @@ After the apps you want are installed:
 just freeze
 ```
 
-This writes `home/Brewfile.<Hostname>` and keeps the previous one as `.bak`.
-Commit it. See [Maintenance](maintenance.md) for the caveat about tap
+This writes `home/Brewfile.<Hostname>`. Commit it. See [Maintenance](maintenance.md) for the caveat about tap
 formulae.
 
 ## 10. Hammerspoon
