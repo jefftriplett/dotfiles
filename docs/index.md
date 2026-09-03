@@ -49,9 +49,22 @@ The Reference section holds the full option lists for each tool.
 
 - `docs/`: this manual, built with [Zensical](https://zensical.org/)
 
-## Terminal theme
+## Theme
 
-- [Dracula][dracula] Dark theme for iTerm and 294+ apps.
+[Dracula][dracula] everywhere it can be. Some of it lives in this repository,
+the rest is set inside each app.
+
+| App | Where Dracula is configured |
+| --- | --------------------------- |
+| tmux | `home/.tmux.conf`, the `dracula/tmux` plugin and the status bar colors |
+| Ghostty | `home/.config/ghostty/config` and the `dracula` palette file next to it |
+| Starship | Dracula hex colors in `home/.config/starship.toml` |
+| Sublime Text | `home/.config/sublime-text/`, color scheme and Package Control entry |
+| Zed | `home/.config/zed/themes/dracula.json`; select it in the Zed theme setting |
+| Alfred | Theme imported into Alfred preferences |
+| cmux | Set in the app |
+| Slack | Set in the app |
+| Obsidian | Set per vault in the appearance settings |
 
 ## Inspiration / Thank you!
 
