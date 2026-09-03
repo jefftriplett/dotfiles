@@ -101,8 +101,6 @@ dotfiles.default_mode = "symlink"
 "~/.config/yabai" = {}
 "~/.config/zed" = {}
 
-# (postrmproject/prermproject omitted: dangling homesick links, source gone)
-
 # --- Library/Application Support (immediate children, mirroring homesick) ---
 "~/Library/Application Support/Claude" = {}
 "~/Library/Application Support/io.datasette.llm" = {}
