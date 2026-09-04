@@ -60,7 +60,7 @@ is set inside each app.
 | Alfred | Theme imported into Alfred preferences |
 | cmux | Inherits `theme = dracula` from the Ghostty config; `cmux themes list` should name that file as its source |
 | Ghostty | `home/.config/ghostty/config` and the `dracula` palette file next to it |
-| This manual | `docs/stylesheets/dracula.css`, selected as the dark scheme in `zensical.toml` |
+| Manual | `docs/stylesheets/dracula.css`, selected as the dark scheme in `zensical.toml` |
 | Obsidian | Set per vault in the appearance settings |
 | Slack | Set in the app |
 | Starship | Dracula hex colors in `home/.config/starship.toml` |
