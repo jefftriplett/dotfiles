@@ -58,7 +58,7 @@ is set inside each app.
 | App | Where Dracula is configured |
 | --- | --------------------------- |
 | [Alfred](https://draculatheme.com/alfred) | Theme imported into Alfred preferences |
-| cmux | Inherits `theme = dracula` from the Ghostty config; `cmux themes list` should name that file as its source |
+| [cmux](https://cmuxthemes.com/themes/dracula/) | Inherits `theme = dracula` from the Ghostty config; `cmux themes list` should name that file as its source |
 | [Ghostty](https://draculatheme.com/ghostty) | `home/.config/ghostty/config` and the `dracula` palette file next to it |
 | Manual | `docs/stylesheets/dracula.css`, selected as the dark scheme in `zensical.toml`; the [MkDocs theme](https://draculatheme.com/mkdocs) is the nearest upstream, since Zensical grew out of Material for MkDocs |
 | [Obsidian](https://draculatheme.com/obsidian) | Set per vault in the appearance settings |
