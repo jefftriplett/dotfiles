@@ -60,7 +60,6 @@ is set inside each app.
 | [Alfred](https://draculatheme.com/alfred) | Theme imported into Alfred preferences |
 | [cmux](https://cmuxthemes.com/themes/dracula/) | Inherits `theme = dracula` from the Ghostty config; `cmux themes list` should name that file as its source |
 | [Ghostty](https://draculatheme.com/ghostty) | `home/.config/ghostty/config` and the `dracula` palette file next to it |
-| Manual | `docs/stylesheets/dracula.css`, selected as the dark scheme in `zensical.toml`; the [MkDocs theme](https://draculatheme.com/mkdocs) is the nearest upstream, since Zensical grew out of Material for MkDocs |
 | [Obsidian](https://draculatheme.com/obsidian) | Set per vault in the appearance settings |
 | [Slack](https://draculatheme.com/slack) | Set in the app |
 | [Starship](https://draculatheme.com/starship) | Dracula hex colors in `home/.config/starship.toml` |
@@ -69,6 +68,7 @@ is set inside each app.
 | [tmux](https://draculatheme.com/tmux) | `home/.tmux.conf`, the `dracula/tmux` plugin and the status bar colors |
 | [Vivaldi](https://draculatheme.com/vivaldi) | Set in the browser |
 | [Zed](https://draculatheme.com/zed) | `home/.config/zed/themes/dracula.json`; select it in the Zed theme setting |
+| Zensical | `docs/stylesheets/dracula.css`, selected as the dark scheme in `zensical.toml`; the [MkDocs theme](https://draculatheme.com/mkdocs) is the nearest upstream, since Zensical grew out of Material for MkDocs |
 
 cmux is built on Ghostty and reads `~/.config/ghostty/config`, so the one `theme = dracula`
 line covers both terminals. `cmux themes set` writes an override into cmux's own
