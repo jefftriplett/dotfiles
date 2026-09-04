@@ -33,6 +33,7 @@ nav = [
     { "Machine List" = "machines.md" },
     { "How workon resolves a project" = "workon-process.md" },
     { "cmux Workspaces" = "cmux.md" },
+    { "Stream Deck" = "stream-deck.md" },
   ] },
 ]
 

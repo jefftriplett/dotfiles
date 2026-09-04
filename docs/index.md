@@ -35,6 +35,10 @@ The Reference section holds the full option lists for each tool.
 - [Alfred][alfred]: Productivity tool with [Alfred Powerpack][alfred-powerpack]
 - [Hammerspoon][hammerspoon]: macOS automation tool (tiling windows manager)
 
+### Hardware
+
+- [Elgato Stream Deck](stream-deck.md): Programmable buttons for lights, media, and shortcuts
+
 ### Python Environment
 
 - [pip][pip]: PyPA recommended tool for installing Python packages

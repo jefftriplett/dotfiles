@@ -65,6 +65,7 @@ flowchart TD
 | Where projects live | the project registry | `~/Projects/projects.toml`, edited by `projects`; opened by `workon` and `mkproject` in `home/.bashrc.d/60-workon.bash` |
 | Windows and app hotkeys | [Hammerspoon](https://www.hammerspoon.org/) | `home/.hammerspoon/` |
 | Editor settings | Sublime Text | `home/.config/sublime-text/`, linked by `just macos::sublime-link` |
+| Hardware buttons | [Elgato Stream Deck](stream-deck.md) | `~/Library/Application Support/com.elgato.StreamDeck/ProfilesV3/` |
 | Lint | prek | `.pre-commit-config.yaml`, run by `just lint` and by CI |
 | This manual | Zensical | `zensical.toml` and `docs/`, published by the Docs workflow |
 
