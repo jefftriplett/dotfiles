@@ -1,0 +1,20 @@
+# Copy this file to ~/.config/git-private/config and fill in the values.
+# The destination lives outside the dotfiles repository and must not be
+# committed.
+
+[commit]
+    gpgsign = false
+
+[github]
+    user =
+
+[gpg]
+    format = ssh
+
+[gpg "ssh"]
+    program =
+
+[user]
+    email =
+    name =
+    signingkey =

@@ -40,6 +40,27 @@ writing their own files next to yours.
 Open a new shell after this step. The prompt and the shell functions come from
 the linked files.
 
+### Configure Git identity
+
+Git's shared settings are linked to `~/.config/git/config`. Identity and
+signing values are intentionally kept outside this repository in
+`~/.config/git-private/config`. On a new machine, create the private file from
+the value-free example:
+
+```shell
+mkdir -p ~/.config/git-private
+cp ~/.config/git/private.example ~/.config/git-private/config
+chmod 600 ~/.config/git-private/config
+${EDITOR:-nano} ~/.config/git-private/config
+```
+
+Confirm that Git sees the private values before making a commit:
+
+```shell
+git config --show-origin --name-only --get-regexp '^(user|github)\.'
+git var GIT_AUTHOR_IDENT
+```
+
 ## 4. Bootstrap
 
 ```shell

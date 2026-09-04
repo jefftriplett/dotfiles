@@ -90,6 +90,7 @@
 	zeroPaddedFilemode = ignore
 
 [include]
-    path = ~/.config/git/override
+    # Machine-specific identity and signing settings live outside this repo.
+    path = ~/.config/git-private/config
 [rebase]
     autoStash = true
