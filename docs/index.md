@@ -57,18 +57,18 @@ is set inside each app.
 
 | App | Where Dracula is configured |
 | --- | --------------------------- |
-| tmux | `home/.tmux.conf`, the `dracula/tmux` plugin and the status bar colors |
-| Ghostty | `home/.config/ghostty/config` and the `dracula` palette file next to it |
-| Starship | Dracula hex colors in `home/.config/starship.toml` |
-| Sublime Text | `home/.config/sublime-text/`, color scheme and Package Control entry |
-| Zed | `home/.config/zed/themes/dracula.json`; select it in the Zed theme setting |
 | Alfred | Theme imported into Alfred preferences |
 | cmux | Inherits `theme = dracula` from the Ghostty config; `cmux themes list` should name that file as its source |
-| Slack | Set in the app |
-| Obsidian | Set per vault in the appearance settings |
-| Telegram | Set in the app |
-| Vivaldi | Set in the browser |
+| Ghostty | `home/.config/ghostty/config` and the `dracula` palette file next to it |
 | This manual | `docs/stylesheets/dracula.css`, selected as the dark scheme in `zensical.toml` |
+| Obsidian | Set per vault in the appearance settings |
+| Slack | Set in the app |
+| Starship | Dracula hex colors in `home/.config/starship.toml` |
+| Sublime Text | `home/.config/sublime-text/`, color scheme and Package Control entry |
+| Telegram | Set in the app |
+| tmux | `home/.tmux.conf`, the `dracula/tmux` plugin and the status bar colors |
+| Vivaldi | Set in the browser |
+| Zed | `home/.config/zed/themes/dracula.json`; select it in the Zed theme setting |
 
 cmux is built on Ghostty and reads `~/.config/ghostty/config`, so the one `theme = dracula`
 line covers both terminals. `cmux themes set` writes an override into cmux's own
