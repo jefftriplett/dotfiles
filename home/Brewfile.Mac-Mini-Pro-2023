@@ -1,3 +1,4 @@
+tap "anthropics/tap"
 tap "rjyo/moshi"
 tap "skzv/tap"
 tap "steipete/tap"
@@ -380,6 +381,8 @@ cask "airserver"
 cask "alfred"
 # Android SDK component
 cask "android-platform-tools"
+# CLI for the Claude Platform
+cask "anthropics/tap/ant", trusted: true
 # Application uninstaller
 cask "appcleaner"
 # Backup and restore SD cards, USB drives, external HDD, etc

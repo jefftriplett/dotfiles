@@ -1,3 +1,4 @@
+tap "anthropics/tap"
 tap "darrylmorley/whatcable"
 tap "rjyo/moshi"
 tap "skzv/tap"
@@ -387,6 +388,8 @@ cask "airserver"
 cask "alfred"
 # Android SDK component
 cask "android-platform-tools"
+# CLI for the Claude Platform
+cask "anthropics/tap/ant", trusted: true
 # Application uninstaller
 cask "appcleaner"
 # Securely stores and accesses AWS credentials in a development environment

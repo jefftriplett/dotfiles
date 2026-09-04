@@ -1,3 +1,4 @@
+tap "anthropics/tap"
 tap "darrylmorley/whatcable"
 tap "homebrew/command-not-found"
 tap "rjyo/moshi"
@@ -422,6 +423,8 @@ cask "airserver"
 cask "alfred"
 # Android SDK component
 cask "android-platform-tools"
+# CLI for the Claude Platform
+cask "anthropics/tap/ant", trusted: true
 # Backup and restore SD cards, USB drives, external HDD, etc
 cask "applepi-baker"
 # User-friendly GUI app for Homebrew
