@@ -3,10 +3,10 @@
 An Elgato Stream Deck provides hardware buttons for lights, media, and
 shortcuts. Two devices are connected:
 
-| Device | Model | Buttons | Role |
-| ------ | ----- | ------- | ---- |
-| Stream Deck (15-key) | 20GAA9902 | 5 × 3 grid | Main control surface |
-| Stream Deck (3-key) | 20GBF9901 | 3 × 1 strip | Desk lights, mute toggle, media |
+| Device | Model | Buttons | Connected to |
+| ------ | ----- | ------- | ------------ |
+| Stream Deck (15-key) | 20GAA9902 | 5 × 3 grid | mini, studio |
+| Stream Deck Pedal (3-key) | 20GBF9901 | 3 × 1 strip | studio |
 
 ## Profiles
 

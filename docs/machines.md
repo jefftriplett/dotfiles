@@ -4,16 +4,16 @@
 
 | Key | Machine | Chip | RAM | Role |
 | --- | ------- | ---- | --- | ---- |
-| `studio` | Mac Studio (2023) | M2 Max | 32 GB | Desktop, most long-running tmux sessions |
+| `studio` | Mac Studio (2023) | M2 Max | 64 GB | Desktop, most long-running tmux sessions |
 | `mini` | Mac Mini Pro (2023) | M2 Pro | 32 GB | Desktop, second set of sessions |
-| `air` | MacBook Air (2025) | M4 | 24 GB | Laptop, portable dev |
+| `air` | MacBook Air (2025) | M4 | 32 GB | Laptop, portable dev |
 
 ### Peripherals
 
 | Device | Connected to |
 | ------ | ------------ |
-| Elgato Stream Deck (15-key) | mini |
-| Elgato Stream Deck (3-key) | mini |
+| Elgato Stream Deck (15-key) | mini, studio |
+| Elgato Stream Deck Pedal (3-key) | studio |
 | Elgato Key Light A160 | mini (USB), all (Control Center) |
 
 See [Stream Deck](stream-deck.md) for profile and button configuration.
