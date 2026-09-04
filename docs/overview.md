@@ -10,7 +10,7 @@ so you know where to look when something needs to change.
 | Key | ssh name | Role |
 | --- | -------- | ---- |
 | `studio` | `mac-studio-2023` | Desktop, most long-running tmux sessions |
-| `mini` | `mac-mini-pro-2023` | Desktop, second set of sessions |
+| `mini` | `mac-mini-pro-2023` | Desktop, tmux sessions for side projects |
 | `air` | `mba-2025` | Laptop; reports `MacBook-Air-2025` as its own hostname |
 
 The short keys and ssh names live in the `[machines]` table of the
