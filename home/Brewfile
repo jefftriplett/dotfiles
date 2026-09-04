@@ -224,7 +224,7 @@ cask "airflow"
 cask "airserver"
 cask "alfred"
 cask "android-platform-tools"
-cask "anthropics/tap/ant"
+cask "anthropics/tap/ant", trusted: true
 cask "appcleaner"
 cask "applepi-baker"
 cask "applite"
