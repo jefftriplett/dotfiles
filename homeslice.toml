@@ -15,7 +15,6 @@ links = [
     "home/.isort.cfg",
     "home/.justfiles",
     "home/.maid",
-    "home/.personal.gitconfig",
     "home/.pip",
     "home/.plists",
     "home/.proselintrc.json",

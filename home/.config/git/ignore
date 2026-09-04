@@ -19,7 +19,6 @@
 .hg
 .hgignore
 .installed.cfg
-.personal.gitconfig
 .pip/download_cache
 .Python
 .sass-cache

@@ -27,7 +27,6 @@ dotfiles.default_mode = "symlink"
 "~/.isort.cfg" = {}
 "~/.justfiles" = {}
 "~/.maid" = {}
-"~/.personal.gitconfig" = {}
 "~/.pip" = {}
 "~/.plists" = {}
 "~/.proselintrc.json" = {}
