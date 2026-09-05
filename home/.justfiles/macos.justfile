@@ -67,6 +67,33 @@ justfile := justfile_directory() + "/.justfiles/macos.justfile"
     duti -s com.bambulab.bambu-studio .3mf all
 
 # ----------------------------------------------------------------
+# Screenshots
+# ----------------------------------------------------------------
+
+screenshots_dir := env_var("HOME") + "/Screenshots"
+
+# save new screenshots to ~/Screenshots instead of the iCloud-synced Desktop
+screenshots-setup:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p "{{ screenshots_dir }}"
+    defaults write com.apple.screencapture location -string "{{ screenshots_dir }}"
+    killall SystemUIServer
+    echo "screenshots now save to $(defaults read com.apple.screencapture location)"
+
+# move screenshots that landed on the Desktop into ~/Screenshots (never overwrites)
+screenshots-sweep:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    mkdir -p "{{ screenshots_dir }}"
+    shopt -s nullglob nocaseglob
+    moved=0
+    for f in "${HOME}"/Desktop/Screenshot*.png "${HOME}"/Desktop/Screen\ Shot*.png "${HOME}"/Desktop/CleanShot*.png "${HOME}"/Desktop/Screen\ Recording*.mov; do
+        mv -n "${f}" "{{ screenshots_dir }}/" && moved=$((moved + 1))
+    done
+    echo "moved ${moved} file(s) to {{ screenshots_dir }}"
+
+# ----------------------------------------------------------------
 # Sublime Text
 # ----------------------------------------------------------------
 

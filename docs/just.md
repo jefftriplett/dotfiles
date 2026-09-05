@@ -86,6 +86,8 @@ Available recipes:
             version           # display pi-coding-agent version
     macos:
         duti-setup                 # set default applications for file types using duti
+        screenshots-setup          # save new screenshots to ~/Screenshots instead of the iCloud-synced Desktop
+        screenshots-sweep          # move screenshots that landed on the Desktop into ~/Screenshots (never overwrites)
         sublime-diff               # show how the local Sublime Text settings differ from the dotfiles
         sublime-link               # link the Sublime Text settings into Packages/User; a Preferences.<Host> overlay is merged in
         timemachine-boost          # boost Time Machine backup speed by increasing IO priority

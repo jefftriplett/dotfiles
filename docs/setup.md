@@ -160,7 +160,15 @@ UUIDs to the console and copy them into `display_grid.lua`.
 `just macos::duti-setup` installs `duti` and sets the default app for a list
 of file types.
 
-## 12. Optional: Sublime Text settings
+## 12. Screenshots
+
+`just macos::screenshots-setup` points macOS at `~/Screenshots` for new
+screenshots. The Desktop is one iCloud folder shared by every Mac, so a
+screenshot saved there shows up on all of them; `~/Screenshots` is local to
+each machine. `just macos::screenshots-sweep` moves any screenshots that
+still landed on the Desktop into `~/Screenshots` without overwriting.
+
+## 13. Optional: Sublime Text settings
 
 The preferences and the Package Control package list live in
 `home/.config/sublime-text/`. `just macos::sublime-link` symlinks them into
