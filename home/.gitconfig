@@ -1,0 +1,10 @@
+# Loader only -- real settings live in ~/.config/git/config.
+#
+# git reads ~/.gitconfig unconditionally, independent of XDG_CONFIG_HOME.
+# The XDG-tier file (~/.config/git/config) is only read when XDG_CONFIG_HOME
+# is unset or points at ~/.config, so a session that sets XDG_CONFIG_HOME
+# elsewhere silently loses every alias and setting. Including it from here
+# guarantees it loads in every session regardless. That file in turn includes
+# ~/.config/git-private/config for machine-local identity and signing.
+[include]
+    path = ~/.config/git/config
