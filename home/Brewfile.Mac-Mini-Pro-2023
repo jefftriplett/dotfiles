@@ -420,7 +420,6 @@ cask "elgato-game-capture-hd"
 # Assign keys, and then decorate and label them
 cask "elgato-stream-deck"
 # Turn your phone into a webcam
-cask "epoccam"
 # Notification Center widget and menu bar application to monitor fans
 cask "fanny"
 # UI toolkit for building applications for mobile, web and desktop
