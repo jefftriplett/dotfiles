@@ -109,6 +109,16 @@ Available recipes:
         uv-python-reinstall *ARGS # reinstall python versions using uv installer
         uv-tool-install *ARGS     # install common python CLI tools using uv installer
         uv-tool-upgrade           # upgrade common python CLI tools using uv installer
+    ssh-clipboard:
+        install   # install the ssh-clipboard CLI from npm, then run the setup TUI
+        monitor   # watch clipboard values and peer health
+        outdated  # check for a newer ssh-clipboard release
+        restart   # restart the per-user background service
+        setup     # add, verify, or repair peers
+        status    # show daemon and peer status
+        uninstall # uninstall the ssh-clipboard CLI and stop its service
+        upgrade   # update ssh-clipboard to the latest stable release
+        version   # display the ssh-clipboard version
 
     [database]
     postgresql-upgrade # upgrade PostgreSQL to latest version and migrate databases

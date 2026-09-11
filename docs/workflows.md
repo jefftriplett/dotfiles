@@ -91,6 +91,13 @@ workspaces that already exist. See [cmux Workspaces](cmux.md).
 | direnv | `direnv allow` in the project after editing its `.envrc` |
 | Registry | nothing; `workon` reads `projects.toml` on every call and the completion cache refreshes itself |
 
+## Paste on another Mac
+
+Copy anywhere, then paste on the other Mac. ssh-clipboard carries text, images,
+and Finder files between the Macs over ssh. `just ssh-clipboard::status` shows
+which peers are connected; `just ssh-clipboard::monitor` shows each value as it
+moves. See [ssh-clipboard](ssh-clipboard.md).
+
 ## Copy text out of tmux
 
 Select with the mouse, or `v` then `y` in copy mode. The text goes to the

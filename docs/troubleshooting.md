@@ -16,6 +16,24 @@ Running the command from the machine itself never dials it; that is why
 `hostname` must be set in the registry when it differs from the ssh name. See
 [Machine List](machines.md).
 
+## ssh-clipboard says passwordless ssh failed
+
+The setup TUI reports that a machine is not reachable without a password,
+while `ssh mac-studio-2023` works every day.
+
+The TUI takes machines from Tailscale and dials the full tailnet name, such
+as `mac-studio-2023.tail7129b.ts.net`, or the Tailscale IP. A `Host` entry
+that only names `mac-studio-2023` does not match, so ssh falls back to the
+local user name. That matters here: the Studio's account is not the same as
+the account on the other two Macs, and the login fails.
+
+1. Reproduce with the tool's own options: `ssh -T -o BatchMode=yes -o PasswordAuthentication=no <tailnet-name> true`.
+2. Add the tailnet name and the IP to the existing `Host` line in `~/.ssh/config` on each Mac, so the `User` line applies to every spelling.
+3. Re-run `just ssh-clipboard::setup`.
+
+`~/.ssh/config` is per-machine and is not in the dotfiles. It holds account
+names and addresses, and the repository is public.
+
 ## Tab completion does not show a new project
 
 `workon` completes from a cache at `~/.cache/workon/names`, because starting

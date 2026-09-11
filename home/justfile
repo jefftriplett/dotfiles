@@ -14,6 +14,7 @@ mod homebrew '.justfiles/homebrew.justfile'
 mod macos '.justfiles/macos.justfile'
 mod mise '.justfiles/mise.justfile'
 mod python '.justfiles/python.justfile'
+mod ssh-clipboard '.justfiles/ssh-clipboard.justfile'
 
 HOST := `hostname -s`
 RICH_THEME := "dracula"
@@ -67,6 +68,7 @@ alias lock := freeze
     just macos fmt
     just mise fmt
     just python fmt
+    just ssh-clipboard fmt
 
 # update lockfiles without installing dependencies
 [group("utils")]
@@ -117,6 +119,7 @@ alias lock := freeze
     just mise::upgrade
     just python::upgrade
     just llm::upgrade
+    -just ssh-clipboard::upgrade
 
     echo "==> Updating tmux plugins..."
     -[ -x "$HOME/.tmux/plugins/tpm/bin/update_plugins" ] && "$HOME/.tmux/plugins/tpm/bin/update_plugins" all
