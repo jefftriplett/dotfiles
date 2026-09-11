@@ -22,15 +22,11 @@ from 2017. They are leftovers from an older sync setup and nothing reads them.
 | [Emoji Search][emoji-search] | Jeff Triplett | `emoji` | all |
 | [Sublime Text Projects][sublime-projects] | Dean Jackson | `.st` | all |
 | [Backup Preferences][backup-preferences] | Alfred Team | `start backups`, `restore backups` | studio |
-| [Findmoji][findmoji] | Robb Knight | `emoji` (configurable) | mini |
 | Alfred Justfile | local | `just` | studio |
 
 Emoji Search is built from `~/Projects/alfred-workflow/alfred-emoji-search-git`, a
 Syncthing-mirrored project, and installed by hand on each Mac. The three Macs do not
 have to run the same version of a workflow, and today they do not.
-
-On the mini, Findmoji keeps its default keyword, which is also `emoji`, so both workflows
-answer there. Change one keyword in the workflow's configuration, or remove one of them.
 
 Alfred Justfile is an unfinished local workflow that lists `just` recipes through a script
 filter. Its script path still points at a pyenv shim, and pyenv is gone, so the keyword
@@ -60,5 +56,4 @@ the file names carry the hostname, so the archives do not collide.
 [alfred-powerpack]: https://www.alfredapp.com/powerpack/
 [backup-preferences]: https://alfred.app/workflows/alfredapp/backup-preferences/
 [emoji-search]: https://github.com/jefftriplett/alfred-emoji-search
-[findmoji]: https://alfred.app/workflows/rknightuk/findmoji/
 [sublime-projects]: https://github.com/deanishe/alfred-sublime-text
