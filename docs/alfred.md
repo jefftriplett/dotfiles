@@ -22,14 +22,14 @@ from 2017. They are leftovers from an older sync setup and nothing reads them.
 | [Emoji Search][emoji-search] | Jeff Triplett | `emoji` | all |
 | [Sublime Text Projects][sublime-projects] | Dean Jackson | `.st` | all |
 | [Backup Preferences][backup-preferences] | Alfred Team | `start backups`, `restore backups` | studio |
-| Alfred Justfile | local | `just` | studio |
+| Alfred Justfile | Jeff Triplett | `just` | studio |
 
 Emoji Search is built from `~/Projects/alfred-workflow/alfred-emoji-search-git`, a
 Syncthing-mirrored project, and installed by hand on each Mac. The three Macs do not
 have to run the same version of a workflow, and today they do not.
 
-Alfred Justfile is an unfinished local workflow that lists `just` recipes through a script
-filter. Its script path still points at a pyenv shim, and pyenv is gone, so the keyword
+Alfred Justfile is Jeff's own workflow, not yet published, that lists `just` recipes through a
+script filter. Its source is `~/Projects/alfred-workflow/alfred-demo-git`. Its script path still points at a pyenv shim, and pyenv is gone, so the keyword
 does nothing until the path is changed to `/opt/homebrew/bin/uv`.
 
 ## Backups
