@@ -62,8 +62,10 @@ flowchart TD
 | Prompt | [Starship](https://starship.rs/) | `home/.config/starship.toml` |
 | Terminal sessions | tmux | `home/.tmux.conf`; functions in `home/.bashrc.d/20-tmux.bash` |
 | Terminal windows | [cmux](https://github.com/manaflow-ai/cmux) | `home/bin/cmux-*` keep workspaces and sessions in step |
+| Clipboard across the Macs | [ssh-clipboard](ssh-clipboard.md) | `home/.justfiles/ssh-clipboard.justfile`; peers in `~/.config/ssh-clipboard/config.json` per Mac |
 | Where projects live | the project registry | `~/Projects/projects.toml`, edited by `projects`; opened by `workon` and `mkproject` in `home/.bashrc.d/60-workon.bash` |
 | Windows and app hotkeys | [Hammerspoon](https://www.hammerspoon.org/) | `home/.hammerspoon/` |
+| Launcher and workflows | [Alfred](alfred.md) | `~/Library/Application Support/Alfred/` per Mac, not in the repo; backed up by a workflow |
 | Editor settings | Sublime Text | `home/.config/sublime-text/`, linked by `just macos::sublime-link` |
 | Hardware buttons | [Elgato Stream Deck](stream-deck.md) | `~/Library/Application Support/com.elgato.StreamDeck/ProfilesV3/` |
 | Lint | prek | `.pre-commit-config.yaml`, run by `just lint` and by CI |

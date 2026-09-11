@@ -47,11 +47,13 @@ Run `just docs-serve` to read it locally.
 | [Installation](docs/installation.md) | Install steps and the everyday `just` workflow |
 | [Just Recipes](docs/just.md) | Every recipe, generated from the justfiles |
 | [Hammerspoon](docs/hammerspoon.md) | Window management, display grid, and application hotkeys |
+| [Alfred](docs/alfred.md) | The launcher, its workflows on each Mac, and preference backups |
 | [tmux](docs/tmux.md) | Aliases, shell functions, scripts, key bindings, and direnv auto-attach |
 | [Project Registry](docs/projects.md) | `workon`, `mkproject`, and `projects` across the Macs |
 | [Machine List](docs/machines.md) | The `[machines]` table and how hosts resolve |
 | [How workon resolves a project](docs/workon-process.md) | The decision process behind `workon` |
 | [cmux Workspaces](docs/cmux.md) | Keeping cmux workspaces and tmux sessions in sync |
+| [ssh-clipboard](docs/ssh-clipboard.md) | One clipboard across the Macs, over ssh |
 
 ```shell
 $ just docs-serve    # live preview at http://127.0.0.1:8000/

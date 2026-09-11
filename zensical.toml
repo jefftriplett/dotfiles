@@ -28,11 +28,13 @@ nav = [
   { "Reference" = [
     { "Just Recipes" = "just.md" },
     { "Hammerspoon" = "hammerspoon.md" },
+    { "Alfred" = "alfred.md" },
     { "tmux" = "tmux.md" },
     { "Project Registry" = "projects.md" },
     { "Machine List" = "machines.md" },
     { "How workon resolves a project" = "workon-process.md" },
     { "cmux Workspaces" = "cmux.md" },
+    { "ssh-clipboard" = "ssh-clipboard.md" },
     { "Stream Deck" = "stream-deck.md" },
   ] },
 ]

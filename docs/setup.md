@@ -85,7 +85,7 @@ directory. The recipe does this, in order:
 !!! note
     The generic `home/Brewfile` is only the starting point for a Mac that has
     no per-host file yet. The per-host files, `home/Brewfile.<Hostname>`, are
-    what each Mac really has, and `bootstrap` prefers them. Step 9 creates
+    what each Mac really has, and `bootstrap` prefers them. Step 10 creates
     this Mac's own file.
 
 ## 5. Tailscale and ssh names
@@ -122,7 +122,21 @@ patterns; each project can add its own `.stignore`. Virtualenvs are ignored,
 which is why a project's `.venv` is rebuilt on each Mac the first time you
 enter the directory.
 
-## 8. tmux plugins
+## 8. ssh-clipboard
+
+One clipboard across the Macs. It comes from npm, not the Brewfile:
+
+```shell
+just ssh-clipboard::install
+```
+
+That installs the CLI and opens the setup TUI. Pick the other Macs from the
+Tailscale list. Setup verifies passwordless ssh to each one, installs the
+daemon there, and starts the service on both ends. The list uses full tailnet
+names, so the `Host` entries in `~/.ssh/config` must match them; see
+[ssh-clipboard](ssh-clipboard.md).
+
+## 9. tmux plugins
 
 The plugin manager is not in the repository. Clone it, then install the
 plugins from inside tmux:
@@ -134,7 +148,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 Start tmux and press `prefix + I` (capital i). That installs tmux-sensible and
 the Dracula theme named in `~/.tmux.conf`.
 
-## 9. Freeze this Mac's Brewfile
+## 10. Freeze this Mac's Brewfile
 
 After the apps you want are installed:
 
@@ -145,7 +159,7 @@ just freeze
 This writes `home/Brewfile.<Hostname>`. Commit it. See [Maintenance](maintenance.md) for the caveat about tap
 formulae.
 
-## 10. Hammerspoon
+## 11. Hammerspoon
 
 Open Hammerspoon once. macOS asks for Accessibility permission; grant it in
 System Settings, otherwise no hotkey can move a window. The config is already
@@ -155,12 +169,19 @@ hotkeys are listed in [Hammerspoon](hammerspoon.md).
 If this Mac drives the 2x2 monitor grid, press `hyper + 9` to dump the screen
 UUIDs to the console and copy them into `display_grid.lua`.
 
-## 11. Optional: default apps
+## 12. Alfred
+
+Alfred installs from the Brewfile. Its preferences are per-Mac and not in the
+repository. Sign in to the Powerpack, import the Dracula theme, then install
+the workflows listed in [Alfred](alfred.md). The Backup Preferences workflow
+can also restore another Mac's archive from the iCloud `Backups` folder.
+
+## 13. Optional: default apps
 
 `just macos::duti-setup` installs `duti` and sets the default app for a list
 of file types.
 
-## 12. Screenshots
+## 14. Screenshots
 
 `just macos::screenshots-setup` points macOS at `~/Screenshots` for new
 screenshots. The Desktop is one iCloud folder shared by every Mac, so a
@@ -168,7 +189,7 @@ screenshot saved there shows up on all of them; `~/Screenshots` is local to
 each machine. `just macos::screenshots-sweep` moves any screenshots that
 still landed on the Desktop into `~/Screenshots` without overwriting.
 
-## 13. Optional: Sublime Text settings
+## 15. Optional: Sublime Text settings
 
 The preferences and the Package Control package list live in
 `home/.config/sublime-text/`. `just macos::sublime-link` symlinks them into

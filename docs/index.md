@@ -29,10 +29,11 @@ The Reference section holds the full option lists for each tool.
 - [Homesick][homesick]: Manages dotfiles with Git and symlinks
 - [Just](https://github.com/casey/just): 🤖 Command runner for project-specific tasks
 - [Starship][starship]: Minimal, blazing-fast, and customizable prompt for any shell
+- [ssh-clipboard](ssh-clipboard.md): One clipboard across the Macs, over ssh
 
 ### GUI
 
-- [Alfred][alfred]: Productivity tool with [Alfred Powerpack][alfred-powerpack]
+- [Alfred][alfred]: Productivity tool with [Alfred Powerpack][alfred-powerpack]; workflows and backups in [Alfred](alfred.md)
 - [Hammerspoon][hammerspoon]: macOS automation tool (tiling windows manager)
 
 ### Hardware
