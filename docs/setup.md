@@ -188,6 +188,8 @@ screenshots. The Desktop is one iCloud folder shared by every Mac, so a
 screenshot saved there shows up on all of them; `~/Screenshots` is local to
 each machine. `just macos::screenshots-sweep` moves any screenshots that
 still landed on the Desktop into `~/Screenshots` without overwriting.
+For other `defaults write` keys worth setting, see
+[macos-defaults.com](https://macos-defaults.com).
 
 ## 15. Optional: Sublime Text settings
 

@@ -88,6 +88,7 @@ it. The [cmux Dracula theme](https://cmuxthemes.com/themes/dracula/) page shows 
 - https://github.com/geerlingguy/mac-dev-playbook
 - https://github.com/JohnColvin/.maid/blob/master/rules.rb
 - https://github.com/mathiasbynens/dotfiles/blob/master/.osx
+- [macOS defaults](https://macos-defaults.com): a catalog of `defaults write` keys, with what each one changes
 - https://github.com/mitchty/src/blob/master/dotfiles/maid/rules.rb
 - http://blog.palcu.ro/2014/06/dotfiles-and-dev-tools-provisioned-by.html
 
