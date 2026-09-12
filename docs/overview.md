@@ -67,6 +67,7 @@ flowchart TD
 | Windows and app hotkeys | [Hammerspoon](https://www.hammerspoon.org/) | `home/.hammerspoon/` |
 | Launcher and workflows | [Alfred](alfred.md) | `~/Library/Application Support/Alfred/` per Mac, not in the repo; backed up by a workflow |
 | Editor settings | Sublime Text | `home/.config/sublime-text/`, linked by `just macos::sublime-link` |
+| Agent approvals | [Moshi](moshi.md) | `brew services`; `moshi-hook install` writes agent hook configs |
 | Hardware buttons | [Elgato Stream Deck](stream-deck.md) | `~/Library/Application Support/com.elgato.StreamDeck/ProfilesV3/` |
 | Lint | prek | `.pre-commit-config.yaml`, run by `just lint` and by CI |
 | This manual | Zensical | `zensical.toml` and `docs/`, published by the Docs workflow |

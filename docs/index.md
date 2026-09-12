@@ -28,6 +28,7 @@ The Reference section holds the full option lists for each tool.
 - [Homebrew][homebrew]: Package management for macOS
 - [Homesick][homesick]: Manages dotfiles with Git and symlinks
 - [Just](https://github.com/casey/just): 🤖 Command runner for project-specific tasks
+- [Moshi](moshi.md): Remote approval daemon for AI agent hooks
 - [Starship][starship]: Minimal, blazing-fast, and customizable prompt for any shell
 - [ssh-clipboard](ssh-clipboard.md): One clipboard across the Macs, over ssh
 
