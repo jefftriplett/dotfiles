@@ -26,7 +26,7 @@ brew_log := "/opt/homebrew/var/log/syncthing.log"
 service-install:
     #!/usr/bin/env bash
     set -euo pipefail
-    mkdir -p "$(dirname "{{ log }}")"
+    mkdir -p "$(dirname "{{ log }}")" "$(dirname "{{ agent }}")"
     if brew services list | grep -q "^syncthing.*started"; then
         echo "stopping the Homebrew service"
         brew services stop syncthing
