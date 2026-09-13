@@ -3,7 +3,6 @@ tap "darrylmorley/whatcable"
 tap "rjyo/moshi"
 tap "skzv/tap"
 tap "steipete/tap"
-tap "tw93/tap"
 # Run your GitHub Actions locally
 brew "act"
 # Download with resuming and segmented downloading
@@ -454,7 +453,6 @@ cask "herd"
 cask "hyper"
 # Automatically ejects external drives
 cask "jettison"
-cask "kakuku"
 # Blocks all Keyboard and TouchBar input
 cask "keyboardcleantool"
 # Open-source keystroke visualiser
