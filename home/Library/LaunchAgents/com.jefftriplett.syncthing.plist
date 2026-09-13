@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Label</key>
+	<string>com.jefftriplett.syncthing</string>
+
+	<!-- Replaces the Homebrew service, which captures stdout into one file
+	     that never rotates. Syncthing rotates its own log at 50 MiB and
+	     keeps three old files, so the log tops out around 200 MB. -->
+	<key>ProgramArguments</key>
+	<array>
+		<string>/opt/homebrew/opt/syncthing/bin/syncthing</string>
+		<string>--no-browser</string>
+		<string>--no-restart</string>
+		<string>--log-file=/Users/jefftriplett/.local/log/syncthing.log</string>
+		<string>--log-max-size=52428800</string>
+		<string>--log-max-old-files=3</string>
+	</array>
+
+	<key>RunAtLoad</key>
+	<true/>
+
+	<key>KeepAlive</key>
+	<true/>
+
+	<!-- Everything goes to the rotated log above; a panic is written by
+	     Syncthing itself to panic-*.log next to its config. -->
+	<key>StandardOutPath</key>
+	<string>/dev/null</string>
+
+	<key>StandardErrorPath</key>
+	<string>/dev/null</string>
+
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin</string>
+	</dict>
+</dict>
+</plist>

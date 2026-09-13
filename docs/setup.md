@@ -116,8 +116,19 @@ refuses to add a host that does not answer. See [Machine List](machines.md).
 
 ## 7. Syncthing
 
-Install Syncthing from the Brewfile, then share `~/Projects` and `~/Work` with
-the other Macs. `home/.stignore` is linked into `~` and holds the global ignore
+Install Syncthing from the Brewfile, then run it from our own LaunchAgent
+instead of the Homebrew service:
+
+```shell
+just syncthing::service-install
+```
+
+The Homebrew service pipes Syncthing's output into one file that never
+rotates; it reached hundreds of gigabytes on every Mac. Our agent passes
+`--log-file` with a 50 MiB limit and three old files, so the log stays under
+200 MB. `just syncthing::status` shows the agent and the log sizes.
+
+Then share `~/Projects` and `~/Work` with the other Macs. `home/.stignore` is linked into `~` and holds the global ignore
 patterns; each project can add its own `.stignore`. Virtualenvs are ignored,
 which is why a project's `.venv` is rebuilt on each Mac the first time you
 enter the directory.

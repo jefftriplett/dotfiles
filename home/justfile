@@ -15,6 +15,7 @@ mod macos '.justfiles/macos.justfile'
 mod mise '.justfiles/mise.justfile'
 mod python '.justfiles/python.justfile'
 mod ssh-clipboard '.justfiles/ssh-clipboard.justfile'
+mod syncthing '.justfiles/syncthing.justfile'
 
 HOST := `hostname -s`
 RICH_THEME := "dracula"
@@ -69,6 +70,7 @@ alias lock := freeze
     just mise fmt
     just python fmt
     just ssh-clipboard fmt
+    just syncthing fmt
 
 # update lockfiles without installing dependencies
 [group("utils")]

@@ -14,7 +14,7 @@ just update
 | Recipe | What it does |
 | ------ | ------------ |
 | `upgrade` | `git pull` the dotfiles, `homesick symlink`, then upgrade Homebrew, mise, the uv Pythons, the uv tools, the AI CLIs, ssh-clipboard, and the tmux plugins; finally `just freeze` |
-| `restart` | restart every Homebrew service that is running |
+| `restart` | restart every Homebrew service that is running; Syncthing is not one of them, use `just syncthing::restart` |
 | `cleanup` | `brew cleanup`; `--days N` prunes the download cache older than N days |
 
 `just upgrade-all` is the smaller variant: it only reinstalls the uv

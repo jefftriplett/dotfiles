@@ -119,6 +119,14 @@ Available recipes:
         uninstall # uninstall the ssh-clipboard CLI and stop its service
         upgrade   # update ssh-clipboard to the latest stable release
         version   # display the ssh-clipboard version
+    syncthing:
+        log               # follow the Syncthing log
+        restart           # restart the Syncthing LaunchAgent
+        service-install   # run Syncthing from our LaunchAgent with a rotated log, in place of the Homebrew service
+        service-uninstall # go back to the Homebrew service
+        start             # start the Syncthing LaunchAgent
+        status            # show the LaunchAgent state and the log sizes
+        stop              # stop the Syncthing LaunchAgent until the next login
 
     [database]
     postgresql-upgrade # upgrade PostgreSQL to latest version and migrate databases

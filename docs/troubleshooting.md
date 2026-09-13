@@ -34,6 +34,20 @@ the account on the other two Macs, and the login fails.
 `~/.ssh/config` is per-machine and is not in the dotfiles. It holds account
 names and addresses, and the repository is public.
 
+## Syncthing's log fills the disk
+
+`/opt/homebrew/var/log/syncthing.log` is hundreds of gigabytes, Time Machine
+copies it on every run, and the Mac is slow.
+
+The Homebrew service captures Syncthing's stdout into that file with no
+rotation, and a folder that fails to sync logs one warning per file per
+retry, every hour. `just syncthing::service-install` moves Syncthing to our
+LaunchAgent with a rotated log under `~/.local/log/`, truncates the old file,
+and excludes it from Time Machine. If a folder still logs thousands of
+"no connected device has the required version" warnings, its index holds
+stale entries; pause the folder in the Syncthing GUI and reset it from
+Actions → Advanced, which rebuilds the index without touching files.
+
 ## Tab completion does not show a new project
 
 `workon` completes from a cache at `~/.cache/workon/names`, because starting
