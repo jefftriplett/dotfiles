@@ -2,7 +2,7 @@
 // Air, Mini, and Studio copies: exclude lists are the union of all three,
 // per-machine values follow the majority.
 {
-	"auto_complete": false,
+	"auto_complete": true,
 	"auto_complete_commit_on_tab": false,
 	"auto_complete_delay": 50,
 	"auto_complete_selector": "source - comment",
