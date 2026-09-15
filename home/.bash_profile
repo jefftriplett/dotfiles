@@ -45,7 +45,12 @@ if command -v starship > /dev/null; then
     # $PROMPT_COMMAND still names a _cmux_prompt_command that does not exist
     # here. Eval-ing it printed "command not found" onto the output of every
     # such command.
-    if [[ -n "$CMUX_SHELL_INTEGRATION" && $- == *i* ]]; then
+    # The function check covers the same gap for an interactive shell that
+    # inherited the export without cmux actually running: cmux's own
+    # bootstrap exports PROMPT_COMMAND to seed a new shell, then un-exports
+    # it once done, but that export can outlive the unexport and keep
+    # leaking into shells that never sourced the real integration.
+    if [[ -n "$CMUX_SHELL_INTEGRATION" && $- == *i* ]] && declare -F _cmux_prompt_command > /dev/null; then
         # Execute cmux's bootstrap NOW instead of waiting for first prompt
         eval "$PROMPT_COMMAND"
         # cmux has settled — now init starship on top
