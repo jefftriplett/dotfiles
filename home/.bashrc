@@ -6,6 +6,21 @@
 # stops printing job-control notifications.
 set +m
 
+# CMUX fix (part 0): scrub a stale $PROMPT_COMMAND inherited from a parent
+# shell. cmux-bash-integration.bash prepends "_cmux_prompt_command;" to
+# PROMPT_COMMAND once it defines that function, then exports PROMPT_COMMAND
+# to seed new shells before un-exporting it; if that unexport does not take,
+# a later shell inherits the already-built string — call and all — without
+# ever running the integration that defines the function. Every hook setup
+# below (mise, direnv, starship) only ever prepends onto $PROMPT_COMMAND, so
+# without this the dead call stays baked in and fires on every prompt for
+# the life of the shell, surviving even a re-source of this file.
+if [[ -n "$PROMPT_COMMAND" ]] && ! declare -F _cmux_prompt_command > /dev/null; then
+    PROMPT_COMMAND="${PROMPT_COMMAND//_cmux_prompt_command;/}"
+    PROMPT_COMMAND="${PROMPT_COMMAND//;_cmux_prompt_command/}"
+    PROMPT_COMMAND="${PROMPT_COMMAND//_cmux_prompt_command/}"
+fi
+
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 # export PATH="$PATH:$HOME/.rvm/bin"
 # export PROMPT_COMMAND="history -a;$PROMPT_COMMAND"
