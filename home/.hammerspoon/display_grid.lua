@@ -3,10 +3,16 @@
 local log = require('logger')
 
 local displayGrid = {
-    A = "B43E3352-ACB7-4163-A25B-2DDAE0174571",  -- WQX DP (2) - top-left
-    B = "B32F530C-62CF-4F0D-9997-80BF2B812AC8",  -- WQX DP (1) - top-right
+    -- A and B are identical WQX panels; macOS sometimes swaps which UUID drives
+    -- which physical panel on reconnect. If the top row shows up reversed, swap
+    -- these two UUIDs (or run hyper+f after telling which side is which).
+    A = "B32F530C-62CF-4F0D-9997-80BF2B812AC8",  -- WQX DP (1) - top-left  (physical left, as of 2026-09-24)
+    B = "B43E3352-ACB7-4163-A25B-2DDAE0174571",  -- WQX DP (2) - top-right (physical right, as of 2026-09-24)
     C = "C9240C8E-A9D2-418A-89AC-28D3B5DEE5FC",  -- PM161Q B1 (1) - bottom-left
-    D = "F4AB0D6C-8E85-4E84-B5AB-C5B388536E3D",  -- PM161Q B1 (2) - bottom-right
+    -- D = bottom-right, anchor. Behind a KVM, so this UUID changes with the source:
+    --   GLKVM (KVM passthrough):  6B20597B-497C-47A7-86BA-12132646630D  (current, since 2026-09-22)
+    --   PM161Q B1 (2):            F4AB0D6C-8E85-4E84-B5AB-C5B388536E3D  (previous)
+    D = "6B20597B-497C-47A7-86BA-12132646630D",  -- GLKVM (KVM passthrough)
 }
 
 local function resolveScreens()
@@ -17,35 +23,56 @@ local function resolveScreens()
         D = hs.screen.find(displayGrid.D),
     }
 
-    for key, screen in pairs(screens) do
-        if not screen then
-            log.w("Display grid missing screen:", key)
-            return nil
+    -- Don't bail when a slot is missing -- arrange whatever is connected so
+    -- the grid holds when one display (e.g. the KVM feed) is unplugged.
+    local present = 0
+    for _, key in ipairs({"A", "B", "C", "D"}) do
+        if screens[key] then
+            present = present + 1
+        else
+            log.w("Display grid slot not connected (skipping):", key)
         end
+    end
+
+    if present == 0 then
+        log.w("Display grid: none of the known displays are connected")
+        return nil
     end
 
     return screens
 end
 
+-- Target origin for a slot. All four are anchored to a shared corner at
+-- (0,0): A top-left, B top-right, C bottom-left, D bottom-right. Because
+-- each position depends only on that display's own size, the remaining
+-- displays keep their slots when one is disconnected.
+local function originForSlot(key, screen)
+    local frame = screen:fullFrame()
+    if key == "A" then return -frame.w, -frame.h end  -- top-left
+    if key == "B" then return 0,        -frame.h end  -- top-right
+    if key == "C" then return -frame.w, 0         end  -- bottom-left
+    return 0, 0                                         -- D: bottom-right anchor
+end
+
 function fix2x2Grid()
     local screens = resolveScreens()
     if not screens then
+        hs.alert.show('Display grid: no known displays')
         return
     end
 
-    local frameA = screens.A:fullFrame()
-    local frameB = screens.B:fullFrame()
-    local frameC = screens.C:fullFrame()
-
+    local count = 0
     local function applyPositions()
-        -- D (bottom-right) is anchor at origin
-        screens.D:setOrigin(0, 0)
-        -- A (top-left) above C — set before B so B doesn't get shoved
-        screens.A:setOrigin(-frameA.w, -frameA.h)
-        -- C (bottom-left) is left of D
-        screens.C:setOrigin(-frameC.w, 0)
-        -- B (top-right) is above D
-        screens.B:setOrigin(0, -frameB.h)
+        -- Apply D, A, C, B in that order (anchor first, top-right last) so
+        -- macOS doesn't shove the top-right display before the rest land.
+        count = 0
+        for _, key in ipairs({"D", "A", "C", "B"}) do
+            local screen = screens[key]
+            if screen then
+                screen:setOrigin(originForSlot(key, screen))
+                count = count + 1
+            end
+        end
     end
 
     applyPositions()
@@ -54,6 +81,7 @@ function fix2x2Grid()
     hs.timer.doAfter(0.4, applyPositions)
 
     log.i("Applied 2x2 display grid")
+    hs.alert.show(string.format('Display grid applied (%d displays)', count))
 end
 
 local function scheduleGridFix(delaySeconds)
