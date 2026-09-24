@@ -51,6 +51,7 @@ The Reference section holds the full option lists for each tool.
 - `home/`: dotfiles (Brewfile, shell config, app config)
 - `home/bin/`: standalone scripts, symlinked onto `$PATH` as `~/bin`
 - `home/.justfiles/`: just submodules for task groups
+- `rust/`: Cargo workspace for the compiled tools (`projects`, `homesick-new`); `just rust-install` puts them in `~/.local/bin`
 - `scripts/`: README generation helpers
 
 - `docs/`: this manual, built with [Zensical](https://zensical.org/)

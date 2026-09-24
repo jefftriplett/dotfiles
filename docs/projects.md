@@ -50,15 +50,19 @@ guessed owner would send you across the network to open something already in fro
 
 Set `$PROJECTS_TOML` to point somewhere else for a single run.
 
-The registry model is defined with pydantic in `home/bin/_projects.py`. `_cmux.py` stays on
-plain dataclasses on purpose: every `cmux-*` and `tmux-remote-*` script imports it, and none of
-them should have to grow a dependency to do so. Only `projects` declares pydantic.
+`projects` is a Rust binary built from `rust/projects/` and installed to `~/.local/bin` by
+`just projects-install` (or `just rust-install`, which builds every tool under `rust/`). It
+starts in a few milliseconds, which is what lets `workon` and tab completion call it on every
+use. The previous Python version is kept as `projects-archive`; see
+[Archived versions](#archived-versions).
 
 ## workon and mkproject
 
-Registry-aware companions to `workon` and `mkproject`, defined in `home/.bashrc.d/60-workon.bash`.
+Registry-aware companions to `workon` and `mkproject`, defined in `home/.bashrc.d/61-workon.bash`.
 They are shell functions rather than scripts because the local case has to change the calling
-shell's directory and environment.
+shell's directory and environment — but only thin ones: each runs `projects workon` or
+`projects mkproject` and evals the few lines of shell it prints. How that works is in
+[How workon resolves a project](workon-process.md).
 
 | Command | Description |
 | ------- | ----------- |
@@ -73,7 +77,6 @@ shell's directory and environment.
 | `workon --sessions` (`-s`) | Show the tmux sessions live on every Mac, and what opens each |
 | `workon -s --kill <p>` | Kill a session by project key or session name |
 | `workon --help` (`-h`) | Usage |
-| `workon-refresh` | Rebuild the completion cache now |
 | `mkproject <name>` | Create, register, and open a new project |
 
 There is one `workon` and one `mkproject` — no separate remote command to reach for.
@@ -83,16 +86,14 @@ then cd locally or mosh out. `--local`, `--remote`, and `--auto` take the name e
 Flags and the name can come in any order. A second bare argument, an unknown flag, or a
 `--host` with no machine after it is a usage error with exit code 2.
 
-Two environment variables shape it. `WORKON_TMUX=1` makes every local open attach a
-session, as if `--tmux` were passed; `--no-tmux` overrides it for one call.
-`WORKON_PROJECT_DIRS` is the list of roots the unregistered fallback and the completion
-cache scan, `~/Projects` and `~/Work` by default.
+`WORKON_TMUX=1` makes every local open attach a session, as if `--tmux` were passed;
+`--no-tmux` overrides it for one call. The unregistered fallback and tab completion scan
+`~/Projects` and `~/Work`.
 
-`workon` trusts `projects resolve` and its exit code. Only exit code 3, the resolver's
-"not in the registry" answer, sends `workon` to the directory scan. Any other failure —
-a registry that does not parse, an entry that fails validation, a `projects` script that
-is missing from `$PATH` — is printed and `workon` stops with that exit code, rather than
-silently opening a same-named local directory that may not be the project you meant.
+Only a name that is genuinely not in the registry sends `workon` to the directory scan.
+A registry that does not parse, or an entry that fails validation, is printed and `workon`
+stops with exit code 2, rather than silently opening a same-named local directory that may
+not be the project you meant.
 
 A project that is *not* in the registry falls back to the original directory scan of
 `~/Projects`, `~/Work`, and `~/.virtualenvs`, so nothing that worked before the registry
@@ -111,16 +112,12 @@ workon django-news     # remote: mosh mac-studio-2023, attach (its entry sets tm
 workon                 # no argument: list what is registered
 ```
 
-Tab completion reads a cache at `~/.cache/workon/names` rather than calling `projects` on
-every keypress. `projects` is a `uv run` script and costs ~300ms to start — fine when you
-typed it, an eternity to sit through on a TAB. The cache rebuilds when the registry,
-`~/Projects`, `~/Work`, or `~/.virtualenvs` is newer than it, which is four `[[ -nt ]]`
-builtins and no subprocess in the common case. That takes a TAB from **580ms to
-unmeasurable**, and a new project still shows up the moment it exists, whether it arrived
-through `projects add` or a bare `mkdir`.
-
-`workon-refresh` rebuilds it by hand, for warming the cache from a profile or when you
-want to be sure.
+Tab completion calls `projects names` on every TAB, which lists registered projects plus
+every directory under `~/Projects` and `~/Work` and every `~/.virtualenvs` entry. It takes
+about 5ms, so there is no cache: a new project shows up the moment it exists, whether it
+arrived through `projects add` or a bare `mkdir`. (The Python `projects` took ~500ms to
+start, which is why the archived bash version kept a cache and a `workon-refresh` to
+rebuild it.)
 
 Names are matched loosely: a project registered as `thumb.im` also answers to `thumb-im`,
 the slug tmux actually shows you.
@@ -356,8 +353,9 @@ projects list | fzf | xargs workon  # pick one and open it
 projects list --long               # grouped by machine, with paths and sessions
 ```
 
-`projects resolve --shell` is the interface `workon` consumes; `--json` is the same data
-for anything else:
+`projects resolve` shows how a project would be reached. `--json` is the same data for
+scripts, and `--shell` prints `eval`-able `WORKON_RESOLVED_*` assignments, which is what the
+archived bash `workon-archive` consumes:
 
 ```shell
 $ projects resolve django-news
@@ -365,8 +363,29 @@ django-news  (remote via mac-studio-2023)
   machine  studio
   path     ~/Work/django-news
   session  django-news
-  command  mosh mac-studio-2023 -- bash -lc 'cd "$HOME"/Work/django-news; tmux new-session -A -s django-news -c "$HOME"/Work/django-news'
+  command  mosh mac-studio-2023 -- bash -lc 'cd "$HOME"/Work/django-news && tmux new-session -A -s django-news -c "$HOME"/Work/django-news'
 ```
 
 The `~` in a remote path is deliberately left unexpanded: it has to expand against the remote
 home directory, not this machine's.
+
+## Archived versions
+
+The Rust `projects`, `workon`, and `mkproject` replaced a Python `projects` and a
+bash `workon`/`mkproject`. The old versions are still installed under `-archive`
+names, so the two can be compared side by side. Both read and write the same
+`~/Projects/projects.toml`, and take the same commands and flags.
+
+| Current | Archived | Where the archived one lives |
+| ------- | -------- | ---------------------------- |
+| `projects` (Rust, `~/.local/bin`) | `projects-archive` | `home/bin/projects-archive`, a `uv run` script using `home/bin/_projects.py` |
+| `workon` | `workon-archive` | `home/.bashrc.d/60-workon-archive.bash`, calling `projects-archive` |
+| `mkproject` | `mkproject-archive` | same file |
+
+`workon-archive` still keeps its completion cache, now at `~/.cache/workon-archive/names`,
+and `workon-archive-refresh` rebuilds it. `_cmux.py`, which `_projects.py` imports, is still
+used by the `cmux-*` and `tmux-remote-ls` scripts.
+
+After pulling changes to `rust/` on a Mac, rebuild with `just rust-install`. Until
+`projects` is installed on a Mac, `workon` and `mkproject` there fall back to the archived
+versions.

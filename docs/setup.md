@@ -102,6 +102,13 @@ auth is required. The scripts never type a password.
 
 ## 6. Register the machine
 
+`projects`, `workon`, and `mkproject` are backed by a Rust binary. Build it once
+mise has installed Rust in step 4:
+
+```shell
+just rust-install     # builds rust/ and installs projects to ~/.local/bin
+```
+
 The registry lives in `~/Projects/projects.toml`. If this Mac does not have it
 yet, Syncthing brings it over in step 7, so do this step after Syncthing has
 finished its first sync. Then add the machine:
@@ -222,6 +229,7 @@ python --version            # 3.14.x from ~/.local/bin
 mise ls                     # go, node, ruby, rust present
 just --list                 # recipes resolve
 tmux-remote-ls              # the other Macs answer
+command -v projects         # ~/.local/bin/projects, the Rust build
 workon                      # lists registered projects
 just lint                   # every hook passes
 ```

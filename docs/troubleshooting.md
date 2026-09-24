@@ -50,11 +50,19 @@ Actions → Advanced, which rebuilds the index without touching files.
 
 ## Tab completion does not show a new project
 
-`workon` completes from a cache at `~/.cache/workon/names`, because starting
-`projects` costs about 300 ms and a TAB should not. The cache rebuilds when
-the registry, `~/Projects`, `~/Work`, or `~/.virtualenvs` is newer than it.
+`workon` completes by calling `projects names` on every TAB, so there is no
+cache to go stale: a project appears as soon as it is registered or its
+directory exists under `~/Projects` or `~/Work`.
 
-If a name is still missing, run `workon-refresh`.
+If a name is still missing, check that `command -v projects` is the Rust build
+in `~/.local/bin`. On a Mac where it has not been built, `workon` falls back to
+`workon-archive`, which completes from a cache; `workon-archive-refresh`
+rebuilds that, and `just rust-install` gets the Rust build in place.
+
+## `workon` or `projects` behaves like an older version
+
+The Rust tools are built from `rust/` and do not update when you pull. After a
+`git pull` that touches `rust/`, run `just rust-install`.
 
 ## A formula vanished from the Brewfile after `just freeze`
 

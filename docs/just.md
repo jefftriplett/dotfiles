@@ -129,39 +129,48 @@ Available recipes:
         stop              # stop the Syncthing LaunchAgent until the next login
 
     [database]
-    postgresql-upgrade # upgrade PostgreSQL to latest version and migrate databases
+    postgresql-upgrade   # upgrade PostgreSQL to latest version and migrate databases
 
     [docs]
-    docs-build         # build the manual into site/ with zensical
-    docs-serve         # serve the manual locally with live reload
-    update-docs        # regenerate the recipe list in docs/just.md using cog [alias: update-readme-docs]
+    docs-build           # build the manual into site/ with zensical
+    docs-serve           # serve the manual locally with live reload
+    update-docs          # regenerate the recipe list in docs/just.md using cog [alias: update-readme-docs]
 
     [maintenance]
-    cleanup [OPTIONS]  # clean up old Homebrew packages and casks
-    outdated           # list outdated packages from Homebrew and pip
-    update             # update project to run at its current version
-    upgrade            # update and upgrade Homebrew packages
-    upgrade-all        # upgrade all tools (uv pythons and mise packages)
+    cleanup [OPTIONS]    # clean up old Homebrew packages and casks
+    outdated             # list outdated packages from Homebrew and pip
+    update               # update project to run at its current version
+    upgrade              # update and upgrade Homebrew packages
+    upgrade-all          # upgrade all tools (uv pythons and mise packages)
+
+    [rust]
+    homesick-new-build   # build homesick-new (castle-free Rust homesick) in release mode
+    homesick-new-install # build and install homesick-new to ~/.local/bin
+    projects-build       # build projects (the Rust projects/workon/mkproject) in release mode
+    projects-install     # build and install projects to ~/.local/bin
+    rust-build           # build every Rust tool in the rust/ workspace in release mode
+    rust-check           # check formatting, lint with clippy, and run tests for the rust/ workspace
+    rust-install         # build and install every Rust tool under rust/ to ~/.local/bin
 
     [services]
-    restart            # restart Homebrew services
-    stop               # stop all Homebrew services
+    restart              # restart Homebrew services
+    stop                 # stop all Homebrew services
 
     [setup]
-    bootstrap          # install and update all dependencies
-    install            # create symlinks for dotfiles using homesick
+    bootstrap            # install and update all dependencies
+    install              # create symlinks for dotfiles using homesick
 
     [shortcuts]
-    open-docs          # open documentation in browser using Tailscale/golinks
-    open-go            # open Tailscale/golinks homepage
-    open-ha            # open Home Assistant interface in browser
-    open-syncthing     # open Syncthing interface in browser
+    open-docs            # open documentation in browser using Tailscale/golinks
+    open-go              # open Tailscale/golinks homepage
+    open-ha              # open Home Assistant interface in browser
+    open-syncthing       # open Syncthing interface in browser
 
     [utils]
-    fmt                # format and overwrite justfile
-    freeze             # update lockfiles without installing dependencies [alias: lock]
-    lint               # run every lint hook in .pre-commit-config.yaml against the whole tree
-    test               # run validation checks
+    fmt                  # format and overwrite justfile
+    freeze               # update lockfiles without installing dependencies [alias: lock]
+    lint                 # run every lint hook in .pre-commit-config.yaml against the whole tree
+    test                 # run validation checks
 ```
 
 <!-- [[[end]]] -->

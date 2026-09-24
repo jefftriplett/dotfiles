@@ -63,7 +63,8 @@ flowchart TD
 | Terminal sessions | tmux | `home/.tmux.conf`; functions in `home/.bashrc.d/20-tmux.bash` |
 | Terminal windows | [cmux](https://github.com/manaflow-ai/cmux) | `home/bin/cmux-*` keep workspaces and sessions in step |
 | Clipboard across the Macs | [ssh-clipboard](ssh-clipboard.md) | `home/.justfiles/ssh-clipboard.justfile`; peers in `~/.config/ssh-clipboard/config.json` per Mac |
-| Where projects live | the project registry | `~/Projects/projects.toml`, edited by `projects`; opened by `workon` and `mkproject` in `home/.bashrc.d/60-workon.bash` |
+| Where projects live | the project registry | `~/Projects/projects.toml`, edited by the Rust `projects`; opened by `workon` and `mkproject` in `home/.bashrc.d/61-workon.bash` |
+| Compiled tools | Rust / cargo | the `rust/` Cargo workspace: `projects` and `homesick-new`; `just rust-install` builds them into `~/.local/bin` |
 | Windows and app hotkeys | [Hammerspoon](https://www.hammerspoon.org/) | `home/.hammerspoon/` |
 | Launcher and workflows | [Alfred](alfred.md) | `~/Library/Application Support/Alfred/` per Mac, not in the repo; backed up by a workflow |
 | Editor settings | Sublime Text | `home/.config/sublime-text/`, linked by `just macos::sublime-link` |
@@ -76,7 +77,7 @@ flowchart TD
 
 1. `~/.bash_profile` sources every `~/.bashrc.d/*.bash` file in name order: exports, tmux, aliases, functions, secrets, the OS file, then workon.
 2. `50-osx.bash` and `50-linux.bash` each start with a `uname` check and return on the other OS.
-3. `60-workon.bash` defines `workon` and `mkproject`.
+3. `60-workon-archive.bash` defines the archived `workon-archive` and `mkproject-archive`; `61-workon.bash` defines `workon` and `mkproject`, thin wrappers around the Rust `projects`.
 4. `~/.bashrc` sources `20-tmux.bash`, starts Starship, and installs the direnv hook.
 5. If `TMUX_AUTOATTACH` is set, `20-tmux.bash` attaches the named session. A project's `.envrc` sets that variable through `use tmux`.
 
@@ -87,7 +88,7 @@ project asked for it, drops you into its tmux session.
 
 ## How a project is opened
 
-`workon <name>` asks `projects resolve` where the project lives. The answer is
+`workon <name>` asks the Rust `projects` where the project lives. The answer is
 one of three things:
 
 | Answer | What happens |
