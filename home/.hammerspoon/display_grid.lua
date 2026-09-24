@@ -6,8 +6,8 @@ local displayGrid = {
     -- A and B are identical WQX panels; macOS sometimes swaps which UUID drives
     -- which physical panel on reconnect. If the top row shows up reversed, swap
     -- these two UUIDs (or run hyper+f after telling which side is which).
-    A = "B32F530C-62CF-4F0D-9997-80BF2B812AC8",  -- WQX DP (1) - top-left  (physical left, as of 2026-09-24)
-    B = "B43E3352-ACB7-4163-A25B-2DDAE0174571",  -- WQX DP (2) - top-right (physical right, as of 2026-09-24)
+    A = "B43E3352-ACB7-4163-A25B-2DDAE0174571",  -- WQX DP (2) - top-left  (physical left, as of 2026-09-24 pm)
+    B = "B32F530C-62CF-4F0D-9997-80BF2B812AC8",  -- WQX DP (1) - top-right (physical right, as of 2026-09-24 pm)
     C = "C9240C8E-A9D2-418A-89AC-28D3B5DEE5FC",  -- PM161Q B1 (1) - bottom-left
     -- D (bottom-right, anchor) is the KVM feed. Its UUID changes when the KVM
     -- source switches, so it is NOT pinned here: D is resolved as whatever
