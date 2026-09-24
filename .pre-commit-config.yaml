@@ -28,7 +28,7 @@ repos:
       - id: ruff-check
         # The uv inline scripts in home/bin have no .py extension.
         types: [text]
-        files: ^(home/bin/(cmux-.*|tmux-remote-ls|projects|subl-projects|git-jeff|_.*\.py)|scripts/.*\.py)$
+        files: ^(home/bin/(cmux-.*|tmux-remote-ls|projects-archive|subl-projects|git-jeff|_.*\.py)|scripts/.*\.py)$
 
   - repo: local
     hooks:
@@ -37,3 +37,19 @@ repos:
         entry: bash -c 'for f in "$@"; do just --unstable --fmt --check --justfile "$f" || exit 1; done' --
         language: system
         files: (^|/)(justfile|.*\.justfile)$
+
+      # Whole-workspace runs, not per file: rustfmt and clippy work on the
+      # crates under rust/, which share one Cargo workspace.
+      - id: cargo-fmt
+        name: cargo fmt --check
+        entry: cargo fmt --all --check --manifest-path rust/Cargo.toml
+        language: system
+        files: ^rust/
+        pass_filenames: false
+
+      - id: cargo-clippy
+        name: cargo clippy -D warnings
+        entry: cargo clippy --quiet --locked --workspace --all-targets --manifest-path rust/Cargo.toml -- -D warnings
+        language: system
+        files: ^rust/
+        pass_filenames: false

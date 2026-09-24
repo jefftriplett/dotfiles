@@ -14,5 +14,20 @@ jobs:
 
       - uses: extractions/setup-just@v4
 
+      # For the cargo-fmt and cargo-clippy hooks.
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+
       - name: Run the lint hooks
         run: uv run --with prek prek run --all-files --show-diff-on-failure
+
+  rust-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Test the rust/ workspace
+        run: cargo test --locked --workspace --manifest-path rust/Cargo.toml
