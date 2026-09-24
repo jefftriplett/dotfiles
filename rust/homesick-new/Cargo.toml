@@ -1,0 +1,17 @@
+[package]
+name = "homesick-new"
+description = "Castle-free Rust port of homesick's symlink behavior"
+edition.workspace = true
+publish.workspace = true
+version.workspace = true
+
+[[bin]]
+name = "homesick-new"
+path = "src/main.rs"
+
+[dependencies]
+clap.workspace = true
+toml_edit.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

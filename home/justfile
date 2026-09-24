@@ -85,6 +85,42 @@ alias lock := freeze
     rm -f "{{ DOTFILES_DIR }}"/home/.claude.json.tmp.*
     homesick symlink
 
+# build every Rust tool in the rust/ workspace in release mode
+[group("rust")]
+@rust-build:
+    cargo build --release --locked --workspace --manifest-path "{{ DOTFILES_DIR }}/rust/Cargo.toml"
+
+# build and install every Rust tool under rust/ to ~/.local/bin
+[group("rust")]
+@rust-install: projects-install homesick-new-install
+
+# check formatting, lint with clippy, and run tests for the rust/ workspace
+[group("rust")]
+@rust-check:
+    cargo fmt --all --check --manifest-path "{{ DOTFILES_DIR }}/rust/Cargo.toml"
+    cargo clippy --quiet --locked --workspace --all-targets --manifest-path "{{ DOTFILES_DIR }}/rust/Cargo.toml" -- -D warnings
+    cargo test --quiet --locked --workspace --manifest-path "{{ DOTFILES_DIR }}/rust/Cargo.toml"
+
+# build projects (the Rust projects/workon/mkproject) in release mode
+[group("rust")]
+@projects-build:
+    cargo build --release --locked --package projects --manifest-path "{{ DOTFILES_DIR }}/rust/Cargo.toml"
+
+# build and install projects to ~/.local/bin
+[group("rust")]
+@projects-install:
+    cargo install --locked --path "{{ DOTFILES_DIR }}/rust/projects" --root "$HOME/.local"
+
+# build homesick-new (castle-free Rust homesick) in release mode
+[group("rust")]
+@homesick-new-build:
+    cargo build --release --locked --package homesick-new --manifest-path "{{ DOTFILES_DIR }}/rust/Cargo.toml"
+
+# build and install homesick-new to ~/.local/bin
+[group("rust")]
+@homesick-new-install:
+    cargo install --locked --path "{{ DOTFILES_DIR }}/rust/homesick-new" --root "$HOME/.local"
+
 # run every lint hook in .pre-commit-config.yaml against the whole tree
 [group("utils")]
 @lint:
