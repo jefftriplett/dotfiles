@@ -1,7 +1,10 @@
-# workon - Open a project, wherever it lives
+# workon-archive - the original bash workon/mkproject, kept for comparison
 #
-# Source this file in your .bashrc:
-#   source ~/.bashrc.d/60-workon.bash
+# Superseded by ~/.bashrc.d/61-workon.bash, whose `workon` and `mkproject`
+# are thin wrappers around the Rust `projects` (rust/projects in the dotfiles
+# repo). This file keeps the old versions reachable as `workon-archive` and
+# `mkproject-archive`, still backed by the Python ~/bin/projects-archive. Both
+# read and write the same ~/Projects/projects.toml.
 #
 # One command for local and remote. `workon <name>` consults the registry in
 # ~/Projects/projects.toml: a project on this Mac is a cd + virtualenv
@@ -24,7 +27,7 @@
 # Directories to search for projects that are not in the registry
 WORKON_PROJECT_DIRS=("${HOME}/Projects" "${HOME}/Work")
 
-workon() {
+workon-archive() {
     local mode="auto"
     local name=""
     local host=""
@@ -33,18 +36,18 @@ workon() {
     while [[ $# -gt 0 ]]; do
         case "$1" in
             -h | --help)
-                _workon_usage
+                _workon_archive_usage
                 return 0
                 ;;
             -l | --list)
-                _workon_list_projects
+                _workon_archive_list_projects
                 return 0
                 ;;
             -s | --sessions)
                 # Everything after this is for `projects sessions` (-m, -a,
                 # --names), so hand the rest of the argv over untouched.
                 shift
-                projects sessions "$@"
+                projects-archive sessions "$@"
                 return $?
                 ;;
             --auto)     mode="auto" ;;
@@ -68,7 +71,7 @@ workon() {
             --no-tmux)  want_tmux=0 ;;
             -*)
                 echo "workon: unknown option: $1" >&2
-                _workon_usage >&2
+                _workon_archive_usage >&2
                 return 2
                 ;;
             *)
@@ -84,10 +87,10 @@ workon() {
     done
 
     if [[ -z "$name" ]]; then
-        _workon_usage
+        _workon_archive_usage
         echo
         echo "Projects:"
-        _workon_list_projects | sed 's/^/  /'
+        _workon_archive_list_projects | sed 's/^/  /'
         return 1
     fi
 
@@ -100,7 +103,7 @@ workon() {
     fi
 
     local resolved resolve_status
-    if resolved="$(projects resolve "${resolve_args[@]}" 2>&1)"; then
+    if resolved="$(projects-archive resolve "${resolve_args[@]}" 2>&1)"; then
         resolve_status=0
     else
         resolve_status=$?
@@ -126,7 +129,7 @@ workon() {
             echo "Register it with: projects add $(printf '%q' "$name")" >&2
             return 1
         fi
-        _workon_local_fallback "$name"
+        _workon_archive_local_fallback "$name"
         return $?
     fi
 
@@ -148,7 +151,7 @@ workon() {
 
     case "$mode" in
         local)
-            _workon_open_local "$WORKON_RESOLVED_NAME" "$WORKON_RESOLVED_PATH" \
+            _workon_archive_open_local "$WORKON_RESOLVED_NAME" "$WORKON_RESOLVED_PATH" \
                 "$WORKON_RESOLVED_SESSION" "$want_tmux"
             return $?
             ;;
@@ -171,15 +174,15 @@ workon() {
     esac
 
     if [[ "$WORKON_RESOLVED_KIND" == "remote" ]]; then
-        _workon_open_remote
+        _workon_archive_open_remote
         return $?
     fi
 
-    _workon_open_local "$WORKON_RESOLVED_NAME" "$WORKON_RESOLVED_PATH" \
+    _workon_archive_open_local "$WORKON_RESOLVED_NAME" "$WORKON_RESOLVED_PATH" \
         "$WORKON_RESOLVED_SESSION" "$want_tmux"
 }
 
-_workon_usage() {
+_workon_archive_usage() {
     cat <<'EOF'
 Usage: workon [--auto|--local|--remote] [--host=MACHINE] [--tmux] <project>
 
@@ -201,7 +204,7 @@ EOF
 }
 
 # Open a project on this machine: cd in, then either attach tmux or activate.
-_workon_open_local() {
+_workon_archive_open_local() {
     local name="$1"
     local path="$2"
     local session="$3"
@@ -233,12 +236,12 @@ _workon_open_local() {
         return $?
     fi
 
-    _workon_activate "$path" "$name"
+    _workon_archive_activate "$path" "$name"
 }
 
 # Mosh (or ssh) to the machine and attach the session. Uses the argv the
 # resolver built, which is already quoted for both hops.
-_workon_open_remote() {
+_workon_archive_open_remote() {
     if (( ${#WORKON_RESOLVED_ARGV[@]} == 0 )); then
         echo "workon: no command to reach $WORKON_RESOLVED_HOST" >&2
         return 1
@@ -256,7 +259,7 @@ _workon_open_remote() {
 
 # Unregistered projects: the original directory scan, unchanged, so anything
 # that worked before the registry existed still works.
-_workon_local_fallback() {
+_workon_archive_local_fallback() {
     local name="$1"
     local base_dir project_dir=""
 
@@ -290,11 +293,11 @@ _workon_local_fallback() {
     fi
 
     cd "$project_dir" || return 1
-    _workon_activate "$project_dir" "$name"
+    _workon_archive_activate "$project_dir" "$name"
 }
 
 # Activate a project's virtualenv in the current shell.
-_workon_activate() {
+_workon_archive_activate() {
     local project_dir="$1"
     local name="$2"
     local venv_dir full_venv_path
@@ -320,13 +323,13 @@ _workon_activate() {
     echo "No virtualenv found for: ${name}"
 }
 
-WORKON_CACHE="${XDG_CACHE_HOME:-${HOME}/.cache}/workon/names"
+WORKON_CACHE="${XDG_CACHE_HOME:-${HOME}/.cache}/workon-archive/names"
 
 # Registered projects first, then any unregistered directory, so completion
 # covers everything workon can actually open.
-_workon_build_list() {
+_workon_archive_build_list() {
     {
-        projects list 2>/dev/null
+        projects-archive list 2>/dev/null
 
         local base_dir project
         for base_dir in "${WORKON_PROJECT_DIRS[@]}"; do
@@ -357,7 +360,7 @@ _workon_build_list() {
 # cover projects appearing and disappearing, since adding or removing an entry
 # touches the containing directory; the registry's own mtime covers everything
 # `projects add`, `set`, `remove`, and `import` do.
-_workon_cache_stale() {
+_workon_archive_cache_stale() {
     [[ -f "$WORKON_CACHE" ]] || return 0
 
     local source
@@ -376,14 +379,14 @@ _workon_cache_stale() {
 # Deliberately not a background refresh: a stale-but-instant list that silently
 # repairs itself later is worse than one you can reason about. This rebuilds
 # only when something actually changed, and then it is correct immediately.
-_workon_list_projects() {
-    if _workon_cache_stale; then
+_workon_archive_list_projects() {
+    if _workon_archive_cache_stale; then
         mkdir -p "${WORKON_CACHE%/*}"
         # Written via a temp file and moved into place, so a TAB pressed while
         # the rebuild is running reads either the old list or the new one,
         # never a half-written one.
         local tmp="${WORKON_CACHE}.$$"
-        if _workon_build_list > "$tmp" 2>/dev/null; then
+        if _workon_archive_build_list > "$tmp" 2>/dev/null; then
             mv -f "$tmp" "$WORKON_CACHE"
         else
             rm -f "$tmp"
@@ -396,20 +399,20 @@ _workon_list_projects() {
 
 # For when you know the list changed and do not want to wait for a stat to
 # notice -- or to warm the cache from a shell profile or a cron job.
-workon-refresh() {
+workon-archive-refresh() {
     rm -f "$WORKON_CACHE"
-    _workon_list_projects >/dev/null
+    _workon_archive_list_projects >/dev/null
     printf 'workon: cached %s names in %s\n' \
         "$(grep -c . "$WORKON_CACHE" 2>/dev/null || echo 0)" "$WORKON_CACHE"
 }
 
-_workon_completions() {
+_workon_archive_completions() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local prev="${COMP_WORDS[COMP_CWORD - 1]}"
 
     if [[ "$prev" == "--host" || "$prev" == "--machine" ]]; then
         mapfile -t COMPREPLY < <(
-            compgen -W "$(projects machines 2>/dev/null | awk '{print $1}')" -- "$cur"
+            compgen -W "$(projects-archive machines 2>/dev/null | awk '{print $1}')" -- "$cur"
         )
         return
     fi
@@ -419,7 +422,7 @@ _workon_completions() {
             local flag="${cur%%=*}"
             local partial="${cur#*=}"
             mapfile -t COMPREPLY < <(
-                compgen -P "${flag}=" -W "$(_workon_list_projects)" -- "$partial"
+                compgen -P "${flag}=" -W "$(_workon_archive_list_projects)" -- "$partial"
             )
             return
             ;;
@@ -431,10 +434,10 @@ _workon_completions() {
             ;;
     esac
 
-    mapfile -t COMPREPLY < <(compgen -W "$(_workon_list_projects)" -- "$cur")
+    mapfile -t COMPREPLY < <(compgen -W "$(_workon_archive_list_projects)" -- "$cur")
 }
 
-complete -F _workon_completions workon
+complete -F _workon_archive_completions workon-archive
 
 # ---------------------------------------------------------------------------
 # mkproject
@@ -446,7 +449,7 @@ complete -F _workon_completions workon
 # here, even for a project owned by another Mac: ~/Projects and ~/Work are
 # Syncthing folders, so the directory and .envrc arrive on their own, and
 # `layout uv` builds a native venv the first time direnv sees it over there.
-mkproject() {
+mkproject-archive() {
     local name=""
     local attach=1
     local args=()
@@ -506,21 +509,21 @@ EOF
         return 1
     fi
 
-    projects create "$name" "${args[@]}" || return $?
+    projects-archive create "$name" "${args[@]}" || return $?
 
     if (( attach )); then
-        workon "$name"
+        workon-archive "$name"
     fi
 }
 
-_mkproject_completions() {
+_mkproject_archive_completions() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local prev="${COMP_WORDS[COMP_CWORD - 1]}"
 
     case "$prev" in
         --machine | --host)
             mapfile -t COMPREPLY < <(
-                compgen -W "$(projects machines 2>/dev/null | awk '{print $1}')" -- "$cur"
+                compgen -W "$(projects-archive machines 2>/dev/null | awk '{print $1}')" -- "$cur"
             )
             return
             ;;
@@ -537,4 +540,4 @@ _mkproject_completions() {
     fi
 }
 
-complete -F _mkproject_completions mkproject
+complete -F _mkproject_archive_completions mkproject-archive
