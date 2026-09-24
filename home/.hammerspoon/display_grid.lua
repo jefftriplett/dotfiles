@@ -9,10 +9,11 @@ local displayGrid = {
     A = "B32F530C-62CF-4F0D-9997-80BF2B812AC8",  -- WQX DP (1) - top-left  (physical left, as of 2026-09-24)
     B = "B43E3352-ACB7-4163-A25B-2DDAE0174571",  -- WQX DP (2) - top-right (physical right, as of 2026-09-24)
     C = "C9240C8E-A9D2-418A-89AC-28D3B5DEE5FC",  -- PM161Q B1 (1) - bottom-left
-    -- D = bottom-right, anchor. Behind a KVM, so this UUID changes with the source:
-    --   GLKVM (KVM passthrough):  6B20597B-497C-47A7-86BA-12132646630D  (current, since 2026-09-22)
-    --   PM161Q B1 (2):            F4AB0D6C-8E85-4E84-B5AB-C5B388536E3D  (previous)
-    D = "6B20597B-497C-47A7-86BA-12132646630D",  -- GLKVM (KVM passthrough)
+    -- D (bottom-right, anchor) is the KVM feed. Its UUID changes when the KVM
+    -- source switches, so it is NOT pinned here: D is resolved as whatever
+    -- connected display is not A/B/C (see resolveScreens). Last-known KVM UUIDs
+    -- for reference: GLKVM 6B20597B-497C-47A7-86BA-12132646630D (since 2026-09-22),
+    -- PM161Q B1 (2) F4AB0D6C-8E85-4E84-B5AB-C5B388536E3D (previous).
 }
 
 local function resolveScreens()
@@ -20,8 +21,29 @@ local function resolveScreens()
         A = hs.screen.find(displayGrid.A),
         B = hs.screen.find(displayGrid.B),
         C = hs.screen.find(displayGrid.C),
-        D = hs.screen.find(displayGrid.D),
     }
+
+    -- D is the KVM feed. Rather than pin its (changing) UUID, assume D is
+    -- whatever connected display is not one of the known A/B/C UUIDs.
+    local known = {
+        [displayGrid.A] = true,
+        [displayGrid.B] = true,
+        [displayGrid.C] = true,
+    }
+    local leftovers = {}
+    for _, screen in ipairs(hs.screen.allScreens()) do
+        if not known[screen:getUUID()] then
+            leftovers[#leftovers + 1] = screen
+        end
+    end
+    if #leftovers == 1 then
+        screens.D = leftovers[1]
+    elseif #leftovers > 1 then
+        log.w("Display grid: multiple non-A/B/C displays; using first as D (KVM):", #leftovers)
+        screens.D = leftovers[1]
+    else
+        log.w("Display grid: no KVM (D) display detected")
+    end
 
     -- Don't bail when a slot is missing -- arrange whatever is connected so
     -- the grid holds when one display (e.g. the KVM feed) is unplugged.
