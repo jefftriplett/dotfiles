@@ -77,10 +77,13 @@ fn subdirs(dir: &Path) -> Vec<String> {
     let Ok(entries) = fs::read_dir(dir) else {
         return Vec::new();
     };
+    // Hidden directories are skipped, as the bash `"$dir"/*/` glob did:
+    // ~/Projects/.stfolder is Syncthing's marker, not a project.
     entries
         .flatten()
         .filter(|entry| entry.path().is_dir())
         .map(|entry| entry.file_name().to_string_lossy().into_owned())
+        .filter(|name| !name.starts_with('.'))
         .collect()
 }
 
@@ -102,7 +105,11 @@ pub fn all_names() -> Vec<String> {
             .into_iter()
             .filter(|name| venvs.join(name).join("bin/activate").is_file()),
     );
-    names.into_iter().collect()
+    // Case-insensitive, like `sort -u` under a UTF-8 locale, so "Meetings"
+    // sits among the m's rather than ahead of every lowercase name.
+    let mut names: Vec<String> = names.into_iter().collect();
+    names.sort_by(|a, b| a.to_lowercase().cmp(&b.to_lowercase()).then(a.cmp(b)));
+    names
 }
 
 #[derive(PartialEq)]
