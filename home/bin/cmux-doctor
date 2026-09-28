@@ -19,6 +19,7 @@ preflight in scripts.
 
 import json
 import os
+import re
 import shutil
 import socket
 import stat
@@ -223,6 +224,99 @@ def check_socket() -> None:
         ok("socket access", detail=str(access_mode))
 
 
+# ---- cmux UDP socket-leak check ---------------------------------------------
+
+
+# cmux has been seen to slowly leak UDP sockets across the ephemeral port range
+# (49152-65535) the longer it runs, until it occupies mosh's default range
+# (60000-61000) and mosh-server can no longer bind -- so mosh to that machine
+# fails with "bind: Address already in use". A healthy instance holds a handful
+# of ports; a leaking one holds thousands. Restarting cmux releases them.
+MOSH_PORT_LO, MOSH_PORT_HI = 60000, 61000
+LEAK_WARN = 500          # distinct UDP ports held above this = leaking
+MOSH_RANGE_BLOCK = 900   # this many of mosh's ~1001 ports gone = mosh will fail
+
+
+def _cmux_udp_ports() -> tuple[int, int] | str | None:
+    """(distinct UDP ports cmux holds, how many fall in mosh's range).
+
+    None when cmux isn't running; an error string when lsof could not read
+    its sockets at all, so a failed read is not reported as "0 ports, normal".
+    lsof sees the current user's own sockets without sudo, which is all we
+    need. (lsof exiting 1 with no output just means no UDP sockets.)
+    """
+    try:
+        pids = subprocess.run(
+            ["pgrep", "-x", "cmux"], capture_output=True, text=True, timeout=5
+        ).stdout.split()
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if not pids:
+        return None
+
+    ports: set[int] = set()
+    read_any = False
+    last_error = ""
+    for pid in pids:
+        try:
+            out = subprocess.run(
+                ["lsof", "-nP", "-iUDP", "-a", "-p", pid],
+                capture_output=True, text=True, timeout=20,
+            ).stdout
+        except (OSError, subprocess.SubprocessError) as exc:
+            last_error = str(exc)
+            continue
+        read_any = True
+        for line in out.splitlines():
+            fields = line.split()
+            if not fields:
+                continue
+            # The NAME column is "host:port" for an unconnected socket and
+            # "local:port->remote:port" for a connected one. Only the local
+            # port occupies this machine's range, so drop the remote side.
+            local = fields[-1].split("->")[0]
+            match = re.search(r":(\d+)$", local)
+            if match:
+                ports.add(int(match.group(1)))
+
+    if not read_any:
+        return f"lsof could not read cmux's sockets: {last_error}"
+    in_mosh = sum(1 for p in ports if MOSH_PORT_LO <= p <= MOSH_PORT_HI)
+    return len(ports), in_mosh
+
+
+def check_cmux_udp() -> None:
+    section("cmux UDP ports")
+    result = _cmux_udp_ports()
+    if result is None:
+        ok("cmux udp", detail="cmux not running (nothing to leak)")
+        return
+    if isinstance(result, str):
+        warn("cmux udp", detail=result)
+        return
+
+    total, in_mosh = result
+    if in_mosh >= MOSH_RANGE_BLOCK:
+        fail(
+            "cmux udp leak",
+            detail=(
+                f"cmux holds {total} UDP ports incl. {in_mosh} of mosh's range "
+                f"({MOSH_PORT_LO}-{MOSH_PORT_HI}) -- mosh will fail to bind; "
+                f"restart cmux (killall cmux; open -a cmux)"
+            ),
+        )
+    elif total > LEAK_WARN:
+        warn(
+            "cmux udp leak",
+            detail=(
+                f"cmux holds {total} UDP ports and is climbing -- restart cmux "
+                f"before it exhausts the ephemeral range and blocks mosh"
+            ),
+        )
+    else:
+        ok("cmux udp", detail=f"{total} UDP port(s) held (normal)")
+
+
 # ---- config checks ----------------------------------------------------------
 
 
@@ -411,6 +505,7 @@ def main(
 ) -> None:
     check_tools()
     check_socket()
+    check_cmux_udp()
     check_config()
     check_hosts(skip_probe=skip_hosts, timeout=timeout)
     check_remote_tmux_rpc(skip_probe=skip_hosts, timeout=timeout)
