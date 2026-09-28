@@ -1,7 +1,7 @@
 tap "anthropics/tap"
 tap "darrylmorley/whatcable"
 tap "homebrew/command-not-found"
-tap "rjyo/moshi"
+tap "rjyo/moshi", trusted: true
 tap "skzv/tap"
 # Run your GitHub Actions locally
 brew "act"
@@ -348,7 +348,7 @@ brew "starship"
 # Generate scripting interfaces to C/C++ code
 brew "swig"
 # Open source continuous file synchronization application
-brew "syncthing", restart_service: :changed
+brew "syncthing"
 # Easiest, most secure way to use WireGuard and 2FA
 brew "tailscale", restart_service: :changed
 # Log file highlighter
@@ -407,12 +407,16 @@ brew "zlib"
 brew "zola"
 # Shell extension to navigate your filesystem faster
 brew "zoxide"
+# Portable daemon + CLI that bridges AI coding agents to the Moshi mobile app
+brew "rjyo/moshi/moshi-hook"
 # One TUI for every AI coding session — Claude Code, Codex, Antigravity
 brew "skzv/tap/ccmux", trusted: true
 # Command-line interface for 1Password
 cask "1password-cli"
 # Control every piece of your controller
 cask "8bitdo-ultimate-software"
+# Browse, search and analyse your past AI coding sessions
+cask "agentsview"
 # AirPods companion app
 cask "airbuddy"
 # Watch local content on Apple TV and Chromecast
@@ -486,6 +490,8 @@ cask "ghostty"
 cask "github"
 # Desktop automation application
 cask "hammerspoon"
+# Homebrew's official GUI
+cask "homebrew-app"
 # Terminal built on web technologies
 cask "hyper"
 # Automatically ejects external drives
@@ -564,7 +570,8 @@ cask "vivaldi"
 cask "vlc"
 # Binary releases of VS Code without MS branding/telemetry/licensing
 cask "vscodium"
-cask "whatcable"
+# Menu bar app for USB-C cable diagnostics
+cask "darrylmorley/whatcable/whatcable", trusted: true
 # Full-featured companion app to the YubiKey
 cask "yubico-authenticator"
 # Multiplayer code editor
@@ -573,6 +580,7 @@ cask "zed"
 cask "zoom"
 mas "Annotate", id: 918207447
 mas "Bitwarden", id: 1352778147
+mas "Brother iPrint&Scan", id: 1193539993
 mas "BUSY", id: 6738797176
 mas "Craft", id: 1487937127
 mas "Directive", id: 1503550067
