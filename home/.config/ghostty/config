@@ -8,6 +8,11 @@ font-family = Hack Nerd Font Mono
 font-feature=-liga
 font-size = 20
 # font-thicken = true
+# Always consume cmd+c as copy so it never leaks a bare "c" into the pane when
+# there's no selection (Ghostty's default binding is performable and passes the
+# key through in that case, which bites inside herdr where herdr owns the mouse).
+# copy-on-select already handles the actual copying, so this is mostly a guard.
+keybind = cmd+c=copy_to_clipboard
 keybind = cmd+left=previous_tab
 keybind = cmd+right=next_tab
 keybind = cmd+shift+left=move_tab:-1
