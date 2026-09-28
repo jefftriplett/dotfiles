@@ -9,7 +9,7 @@ and application toggles. The configuration lives in `home/.hammerspoon/`.
 | `config.lua` | Display names, grid sizes, and application layouts |
 | `keys.lua` | Defines the `hyper` modifier |
 | `sizeup.lua` | Window movement hotkeys (SizeUp emulation) |
-| `display_grid.lua` | Fixes the 2x2 monitor arrangement by screen UUID |
+| `display_grid.lua` | Arranges the 2x2 monitor grid, classifying displays by name each time |
 | `logger.lua`, `tabletools.lua` | Logging and table helpers |
 
 Press <kbd>hyper</kbd> + <kbd>r</kbd> to reload the configuration.
@@ -42,10 +42,21 @@ Press <kbd>hyper</kbd> + <kbd>r</kbd> to reload the configuration.
 
 ## Display Grid (2x2 Monitor Setup)
 
-| Action                     | Key Combination              |
-| -------------------------- | ---------------------------- |
-| fix 2x2 display grid       | <kbd>hyper</kbd> + <kbd>f</kbd> |
-| dump display configuration | <kbd>hyper</kbd> + <kbd>9</kbd> |
+| Action                               | Key Combination              |
+| ------------------------------------ | ---------------------------- |
+| swap the two top displays, re-apply grid | <kbd>hyper</kbd> + <kbd>f</kbd> |
+| dump display configuration           | <kbd>hyper</kbd> + <kbd>9</kbd> |
+
+The top row is two identical WQX DP panels. They report identical EDIDs, down
+to the serial number, so macOS cannot tell them apart and sometimes hands their
+IDs out the other way round when the displays wake from sleep. Nothing in
+software can tell which physical panel is on the left, so the grid keeps the
+tops in whatever order they are in, and <kbd>hyper</kbd> + <kbd>f</kbd> swaps
+them when they come back reversed.
+
+The other slots are found on every run: `PM161Q B1` is bottom-left, and
+whatever display is left over, the KVM feed, is bottom-right. To re-apply the
+grid without swapping, run `hs -c 'fix2x2Grid()'`.
 
 ## Application Toggle
 

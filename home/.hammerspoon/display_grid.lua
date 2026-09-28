@@ -1,73 +1,73 @@
--- Enforce a deterministic 2x2 display grid using screen UUIDs.
+-- Enforce a 2x2 display grid, working out which display is which each time.
+--
+--   top-left     | top-right        two identical WQX DP panels
+--   -------------+-------------
+--   bottom-left  | bottom-right     PM161Q B1 | the KVM feed (anchor at 0,0)
+--
+-- The two top panels report identical EDIDs (same vendor, model, and serial
+-- number 1), so macOS cannot tell them apart and hands out their two saved
+-- UUIDs in whatever order they reconnect after display sleep. Pinning a UUID
+-- to a side therefore flips every few wakes. Instead, the displays are polled
+-- and classified by name on every run, the tops keep whatever left/right
+-- order they have now, and hyper+f swaps them -- one keypress when they
+-- come back reversed.
 
 local log = require('logger')
 
-local displayGrid = {
-    -- A and B are identical WQX panels; macOS sometimes swaps which UUID drives
-    -- which physical panel on reconnect. If the top row shows up reversed, swap
-    -- these two UUIDs (or run hyper+f after telling which side is which).
-    A = "B43E3352-ACB7-4163-A25B-2DDAE0174571",  -- WQX DP (2) - top-left  (physical left, as of 2026-09-24 pm)
-    B = "B32F530C-62CF-4F0D-9997-80BF2B812AC8",  -- WQX DP (1) - top-right (physical right, as of 2026-09-24 pm)
-    C = "C9240C8E-A9D2-418A-89AC-28D3B5DEE5FC",  -- PM161Q B1 (1) - bottom-left
-    -- D (bottom-right, anchor) is the KVM feed. Its UUID changes when the KVM
-    -- source switches, so it is NOT pinned here: D is resolved as whatever
-    -- connected display is not A/B/C (see resolveScreens). Last-known KVM UUIDs
-    -- for reference: GLKVM 6B20597B-497C-47A7-86BA-12132646630D (since 2026-09-22),
-    -- PM161Q B1 (2) F4AB0D6C-8E85-4E84-B5AB-C5B388536E3D (previous).
+local roles = {
+    -- The two top panels, matched by name. macOS appends " (1)" / " (2)"
+    -- to identical names, so match the prefix.
+    topPattern = "^WQX DP",
+    -- Bottom-left. Prefer its UUID (stable, since it reports a real serial);
+    -- fall back to the name. The KVM feed has shown up as a "PM161Q B1 (2)"
+    -- before, so the UUID keeps the two apart when both are connected.
+    bottomLeftUUID = "C9240C8E-A9D2-418A-89AC-28D3B5DEE5FC",
+    bottomLeftPattern = "^PM161Q",
+    -- Bottom-right is the KVM feed, whose UUID changes with the KVM source:
+    -- it is whatever display is left over after the others are classified.
 }
 
-local function resolveScreens()
-    local screens = {
-        A = hs.screen.find(displayGrid.A),
-        B = hs.screen.find(displayGrid.B),
-        C = hs.screen.find(displayGrid.C),
-    }
+-- Poll every connected display and sort them into slots:
+-- A top-left, B top-right, C bottom-left, D bottom-right.
+local function classifyScreens()
+    local tops, bottomLeft, leftovers = {}, nil, {}
 
-    -- D is the KVM feed. Rather than pin its (changing) UUID, assume D is
-    -- whatever connected display is not one of the known A/B/C UUIDs.
-    local known = {
-        [displayGrid.A] = true,
-        [displayGrid.B] = true,
-        [displayGrid.C] = true,
-    }
-    local leftovers = {}
     for _, screen in ipairs(hs.screen.allScreens()) do
-        if not known[screen:getUUID()] then
+        local name = screen:name() or ""
+        if name:match(roles.topPattern) then
+            tops[#tops + 1] = screen
+        elseif screen:getUUID() == roles.bottomLeftUUID then
+            if bottomLeft then leftovers[#leftovers + 1] = bottomLeft end
+            bottomLeft = screen
+        elseif not bottomLeft and name:match(roles.bottomLeftPattern) then
+            bottomLeft = screen
+        else
             leftovers[#leftovers + 1] = screen
         end
     end
-    if #leftovers == 1 then
-        screens.D = leftovers[1]
-    elseif #leftovers > 1 then
-        log.w("Display grid: multiple non-A/B/C displays; using first as D (KVM):", #leftovers)
-        screens.D = leftovers[1]
-    else
-        log.w("Display grid: no KVM (D) display detected")
+
+    -- The tops keep their current left/right order: whichever is further
+    -- left now stays top-left. hyper+f is what changes it.
+    table.sort(tops, function(a, b)
+        local fa, fb = a:fullFrame(), b:fullFrame()
+        if fa.x ~= fb.x then return fa.x < fb.x end
+        return a:getUUID() < b:getUUID()
+    end)
+    if #tops > 2 then
+        log.w("Display grid: more than two top panels; using the first two:", #tops)
+    end
+    for i = 3, #tops do leftovers[#leftovers + 1] = tops[i] end
+
+    if #leftovers > 1 then
+        log.w("Display grid: several unclassified displays; using the first as the KVM (D):", #leftovers)
     end
 
-    -- Don't bail when a slot is missing -- arrange whatever is connected so
-    -- the grid holds when one display (e.g. the KVM feed) is unplugged.
-    local present = 0
-    for _, key in ipairs({"A", "B", "C", "D"}) do
-        if screens[key] then
-            present = present + 1
-        else
-            log.w("Display grid slot not connected (skipping):", key)
-        end
-    end
-
-    if present == 0 then
-        log.w("Display grid: none of the known displays are connected")
-        return nil
-    end
-
-    return screens
+    return { A = tops[1], B = tops[2], C = bottomLeft, D = leftovers[1] }
 end
 
 -- Target origin for a slot. All four are anchored to a shared corner at
--- (0,0): A top-left, B top-right, C bottom-left, D bottom-right. Because
--- each position depends only on that display's own size, the remaining
--- displays keep their slots when one is disconnected.
+-- (0,0), and each position depends only on that display's own size, so the
+-- rest keep their slots when one is disconnected.
 local function originForSlot(key, screen)
     local frame = screen:fullFrame()
     if key == "A" then return -frame.w, -frame.h end  -- top-left
@@ -76,96 +76,80 @@ local function originForSlot(key, screen)
     return 0, 0                                         -- D: bottom-right anchor
 end
 
-function fix2x2Grid()
-    local screens = resolveScreens()
-    if not screens then
-        hs.alert.show('Display grid: no known displays')
+local function describe(screens)
+    local parts = {}
+    for _, key in ipairs({"A", "B", "C", "D"}) do
+        local screen = screens[key]
+        parts[#parts + 1] = key .. "=" .. (screen and screen:name() or "(none)")
+    end
+    return table.concat(parts, "  ")
+end
+
+-- Place the classified displays. With `swapTops`, the two tops trade sides.
+local function applyGrid(swapTops)
+    local screens = classifyScreens()
+    if not (screens.A or screens.B or screens.C or screens.D) then
+        hs.alert.show("Display grid: no displays found")
         return
     end
 
-    local count = 0
-    local function applyPositions()
-        -- Apply D, A, C, B in that order (anchor first, top-right last) so
-        -- macOS doesn't shove the top-right display before the rest land.
-        count = 0
-        for _, key in ipairs({"D", "A", "C", "B"}) do
+    if swapTops then
+        if screens.A and screens.B then
+            screens.A, screens.B = screens.B, screens.A
+        else
+            log.w("Display grid: need both top panels to swap them")
+        end
+    end
+
+    local function place(order)
+        for _, key in ipairs(order) do
             local screen = screens[key]
-            if screen then
-                screen:setOrigin(originForSlot(key, screen))
-                count = count + 1
-            end
+            if screen then screen:setOrigin(originForSlot(key, screen)) end
         end
     end
 
-    applyPositions()
-    -- Second pass: macOS sometimes shoves displays during the first pass
-    -- before all positions are known. Re-applying locks things in place.
-    hs.timer.doAfter(0.4, applyPositions)
+    -- Park the tops far apart first: two same-size panels trading places
+    -- would otherwise overlap mid-move, and macOS shoves one of them aside.
+    -- Then set the final origins anchor-first, and once more after a beat,
+    -- because macOS can still nudge displays while the first pass lands.
+    if screens.A then screens.A:setOrigin(-10000, -2000) end
+    if screens.B then screens.B:setOrigin(10000, -2000) end
+    hs.timer.doAfter(0.3, function() place({"D", "B", "C", "A"}) end)
+    hs.timer.doAfter(0.8, function() place({"D", "B", "C", "A"}) end)
 
-    log.i("Applied 2x2 display grid")
-    hs.alert.show(string.format('Display grid applied (%d displays)', count))
+    local summary = describe(screens)
+    log.i((swapTops and "Swapped tops; " or "Applied grid; ") .. summary)
+    hs.alert.show(swapTops and "Swapped the top displays" or "Display grid applied")
 end
 
-local function scheduleGridFix(delaySeconds)
-    hs.timer.doAfter(delaySeconds, fix2x2Grid)
+-- Arrange the grid, keeping the tops in their current left/right order.
+-- Headless: hs -c "fix2x2Grid()"
+function fix2x2Grid()
+    applyGrid(false)
 end
 
-local displayGridScreenWatcher = hs.screen.watcher.new(function()
-    scheduleGridFix(1.5)
-end)
+-- Swap the two top panels and arrange the grid. Bound to hyper+f.
+function swapTopDisplays()
+    applyGrid(true)
+end
 
-local displayGridCaffeinateWatcher = hs.caffeinate.watcher.new(function(eventType)
-    if eventType == hs.caffeinate.watcher.systemDidWake then
-        scheduleGridFix(2.5)
-    end
-end)
+hs.hotkey.bind(hyper, "f", swapTopDisplays)
 
--- displayGridScreenWatcher:start()
--- displayGridCaffeinateWatcher:start()
-
-hs.hotkey.bind(hyper, "f", fix2x2Grid)
-
--- Dump current display configuration to console
+-- Log every display, the slot it was classified into, and where it is now.
 function dumpDisplayGrid()
-    local screens = hs.screen.allScreens()
+    local screens = classifyScreens()
+    local slotFor = {}
+    for key, screen in pairs(screens) do slotFor[screen:getUUID()] = key end
 
-    -- Sort screens by position (top-left to bottom-right)
-    table.sort(screens, function(a, b)
-        local frameA = a:fullFrame()
-        local frameB = b:fullFrame()
-        if frameA.y ~= frameB.y then
-            return frameA.y < frameB.y
-        end
-        return frameA.x < frameB.x
-    end)
-
-    log.i("-- Current display configuration:")
-    log.i("local displayGrid = {")
-
-    local labels = {"A", "B", "C", "D"}
-    for i, screen in ipairs(screens) do
+    log.i("-- Displays (slot: A top-left, B top-right, C bottom-left, D bottom-right):")
+    for _, screen in ipairs(hs.screen.allScreens()) do
         local frame = screen:fullFrame()
-        local label = labels[i] or tostring(i)
-        log.i(string.format('    %s = "%s",  -- %s (%dx%d @ %d,%d)',
-            label,
+        log.i(string.format("%s  %-14s %s  %dx%d @ %d,%d",
+            slotFor[screen:getUUID()] or "-",
+            screen:name() or "?",
             screen:getUUID(),
-            screen:name(),
-            frame.w, frame.h,
-            frame.x, frame.y
-        ))
+            frame.w, frame.h, frame.x, frame.y))
     end
-
-    log.i("}")
-    log.i("")
-    log.i("-- Grid layout (based on current positions):")
-
-    for i, screen in ipairs(screens) do
-        local frame = screen:fullFrame()
-        local label = labels[i] or tostring(i)
-        log.i(string.format("%s: %s (%dx%d @ %d,%d)",
-            label, screen:name(), frame.w, frame.h, frame.x, frame.y))
-    end
-
     hs.alert.show("Display config dumped to console")
 end
 
