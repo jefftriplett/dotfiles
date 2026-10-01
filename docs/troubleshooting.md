@@ -48,6 +48,25 @@ and excludes it from Time Machine. If a folder still logs thousands of
 stale entries; pause the folder in the Syncthing GUI and reset it from
 Actions → Advanced, which rebuilds the index without touching files.
 
+## The CodexBar menu bar item is broken
+
+CodexBar's item in the menu bar draws wrong, stops updating, or does not
+respond to clicks.
+
+The menu bar itself is drawn by two macOS processes, `SystemUIServer` and
+`ControlCenter`, and third-party menu bar extras are hosted through them.
+Restarting both usually fixes it; macOS relaunches them right away.
+
+```shell
+just macos::menubar-reset
+```
+
+If the item is still broken, relaunch CodexBar as well:
+
+```shell
+just macos::menubar-reset codexbar
+```
+
 ## Tab completion does not show a new project
 
 `workon` completes by calling `projects names` on every TAB, so there is no

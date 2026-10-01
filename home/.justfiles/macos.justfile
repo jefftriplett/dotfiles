@@ -94,6 +94,29 @@ screenshots-sweep:
     echo "moved ${moved} file(s) to {{ screenshots_dir }}"
 
 # ----------------------------------------------------------------
+# Menu bar
+# ----------------------------------------------------------------
+
+# restart the processes that draw the menu bar; pass "codexbar" to also relaunch CodexBar
+menubar-reset *APPS:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    # macOS relaunches both right away; menu bar extras live in ControlCenter
+    killall SystemUIServer ControlCenter
+    for app in {{ APPS }}; do
+        case "${app}" in
+            codexbar)
+                pkill -x CodexBar || true
+                sleep 1
+                open -b com.steipete.codexbar
+                echo "relaunched CodexBar"
+                ;;
+            *) echo "unknown app: ${app}" >&2; exit 1 ;;
+        esac
+    done
+    echo "menu bar reset"
+
+# ----------------------------------------------------------------
 # Sublime Text
 # ----------------------------------------------------------------
 
