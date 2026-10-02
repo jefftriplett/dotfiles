@@ -35,6 +35,7 @@ nav = [
     { "Machine List" = "machines.md" },
     { "Moshi" = "moshi.md" },
     { "Project Registry" = "projects.md" },
+    { "Rust Rewrites" = "rust-rewrites.md" },
     { "ssh-clipboard" = "ssh-clipboard.md" },
     { "Stream Deck" = "stream-deck.md" },
     { "tmux" = "tmux.md" },

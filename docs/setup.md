@@ -103,10 +103,11 @@ auth is required. The scripts never type a password.
 ## 6. Register the machine
 
 `projects`, `workon`, and `mkproject` are backed by a Rust binary. Build it once
-mise has installed Rust in step 4:
+mise has installed Rust in step 4. The same recipe also installs `homesick-new`.
+See [Rust Rewrites](rust-rewrites.md).
 
 ```shell
-just rust-install     # builds rust/ and installs projects to ~/.local/bin
+just rust-install     # installs projects and homesick-new to ~/.local/bin
 ```
 
 The registry lives in `~/Projects/projects.toml`. If this Mac does not have it
@@ -230,6 +231,7 @@ mise ls                     # go, node, ruby, rust present
 just --list                 # recipes resolve
 tmux-remote-ls              # the other Macs answer
 command -v projects         # ~/.local/bin/projects, the Rust build
+homesick-new show-path      # prints ~/.homesick/repos/dotfiles
 workon                      # lists registered projects
 just lint                   # every hook passes
 ```

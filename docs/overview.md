@@ -58,7 +58,7 @@ flowchart TD
 | Terminal sessions and workspaces | [herdr](herdr.md) | `~/.config/herdr/config.toml` per Mac, not in the repo; other Macs saved with `herdr machine add` |
 | Clipboard across the Macs | [ssh-clipboard](ssh-clipboard.md) | `home/.justfiles/ssh-clipboard.justfile`; peers in `~/.config/ssh-clipboard/config.json` per Mac |
 | Where projects live | the project registry | `~/Projects/projects.toml`, edited by the Rust `projects`; opened by `workon` and `mkproject` in `home/.bashrc.d/61-workon.bash` |
-| Compiled tools | Rust / cargo | the `rust/` Cargo workspace: `projects` and `homesick-new`; `just rust-install` builds them into `~/.local/bin` |
+| Compiled tools | [Rust / cargo](rust-rewrites.md) | the `rust/` Cargo workspace: `projects` and `homesick-new`; `just rust-install` builds them into `~/.local/bin` |
 | Windows and app hotkeys | [Hammerspoon](https://www.hammerspoon.org/) | `home/.hammerspoon/` |
 | Launcher and workflows | [Alfred](alfred.md) | `~/Library/Application Support/Alfred/` per Mac, not in the repo; backed up by a workflow |
 | Editor settings | Sublime Text | `home/.config/sublime-text/`, linked by `just macos::sublime-link` |
