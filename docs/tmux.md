@@ -1,5 +1,8 @@
 # tmux
 
+!!! warning "Deprecated"
+    This tmux setup is deprecated. Use [herdr](herdr.md). This page stays for reference.
+
 Session management and key bindings are defined in `home/.tmux.conf` and `home/.bashrc.d/20-tmux.bash`.
 
 ## Shell Aliases

@@ -46,7 +46,7 @@ moshi-hook host setup
 moshi-hook serve            # run the daemon in the foreground
 moshi-hook logs -f          # tail daemon logs
 moshi-hook probe            # check if the daemon is running
-moshi-hook context          # print terminal context (tmux/herdr/shell)
+moshi-hook context          # print terminal context (tmux/herdr/zellij/shell)
 moshi-hook cwd-list         # list recent agent working directories
 moshi-hook diff             # open a local Git diff viewer
 moshi-hook servers          # probe local HTTP servers (SSH preflight)
@@ -61,9 +61,10 @@ brew upgrade moshi-hook     # upgrades both moshi and moshi-hook
 brew services restart moshi-hook
 ```
 
-Repeat on each Mac, or run remotely:
+Repeat on each Mac, or run remotely from another Mac:
 
 ```shell
 ssh mac-studio-2023 "brew upgrade moshi-hook && brew services restart moshi-hook"
+ssh mac-mini-pro-2023 "brew upgrade moshi-hook && brew services restart moshi-hook"
 ssh mba-2025 "brew upgrade moshi-hook && brew services restart moshi-hook"
 ```

@@ -1,5 +1,8 @@
 # cmux Workspaces
 
+!!! warning "Deprecated"
+    These cmux scripts are deprecated. Use [herdr](herdr.md). This page stays for reference.
+
 Scripts in `home/bin/` that keep [cmux][cmux] workspaces and tmux sessions in sync. They are
 [uv][uv] inline-script executables — the dependency headers mean they run straight from
 `$PATH` with no virtualenv to manage.

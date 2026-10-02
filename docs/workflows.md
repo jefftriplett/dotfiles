@@ -57,7 +57,18 @@ A project with no machine opens wherever you are, which is the right answer
 for anything Syncthing mirrors. See [Machine List](machines.md) for how names
 resolve.
 
+## Work in herdr on another Mac
+
+1. Run `herdr machine status` to check the saved Macs.
+2. Run `herdr --remote mac-studio-2023 --session default` to attach to the studio session.
+3. Run `herdr --machine studio <command>` to send one API command without an attach.
+
+See [herdr](herdr.md#machine-to-machine).
+
 ## Keep cmux workspaces in step with tmux
+
+!!! warning "Deprecated"
+    The cmux scripts are deprecated. Use [herdr](herdr.md).
 
 1. `cmux-tmux-sync --dry-run` shows which detached local sessions have no workspace.
 2. `cmux-tmux-sync` creates them. Add `--all` to include the other Macs as mosh workspaces.
@@ -99,6 +110,9 @@ which peers are connected; `just ssh-clipboard::monitor` shows each value as it
 moves. See [ssh-clipboard](ssh-clipboard.md).
 
 ## Copy text out of tmux
+
+!!! warning "Deprecated"
+    The tmux setup is deprecated. Use [herdr](herdr.md).
 
 Select with the mouse, or `v` then `y` in copy mode. The text goes to the
 system clipboard through OSC 52, on every Mac and over ssh. Over mosh it does

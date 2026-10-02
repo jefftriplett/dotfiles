@@ -29,6 +29,7 @@ nav = [
     { "Just Recipes" = "just.md" },
     { "Hammerspoon" = "hammerspoon.md" },
     { "Alfred" = "alfred.md" },
+    { "herdr" = "herdr.md" },
     { "tmux" = "tmux.md" },
     { "Project Registry" = "projects.md" },
     { "Machine List" = "machines.md" },
