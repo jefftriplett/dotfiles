@@ -15,8 +15,12 @@
 | Elgato Stream Deck (15-key) | mini, studio |
 | Elgato Stream Deck Pedal (3-key) | studio |
 | Elgato Key Light A160 | mini (USB), all (Control Center) |
+| [GL.iNet GL-RM10](https://www.gl-inet.com/en-us/products/gl-rm10) remote KVM | mini, studio (one each) |
 
 See [Stream Deck](stream-deck.md) for profile and button configuration.
+
+The KVM shows up on the Mac as a display named `GLKVM`. On the studio it is the
+bottom-right display of the 2x2 grid — see [Hammerspoon](hammerspoon.md).
 
 ## Configuration
 
