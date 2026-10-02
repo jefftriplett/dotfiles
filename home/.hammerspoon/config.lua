@@ -14,6 +14,9 @@ config.displays = {
         display_1792x1120 = '1792x1120@2x', -- main
     },
 
+    -- Grid for any screen not listed in grids
+    defaultGrid = '3x2',
+
     -- Monitor grid configurations (keyed by screen name)
     grids = {
         ['WQX DP (1)']    = '6x4',  -- 2048x1280

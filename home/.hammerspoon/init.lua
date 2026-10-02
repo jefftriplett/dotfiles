@@ -59,10 +59,11 @@ function setup_grid()
         local gridConfig = config.displays.grids[screenName]
         if gridConfig then
             log.d('  -> grid:', gridConfig)
-            hs.grid.setGrid(gridConfig, screen)
         else
-            log.w('  -> no grid config')
+            gridConfig = config.displays.defaultGrid
+            log.d('  -> default grid:', gridConfig)
         end
+        hs.grid.setGrid(gridConfig, screen)
     end
 end
 
