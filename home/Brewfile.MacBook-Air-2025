@@ -1,7 +1,7 @@
 tap "anthropics/tap"
 tap "darrylmorley/whatcable"
-tap "rjyo/moshi"
-tap "skzv/tap"
+tap "rjyo/moshi", trusted: true
+tap "skzv/tap", trusted: true
 tap "steipete/tap"
 # Run your GitHub Actions locally
 brew "act"
@@ -312,7 +312,7 @@ brew "swiftlint"
 # Generate scripting interfaces to C/C++ code
 brew "swig"
 # Open source continuous file synchronization application
-brew "syncthing", restart_service: :changed
+brew "syncthing"
 # Send macOS User Notifications from the command-line
 brew "terminal-notifier"
 # Programmatically correct mistyped console commands
@@ -371,12 +371,18 @@ brew "zeroclaw"
 brew "zig"
 # General-purpose lossless data-compression library
 brew "zlib"
+# Portable daemon + CLI that bridges AI coding agents to the Moshi mobile app
+brew "rjyo/moshi/moshi-hook", trusted: true
+# One TUI for every AI coding session — Claude Code, Codex, Antigravity
+brew "skzv/tap/ccmux"
 # Fast X CLI for tweeting, replying, and reading
-brew "steipete/tap/bird"
+brew "steipete/tap/bird", trusted: true
 # Command-line interface for 1Password
 cask "1password-cli"
 # Control every piece of your controller
 cask "8bitdo-ultimate-software"
+# Browse, search and analyse your past AI coding sessions
+cask "agentsview"
 # AirPods companion app
 cask "airbuddy"
 # Watch local content on Apple TV and Chromecast
@@ -449,6 +455,8 @@ cask "hammerspoon"
 cask "handbrake-app"
 # Laravel and PHP development environment manager
 cask "herd"
+# Homebrew's official GUI
+cask "homebrew-app"
 # Terminal built on web technologies
 cask "hyper"
 # Automatically ejects external drives
@@ -517,7 +525,8 @@ cask "tower"
 cask "vivaldi"
 # Multimedia player
 cask "vlc"
-cask "whatcable"
+# Menu bar app for USB-C cable diagnostics
+cask "darrylmorley/whatcable/whatcable", trusted: true
 # Full-featured companion app to the YubiKey
 cask "yubico-authenticator"
 mas "GarageBand", id: 682658836
