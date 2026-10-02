@@ -363,8 +363,6 @@ brew "yarn"
 brew "yazi"
 # Tool for managing your YubiKey configuration
 brew "ykman"
-# Pluggable terminal workspace, with terminal multiplexer as the base feature
-brew "zellij"
 # Rust-first autonomous agent runtime
 brew "zeroclaw"
 # Programming language designed for robustness, optimality, and clarity
