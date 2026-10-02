@@ -1,15 +1,15 @@
 # Hammerspoon
 
-[Hammerspoon][hammerspoon] handles window management, the 2x2 display grid,
-and application toggles. The configuration lives in `home/.hammerspoon/`.
+[Hammerspoon][hammerspoon] handles window management, a window grid on each
+display, and application toggles. The configuration lives in `home/.hammerspoon/`.
 
 | File | Purpose |
 | ---- | ------- |
-| `init.lua` | Loads the modules, sets the grid per screen, starts the system watchers, binds the application hotkeys |
-| `config.lua` | Display names, grid sizes, and application layouts |
+| `init.lua` | Loads the modules, sets the window grid per screen, starts the system watchers, binds the application hotkeys |
+| `config.lua` | Display names, window grid sizes, and application layouts |
 | `keys.lua` | Defines the `hyper` modifier |
 | `sizeup.lua` | Window movement hotkeys (SizeUp emulation) |
-| `display_grid.lua` | Arranges the 2x2 monitor grid, classifying displays by name each time |
+| `display_grid.lua` | Arranges the four displays on the Studio |
 | `logger.lua`, `tabletools.lua` | Logging and table helpers |
 
 Press <kbd>hyper</kbd> + <kbd>r</kbd> to reload the configuration.
@@ -40,11 +40,33 @@ Press <kbd>hyper</kbd> + <kbd>r</kbd> to reload the configuration.
 | move to next monitor      | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>right</kbd>                    |
 | move to previous monitor  | <kbd>ctrl</kbd> + <kbd>opt</kbd> + <kbd>left</kbd>                     |
 
-## Display Grid (2x2 Monitor Setup)
+## Window Grid
+
+<kbd>hyper</kbd> + <kbd>g</kbd> shows a grid over the screen. Click or type a
+cell to move the focused window there. Each display gets its grid from
+`config.displays.grids` in `config.lua`, matched by the exact screen name. A
+display that is not in that list gets `config.displays.defaultGrid`, which is
+3x2.
+
+| Screen name | Grid |
+| ----------- | ---- |
+| `WQX DP (1)`, `WQX DP (2)` | 6x4 |
+| `PM161Q B1 (1)`, `PM161Q B1 (2)` | 3x2 |
+| `XREAL One` | 3x2 |
+| any other display | 3x2 (default) |
+
+To find a screen name, press <kbd>hyper</kbd> + <kbd>9</kbd> and read the
+Hammerspoon console.
+
+## Studio Display Layout
+
+The Studio has four displays in a 2x2 layout. The Air and the Mini do not use
+this layout. Do not press <kbd>hyper</kbd> + <kbd>f</kbd> on them, because
+`display_grid.lua` moves their displays to the wrong positions.
 
 | Action                               | Key Combination              |
 | ------------------------------------ | ---------------------------- |
-| swap the two top displays, re-apply grid | <kbd>hyper</kbd> + <kbd>f</kbd> |
+| swap the two top displays, re-apply layout | <kbd>hyper</kbd> + <kbd>f</kbd> |
 | dump display configuration           | <kbd>hyper</kbd> + <kbd>9</kbd> |
 
 The top row is two identical WQX DP panels. They report identical EDIDs, down

@@ -185,8 +185,9 @@ System Settings, otherwise no hotkey can move a window. The config is already
 linked at `~/.hammerspoon`. Press `hyper + r` to reload it after changes. The
 hotkeys are listed in [Hammerspoon](hammerspoon.md).
 
-If this Mac drives the 2x2 monitor grid, press `hyper + 9` to dump the screen
-UUIDs to the console and copy them into `display_grid.lua`.
+On the Studio, press `hyper + 9` to dump the screen names and UUIDs to the
+console. If the bottom-left display changed, copy its UUID into
+`display_grid.lua`. See [Hammerspoon](hammerspoon.md#studio-display-layout).
 
 ## 12. Alfred
 

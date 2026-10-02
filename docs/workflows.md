@@ -88,7 +88,7 @@ workspaces that already exist. See [cmux Workspaces](cmux.md).
 | Maximize, center, snap back | `hyper + m`, `hyper + c`, `hyper + z` |
 | Show the grid | `hyper + g` |
 | Toggle an app | `hyper + letter`, see the table in [Hammerspoon](hammerspoon.md) |
-| Fix the 2x2 monitor layout | `hyper + f` |
+| Swap the top displays (Studio only) | `hyper + f` |
 
 `hyper` is `ctrl + opt + cmd`.
 

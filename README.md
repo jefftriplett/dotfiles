@@ -46,7 +46,7 @@ Run `just docs-serve` to read it locally.
 | [Troubleshooting](docs/troubleshooting.md) | Symptoms, causes, and fixes |
 | [Installation](docs/installation.md) | Install steps and the everyday `just` workflow |
 | [Just Recipes](docs/just.md) | Every recipe, generated from the justfiles |
-| [Hammerspoon](docs/hammerspoon.md) | Window management, display grid, and application hotkeys |
+| [Hammerspoon](docs/hammerspoon.md) | Window management, window grids, and application hotkeys |
 | [Alfred](docs/alfred.md) | The launcher, its workflows on each Mac, and preference backups |
 | [tmux](docs/tmux.md) | Aliases, shell functions, scripts, key bindings, and direnv auto-attach |
 | [Project Registry](docs/projects.md) | `workon`, `mkproject`, and `projects` across the Macs |
