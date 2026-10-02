@@ -85,6 +85,56 @@ local function describe(screens)
     return table.concat(parts, "  ")
 end
 
+-- Every setOrigin makes macOS re-normalize the whole arrangement: a display
+-- left detached or overlapping gets slid to the nearest edge, which can
+-- shove the others too. So displays are moved one at a time, and after each
+-- move the grid is re-read and the next misplaced display is moved, until
+-- all four match their targets or the passes run out.
+local SETTLE_SECONDS = 0.4
+local MAX_MOVES = 8
+local ORDER = {"D", "C", "B", "A"}
+
+-- Bumped on every run so a newer run cancels an older one still settling.
+local generation = 0
+local settleTimer = nil
+
+-- Screens are looked up again by ID on every pass: a screen object held
+-- across a reconfiguration can report its old frame.
+local function misplacedSlot(targets)
+    for _, key in ipairs(ORDER) do
+        local target = targets[key]
+        local screen = target and hs.screen.find(target.id)
+        if screen then
+            local frame = screen:fullFrame()
+            if math.abs(frame.x - target.x) >= 1 or math.abs(frame.y - target.y) >= 1 then
+                return key, screen, frame
+            end
+        end
+    end
+end
+
+local function settle(targets, run, moves, done)
+    if run ~= generation then return end
+
+    local key, screen, frame = misplacedSlot(targets)
+    if not key then
+        done(nil)
+        return
+    end
+    if moves >= MAX_MOVES then
+        done(string.format("%s still at %d,%d (wanted %d,%d)",
+            key, frame.x, frame.y, targets[key].x, targets[key].y))
+        return
+    end
+
+    log.d(string.format("Display grid: moving %s from %d,%d to %d,%d",
+        key, frame.x, frame.y, targets[key].x, targets[key].y))
+    screen:setOrigin(targets[key].x, targets[key].y)
+    settleTimer = hs.timer.doAfter(SETTLE_SECONDS, function()
+        settle(targets, run, moves + 1, done)
+    end)
+end
+
 -- Place the classified displays. With `swapTops`, the two tops trade sides.
 local function applyGrid(swapTops)
     local screens = classifyScreens()
@@ -93,33 +143,51 @@ local function applyGrid(swapTops)
         return
     end
 
-    if swapTops then
-        if screens.A and screens.B then
-            screens.A, screens.B = screens.B, screens.A
-        else
-            log.w("Display grid: need both top panels to swap them")
-        end
+    local swapping = swapTops and screens.A and screens.B
+    if swapTops and not swapping then
+        log.w("Display grid: need both top panels to swap them")
+    end
+    if swapping then
+        screens.A, screens.B = screens.B, screens.A
     end
 
-    local function place(order)
-        for _, key in ipairs(order) do
-            local screen = screens[key]
-            if screen then screen:setOrigin(originForSlot(key, screen)) end
-        end
+    local targets = {}
+    for key, screen in pairs(screens) do
+        local x, y = originForSlot(key, screen)
+        targets[key] = { id = screen:id(), x = x, y = y }
     end
 
-    -- Park the tops far apart first: two same-size panels trading places
-    -- would otherwise overlap mid-move, and macOS shoves one of them aside.
-    -- Then set the final origins anchor-first, and once more after a beat,
-    -- because macOS can still nudge displays while the first pass lands.
-    if screens.A then screens.A:setOrigin(-10000, -2000) end
-    if screens.B then screens.B:setOrigin(10000, -2000) end
-    hs.timer.doAfter(0.3, function() place({"D", "B", "C", "A"}) end)
-    hs.timer.doAfter(0.8, function() place({"D", "B", "C", "A"}) end)
+    generation = generation + 1
+    local run = generation
+    if settleTimer then settleTimer:stop() end
 
     local summary = describe(screens)
-    log.i((swapTops and "Swapped tops; " or "Applied grid; ") .. summary)
-    hs.alert.show(swapTops and "Swapped the top displays" or "Display grid applied")
+    local label = swapping and "Swapped the top displays" or "Display grid applied"
+    local function done(problem)
+        settleTimer = nil
+        if problem then
+            log.w("Display grid: gave up; " .. problem .. "; " .. summary)
+            hs.alert.show("Display grid: " .. problem)
+        else
+            log.i(label .. "; " .. summary)
+            hs.alert.show(label)
+        end
+    end
+
+    -- Two same-size panels trading places would overlap if moved straight
+    -- across, and macOS would shove one aside. So first lift the panel
+    -- headed left to sit directly above the A slot, still touching the
+    -- panel under it; the B slot is then free, and settle() fills B and A.
+    if swapping then
+        local a = targets.A
+        local height = screens.A:fullFrame().h
+        screens.A:setOrigin(a.x, a.y - height)
+        settleTimer = hs.timer.doAfter(SETTLE_SECONDS, function()
+            settle(targets, run, 0, done)
+        end)
+    else
+        settle(targets, run, 0, done)
+    end
 end
 
 -- Arrange the grid, keeping the tops in their current left/right order.
