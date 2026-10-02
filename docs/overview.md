@@ -32,22 +32,17 @@ flowchart TD
     mise["mise<br/>go, node, ruby, rust, bun, deno"]
     uv["uv<br/>python + CLI tools"]
     shell["bash<br/>.bash_profile, direnv, Starship"]
-    tmux["tmux<br/>sessions + shell functions"]
-    cmux["cmux<br/>workspaces"]
+    herdr["herdr<br/>agent workspaces + sessions"]
     registry["projects.toml<br/>projects / workon / mkproject"]
     hs["Hammerspoon<br/>windows + hotkeys"]
     sync["Syncthing<br/>~/Projects, ~/Work"]
 
     repo --> homesick --> shell
     homesick --> hs
-    homesick --> tmux
-    just --> brew
+    just --> brew --> herdr
     just --> mise
     just --> uv
-    shell --> tmux
     shell --> registry
-    registry --> tmux
-    cmux --> tmux
     sync -. mirrors .-> registry
 ```
 
@@ -60,8 +55,7 @@ flowchart TD
 | Python interpreters and CLI tools | [uv](https://docs.astral.sh/uv/) | `home/.justfiles/python.justfile`; `uv python install --default` owns `python` on the PATH |
 | Per-directory environment | [direnv](https://direnv.net/) | `home/.config/direnv/direnvrc` defines `layout uv` and `use tmux` |
 | Prompt | [Starship](https://starship.rs/) | `home/.config/starship.toml` |
-| Terminal sessions | tmux | `home/.tmux.conf`; functions in `home/.bashrc.d/20-tmux.bash` |
-| Terminal windows | [cmux](https://github.com/manaflow-ai/cmux) | `home/bin/cmux-*` keep workspaces and sessions in step |
+| Terminal sessions and workspaces | [herdr](herdr.md) | `~/.config/herdr/config.toml` per Mac, not in the repo; other Macs saved with `herdr machine add` |
 | Clipboard across the Macs | [ssh-clipboard](ssh-clipboard.md) | `home/.justfiles/ssh-clipboard.justfile`; peers in `~/.config/ssh-clipboard/config.json` per Mac |
 | Where projects live | the project registry | `~/Projects/projects.toml`, edited by the Rust `projects`; opened by `workon` and `mkproject` in `home/.bashrc.d/61-workon.bash` |
 | Compiled tools | Rust / cargo | the `rust/` Cargo workspace: `projects` and `homesick-new`; `just rust-install` builds them into `~/.local/bin` |
