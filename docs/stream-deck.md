@@ -21,6 +21,44 @@ The 15-key deck switches between profiles with a dedicated button:
 The 3-key deck uses a single **Default Profile** with desk lights, mute
 toggle, and media.
 
+## Mac Studio launcher page
+
+On the Mac Studio, page 2 of the 15-key deck's default profile is an app
+launcher. Each key opens an app from `/Applications`. The bottom corners
+switch pages and wrap around between pages 1 and 3.
+
+![Stream Deck page 2 on the Mac Studio](images/stream-deck-studio-page-2.png)
+
+| Row | Keys |
+| --- | ---- |
+| Top | Zoom, Granola, MacWhisper, Obsidian, Ghostty |
+| Middle | Hermes, Claude, ChatGPT, Raindrop.io, cmux |
+| Bottom | Previous page, Bambu Studio, Slack, Discord, Next page |
+
+The page is defined as a JSON spec (`layouts/mk2-page2.json`) and
+written to the Stream Deck app's profile by scripts in
+`~/Projects/stream-deck`, not built by hand in the app:
+
+| Script | Purpose |
+| ------ | ------- |
+| `scripts/sdconfig.py` | Dump, export, and apply page layouts to the app's profiles (stdlib only) |
+| `scripts/keyicon.py` | Render a key image from an app's icon with the label baked in (pyobjc) |
+| `scripts/navicon.py` | Draw the page navigation keys: chevron, target page, page dots (Pillow) |
+
+All three are PEP 723 scripts, so they run with `uv run`:
+
+```shell
+cd ~/Projects/stream-deck
+uv run scripts/sdconfig.py export --page DFE14820 \
+    --like layouts/mk2-page2.json --out layouts/mk2-page2.json
+uv run scripts/sdconfig.py apply layouts/mk2-page2.json            # dry run
+uv run scripts/sdconfig.py apply layouts/mk2-page2.json --apply    # write
+```
+
+`apply` is a dry run unless you pass `--apply`. Before it writes, it
+backs up the profile to `.sdconfig-backups/` outside `ProfilesV3/`. It
+won't write while the Stream Deck app is running (see below).
+
 ## Editing profiles
 
 The Elgato Stream Deck app owns the config files under
