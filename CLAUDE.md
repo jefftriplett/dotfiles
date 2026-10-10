@@ -23,6 +23,10 @@
 - Commit messages should be 50 characters or less (excluding emoji)
 - Format: `{emoji_short_code} {commit_message}`
 
+## Commits and branches
+- Commit directly to `main` and push; don't create a branch or PR
+- Only use a branch + PR when explicitly asked to stage one
+
 ## Tools Used
 - Package management: Homebrew, uv
 - Automation: Just (command runner), homesick (dotfiles)
