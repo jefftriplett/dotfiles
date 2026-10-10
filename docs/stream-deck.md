@@ -27,6 +27,13 @@ On the Mac Studio, page 2 of the 15-key deck's default profile is an app
 launcher. Each key opens an app from `/Applications`. The bottom corners
 switch pages and wrap around between pages 1 and 3.
 
+The key images use the [Dracula](https://draculatheme.com) theme, to
+match the terminal and these docs. The keys have a Dracula background
+(`#282a36`) and foreground labels (`#f8f8f2`), and the navigation keys
+have pink chevrons and purple page dots. App icons are left as they
+are. Each layout spec picks its theme with a top-level `"theme"` key
+(`default` or `dracula`).
+
 ![Stream Deck page 2 on the Mac Studio](images/stream-deck-studio-page-2.png)
 
 | Row | Keys |
