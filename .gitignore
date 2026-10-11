@@ -37,6 +37,7 @@ node_modules/
 apps/*-x64/*
 apps/*/*-darwin-x64/*
 apps/*/build/*
+home/.config/herdr/session*
 home/.maid/*.log.[0-9]
 roles/*
 
