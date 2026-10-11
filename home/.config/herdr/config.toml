@@ -1,0 +1,8 @@
+onboarding = false
+
+[theme]
+name = "dracula"
+auto_switch = false
+
+[ui.toast]
+delivery = "herdr"
