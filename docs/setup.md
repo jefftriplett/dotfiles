@@ -78,7 +78,7 @@ directory. The recipe does this, in order:
 | mise | `mise install` for go, node, ruby, rust, then `mise reshim` | Language runtimes |
 | Python | `just python::bootstrap` | See below |
 
-`python::bootstrap` installs the uv-managed interpreters (3.10 to 3.14), runs
+`python::bootstrap` installs the uv-managed interpreters (3.11 to 3.15), runs
 `uv python install --default 3.14` so `python` and `python3` exist in
 `~/.local/bin`, and installs the CLI tools with `uv tool install`.
 
