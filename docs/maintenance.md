@@ -90,11 +90,54 @@ uv owns Python. The recipes are in the `python` module:
 | ------ | ------------ |
 | `just python::bootstrap` | Install the interpreters, set 3.14 as `python`, install the CLI tools |
 | `just python::upgrade` | Upgrade the interpreters in place and the CLI tools |
-| `just python::uv-python-install` | Reinstall the interpreter list |
+| `just python::uv-python-install` | Install 3.11 to 3.15; a version already installed is skipped |
 | `just python::uv-tool-install` | Install or, with `--upgrade`, upgrade the tools |
 
 The tool list is in `home/.justfiles/python.justfile`. Add a tool there, not
 by hand, so every Mac gets it.
+
+### Python versions
+
+Every Mac keeps one uv install of each version: the newest patch release. On
+2026-10-12 all three Macs had the same set:
+
+| Version | Patch | Command in `~/.local/bin` | Installed by |
+| ------- | ----- | ------------------------- | ------------ |
+| 3.15 | 3.15.0 | `python3.15` | `uv-python-install` |
+| 3.14 | 3.14.8 | `python3.14`, `python` | `uv-python-install`; `bootstrap` makes it the default |
+| 3.13 | 3.13.16 | `python3.13` | `uv-python-install` |
+| 3.12 | 3.12.15 | `python3.12` | `uv-python-install` |
+| 3.11 | 3.11.17 | `python3.11` | `uv-python-install` |
+| 3.15 free-threaded | 3.15.0 | `python3.15t` | by hand: `uv python install 3.15t` |
+| 3.14 free-threaded | 3.14.8 | `python3.14t` | by hand: `uv python install 3.14t` |
+
+3.10 and older are gone. Do not install them again.
+
+Homebrew also installs Python 3.12 to 3.14 in `/opt/homebrew/bin`, because
+other formulae need them. `~/.local/bin` comes last on the PATH, so `python3`
+and `python3.14` find the Homebrew copy first. Only `python` always finds the
+uv copy.
+
+To see what is installed:
+
+```shell
+uv python list --only-installed --managed-python
+uv python dir      # where uv keeps them
+```
+
+To move to new patch releases and drop the old ones:
+
+1. Run `just python::uv-pip-upgrade`. It runs `uv python upgrade`, which
+   installs the newest patch of each version and moves the links.
+2. `uv python upgrade` skips the free-threaded builds. Install those by full
+   version, for example `uv python install 3.14.8+freethreaded`.
+3. Remove each old patch by its key, for example
+   `uv python uninstall cpython-3.14.7-macos-aarch64-none`.
+4. Do the same on each Mac.
+
+A project `.venv` points to the exact patch release that made it. When that
+release is removed, the `.venv` stops working. Run `uv sync` in the project to
+make a new one. For a uv tool, run `uv tool install --reinstall <tool>`.
 
 ## Languages
 
