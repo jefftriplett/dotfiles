@@ -16,6 +16,7 @@
 | Elgato Stream Deck Pedal (3-key) | studio |
 | Elgato Key Light A160 | mini (USB), all (Control Center) |
 | [GL.iNet GL-RM10](https://www.gl-inet.com/en-us/products/gl-rm10) remote KVM | mini, studio (one each) |
+| [Blackmagic ATEM Mini Pro](https://www.blackmagicdesign.com/products/atemmini) live switcher | studio (USB; webcam + audio device) |
 
 See [Stream Deck](stream-deck.md) for profile and button configuration.
 
