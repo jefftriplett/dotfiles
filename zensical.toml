@@ -39,6 +39,7 @@ nav = [
     { "ssh-clipboard" = "ssh-clipboard.md" },
     { "Stream Deck" = "stream-deck.md" },
     { "tmux" = "tmux.md" },
+    { "UPS and Mac Studio Reboots" = "ups.md" },
   ] },
 ]
 

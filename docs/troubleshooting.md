@@ -182,3 +182,10 @@ The reload still happens.
 `hs.timer.usleep` inside one `hs -c` call blocks Hammerspoon's run loop, so
 window and focus events do not process until the call returns. Issue one
 action per `hs -c` call and sleep in the shell between them.
+
+## The Mac Studio restarts on its own and waits at the login screen
+
+The studio has had hard power cuts that reboot it about once a week.
+FileVault is on and auto-login is off, so after any unexpected restart
+it waits at the login screen for a password. See
+[UPS and Mac Studio Reboots](ups.md) for the investigation and next steps.
