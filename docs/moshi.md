@@ -24,9 +24,30 @@ moshi-hook install
 brew services start moshi-hook
 ```
 
-`moshi-hook install` writes hook configs for supported agent CLIs (Claude Code,
-Codex, etc.) so their tool calls route through the local daemon for remote
-approval.
+Get the `<PAIRING_TOKEN>` from the Moshi iPhone app under
+**Settings → Integrations**. The token is reusable (account-level), so the same
+one pairs every Mac. Pairing stores a host secret; the host ID lands in a plain
+`host.json` beside it so SSH sessions can read it.
+
+`moshi-hook install` writes hook configs for every supported agent CLI it finds
+(Claude Code, Codex, OpenCode, Gemini, Antigravity, Cursor, Copilot, Goose, and
+others) so their tool calls route through the local daemon for remote approval.
+Agents that were already running when hooks change must be restarted, since each
+reads its hook config only at startup.
+
+### Pairing on a headless / SSH session
+
+The secret defaults to the macOS Keychain, which a non-interactive SSH shell
+cannot unlock (`User interaction is not allowed`). Pair with the file store
+instead when running over SSH:
+
+```shell
+moshi-hook pair --token <PAIRING_TOKEN> --name <HOSTNAME> --store file
+```
+
+All three Macs are paired with `--store file`. To move a pairing back into the
+Keychain, re-run `moshi-hook pair` from an interactive Terminal on that Mac
+(without `--store file`).
 
 ## Multi-machine
 
@@ -40,10 +61,33 @@ To prepare a machine for SSH/Mosh access from Moshi:
 moshi-hook host setup
 ```
 
+## Diagnostics
+
+`moshi-hook doctor` checks a host feature by feature and says what to fix. It
+reports the daemon and gateway, the multiplexers (tmux/herdr), per-agent hook
+status, pairing, and a table of what works (agent inbox, Chat View, Workspaces,
+session picker, diff viewer, browser preview, usage).
+
+```shell
+moshi-hook doctor          # full report with fix suggestions
+moshi-hook doctor --json   # machine-readable, no prompts
+moshi-hook doctor --yes    # apply the suggested fixes without asking
+```
+
+### Codex shared background server
+
+Codex 0.157+ runs every session inside one shared background server
+(`daemon_auto_start`), so Moshi cannot tell Codex sessions apart and
+Chat View, replies, and approvals can land on the wrong terminal. `doctor`
+detects this; `moshi-hook doctor --yes` sets `daemon_auto_start = false` in
+`~/.codex/config.toml` and stops the background server. Restart any Codex
+sessions that were using it afterward.
+
 ## Useful commands
 
 ```shell
 moshi-hook serve            # run the daemon in the foreground
+moshi-hook doctor           # check the host feature by feature
 moshi-hook logs -f          # tail daemon logs
 moshi-hook probe            # check if the daemon is running
 moshi-hook context          # print terminal context (tmux/herdr/zellij/shell)
@@ -68,3 +112,6 @@ ssh mac-studio-2023 "brew upgrade moshi-hook && brew services restart moshi-hook
 ssh mac-mini-pro-2023 "brew upgrade moshi-hook && brew services restart moshi-hook"
 ssh mba-2025 "brew upgrade moshi-hook && brew services restart moshi-hook"
 ```
+
+After a large version jump, re-run `moshi-hook install` to refresh agent hooks
+and `moshi-hook doctor` to confirm the host is healthy.

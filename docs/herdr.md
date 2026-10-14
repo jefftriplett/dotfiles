@@ -78,4 +78,8 @@ If `herdr machine status` says the remote server is stopped, run the
 session of the caller, so an agent in a herdr pane reports the correct
 session to Moshi.
 
+Moshi has a dedicated Herdr control mode (**Settings → Terminal → Herdr**,
+requires herdr 0.9+) that shows only the selected pane, without herdr's own
+sidebar and tabs. The Macs run herdr 0.9.3.
+
 [herdr]: https://herdr.dev
