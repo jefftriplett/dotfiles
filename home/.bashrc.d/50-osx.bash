@@ -64,3 +64,9 @@ fi
 if command -v zoxide > /dev/null 2>&1; then
     eval "$(zoxide init bash)";
 fi
+
+##########
+# pico-8 #
+##########
+
+alias pico8="/Applications/PICO-8.app/Contents/MacOS/pico8"
