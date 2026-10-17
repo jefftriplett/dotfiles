@@ -1,6 +1,6 @@
 tap "anthropics/tap"
-tap "rjyo/moshi"
-tap "skzv/tap"
+tap "rjyo/moshi", trusted: true
+tap "skzv/tap", trusted: true
 tap "steipete/tap"
 tap "xdevplatform/tap"
 # Run your GitHub Actions locally
@@ -322,7 +322,7 @@ brew "summarize"
 # Generate scripting interfaces to C/C++ code
 brew "swig"
 # Open source continuous file synchronization application
-brew "syncthing", restart_service: :changed
+brew "syncthing"
 # Easiest, most secure way to use WireGuard and 2FA
 brew "tailscale"
 # Send macOS User Notifications from the command-line
@@ -356,7 +356,7 @@ brew "webpack"
 # Internet file retriever
 brew "wget"
 # Port of OpenAI's Whisper model in C/C++
-brew "whisper-cpp"
+brew "whisper.cpp"
 # Ad-hoc single-file webserver
 brew "woof"
 # JavaScript package manager
@@ -365,6 +365,8 @@ brew "yarn"
 brew "ykman"
 # General-purpose lossless data-compression library
 brew "zlib"
+# Portable daemon + CLI that bridges AI coding agents to the Moshi mobile app
+brew "rjyo/moshi/moshi-hook"
 # One TUI for every AI coding session — Claude Code, Codex, Antigravity
 brew "skzv/tap/ccmux", trusted: true
 # Fast X CLI for tweeting, replying, and reading
@@ -375,6 +377,8 @@ brew "steipete/tap/remindctl", trusted: true
 cask "1password-cli"
 # Firmware updater for 8BitDo controllers
 cask "8bitdo-firmware-updater"
+# Browse, search and analyse your past AI coding sessions
+cask "agentsview"
 # Watch local content on Apple TV and Chromecast
 cask "airflow"
 # Screen mirroring receiver
@@ -421,7 +425,6 @@ cask "elgato-control-center"
 cask "elgato-game-capture-hd"
 # Assign keys, and then decorate and label them
 cask "elgato-stream-deck"
-# Turn your phone into a webcam
 # Notification Center widget and menu bar application to monitor fans
 cask "fanny"
 # UI toolkit for building applications for mobile, web and desktop
@@ -445,6 +448,8 @@ cask "gitify"
 cask "gitup-app"
 # Desktop automation application
 cask "hammerspoon"
+# Homebrew's official GUI
+cask "homebrew-app"
 # Terminal built on web technologies
 cask "hyper"
 # Automatically ejects external drives
@@ -556,11 +561,11 @@ mas "Numbers", id: 409203825
 mas "Pages", id: 409201541
 mas "Pandan", id: 1569600264
 mas "Paprika Recipe Manager", id: 451907568
-mas "Parachute", id: 6748614170
+mas "Parachute Backup", id: 6748614170
 mas "Pixelmator", id: 407963104
 mas "Pixelmator Pro", id: 1289583905
-mas "ReadKit", id: 1615798039
 mas "ReadKit", id: 588726889
+mas "ReadKit", id: 1615798039
 mas "Recordia", id: 1529006487
 mas "Signals", id: 1453293391
 mas "Skitch", id: 425955336
