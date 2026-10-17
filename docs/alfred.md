@@ -28,6 +28,17 @@ Emoji Search is built from `~/Projects/alfred-workflow/alfred-emoji-search-git`,
 Syncthing-mirrored project, and installed by hand on each Mac. The three Macs do not
 have to run the same version of a workflow, and today they do not.
 
+To install or update it, build the bundle and open it in Alfred, then click **Import**
+and let it replace the older version:
+
+```bash
+cd ~/Projects/alfred-workflow/alfred-emoji-search-git
+just bundle && just open
+```
+
+`just bundle` writes `dist/Emoji Search.alfredworkflow` after a smoke test. The workflow
+needs Python 3.12 or newer and skips macOS's Python 3.9; Homebrew's `python3.12` works.
+
 Alfred Justfile is Jeff's own workflow, not yet published, that lists `just` recipes through a
 script filter. Its source is `~/Projects/alfred-workflow/alfred-demo-git`. Its script path still points at a pyenv shim, and pyenv is gone, so the keyword
 does nothing until the path is changed to `/opt/homebrew/bin/uv`.
