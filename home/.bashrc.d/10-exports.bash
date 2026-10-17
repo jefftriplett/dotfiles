@@ -118,3 +118,8 @@ export PATH
 if [[ -d "${HOME}/.minimax-code/bin" ]]; then
     export PATH="${HOME}/.minimax-code/bin:${PATH}"
 fi
+
+# Pagers grab the mouse so tmux forwards wheel events to them natively
+# (the tmux wheel bindings no longer send arrow keys to alternate-screen
+# panes — that translation made the scroll wheel cycle prompt history).
+export LESS="-FRX --mouse"
