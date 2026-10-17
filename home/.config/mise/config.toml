@@ -16,6 +16,7 @@ idiomatic_version_file_enable_tools = []
 [tools]
 bun = ['latest']
 deno = ['latest']
+"github:lezli01/vincent" = "latest"
 go = ['latest']
 node = "24"
 ruby = ['latest']
