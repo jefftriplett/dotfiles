@@ -11,6 +11,8 @@ brew "xz"
 brew "apache-arrow"
 # Download with resuming and segmented downloading
 brew "aria2"
+# Automatically exclude development dependencies from Time Machine backups
+brew "asimov"
 # Improved shell history for zsh, bash, fish and nushell
 brew "atuin"
 # Automatic configure script builder
