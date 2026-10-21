@@ -70,3 +70,21 @@ fi
 ##########
 
 alias pico8="/Applications/PICO-8.app/Contents/MacOS/pico8"
+
+##########
+# awake  #
+##########
+
+# Keep the Mac awake (display on, no idle sleep).
+#   awake          until Ctrl-C
+#   awake 1234     until PID 1234 exits
+#   awake cmd ...  while cmd runs
+awake() {
+    if [ $# -eq 0 ]; then
+        caffeinate -dis
+    elif [[ $# -eq 1 && $1 =~ ^[0-9]+$ ]]; then
+        caffeinate -dis -w "$1"
+    else
+        caffeinate -dis "$@"
+    fi
+}
