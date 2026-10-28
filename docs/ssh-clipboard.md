@@ -53,4 +53,20 @@ its own, which is fine for the pair. To give the two desktops a direct link, run
 - With Apple Screen Sharing, turn off *Edit → Use Shared Clipboard*, or the two clipboards fight.
 - The daemon needs the ssh connection to answer without a prompt. It never types a password and cannot answer a 1Password or Touch ID prompt.
 
+## Handoff is off
+
+Apple's Universal Clipboard competes with ssh-clipboard. When it wins, a paste stalls on a
+"Pasting from …" / "Connecting…" window while it pulls the copy over its own peer-to-peer
+Wi-Fi link. Handoff, which drives Universal Clipboard, was turned off on all three Macs on
+2026-10-28 so ssh-clipboard is the only clipboard sync:
+
+```shell
+defaults -currentHost write com.apple.coreservices.useractivityd ActivityAdvertisingAllowed -bool no
+defaults -currentHost write com.apple.coreservices.useractivityd ActivityReceivingAllowed -bool no
+```
+
+It takes effect after logging out and back in. This also turns off Handoff to and from the
+iPhone and iPad. The same switch is in System Settings → General → AirDrop & Handoff. Run
+both commands on any new Mac.
+
 [ssh-clipboard]: https://github.com/standardagents/ssh-clipboard

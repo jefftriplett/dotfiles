@@ -147,6 +147,13 @@ set -as terminal-features 'xterm*:extkeys'
 A tmux server started before that change still has the old value. Reload with
 `prefix + r`, or start a new server.
 
+## Pasting shows "Pasting from …" and hangs on "Connecting…"
+
+That window is Apple's Universal Clipboard, not ssh-clipboard. Handoff should be
+off on every Mac; see [ssh-clipboard](ssh-clipboard.md#handoff-is-off). Check
+with `defaults -currentHost read com.apple.coreservices.useractivityd`; both
+values should be `0`. Log out and back in after changing them.
+
 ## Clipboard over mosh
 
 Copying in tmux uses OSC 52, which mosh 1.4.0 does not forward. Inside a mosh
