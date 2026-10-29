@@ -1,6 +1,6 @@
 [project]
 site_name = "Dotfiles Manual"
-site_url = "https://jefftriplett.github.io/dotfiles/"
+site_url = "https://dotfiles.webology.dev/"
 site_description = "How Jeff Triplett's macOS dotfiles fit together"
 site_author = "Jeff Triplett"
 
