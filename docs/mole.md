@@ -45,8 +45,26 @@ Caches, logs, and temporary files under `~/Library`, plus files left behind by
 apps that are no longer installed. Apps rebuild caches, so the main cost is a
 slower first launch.
 
+It also empties the Trash and clears the package caches for uv, pip, npm,
+pnpm, bun, Go, mise, and Homebrew. Those refill on the next install, so the
+next `uv sync` or `brew install` downloads more.
+
 The scan is slow. On the Studio, `mo clean --dry-run` took more than five
 minutes. Run it in a terminal you can leave open.
+
+The first dry run on the Studio (2026-10-29) estimated 24 GB or more. The
+largest items were Vivaldi service worker caches (about 2.7 GB), the Xcode
+Simulator cache (3.3 GB), and Xcode DerivedData (1 GB). The full list goes to
+`~/.config/mole/clean-list.txt`.
+
+Mole only reports the biggest space users; it does not remove them:
+
+| Item | Size | Where to deal with it |
+| ---- | ---- | --------------------- |
+| OrbStack data | 259 GB | `docker system df`, then prune images and volumes |
+| Hugging Face cache | 50 GB | `hf cache scan` / `hf cache delete` |
+| mise Rust installs | 10 GB | `mise prune`, or drop old versions from the config |
+| Simulator devices | 10 GB | `xcrun simctl delete unavailable` |
 
 To keep a cache, add it with `mo clean --whitelist`.
 
