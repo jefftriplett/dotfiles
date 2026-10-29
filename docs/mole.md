@@ -62,7 +62,7 @@ Mole only reports the biggest space users; it does not remove them:
 | Item | Size | Where to deal with it |
 | ---- | ---- | --------------------- |
 | OrbStack data | 259 GB | `docker system df`, then prune images and volumes |
-| Hugging Face cache | 50 GB | `hf cache scan` / `hf cache delete` |
+| Hugging Face cache | 50 GB | `uvx --from huggingface_hub hf cache ls`, then `hf cache rm` |
 | mise Rust installs | 10 GB | `mise prune`, or drop old versions from the config |
 | Simulator devices | 10 GB | `xcrun simctl delete unavailable` |
 
