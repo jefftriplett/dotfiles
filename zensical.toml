@@ -33,6 +33,7 @@ nav = [
     { "How workon resolves a project" = "workon-process.md" },
     { "Just Recipes" = "just.md" },
     { "Machine List" = "machines.md" },
+    { "Mole" = "mole.md" },
     { "Moshi" = "moshi.md" },
     { "Project Registry" = "projects.md" },
     { "Rust Rewrites" = "rust-rewrites.md" },

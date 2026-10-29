@@ -100,6 +100,17 @@ Available recipes:
     mise:
         bootstrap # bootstrap mise by installing configured language versions
         upgrade   # install latest language versions, drop the old ones, and refresh shims
+    mole:
+        analyze path="~" # explore disk usage, defaulting to the home folder
+        clean            # remove caches, logs, and leftovers from uninstalled apps
+        clean-preview    # preview clean; changes nothing
+        history          # list past Mole cleanups
+        installers       # pick installer files (.dmg, .pkg, .zip) to remove from Downloads
+        preview          # preview what clean and purge would remove; changes nothing
+        purge            # remove old project build artifacts (.venv, __pycache__, dist, target)
+        purge-preview    # preview purge; changes nothing
+        status           # show system health
+        update           # update Mole itself
     python:
         bootstrap                 # bootstrap python: uv-managed interpreters, `python` on PATH, and CLI tools
         upgrade                   # update python environment: interpreters in place, then the CLI tools

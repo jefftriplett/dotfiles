@@ -22,6 +22,8 @@ interpreters and runs `mise install`.
 
 `just outdated` lists what Homebrew would upgrade without doing it.
 
+To free disk space, preview with `just mole::preview` first. See [Mole](mole.md).
+
 ## Brewfiles
 
 There are two kinds of Brewfile in `home/`:
