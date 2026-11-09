@@ -352,7 +352,6 @@ brew "swig"
 # Open source continuous file synchronization application
 brew "syncthing"
 # Easiest, most secure way to use WireGuard and 2FA
-brew "tailscale", restart_service: :changed
 # Log file highlighter
 brew "tailspin"
 # Send macOS User Notifications from the command-line
