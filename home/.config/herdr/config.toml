@@ -6,3 +6,6 @@ auto_switch = false
 
 [ui.toast]
 delivery = "herdr"
+
+[ui.sidebar.agents]
+rows = [["state_icon", "machine", "workspace", "tab"]]
