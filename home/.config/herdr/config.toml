@@ -4,8 +4,18 @@ onboarding = false
 name = "dracula"
 auto_switch = false
 
+[keys]
+# jump back and forth between the last two panes
+last_pane = "prefix+semicolon"
+
+[ui]
+mobile_width_threshold = 30
+
 [ui.toast]
 delivery = "herdr"
 
 [ui.sidebar.agents]
 rows = [["state_icon", "machine", "workspace", "tab"]]
+
+[experimental]
+pane_history = false
