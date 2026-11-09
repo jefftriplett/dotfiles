@@ -15,7 +15,7 @@ mobile_width_threshold = 30
 delivery = "herdr"
 
 [ui.sidebar.agents]
-rows = [["state_icon", "machine", "workspace", "tab"]]
+rows = [["state_icon", "workspace", "machine", "tab"]]
 
 [experimental]
 pane_history = false
