@@ -38,6 +38,7 @@ apps/*-x64/*
 apps/*/*-darwin-x64/*
 apps/*/build/*
 home/.config/herdr/session*
+home/.config/herdr/release-notes.json
 home/.maid/*.log.[0-9]
 roles/*
 
