@@ -17,5 +17,8 @@ delivery = "herdr"
 [ui.sidebar.agents]
 rows = [["state_icon", "workspace", "machine"]]
 
+[ui.sidebar.spaces]
+rows = [["state_icon", "workspace"]]
+
 [experimental]
 pane_history = false
