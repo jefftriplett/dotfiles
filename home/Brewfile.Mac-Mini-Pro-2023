@@ -511,6 +511,8 @@ cask "sublime-merge"
 cask "sublime-text"
 # Menu bar customization tool
 cask "swiftbar"
+# Mesh VPN based on WireGuard
+cask "tailscale-app"
 # Enables you to control your computer with voice, eye tracking, or noises
 cask "talon"
 # Desktop client for Telegram messenger
@@ -572,7 +574,6 @@ mas "Signals", id: 1453293391
 mas "Skitch", id: 425955336
 mas "Sleeve", id: 1606145041
 mas "SnippetsLab", id: 1006087419
-mas "Tailscale", id: 1475387142
 mas "Textual 7", id: 1262957439
 mas "The Unarchiver", id: 425424353
 mas "Toggl Track", id: 1291898086

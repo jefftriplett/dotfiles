@@ -320,6 +320,7 @@ cask "streamlabs-obs"
 cask "sublime-merge"
 cask "sublime-text"
 cask "swiftbar"
+cask "tailscale-app"
 cask "talon"
 cask "telegram-desktop"
 cask "thetimemachinemechanic"
@@ -370,7 +371,6 @@ mas "Signals", id: 1453293391
 mas "Skitch", id: 425955336
 mas "Sleeve", id: 1606145041
 mas "SnippetsLab", id: 1006087419
-mas "Tailscale", id: 1475387142
 mas "Textual IRC Client", id: 1262957439
 mas "The Unarchiver", id: 425424353
 mas "Toggl Track", id: 1291898086
