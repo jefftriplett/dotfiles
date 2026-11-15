@@ -263,8 +263,6 @@ brew "pipx"
 brew "pngpaste"
 # Fast, disk space efficient package manager
 brew "pnpm"
-# Object-relational database system
-brew "postgresql@14"
 # Framework for managing multi-language pre-commit hooks
 brew "pre-commit"
 # Code formatter for JavaScript, CSS, JSON, GraphQL, Markdown, YAML

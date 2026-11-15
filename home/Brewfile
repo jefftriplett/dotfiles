@@ -152,8 +152,6 @@ brew "pip-completion"
 brew "pipx"
 brew "pngpaste"
 brew "pnpm"
-brew "postgis"
-brew "postgresql@14", restart_service: true
 brew "pre-commit"
 brew "prettier"
 brew "pup"
