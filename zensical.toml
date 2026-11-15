@@ -26,6 +26,7 @@ nav = [
   { "Maintenance" = "maintenance.md" },
   { "Troubleshooting" = "troubleshooting.md" },
   { "Reference" = [
+    { "agent-desktop" = "agent-desktop.md" },
     { "Alfred" = "alfred.md" },
     { "cmux Workspaces" = "cmux.md" },
     { "Hammerspoon" = "hammerspoon.md" },

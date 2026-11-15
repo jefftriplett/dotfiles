@@ -54,6 +54,7 @@ Run `just docs-serve` to read it locally.
 | [How workon resolves a project](docs/workon-process.md) | The decision process behind `workon` |
 | [cmux Workspaces](docs/cmux.md) | Keeping cmux workspaces and tmux sessions in sync |
 | [ssh-clipboard](docs/ssh-clipboard.md) | One clipboard across the Macs, over ssh |
+| [agent-desktop](docs/agent-desktop.md) | Desktop automation for AI agents: permissions, MCP, and the macOS sandbox |
 
 ```shell
 $ just docs-serve    # live preview at http://127.0.0.1:8000/

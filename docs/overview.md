@@ -63,6 +63,7 @@ flowchart TD
 | Launcher and workflows | [Alfred](alfred.md) | `~/Library/Application Support/Alfred/` per Mac, not in the repo; backed up by a workflow |
 | Editor settings | Sublime Text | `home/.config/sublime-text/`, linked by `just macos::sublime-link` |
 | Agent approvals | [Moshi](moshi.md) | `moshi-hook` daemon via `brew services`; `moshi-hook install` writes agent hook configs, `moshi-hook doctor` checks the host |
+| Desktop automation for agents | [agent-desktop](agent-desktop.md) | Homebrew formula; permissions per launching app per Mac; MCP entry in `~/.claude.json`; sandboxes in `~/.agent-desktop/` |
 | Hardware buttons | [Elgato Stream Deck](stream-deck.md) | `~/Library/Application Support/com.elgato.StreamDeck/ProfilesV3/` |
 | Lint | prek | `.pre-commit-config.yaml`, run by `just lint` and by CI |
 | This manual | Zensical | `zensical.toml` and `docs/`, published by the Docs workflow |

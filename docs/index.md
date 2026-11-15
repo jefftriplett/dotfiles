@@ -24,6 +24,7 @@ The Reference section holds the full option lists for each tool.
 
 ### CLI
 
+- [agent-desktop](agent-desktop.md): Desktop automation CLI for AI agents, with a macOS sandbox
 - [direnv][direnv]: Securely loads or unloads environment variables depending on the current directory
 - [Homebrew][homebrew]: Package management for macOS
 - [Homesick][homesick]: Manages dotfiles with Git and symlinks
