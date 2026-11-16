@@ -29,15 +29,15 @@ run = "mise upgrade"
 
 [tasks.claude]
 description = "Run Claude with skip-permissions and continue fallback"
-run = "cd $MISE_ORIGINAL_CWD && command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --continue || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
+run = "unset CLAUDE_CODE_OAUTH_TOKEN; cd $MISE_ORIGINAL_CWD && command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --continue || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
 
 [tasks.claude-agents]
 description = "Run Claude agents with skip-permissions"
-run = "cd $MISE_ORIGINAL_CWD && command claude agents"
+run = "unset CLAUDE_CODE_OAUTH_TOKEN; cd $MISE_ORIGINAL_CWD && command claude agents"
 
 [tasks.claude-resume]
 description = "Run Claude with skip-permissions and resume fallback"
-run = "cd $MISE_ORIGINAL_CWD && command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --resume || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
+run = "unset CLAUDE_CODE_OAUTH_TOKEN; cd $MISE_ORIGINAL_CWD && command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --resume || command claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
 
 [tasks.codex]
 description = "Run Codex with bypass-approvals-and-sandbox and resume fallback"
