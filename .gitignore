@@ -96,7 +96,10 @@ home/Library/Application Support/Ollama/
 
 # App-generated state/cache
 .homesick/
-home/.claude/
+home/.claude/*
+!home/.claude/skills/
+home/.claude/skills/*
+!home/.claude/skills/restart-sessions/
 home/.codex/
 home/.copilot/
 home/.idea/
