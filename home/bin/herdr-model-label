@@ -1,0 +1,45 @@
+#!/bin/sh
+# Label this herdr terminal with the model its agent is using, so the
+# Herdr app footer (mods/my-status) can show it.
+#
+# Usage: herdr-model-label [claude|codex] < hook-or-statusline.json
+#
+# Reads the JSON that Claude Code's status line or a Codex hook passes on
+# stdin. Prints nothing and always exits 0, so it is safe in either place.
+
+agent="${1:-}"
+input="$(cat 2>/dev/null || true)"
+
+[ -n "${HC_TERMINAL_ID:-}" ] || exit 0
+command -v jq >/dev/null 2>&1 || exit 0
+hc="$(command -v hc 2>/dev/null || echo "$HOME/.local/bin/hc")"
+[ -x "$hc" ] || exit 0
+
+# Claude Code sends .model as an object, Codex (when it sends it) a string.
+model="$(printf '%s' "$input" | jq -r '
+    if (.model | type) == "object" then (.model.display_name // .model.id // empty)
+    elif (.model | type) == "string" then .model
+    else empty end' 2>/dev/null)"
+
+# Codex: the session file records the model of every turn.
+if [ -z "$model" ]; then
+    transcript="$(printf '%s' "$input" | jq -r '.transcript_path // empty' 2>/dev/null)"
+    if [ -n "$transcript" ] && [ -f "$transcript" ]; then
+        model="$(jq -r 'select(.type == "turn_context") | .payload.model // empty' \
+            "$transcript" 2>/dev/null | tail -n 1)"
+    fi
+fi
+
+# Codex before its first turn: the configured default.
+if [ -z "$model" ] && [ "$agent" = "codex" ]; then
+    model="$(sed -n 's/^model *= *"\(.*\)" *$/\1/p' "$HOME/.codex/config.toml" 2>/dev/null | head -n 1)"
+fi
+
+[ -n "$model" ] || exit 0
+
+# Only call hc when the model changed since the last call.
+cache="${TMPDIR:-/tmp}/herdr-model-label.${HC_SCOPE:-default}.${HC_TERMINAL_ID}"
+[ "$(cat "$cache" 2>/dev/null)" = "$model" ] && exit 0
+
+"$hc" label "$HC_TERMINAL_ID" "model=$model" >/dev/null 2>&1 && printf '%s' "$model" >"$cache"
+exit 0

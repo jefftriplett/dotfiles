@@ -72,6 +72,23 @@ herdr machine reconnect studio                     # log in again and verify
 If `herdr machine status` says the remote server is stopped, run the
 `herdr --remote` command that it prints. That command starts the server again.
 
+## Model in the app footer
+
+The Herdr desktop app footer shows the model of the focused agent.
+`~/bin/herdr-model-label` stores it as a `model` label on the agent's
+terminal (`hc label`), and a clone of the footer mod reads that label.
+
+- **Claude Code** runs the script from its status line command
+  (`~/.claude/statusline-command.sh`), so `/model` switches are followed.
+- **Codex** runs it from the `SessionStart`, `UserPromptSubmit` and `Stop`
+  hooks in `~/.codex/hooks.json`. It reads the model from the session file,
+  and falls back to `model` in `~/.codex/config.toml` before the first turn.
+
+The footer is the `my-status` mod, used by the `my-layout` layout, both in
+`~/.config/herdr-app/`. These are clones of the shipped `workspace-status`
+mod and `main` layout, because Herdr replaces edited shipped files. They
+are not in this repo, so each machine needs its own clones.
+
 ## Moshi
 
 [Moshi](moshi.md) works with herdr. `moshi-hook context` finds the herdr
