@@ -84,10 +84,23 @@ terminal (`hc label`), and a clone of the footer mod reads that label.
   hooks in `~/.codex/hooks.json`. It reads the model from the session file,
   and falls back to `model` in `~/.codex/config.toml` before the first turn.
 
-The footer is the `my-status` mod, used by the `my-layout` layout, both in
-`~/.config/herdr-app/`. These are clones of the shipped `workspace-status`
-mod and `main` layout, because Herdr replaces edited shipped files. They
-are not in this repo, so each machine needs its own clones.
+The footer is the `my-status` mod, used by the `my-layout` layout. These
+are clones of the shipped `workspace-status` mod and `main` layout, because
+Herdr replaces edited shipped files. Both live in this repo under
+`home/.config/herdr-app/`.
+
+`~/.config/herdr-app` is a real directory that Herdr writes to, so homesick
+does not link it. Link the three files by hand on a new machine, then pick
+`my-layout` in the app:
+
+```shell
+src=~/.homesick/repos/dotfiles/home/.config/herdr-app
+mkdir -p ~/.config/herdr-app/mods/my-status ~/.config/herdr-app/layouts
+ln -sf $src/mods/my-status/main.js ~/.config/herdr-app/mods/my-status/main.js
+ln -sf $src/mods/my-status/mod.json ~/.config/herdr-app/mods/my-status/mod.json
+ln -sf $src/layouts/my-layout.json ~/.config/herdr-app/layouts/my-layout.json
+herdr-app do layout.switch '{"name":"my-layout"}'
+```
 
 ## Moshi
 
